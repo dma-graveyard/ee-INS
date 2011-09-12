@@ -1,0 +1,110 @@
+package dk.frv.enav.ins.layers.ais;
+
+import java.util.Date;
+
+import dk.frv.ais.geo.GeoLocation;
+import dk.frv.enav.ins.EeINS;
+import dk.frv.enav.ins.ais.SarTarget;
+import dk.frv.enav.ins.common.Heading;
+import dk.frv.enav.ins.common.text.Formatter;
+import dk.frv.enav.ins.common.util.Calculator;
+import dk.frv.enav.ins.gps.GnssTime;
+import dk.frv.enav.ins.gps.GpsData;
+import dk.frv.enav.ins.gps.GpsHandler;
+import dk.frv.enav.ins.gui.InfoPanel;
+
+public class SarTargetInfoPanel extends InfoPanel implements Runnable {
+	private static final long serialVersionUID = 1L;
+
+	private GpsHandler gpsHandler = null;
+	private SarTarget sarTarget = null;
+
+	public SarTargetInfoPanel() {
+		super();
+		(new Thread(this)).start();
+	}
+
+	public synchronized void showSarInfo(SarTarget sarTarget) {
+		this.sarTarget = sarTarget;
+		StringBuilder str = new StringBuilder();
+		//System.out.println("Hello 1");
+		Date now = GnssTime.getInstance().getDate();
+		//System.out.println("Hello 2");
+		Date lastReceived = sarTarget.getLastReceived();
+		Date firstReceived = sarTarget.getFirstReceived();
+		//System.out.println("Hello 3");
+		long elapsedLast = now.getTime() - lastReceived.getTime();
+		long elapsedFirst = now.getTime() - firstReceived.getTime();
+		//System.out.println("Hello 4");
+		str.append("<html><b>AIS SART - MMSI " + sarTarget.getMmsi() + "</b><br/>");
+		
+		GeoLocation sarPos = null;
+		if (sarTarget.getPositionData() != null) {
+			sarPos = sarTarget.getPositionData().getPos();
+		}
+		if (sarPos != null) {
+			str.append(Formatter.latToPrintable(sarPos.getLatitude()) + " ");
+			str.append(Formatter.lonToPrintable(sarPos.getLongitude()) + "<br/>");
+		}
+		
+		str.append("Last reception  " + Formatter.formatTime(elapsedLast) + " [" + Formatter.formatLongDateTime(lastReceived)
+				+ "]<br/>");
+		str.append("First reception " + Formatter.formatTime(elapsedFirst) + " [" + Formatter.formatLongDateTime(firstReceived)
+				+ "]<br/>");
+		//System.out.println("Hello 5");
+		Double dst = null;
+		Double hdg = null;
+		Long ttg = null;
+		Date eta = null;
+		if (gpsHandler != null) {
+			//System.out.println("Hello 5.1");
+			GpsData gpsData = gpsHandler.getCurrentData();
+			//System.out.println("Hello 5.2");
+			if (gpsData != null && !gpsData.isBadPosition()) {
+				//System.out.println("Hello 5.3");
+				GeoLocation pos = gpsData.getPosition();				
+				if (pos != null && sarPos != null) {
+					//System.out.println("Hello 5.4");
+					dst = Calculator.range(pos, sarPos, Heading.RL);
+					//System.out.println("Hello 5.5");
+					hdg = Calculator.bearing(pos, sarPos, Heading.RL);
+					//System.out.println("Hello 5.6");
+					if (gpsData.getSog() != null && gpsData.getSog() > 1) {
+						//System.out.println("Hello 5.7");
+						ttg = Math.round((dst / gpsData.getSog()) * 60 * 60 * 1000);
+						//System.out.println("Hello 5.8");
+						eta = new Date(now.getTime() + ttg);
+						//System.out.println("Hello 5.9");
+					}
+				}
+			}
+		}
+		//System.out.println("Hello 6");
+		str.append("RNG " + Formatter.formatDistNM(dst, 2) + " - BRG " + Formatter.formatDegrees(hdg, 0) + "<br/>");
+		str.append("TTG " + Formatter.formatTime(ttg) + " - ETA " + Formatter.formatLongDateTime(eta));
+		//System.out.println("Hello 7");
+
+		str.append("</html>");
+
+		showText(str.toString());
+		//System.out.println("Hello 8");
+		//System.out.println("------");
+	}
+
+	public synchronized void setGpsHandler(GpsHandler gpsHandler) {
+		this.gpsHandler = gpsHandler;
+	}
+
+	@Override
+	public void run() {
+		while (true) {
+			EeINS.sleep(10000);
+			if (this.isVisible() && sarTarget != null) {
+				//System.out.println("this.isVisible(): " + this.isVisible());
+				showSarInfo(sarTarget);
+			}
+		}
+
+	}
+
+}

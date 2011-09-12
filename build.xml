@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="eeins" default="dist">
+
+	<property name="version" value="2.0-PRE1" />
+
+	<property file="${basedir}/ant.properties" />
+	<property file="${basedir}/.ant.properties" />
+
+	<property name="extlib" value="${basedir}/extlib" />
+	<property name="distdir" value="${basedir}/dist" />
+
+	<property name="build.dir" value="${basedir}/build" />
+	<property name="build.classes.dir" value="${build.dir}/classes" />
+	<property name="build.final.name" value="${ant.project.name}.jar" />
+
+	<property name="src.dir" value="${basedir}/src" />
+	<property name="src.main.dir" value="${src.dir}/main" />
+	<property name="src.main.java.dir" value="${src.main.dir}/java" />
+	<property name="src.main.resources.dir" value="${src.main.dir}/resources" />
+	<property name="javadoc.dir" value="${basedir}/javadoc" />
+
+	<path id="compile.class.path">
+		<fileset dir="${extlib}" >
+			<exclude name="**/svnAnt/*"/>
+			<include name="**/*.jar"/>
+		</fileset>
+	</path>
+
+	<target name="clean">
+		<delete dir="${build.dir}" />
+		<delete dir="${javadoc.dir}" />
+	</target>
+
+	<target name="distclean" depends="clean">
+		<delete dir="${distdir}" />
+	</target>
+
+	<target name="init">
+		<mkdir dir="${build.classes.dir}" />
+	</target>
+
+	<target name="compile" depends="init">
+		<javac destdir="${build.classes.dir}" debug="on" encoding="UTF-8" includeantruntime="false">
+			<compilerarg value="-Xlint" />
+			<includesfile />
+			<classpath refid="compile.class.path" />
+			<src path="${src.main.java.dir}" />
+		</javac>
+	</target>
+
+	<target name="jar" depends="compile">
+		<jar file="${build.dir}/${build.final.name}">
+			<fileset dir="${build.classes.dir}" />
+			<manifest>
+				<attribute name="Built-By" value="${user.name}" />
+				<attribute name="Main-Class" value="dk.frv.enav.ins.Eeins" />
+				<attribute name="Class-Path" value=". lib/*"/>
+				<section name="dk/frv/enav/ins/">
+					<attribute name="Specification-Title" value="E-navigation Enhanced INS" />
+					<attribute name="Specification-Version" value="${version}" />
+					<attribute name="Specification-Vendor" value="Danish Maratime Safety Administration" />
+					<attribute name="Package-Title" value="dk.frv.enav.ins" />
+					<attribute name="Package-Version" value="${version}" />
+					<attribute name="Package-Vendor" value="dk.frv.enav.ins" />
+					<attribute name="Package-Vendor-Id" value="DaMSA" />
+					<attribute name="Implementation-Version" value="${version}"/>
+				</section>
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="dist" depends="jar, enc">
+		<mkdir dir="${distdir}" />
+		<mkdir dir="${distdir}/lib" />
+		<mkdir dir="${distdir}/log" />
+		<copy file="${build.dir}/${build.final.name}" todir="${distdir}/lib" overwrite="true"/>
+		<copy todir="${distdir}/lib">
+			<fileset dir="${extlib}">
+				<include name="/*.jar" />
+				<exclude name="/svnAnt"/>
+			</fileset>
+		</copy>
+		<copy todir="${distdir}" overwrite="false">
+			<fileset dir="${src.main.resources.dir}" />
+		</copy>
+
+	</target>
+
+	<target name="run" depends="dist">
+		<java classname="dk.frv.enav.ins.EeINS" fork="true" dir="${distdir}" maxmemory="1024m">
+			<sysproperty key="java.library.path" value="navicon/native/" />
+			<jvmarg value="-Xmx1024M"/>
+			<jvmarg value="-Xms1024M"/>
+			<jvmarg value="-Xmn256M"/>
+			<classpath>
+				<pathelement path="${distdir}"/>
+				<fileset dir="${distdir}/lib">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+		</java>
+	</target>
+
+	<target name="enc" depends="navicon_enc" />
+
+	<target name="navicon_enc" if="${navicon_enc}">
+		<echo>Using Navicon ENC layer</echo>
+		<copy todir="${distdir}/lib" overwrite="false">
+			<fileset dir="${navicon_enc_path}/lib">
+				<include name="/*.jar" />
+			</fileset>
+		</copy>
+		<copy todir="${distdir}/navicon" overwrite="false">
+			<resources>
+				<fileset dir="${navicon_enc_path}">
+ 					<include name="native/**" />
+					<include name="data/**" />
+				</fileset>
+			</resources>
+		</copy>
+		<copy file="${src.main.resources.dir}/enc_navicon.properties" tofile="${distdir}/enc.properties" overwrite="false"/>
+	</target>
+
+	<target name="javadoc">
+		<mkdir dir="${javadoc.dir}" />
+		<javadoc sourcepath="${src.main.java.dir}"
+                destdir="${javadoc.dir}"
+                            classpathref="compile.class.path">
+			<doctitle>
+				<![CDATA[<h1>DaMSA ee-INS</h1>]]></doctitle>
+		<bottom>
+			<![CDATA[<i>Copyright &copy; 2011 Danish Maritime Safety Administration</i>]]></bottom>
+</javadoc>
+</target>
+
+</project>

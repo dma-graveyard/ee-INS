@@ -1,1 +1,4 @@
-*~
+/build
+/dist
+/ant.properties
+/javadoc

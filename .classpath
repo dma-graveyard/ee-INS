@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="lib" path="extlib/comm.jar"/>
+	<classpathentry kind="lib" path="extlib/commons-codec.jar"/>
+	<classpathentry kind="lib" path="extlib/commons-httpclient-3.1.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://hc.apache.org/httpclient-legacy/apidocs/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="extlib/commons-lang-2.5.jar"/>
+	<classpathentry kind="lib" path="extlib/commons-logging.jar"/>
+	<classpathentry kind="lib" path="extlib/enavshore-common.jar"/>
+	<classpathentry kind="lib" path="extlib/log4j-1.2.15.jar"/>
+	<classpathentry kind="lib" path="extlib/milStd2525_png.jar"/>
+	<classpathentry kind="lib" path="extlib/omcorba.jar"/>
+	<classpathentry kind="lib" path="extlib/omj3d.jar"/>
+	<classpathentry kind="lib" path="extlib/omsvg.jar"/>
+	<classpathentry kind="lib" path="extlib/openmap.jar" sourcepath="/openmap">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/workspace/openmap/doc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="extlib/aislib-1.2.jar"/>
+	<classpathentry kind="output" path="build/classes"/>
+</classpath>
