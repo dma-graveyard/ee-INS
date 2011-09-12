@@ -31,13 +31,13 @@ For detailed description see Wiki.
 	
 ## Project structure ###
 
-|-- build
-|-- dist
-|-- extlib
-`-- src
-    `-- main
-        |-- java
-        `-- resources
+	|-- build
+	|-- dist
+	|-- extlib
+	`-- src
+	    `-- main
+	        |-- java
+	        `-- resources
 
 * `build` - generated directory with compiled class files
 * `extlib` - third party jar files
