@@ -1,6 +1,6 @@
-# e-Navigation Enhanced INS #
+## e-Navigation Enhanced INS ##
 
-## Introduction ##
+### Introduction ###
    
 ee-INS (e-Navigation Enhanced Integrated Navigation System) is an ECDIS like
 application for demonstrating possible e-Navigation services.
@@ -12,24 +12,24 @@ TODO more
 
 For detailed description see Wiki.
 
-## Prerequisites ##
+### Prerequisites ###
 
 * JDK 1.6+ (http://java.sun.com/j2se/)
 * Apache Ant 1.7+ (http://ant.apache.org) or Eclipse IDE (http://eclipse.org)
 
-## Building ##
+### Building ###
 
 	ant
 
-## Running ##
+### Running ###
 
 	ant run
 	
-## Javadoc ##
+### Javadoc ###
 
 	ant javadoc
 	
-## Project structure ###
+### Project structure ###
 
 	|-- build
 	|-- dist
@@ -46,7 +46,7 @@ For detailed description see Wiki.
 * `dist` - a generated directory with a compiled distributable version of the application.
   The application is run from within this directory.   
 
-## Versioning ##
+### Versioning ###
 
 The version is controlled in `build.xml` as a property. The convention is to
 use the format `<major>.<minor>-<dev version>` for non-final versions, and 
@@ -60,18 +60,18 @@ for first pre-version of 2.0 and
 	
 for the final version. 
 
-## ChangeLog ##
+### ChangeLog ###
 
 TODO describe
 
-## ENC layer ##
+### ENC layer ###
 
 TODO describe how Navicon ENC layer can be incorporated
 
-## Eclipse development ##
+### Eclipse development ###
 
 TODO import as project
 
-## Contribution ##
+### Contribution ###
 
 TODO fork and make pull requests
