@@ -27,7 +27,7 @@
  * either expressed or implied, of Danish Maritime Safety Administration.
  * 
  */
-package dk.frv.enav.ins.gui.setupTabs;
+package dk.frv.enav.ins.gui.setuptabs;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;

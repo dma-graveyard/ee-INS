@@ -42,11 +42,11 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 import dk.frv.enav.ins.EeINS;
-import dk.frv.enav.ins.gui.setupTabs.AisTab;
-import dk.frv.enav.ins.gui.setupTabs.ENavTab;
-import dk.frv.enav.ins.gui.setupTabs.MapTab;
-import dk.frv.enav.ins.gui.setupTabs.NavigationTab;
-import dk.frv.enav.ins.gui.setupTabs.SensorTab;
+import dk.frv.enav.ins.gui.setuptabs.AisTab;
+import dk.frv.enav.ins.gui.setuptabs.ENavTab;
+import dk.frv.enav.ins.gui.setuptabs.MapTab;
+import dk.frv.enav.ins.gui.setuptabs.NavigationTab;
+import dk.frv.enav.ins.gui.setuptabs.SensorTab;
 import dk.frv.enav.ins.settings.Settings;
 
 public class SetupDialog extends JDialog implements ActionListener {
