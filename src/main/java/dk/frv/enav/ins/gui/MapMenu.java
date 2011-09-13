@@ -57,7 +57,7 @@ import com.bbn.openmap.MapBean;
 import com.bbn.openmap.MouseDelegator;
 
 import dk.frv.enav.ins.ais.AisAdressedRouteSuggestion;
-import dk.frv.enav.ins.ais.AisTargets;
+import dk.frv.enav.ins.ais.AisHandler;
 import dk.frv.enav.ins.ais.SarTarget;
 import dk.frv.enav.ins.ais.VesselTarget;
 import dk.frv.enav.ins.gps.GpsHandler;
@@ -142,7 +142,7 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 	private Map<Integer, String> map;
 	private NewRouteContainerLayer newRouteLayer;
 	private AisLayer aisLayer;
-	private AisTargets aisTargets;
+	private AisHandler aisHandler;
 	private MouseDelegator mouseDelegator;
 
 	public MapMenu() {
@@ -258,8 +258,8 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 			scaleMenu.add(menuItem);
 		}
 		
-		hideIntendedRoutes.setAisTargets(aisTargets);
-		showIntendedRoutes.setAisTargets(aisTargets);
+		hideIntendedRoutes.setAisHandler(aisHandler);
+		showIntendedRoutes.setAisHandler(aisHandler);
 		
 		newRoute.setMouseDelegator(mouseDelegator);
 		newRoute.setMainFrame(mainFrame);
@@ -536,8 +536,8 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 		if(obj instanceof AisLayer){
 			aisLayer = (AisLayer) obj;
 		}
-		if(obj instanceof AisTargets){
-			aisTargets = (AisTargets) obj;
+		if(obj instanceof AisHandler){
+			aisHandler = (AisHandler) obj;
 		}
 		if (obj instanceof GpsHandler) {
 			gpsHandler = (GpsHandler)obj;

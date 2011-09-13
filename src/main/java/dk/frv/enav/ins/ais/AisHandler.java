@@ -64,9 +64,9 @@ import dk.frv.enav.ins.status.AisStatus;
 import dk.frv.enav.ins.status.ComponentStatus;
 import dk.frv.enav.ins.status.IStatusComponent;
 
-public class AisTargets extends MapHandlerChild implements IAisListener, IStatusComponent, Runnable {
+public class AisHandler extends MapHandlerChild implements IAisListener, IStatusComponent, Runnable {
 
-	private static final Logger LOG = Logger.getLogger(AisTargets.class);
+	private static final Logger LOG = Logger.getLogger(AisHandler.class);
 
 	// How long targets are saved without reports
 	private static final long TARGET_TTL = 60 * 60 * 1000; // One hour
@@ -85,7 +85,7 @@ public class AisTargets extends MapHandlerChild implements IAisListener, IStatus
 	private AisStatus aisStatus = new AisStatus();
 	private String sartMmsiPrefix = "970";
 	
-	public AisTargets() {
+	public AisHandler() {
 		if (EeINS.getSettings().getSensorSettings().isSimulateGps() && EeINS.getSettings().getSensorSettings().getAisSensorRange() == 0) {
 			aisRange = SIMULATED_AIS_RANGE;
 			ownShip.setMmsi(EeINS.getSettings().getSensorSettings().getSimulatedOwnShip());
@@ -95,7 +95,7 @@ public class AisTargets extends MapHandlerChild implements IAisListener, IStatus
 		nameCache = new NameCache();
 		nameCache.loadFromFile();
 		sartMmsiPrefix = EeINS.getSettings().getAisSettings().getSartPrefix();
-		EeINS.startThread(this, "AisTargets");
+		EeINS.startThread(this, "AisHandler");
 	}
 
 	public synchronized AisTarget getTarget(long mmsi) {

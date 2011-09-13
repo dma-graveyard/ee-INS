@@ -36,7 +36,7 @@ import com.bbn.openmap.omGraphics.OMCircle;
 import com.bbn.openmap.omGraphics.OMGraphicList;
 
 import dk.frv.enav.ins.ais.AisTarget;
-import dk.frv.enav.ins.ais.AisTargets;
+import dk.frv.enav.ins.ais.AisHandler;
 import dk.frv.enav.ins.ais.IAisTargetListener;
 import dk.frv.enav.ins.ais.VesselTarget;
 import dk.frv.enav.ins.gps.GpsData;
@@ -64,7 +64,7 @@ public class ExampleLayer extends OMGraphicHandlerLayer implements IGpsDataListe
 	// A handler able to read and parse GPS messages
 	private GpsHandler gpsHandler = null;
 	// An AIS target table
-	private AisTargets aisTargets = null;
+	private AisHandler aisHandler = null;
 	// A manager doing the general route handling
 	private RouteManager routeManager = null;
 	
@@ -136,9 +136,9 @@ public class ExampleLayer extends OMGraphicHandlerLayer implements IGpsDataListe
 			gpsHandler = (GpsHandler)obj;
 			gpsHandler.addListener(this);
 		}
-		if (aisTargets == null && obj instanceof AisTargets) {
-			aisTargets = (AisTargets)obj;
-			aisTargets.addListener(this);
+		if (aisHandler == null && obj instanceof AisHandler) {
+			aisHandler = (AisHandler)obj;
+			aisHandler.addListener(this);
 		}
 		if (routeManager == null && obj instanceof RouteManager) {
 			routeManager = (RouteManager)obj;
@@ -155,9 +155,9 @@ public class ExampleLayer extends OMGraphicHandlerLayer implements IGpsDataListe
 			gpsHandler.removeListener(this);
 			gpsHandler = null;
 		}
-		if (aisTargets == obj) {
-			aisTargets.removeListener(this);
-			aisTargets = null;
+		if (aisHandler == obj) {
+			aisHandler.removeListener(this);
+			aisHandler = null;
 		}
 		if (obj == routeManager) {
 			routeManager.removeListener(this);

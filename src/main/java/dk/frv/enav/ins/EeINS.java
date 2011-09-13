@@ -44,7 +44,7 @@ import org.apache.log4j.xml.DOMConfigurator;
 import com.bbn.openmap.MapHandler;
 import com.bbn.openmap.PropertyConsumer;
 
-import dk.frv.enav.ins.ais.AisTargets;
+import dk.frv.enav.ins.ais.AisHandler;
 import dk.frv.enav.ins.gps.GnssTime;
 import dk.frv.enav.ins.gps.GpsHandler;
 import dk.frv.enav.ins.gui.MainFrame;
@@ -75,7 +75,7 @@ public class EeINS {
 	private static NmeaSensor aisSensor;
 	private static NmeaSensor gpsSensor;
 	private static GpsHandler gpsHandler;
-	private static AisTargets aisTargets;
+	private static AisHandler aisHandler;
 	private static RouteManager routeManager;
 	private static ShoreServices shoreServices;
 	private static AisServices aisServices;
@@ -136,8 +136,8 @@ public class EeINS {
         mapHandler.add(gpsHandler);        
         
         // Start AIS target monitoring
-        aisTargets = new AisTargets();        
-        mapHandler.add(aisTargets);
+        aisHandler = new AisHandler();        
+        mapHandler.add(aisHandler);
         
         // Load routeManager and register as GPS data listener
         routeManager = RouteManager.loadRouteManager();
@@ -280,7 +280,7 @@ public class EeINS {
 		settings.saveToFile();
 		routeManager.saveToFile();
 		msiHandler.saveToFile();
-		aisTargets.saveToFile();		
+		aisHandler.saveToFile();		
 		LOG.info("Closing ee-INS");
 		System.exit(restart ? 2 : 0);
 	}
@@ -347,8 +347,8 @@ public class EeINS {
 		return mainFrame;
 	}
 	
-	public static AisTargets getAisTargets() {
-		return aisTargets;
+	public static AisHandler getAisHandler() {
+		return aisHandler;
 	}
 	
 	public static RouteManager getRouteManager() {

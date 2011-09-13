@@ -31,7 +31,7 @@ package dk.frv.enav.ins.gui.menuitems;
 
 import javax.swing.JMenuItem;
 
-import dk.frv.enav.ins.ais.AisTargets;
+import dk.frv.enav.ins.ais.AisHandler;
 
 public class GeneralShowIntendedRoutes extends JMenuItem implements IMapMenuAction {
 	
@@ -39,7 +39,7 @@ public class GeneralShowIntendedRoutes extends JMenuItem implements IMapMenuActi
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private AisTargets aisTargets;
+	private AisHandler aisHandler;
 
 	public GeneralShowIntendedRoutes(String text) {
 		super();
@@ -48,11 +48,11 @@ public class GeneralShowIntendedRoutes extends JMenuItem implements IMapMenuActi
 	
 	@Override
 	public void doAction() {
-		aisTargets.showAllIntendedRoutes();
+		aisHandler.showAllIntendedRoutes();
 	}
 	
-	public void setAisTargets(AisTargets aisTargets) {
-		this.aisTargets = aisTargets;
+	public void setAisHandler(AisHandler aisHandler) {
+		this.aisHandler = aisHandler;
 	}
 
 }

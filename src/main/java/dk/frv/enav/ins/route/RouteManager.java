@@ -53,7 +53,7 @@ import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.ais.AisAdressedRouteSuggestion;
 import dk.frv.enav.ins.ais.AisBroadcastRouteSuggestion;
 import dk.frv.enav.ins.ais.AisRouteData;
-import dk.frv.enav.ins.ais.AisTargets;
+import dk.frv.enav.ins.ais.AisHandler;
 import dk.frv.enav.ins.ais.IAisRouteSuggestionListener;
 import dk.frv.enav.ins.ais.AisAdressedRouteSuggestion.Status;
 import dk.frv.enav.ins.gps.GnssTime;
@@ -80,7 +80,7 @@ public class RouteManager extends MapHandlerChild implements Runnable, Serializa
 	private GpsHandler gpsHandler = null;
 	private AisServices aisServices = null;
 	private ShoreServices shoreServices = null;
-	private AisTargets aisTargets = null;
+	private AisHandler aisHandler = null;
 	private RouteSuggestionDialog routeSuggestionDialog = null;
 
 	private Set<IRoutesUpdateListener> listeners = new HashSet<IRoutesUpdateListener>();
@@ -518,9 +518,9 @@ public class RouteManager extends MapHandlerChild implements Runnable, Serializa
 			gpsHandler = (GpsHandler) obj;
 			gpsHandler.addListener(this);
 		}
-		if (aisTargets == null && obj instanceof AisTargets) {
-			aisTargets = (AisTargets)obj;
-			aisTargets.addRouteSuggestionListener(this);
+		if (aisHandler == null && obj instanceof AisHandler) {
+			aisHandler = (AisHandler)obj;
+			aisHandler.addRouteSuggestionListener(this);
 		}
 		if (obj instanceof RouteSuggestionDialog) {
 			routeSuggestionDialog = (RouteSuggestionDialog)obj;

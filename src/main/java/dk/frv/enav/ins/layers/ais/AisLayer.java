@@ -50,7 +50,7 @@ import com.bbn.openmap.omGraphics.OMList;
 
 import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.ais.AisTarget;
-import dk.frv.enav.ins.ais.AisTargets;
+import dk.frv.enav.ins.ais.AisHandler;
 import dk.frv.enav.ins.ais.AtoNTarget;
 import dk.frv.enav.ins.ais.IAisTargetListener;
 import dk.frv.enav.ins.ais.SarTarget;
@@ -68,7 +68,7 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 
 	private long minRedrawInterval = 5 * 1000; // 5 sec
 
-	private AisTargets aisTargets = null;
+	private AisHandler aisHandler = null;
 	private MapBean mapBean = null;
 	private MainFrame mainFrame = null;
 	private IntendedRouteInfoPanel intendedRouteInfoPanel = new IntendedRouteInfoPanel();
@@ -134,7 +134,7 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 		// Create and insert
 		if (targetGraphic == null) {
 			if (aisTarget instanceof VesselTarget) {
-				targetGraphic = new VesselTargetGraphic(aisTargets.getNameCache().getName(mmsi));
+				targetGraphic = new VesselTargetGraphic(aisHandler.getNameCache().getName(mmsi));
 			} else if (aisTarget instanceof SarTarget) {
 				targetGraphic = new SarTargetGraphic();
 			} else if (aisTarget instanceof AtoNTarget) {
@@ -239,9 +239,9 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 
 	@Override
 	public void findAndInit(Object obj) {
-		if (obj instanceof AisTargets) {
-			aisTargets = (AisTargets) obj;
-			aisTargets.addListener(this);
+		if (obj instanceof AisHandler) {
+			aisHandler = (AisHandler) obj;
+			aisHandler.addListener(this);
 		}
 		if (obj instanceof MapBean) {
 			mapBean = (MapBean) obj;
@@ -262,8 +262,8 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 
 	@Override
 	public void findAndUndo(Object obj) {
-		if (obj == aisTargets) {
-			aisTargets.removeListener(this);
+		if (obj == aisHandler) {
+			aisHandler.removeListener(this);
 		}
 	}
 

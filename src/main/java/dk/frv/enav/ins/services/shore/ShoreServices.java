@@ -41,7 +41,7 @@ import dk.frv.enav.common.xml.metoc.request.MetocForecastRequest;
 import dk.frv.enav.common.xml.metoc.response.MetocForecastResponse;
 import dk.frv.enav.common.xml.msi.request.MsiPollRequest;
 import dk.frv.enav.common.xml.msi.response.MsiResponse;
-import dk.frv.enav.ins.ais.AisTargets;
+import dk.frv.enav.ins.ais.AisHandler;
 import dk.frv.enav.ins.gps.GpsData;
 import dk.frv.enav.ins.gps.GpsHandler;
 import dk.frv.enav.ins.route.ActiveRoute;
@@ -55,7 +55,7 @@ public class ShoreServices extends MapHandlerChild implements IStatusComponent {
 	
 	private static final Logger LOG = Logger.getLogger(ShoreServices.class);
 
-	private AisTargets aisTargets;
+	private AisHandler aisHandler;
 	private GpsHandler gpsHandler;
 	private EnavSettings enavSettings;
 	private ShoreServiceStatus status = new ShoreServiceStatus();
@@ -100,8 +100,8 @@ public class ShoreServices extends MapHandlerChild implements IStatusComponent {
 	}
 	
 	private void addRequestParameters(ShoreServiceRequest request) throws ShoreServiceException {		
-		if (aisTargets != null && aisTargets.getOwnShip() != null) {
-		    request.setMmsi(aisTargets.getOwnShip().getMmsi());
+		if (aisHandler != null && aisHandler.getOwnShip() != null) {
+		    request.setMmsi(aisHandler.getOwnShip().getMmsi());
 		}
 		
 		// TODO Maybe include pos report
@@ -152,8 +152,8 @@ public class ShoreServices extends MapHandlerChild implements IStatusComponent {
 		
 	@Override
 	public void findAndInit(Object obj) {
-		if (aisTargets == null && obj instanceof AisTargets) {
-			aisTargets = (AisTargets)obj;
+		if (aisHandler == null && obj instanceof AisHandler) {
+			aisHandler = (AisHandler)obj;
 		}
 		if (gpsHandler == null && obj instanceof GpsHandler) {
 			gpsHandler = (GpsHandler)obj;
@@ -162,8 +162,8 @@ public class ShoreServices extends MapHandlerChild implements IStatusComponent {
 	
 	@Override
 	public void findAndUndo(Object obj) {
-		if (obj == aisTargets) {
-			aisTargets = null;
+		if (obj == aisHandler) {
+			aisHandler = null;
 		} else if (obj == gpsHandler) {
 			gpsHandler = null;
 		}		
