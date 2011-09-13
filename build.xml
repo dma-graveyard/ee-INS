@@ -76,8 +76,7 @@
 		<copy file="${build.dir}/${build.final.name}" todir="${distdir}/lib" overwrite="true"/>
 		<copy todir="${distdir}/lib">
 			<fileset dir="${extlib}">
-				<include name="/*.jar" />
-				<exclude name="/svnAnt"/>
+				<include name="*.jar" />
 			</fileset>
 		</copy>
 		<copy todir="${distdir}" overwrite="false">
