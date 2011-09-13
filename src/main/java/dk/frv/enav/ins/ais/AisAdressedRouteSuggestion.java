@@ -34,9 +34,15 @@ import java.util.Date;
 import dk.frv.ais.message.binary.RouteInformation;
 import dk.frv.enav.ins.gps.GnssTime;
 
+/**
+ * Class representing an addressed route suggestion
+ */
 public class AisAdressedRouteSuggestion extends AisIntendedRoute {
 	private static final long serialVersionUID = 1L;
 	
+	/**
+	 * Possible status of a suggestion
+	 */
 	public enum Status {
 		PENDING,
 		ACCEPTED,
@@ -49,12 +55,18 @@ public class AisAdressedRouteSuggestion extends AisIntendedRoute {
 	private Status status = Status.PENDING;
 	private boolean hidden = false;
 
-	// Copy construct
+	/**
+	 * Copy constructor
+	 * @param routeSuggestion
+	 */
 	public AisAdressedRouteSuggestion(AisAdressedRouteSuggestion routeSuggestion) {
 		super(routeSuggestion);
 	}
 	
-
+	/**
+	 * Constructor given AIS route information
+	 * @param routeInformation
+	 */
 	public AisAdressedRouteSuggestion(RouteInformation routeInformation) {
 		super(routeInformation);
 		

@@ -64,6 +64,9 @@ import dk.frv.enav.ins.status.AisStatus;
 import dk.frv.enav.ins.status.ComponentStatus;
 import dk.frv.enav.ins.status.IStatusComponent;
 
+/**
+ * Class for handling incoming AIS messages and maintainer of AIS target tables 
+ */
 public class AisHandler extends MapHandlerChild implements IAisListener, IStatusComponent, Runnable {
 
 	private static final Logger LOG = Logger.getLogger(AisHandler.class);
@@ -81,7 +84,6 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 	private double aisRange = 0;
 	private NmeaSensor nmeaSensor = null;
 	private AisServices aisServices = null;
-	private NameCache nameCache;
 	private AisStatus aisStatus = new AisStatus();
 	private String sartMmsiPrefix = "970";
 	
@@ -92,12 +94,15 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 		} else {
 			aisRange = EeINS.getSettings().getSensorSettings().getAisSensorRange();
 		}
-		nameCache = new NameCache();
-		nameCache.loadFromFile();
 		sartMmsiPrefix = EeINS.getSettings().getAisSettings().getSartPrefix();
 		EeINS.startThread(this, "AisHandler");
 	}
 
+	/**
+	 * Get target with mmsi
+	 * @param mmsi
+	 * @return
+	 */
 	public synchronized AisTarget getTarget(long mmsi) {
 		if (vesselTargets.containsKey(mmsi)) {
 			return new VesselTarget(vesselTargets.get(mmsi));
@@ -212,6 +217,10 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 		}
 	}
 
+	/**
+	 * Method for receiving own ship AIS messages
+	 * @param aisMessage
+	 */
 	@Override
 	public synchronized void receiveOwnMessage(AisMessage aisMessage) {
 		if (aisMessage instanceof AisPositionMessage) {
@@ -232,6 +241,10 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 
 	}
 
+	/**
+	 * Update AtoN target
+	 * @param msg21
+	 */
 	private synchronized void updateAton(AisMessage21 msg21) {
 		if (!isWithinRange(msg21.getPos().getGeoLocation())) {
 			return;
@@ -254,6 +267,11 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 		publishUpdate(atonTarget);
 	}
 	
+	/**
+	 * Update intended route of vessel target
+	 * @param mmsi
+	 * @param routeData
+	 */
 	private synchronized void updateIntendedRoute(long mmsi, AisIntendedRoute routeData) {
 		// Try to find exiting target
 		VesselTarget vesselTarget = vesselTargets.get(mmsi);
@@ -265,7 +283,12 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 		vesselTarget.setAisRouteData(routeData);
 		publishUpdate(vesselTarget);
 	}
-
+	
+	/**
+	 * Update vessel target statics
+	 * @param mmsi
+	 * @param staticData
+	 */
 	private synchronized void updateStatics(long mmsi, VesselStaticData staticData) {
 		// Determine if this is SART
 		if (isSarTarget(mmsi)) {			
@@ -282,10 +305,12 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 		// Update static data
 		vesselTarget.setStaticData(staticData);
 		
-		// Update name cache
-		nameCache.setName(mmsi, staticData.getName());
 	}
 	
+	/**
+	 * Update class b vessel statics
+	 * @param msg24
+	 */
 	private synchronized void updateClassBStatics(AisMessage24 msg24) {
 		// Try to find exiting target
 		VesselTarget vesselTarget = vesselTargets.get(msg24.getUserId());
@@ -303,12 +328,13 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 			staticData.update(msg24);
 		}
 		
-		// Update name cache
-		if (staticData.getName() != null) {
-			nameCache.setName(msg24.getUserId(), staticData.getName());
-		}
 	}
 	
+	/**
+	 * Update SART statics
+	 * @param mmsi
+	 * @param staticData
+	 */
 	private synchronized void updateSartStatics(long mmsi, VesselStaticData staticData) {
 		// Try to find exiting target
 		SarTarget sarTarget = sarTargets.get(mmsi);
@@ -320,16 +346,23 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 		sarTarget.setStaticData(staticData);
 	}
 	
-	public NameCache getNameCache() {
-		return nameCache;
-	}
-	
+	/**
+	 * Determine if mmsi belongs to a SART
+	 * @param mmsi
+	 * @return
+	 */
 	public boolean isSarTarget(long mmsi) {
 		// AIS-SART transponder MMSI begins with 970
 		String strMmsi = Long.toString(mmsi);
 		return strMmsi.startsWith(sartMmsiPrefix);
 	}
 
+	/**
+	 * Update vessel target position data
+	 * @param mmsi
+	 * @param positionData
+	 * @param aisClass
+	 */
 	private synchronized void updatePos(long mmsi, VesselPositionData positionData, VesselTarget.AisClass aisClass) {
 		if (!isWithinRange(positionData.getPos())) {
 			return;
@@ -363,6 +396,11 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 		publishUpdate(vesselTarget);
 	}
 	
+	/**
+	 * Update SART position data
+	 * @param mmsi
+	 * @param positionData
+	 */
 	private synchronized void updateSartPos(long mmsi,  VesselPositionData positionData) {
 		Date now = GnssTime.getInstance().getDate();
 		// Try to find target
@@ -386,6 +424,11 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 		publishUpdate(sarTarget);
 	}
 	
+	/**
+	 * Determine if position is within range
+	 * @param pos
+	 * @return
+	 */
 	private synchronized boolean isWithinRange(GeoLocation pos) {
 		if (getAisRange() <= 0) {
 			return true;
@@ -405,33 +448,30 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 		return (distance <= aisRange);		
 	}
 
-	private synchronized void publishUpdate(AisTarget aisTarget) {		
-//		AisTarget copy;
-//		if (aisTarget instanceof VesselTarget) {
-//			copy = new VesselTarget((VesselTarget) aisTarget);
-//		} else {
-//			copy = new AtoNTarget((AtoNTarget) aisTarget);
-//		}
-		
+	/**
+	 * Publish the update of a target to all listeners
+	 * @param aisTarget
+	 */
+	private void publishUpdate(AisTarget aisTarget) {		
 		for (IAisTargetListener listener : listeners) {
 			//listener.targetUpdated(copy);
 			listener.targetUpdated(aisTarget);
 		}
 	}
 	
-	public synchronized void addListener(IAisTargetListener targetListener) {
+	public void addListener(IAisTargetListener targetListener) {
 		listeners.add(targetListener);
 	}
 	
-	public synchronized void removeListener(IAisTargetListener targetListener) {
+	public void removeListener(IAisTargetListener targetListener) {
 		listeners.remove(targetListener);
 	}
 	
-	public synchronized void addRouteSuggestionListener(IAisRouteSuggestionListener routeSuggestionListener) {
+	public void addRouteSuggestionListener(IAisRouteSuggestionListener routeSuggestionListener) {
 		suggestionListeners.add(routeSuggestionListener);
 	}
 	
-	public synchronized void removeRouteSuggestionListener(IAisRouteSuggestionListener routeSuggestionListener) {
+	public void removeRouteSuggestionListener(IAisRouteSuggestionListener routeSuggestionListener) {
 		suggestionListeners.remove(routeSuggestionListener);
 	}
 	
@@ -440,6 +480,9 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 		return new VesselTarget(ownShip);
 	}
 
+	/**
+	 * Update status of all targets
+	 */
 	private synchronized void updateStatus() {
 		Date now = GnssTime.getInstance().getDate();
 		List<Long> deadTargets = new ArrayList<Long>();
@@ -497,7 +540,7 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 	 * @param now
 	 * @return
 	 */
-	private synchronized boolean updateTarget(AisTarget aisTarget, Date now) {
+	private boolean updateTarget(AisTarget aisTarget, Date now) {
 		if (aisTarget.isGone()) {
 			// Maybe too old and needs to be deleted
 			if (aisTarget.isDeadTarget(TARGET_TTL, now)) {							
@@ -527,11 +570,6 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 		return false;
 	}
 	
-	public synchronized void saveToFile() {
-		nameCache.saveToFile();
-	}
-
-
 	public double getAisRange() {
 		return aisRange;
 	}

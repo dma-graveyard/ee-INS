@@ -29,8 +29,15 @@
  */
 package dk.frv.enav.ins.ais;
 
+/**
+ * Interface to implement for classes wanting to receive AIS target updates
+ */
 public interface IAisTargetListener {
 	
+	/**
+	 * Called when aisTarget has been updated
+	 * @param aisTarget
+	 */
 	void targetUpdated(AisTarget aisTarget);
 
 }

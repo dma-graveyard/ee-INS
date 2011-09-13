@@ -27,12 +27,11 @@
  * either expressed or implied, of Danish Maritime Safety Administration.
  * 
  */
-package dk.frv.enav.ins.ais;
+package dk.frv.enav.ins.layers.ais;
 
 import javax.swing.ImageIcon;
 
 import dk.frv.enav.ins.common.graphics.CenterRaster;
-import dk.frv.enav.ins.layers.ais.SarTargetGraphic;
 
 public class SartGraphic extends CenterRaster {
 	private static final long serialVersionUID = 1L;

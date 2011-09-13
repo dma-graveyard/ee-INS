@@ -33,17 +33,27 @@ import java.util.Date;
 
 import dk.frv.ais.message.binary.RouteInformation;
 
+/**
+ * Class representing a broadcast route suggestion
+ */
 public class AisBroadcastRouteSuggestion extends AisRouteData {
 	private static final long serialVersionUID = 1L;
 	
 	private Date validFrom;
 	private Date validTo;
 	
-	// Copy contructor
+	/**
+	 * Copy constructor
+	 * @param broadcastRouteSuggestion
+	 */
 	public AisBroadcastRouteSuggestion(AisBroadcastRouteSuggestion broadcastRouteSuggestion) {
 		super(broadcastRouteSuggestion);
 	}
 	
+	/**
+	 * Constructor given AIS route information
+	 * @param routeInformation
+	 */
 	public AisBroadcastRouteSuggestion(RouteInformation routeInformation) {
 		super(routeInformation);
 		validFrom = etaFirst;

@@ -35,6 +35,9 @@ import java.util.List;
 
 import dk.frv.ais.message.binary.RouteInformation;
 
+/**
+ * Class representing an AIS intended route
+ */
 public class AisIntendedRoute extends AisRouteData {
 	private static final long serialVersionUID = 1L;
 			
@@ -42,6 +45,10 @@ public class AisIntendedRoute extends AisRouteData {
 	protected Double speed = null;
 	protected Double activeWpRange = null;
 	
+	/**
+	 * Copy constructor
+	 * @param routeData
+	 */
 	public AisIntendedRoute(AisIntendedRoute routeData) {
 		super(routeData);
 		this.etas = routeData.etas;
@@ -49,6 +56,10 @@ public class AisIntendedRoute extends AisRouteData {
 		this.activeWpRange = routeData.activeWpRange;
 	}
 	
+	/**
+	 * Constructor given AIS route information
+	 * @param routeInformation
+	 */
 	public AisIntendedRoute(RouteInformation routeInformation) {
 		super(routeInformation);
 		if (duration == 0) {
@@ -71,6 +82,10 @@ public class AisIntendedRoute extends AisRouteData {
 		
 	}
 		
+	/**
+	 * Update range to active WP given the targets new position
+	 * @param posData
+	 */
 	public void update(VesselPositionData posData) {
 		if (posData == null || posData.getPos() == null || waypoints.size() == 0) {
 			return;

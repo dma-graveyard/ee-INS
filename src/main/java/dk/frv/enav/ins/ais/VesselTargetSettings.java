@@ -31,33 +31,59 @@ package dk.frv.enav.ins.ais;
 
 import java.io.Serializable;
 
+/**
+ * Class holding settings for vessel targets
+ */
 public class VesselTargetSettings implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private boolean hide = false;
 	private boolean showRoute = false;
 	
+	/**
+	 * Empty constructor
+	 */
 	public VesselTargetSettings() {
 		
 	}
 	
+	/**
+	 * Copy constructor
+	 * @param settings
+	 */
 	public VesselTargetSettings(VesselTargetSettings settings) {
 		this.hide = settings.hide;
 		this.showRoute = settings.showRoute;
 	}
 
+	/**
+	 * Is the target hidden on the display or not
+	 * @return
+	 */
 	public boolean isHide() {
 		return hide;
 	}
 
+	/**
+	 * Set visibility
+	 * @param hide
+	 */
 	public void setHide(boolean hide) {
 		this.hide = hide;
 	}
 
+	/**
+	 * Will the intended route be shown for the target if it is available
+	 * @return
+	 */
 	public boolean isShowRoute() {
 		return showRoute;
 	}
 
+	/**
+	 * Set visibility of intended route
+	 * @param showRoute
+	 */
 	public void setShowRoute(boolean showRoute) {
 		this.showRoute = showRoute;
 	}

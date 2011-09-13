@@ -280,7 +280,6 @@ public class EeINS {
 		settings.saveToFile();
 		routeManager.saveToFile();
 		msiHandler.saveToFile();
-		aisHandler.saveToFile();		
 		LOG.info("Closing ee-INS");
 		System.exit(restart ? 2 : 0);
 	}

@@ -29,8 +29,15 @@
  */
 package dk.frv.enav.ins.ais;
 
+/**
+ * Interface to implement for classes wanting to receive route suggestions
+ */
 public interface IAisRouteSuggestionListener {
 	
+	/**
+	 * Method called when routeSuggestion is received
+	 * @param routeSuggestion
+	 */
 	void receiveRouteSuggestion(AisRouteData routeSuggestion);
 
 }

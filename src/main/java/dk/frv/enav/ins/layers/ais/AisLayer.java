@@ -54,7 +54,6 @@ import dk.frv.enav.ins.ais.AisHandler;
 import dk.frv.enav.ins.ais.AtoNTarget;
 import dk.frv.enav.ins.ais.IAisTargetListener;
 import dk.frv.enav.ins.ais.SarTarget;
-import dk.frv.enav.ins.ais.SartGraphic;
 import dk.frv.enav.ins.ais.VesselTarget;
 import dk.frv.enav.ins.event.NavigationMouseMode;
 import dk.frv.enav.ins.gps.GpsHandler;
@@ -134,7 +133,7 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 		// Create and insert
 		if (targetGraphic == null) {
 			if (aisTarget instanceof VesselTarget) {
-				targetGraphic = new VesselTargetGraphic(aisHandler.getNameCache().getName(mmsi));
+				targetGraphic = new VesselTargetGraphic();
 			} else if (aisTarget instanceof SarTarget) {
 				targetGraphic = new SarTargetGraphic();
 			} else if (aisTarget instanceof AtoNTarget) {

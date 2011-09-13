@@ -40,6 +40,9 @@ import dk.frv.ais.geo.GeoLocation;
 import dk.frv.ais.message.binary.RouteInformation;
 import dk.frv.enav.ins.gps.GnssTime;
 
+/**
+ * Abstract base class for AIS route data
+ */
 public abstract class AisRouteData implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
@@ -55,6 +58,10 @@ public abstract class AisRouteData implements Serializable {
 	protected int routeType;
 	protected int senderClassification;
 	
+	/**
+	 * Copy constructor
+	 * @param routeData
+	 */
 	public AisRouteData(AisRouteData routeData) {
 		this.waypoints = routeData.waypoints;
 		this.received = routeData.received;
@@ -65,6 +72,10 @@ public abstract class AisRouteData implements Serializable {
 		this.etaLast = routeData.etaLast;
 	}
 	
+	/**
+	 * Constructor given AIS route information
+	 * @param routeInformation
+	 */
 	public AisRouteData(RouteInformation routeInformation) {
 		received = GnssTime.getInstance().getDate();
 		

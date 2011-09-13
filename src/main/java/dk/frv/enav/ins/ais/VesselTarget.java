@@ -33,18 +33,31 @@ import java.util.Date;
 
 import dk.frv.enav.ins.gps.GnssTime;
 
+/**
+ * Class representing an AIS vessel target
+ */
 public class VesselTarget extends AisTarget {
-	
+
+	/**
+	 * Time an intended route is considered valid without update
+	 */
 	public static final long ROUTE_TTL = 10 * 60 * 1000; // 10 min
 	
+	/**
+	 * Target class A or B 
+	 */
 	public enum AisClass {A, B};
 	
-	private VesselPositionData positionData = null;
+	private VesselPositionData positionData = null;	
 	private VesselStaticData staticData = null;
 	private AisIntendedRoute aisIntendedRoute = null;
 	private AisClass aisClass; 
 	private VesselTargetSettings settings;
 
+	/**
+	 * Copy constructor
+	 * @param vesselTarget
+	 */
 	public VesselTarget(VesselTarget vesselTarget) {
 		super(vesselTarget);
 	    this.aisClass = vesselTarget.aisClass;
@@ -62,6 +75,9 @@ public class VesselTarget extends AisTarget {
 	    }
 	}
 
+	/**
+	 * Empty constructor
+	 */
 	public VesselTarget() {
 		super();
 		settings = new VesselTargetSettings();
@@ -122,7 +138,6 @@ public class VesselTarget extends AisTarget {
 		Date now = GnssTime.getInstance().getDate();
 		long elapsed = now.getTime() - aisIntendedRoute.getReceived().getTime();
 		if (elapsed > ROUTE_TTL) {
-			System.out.println("checkAisRouteData invalidated current route");
 			aisIntendedRoute = null;
 			return true;
 		}
@@ -133,6 +148,12 @@ public class VesselTarget extends AisTarget {
 		return (aisIntendedRoute != null);
 	}
 
+	/**
+	 * Determine if the target has gone.
+	 * @param now will be used as current time
+	 * @param strict when strict is false more relaxed rules will used suitable for down sampled data
+	 * @return if the target has gone  
+	 */
 	@Override
 	public boolean hasGone(Date now, boolean strict) {
 		long elapsed = (now.getTime() - lastReceived.getTime()) / 1000;
@@ -163,7 +184,7 @@ public class VesselTarget extends AisTarget {
 			}
 		}
 		
-		// Some home made tollerance rules
+		// Some home made tolerance rules
 		if (strict) {
 			tol *= 4;
 			if (tol < 120) {

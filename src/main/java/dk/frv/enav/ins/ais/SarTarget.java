@@ -31,6 +31,9 @@ package dk.frv.enav.ins.ais;
 
 import java.util.Date;
 
+/**
+ * Class representing an AIS SART
+ */
 public class SarTarget extends AisTarget {
 	
 	private static final long OLD_TTL = 720; // 12 min
@@ -41,6 +44,10 @@ public class SarTarget extends AisTarget {
 	private boolean old = false;
 	private Date firstReceived = null;
 
+	/**
+	 * Copy constructor
+	 * @param sarTarget
+	 */
 	public SarTarget(SarTarget sarTarget) {
 		super(sarTarget);
 		if (sarTarget.positionData != null) {
@@ -51,10 +58,17 @@ public class SarTarget extends AisTarget {
 	    }
 	}
 	
+	/**
+	 * Empty constructor
+	 */
 	public SarTarget() {
 		super();
 	}
 
+	/**
+	 * Determines if the target should be considered gone
+	 * @return if the target has gone
+	 */
 	@Override
 	public boolean hasGone(Date now, boolean strict) {		
 		long elapsed = (now.getTime() - lastReceived.getTime()) / 1000;		
@@ -62,6 +76,11 @@ public class SarTarget extends AisTarget {
 		return elapsed > GONE_TTL;
 	}
 	
+	/**
+	 * Determine if the target has changed state to old
+	 * @param now
+	 * @return changed to old
+	 */
 	public boolean hasGoneOld(Date now) {
 		long elapsed = (now.getTime() - lastReceived.getTime()) / 1000;
 		boolean newOld = elapsed > OLD_TTL;

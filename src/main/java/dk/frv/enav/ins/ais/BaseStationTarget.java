@@ -33,6 +33,9 @@ import java.util.Date;
 
 import dk.frv.ais.message.AisMessage4;
 
+/**
+ * Class representing a base station target
+ */
 public class BaseStationTarget extends AisTarget {
 	
 	// TODO

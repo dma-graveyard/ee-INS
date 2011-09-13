@@ -32,6 +32,9 @@ package dk.frv.enav.ins.ais;
 import dk.frv.ais.message.AisMessage24;
 import dk.frv.ais.message.AisMessage5;
 
+/**
+ * Class representing the static data of an AIS vessel target
+ */
 public class VesselStaticData {
 
 	private long imo;
@@ -47,6 +50,10 @@ public class VesselStaticData {
 	private float draught;
 	private String destination;
 
+	/**
+	 * Copy constructor
+	 * @param vesselStaticData
+	 */
 	public VesselStaticData(VesselStaticData vesselStaticData) {
 		this.imo = vesselStaticData.imo;
 		this.callsign = vesselStaticData.callsign;		
@@ -62,6 +69,10 @@ public class VesselStaticData {
 		this.destination = vesselStaticData.destination;
 	}
 
+	/**
+	 * Constructor given AIS message #5
+	 * @param msg5
+	 */
 	public VesselStaticData(AisMessage5 msg5) {
 		imo = msg5.getImo();
 		callsign = msg5.getCallsign();
@@ -77,10 +88,18 @@ public class VesselStaticData {
 		destination = msg5.getDest();
 	}
 	
+	/**
+	 * Constructor given AIS message #24
+	 * @param msg24
+	 */
 	public VesselStaticData(AisMessage24 msg24) {
 		update(msg24);
 	}
 	
+	/**
+	 * Update static data given an AIS message #24
+	 * @param msg24
+	 */
 	public void update(AisMessage24 msg24) {
 		if (msg24.getPartNumber() == 0) {
 			// part A

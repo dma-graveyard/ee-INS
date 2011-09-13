@@ -34,6 +34,9 @@ import java.util.Date;
 import dk.frv.ais.geo.GeoLocation;
 import dk.frv.ais.message.AisMessage21;
 
+/**
+ * Class representing a AtoN target
+ */
 public class AtoNTarget extends AisTarget {
 	
 	private GeoLocation pos;
@@ -52,10 +55,17 @@ public class AtoNTarget extends AisTarget {
 	private int assigned;
 	private String nameExt;
 	
+	/**
+	 * Empty constructor
+	 */
 	public AtoNTarget() {
 		super();
 	}
 	
+	/**
+	 * Copy constructor
+	 * @param atoNTarget
+	 */
 	public AtoNTarget(AtoNTarget atoNTarget) {
 		super(atoNTarget);
 		pos = new GeoLocation(pos);
@@ -75,6 +85,10 @@ public class AtoNTarget extends AisTarget {
 		nameExt = atoNTarget.nameExt;
 	}
 	
+	/**
+	 * Update AtoN target given AIS message #21
+	 * @param msg21
+	 */
 	public void update(AisMessage21 msg21) {
 		pos = msg21.getPos().getGeoLocation();
 		atonType = msg21.getAtonType();
@@ -93,12 +107,14 @@ public class AtoNTarget extends AisTarget {
 		nameExt = msg21.getNameExt();
 	}
 	
+	/**
+	 * Determine if AtoN target has gone
+	 */
 	@Override
 	public boolean hasGone(Date now, boolean strict) {
 		long elapsed = (now.getTime() - lastReceived.getTime()) / 1000;		
 		// Base gone "loosely" on ITU-R Rec M1371-4 4.2.1  (3 minutes)
 		long tol = 600; // 10 minutes
-		
 		return (elapsed > tol);
 	}
 	

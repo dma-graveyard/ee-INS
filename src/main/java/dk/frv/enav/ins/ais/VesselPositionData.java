@@ -33,6 +33,9 @@ import dk.frv.ais.geo.GeoLocation;
 import dk.frv.ais.message.AisMessage18;
 import dk.frv.ais.message.AisPositionMessage;
 
+/**
+ * Class representing position data for an AIS vessel target
+ */
 public class VesselPositionData {
 	
 	private GeoLocation pos;
@@ -43,6 +46,27 @@ public class VesselPositionData {
 	private float cog;
 	private float trueHeading;
 	
+	/**
+	 * Copy constructor
+	 * @param vesselPositionData
+	 */
+	public VesselPositionData(VesselPositionData vesselPositionData) {
+		if (vesselPositionData.pos != null) {
+			pos = new GeoLocation(pos);
+		}
+	    navStatus = vesselPositionData.navStatus;
+	    rot = vesselPositionData.rot;
+	    sog = vesselPositionData.sog;
+	    posAcc = vesselPositionData.posAcc;
+	    cog = vesselPositionData.cog;
+	    trueHeading = vesselPositionData.trueHeading;
+	}
+
+	
+	/**
+	 * Constructor given an AIS position message #1, #2 or #3
+	 * @param aisPositionMessage
+	 */
 	public VesselPositionData(AisPositionMessage aisPositionMessage) {
 		pos = aisPositionMessage.getPos().getGeoLocation();
 		navStatus = aisPositionMessage.getNavStatus();
@@ -55,6 +79,10 @@ public class VesselPositionData {
 		validate();
 	}
 	
+	/**
+	 * Constructor given AIS message #18
+	 * @param aisPositionMessage18
+	 */
 	public VesselPositionData(AisMessage18 aisPositionMessage18) {
 		pos = aisPositionMessage18.getPos().getGeoLocation();
 		cog = aisPositionMessage18.getCog() / (float)10.0;
@@ -65,6 +93,9 @@ public class VesselPositionData {
 		validate();
 	}
 	
+	/**
+	 * Validate the current position data
+	 */
 	private void validate() {
 		// Handle unavailable speed and cog
 		if (sog > 100) {
@@ -79,19 +110,7 @@ public class VesselPositionData {
 			pos = null;
 		}
 	}
-	
-	public VesselPositionData(VesselPositionData vesselPositionData) {
-		if (vesselPositionData.pos != null) {
-			pos = new GeoLocation(pos);
-		}
-	    navStatus = vesselPositionData.navStatus;
-	    rot = vesselPositionData.rot;
-	    sog = vesselPositionData.sog;
-	    posAcc = vesselPositionData.posAcc;
-	    cog = vesselPositionData.cog;
-	    trueHeading = vesselPositionData.trueHeading;
-	}
-	
+		
 	public GeoLocation getPos() {
 		return pos;
 	}
@@ -144,7 +163,6 @@ public class VesselPositionData {
 		this.cog = cog;
 	}
 
-	
 	/**
 	 * Returns the heading in degrees. Heading 511 means the target is not available.
 	 * @return Heading in degrees

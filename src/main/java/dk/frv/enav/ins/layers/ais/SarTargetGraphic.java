@@ -41,7 +41,6 @@ import dk.frv.ais.geo.GeoLocation;
 import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.ais.AisTarget;
 import dk.frv.enav.ins.ais.SarTarget;
-import dk.frv.enav.ins.ais.SartGraphic;
 import dk.frv.enav.ins.ais.VesselPositionData;
 
 public class SarTargetGraphic extends TargetGraphic {

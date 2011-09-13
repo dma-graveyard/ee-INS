@@ -31,8 +31,14 @@ package dk.frv.enav.ins.ais;
 
 import java.util.Date;
 
+/**
+ * Abstract base class for AIS targets
+ */
 public abstract class AisTarget {
 	
+	/**
+	 * Status of target can either be OK og GONE
+	 */
 	public enum Status {OK, GONE};
 	
 	protected Date lastReceived;
@@ -42,7 +48,11 @@ public abstract class AisTarget {
 	public AisTarget() {
 		status = Status.OK;
 	}
-	
+
+	/**
+	 * Copy constructor
+	 * @param aisTarget
+	 */
 	public AisTarget(AisTarget aisTarget) {
 		lastReceived = aisTarget.lastReceived;
 		mmsi = aisTarget.mmsi;
@@ -57,6 +67,12 @@ public abstract class AisTarget {
 	 */
 	public abstract boolean hasGone(Date now, boolean strict);
 	
+	/**
+	 * Determine if target is dead given ttl (time-to-live)
+	 * @param ttl
+	 * @param now
+	 * @return
+	 */
 	public boolean isDeadTarget(long ttl, Date now) {
 		return (now.getTime() - lastReceived.getTime() > ttl);		
 	}

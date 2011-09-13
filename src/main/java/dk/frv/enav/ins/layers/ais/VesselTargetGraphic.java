@@ -79,18 +79,11 @@ public class VesselTargetGraphic extends TargetGraphic {
 	private int[] markY = { 0, 0 };
 	private Paint paint;
 	private Stroke stroke;
-	private String cachedName = null;
 	private IntendedRouteGraphic routeGraphic = new IntendedRouteGraphic();
 	private Boolean showNameLabel;
 
 	public VesselTargetGraphic() {
 		super();
-	}
-
-	public VesselTargetGraphic(String name) {
-		this();
-		this.cachedName = name;
-		this.showNameLabel = EeINS.getSettings().getAisSettings().isShowNameLabels();
 	}
 
 	private void createGraphics() {
@@ -200,9 +193,7 @@ public class VesselTargetGraphic extends TargetGraphic {
 		// Determine name
 		String name;
 		if (staticData != null) {
-			name = AisMessage.trimText(staticData.getName());			
-		} else if (cachedName != null) {
-			name = cachedName;
+			name = AisMessage.trimText(staticData.getName());
 		} else {
 			Long mmsi = vesselTarget.getMmsi();
 			name = "ID:" + mmsi.toString();
