@@ -35,20 +35,26 @@ import java.awt.Toolkit;
 import com.bbn.openmap.omGraphics.OMRaster;
 
 import dk.frv.ais.geo.GeoLocation;
-import dk.frv.enav.common.xml.msi.MsiMessage;
 import dk.frv.enav.ins.EeINS;
+import dk.frv.enav.ins.msi.MsiHandler.MsiMessageExtended;
 
 public class MsiSymbolGraphic extends MsiSymbolPosition {
 	private static final long serialVersionUID = 1L;
 	
-	public MsiSymbolGraphic(MsiMessage msiMessage) {
-		super(msiMessage, false);
+	public MsiSymbolGraphic(MsiMessageExtended message) {
+		super(message);
 		setVague(true);
 	}
 	
 	public void createSymbol(GeoLocation pos) {
-		Image msiSymbolImage = Toolkit.getDefaultToolkit().getImage(EeINS.class.getResource("/images/msi/msi_symbol_32.png"));
-		OMRaster msiSymbol = new OMRaster(pos.getLatitude(), pos.getLongitude(), -16, -16, msiSymbolImage);
+		OMRaster msiSymbol;
+		if(acknowledged) {
+			Image msiSymbolImage = Toolkit.getDefaultToolkit().getImage(EeINS.class.getResource("/images/msi/msi_symbol_32.png"));
+			msiSymbol = new OMRaster(pos.getLatitude(), pos.getLongitude(), -16, -16, msiSymbolImage);
+		} else {
+			Image msiSymbolImage = Toolkit.getDefaultToolkit().getImage(EeINS.class.getResource("/images/msi/msi_unack_symbol_34.png"));
+			msiSymbol = new OMRaster(pos.getLatitude(), pos.getLongitude(), -17, -17, msiSymbolImage);
+		}
 		//msiSymbol.scaleTo(32, 32, OMRasterObject.SMOOTH_SCALING);
 		add(msiSymbol);
 		

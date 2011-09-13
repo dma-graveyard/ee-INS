@@ -125,7 +125,7 @@ public class MsiLayer extends OMGraphicHandlerLayer implements MapMouseListener 
 				MsiDirectionalIcon direction = new MsiDirectionalIcon(mapBean);
 				direction.setMarker(message.msiMessage.getLocation().getCenter());
 				graphics.add(direction);
-			}			
+			}
 		}
 		doPrepare();
 	}

@@ -104,7 +104,7 @@ public class SetupDialog extends JDialog implements ActionListener {
 	
 	public void loadSettings(Settings settings) {
 		this.settings = settings;
-		aisTab.loadSettings(settings.getAisSettings());
+		aisTab.loadSettings(settings.getAisSettings(), settings.getNavSettings());
 		enavTab.loadSettings(settings.getEnavSettings());
 		navTab.loadSettings(settings.getNavSettings());
 		sensorTab.loadSettings(settings.getSensorSettings());

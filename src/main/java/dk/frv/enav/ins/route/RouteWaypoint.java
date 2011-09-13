@@ -76,6 +76,27 @@ public class RouteWaypoint implements Serializable {
 		
 	}
 	
+	/**
+	 * Performs a deep copy of this RouteWaypoint. The copy constructor above is used to perform shallow copy
+	 * on route creation and editing, when a back reference to route leg is needed.
+	 * @return Copy of routeWaypoint.
+	 */
+	public RouteWaypoint copy() {
+		RouteWaypoint copy = new RouteWaypoint();
+		copy.setName(this.getName());
+		copy.setPos(this.getPos());
+		copy.setTurnRad(this.getTurnRad());
+		if(this.getOutLeg() != null) {
+			copy.outLeg = this.getOutLeg().copy(copy);
+//			copy.setOutLeg(new RouteLeg(this.getOutLeg()));
+		}
+		if(this.getInLeg() != null) {
+			copy.inLeg = this.getInLeg().copy(copy);
+//			copy.setOutLeg(new RouteLeg(this.getInLeg()));
+		}
+		return copy;
+	}
+	
 	public String getName() {
 		return name;
 	}

@@ -202,6 +202,12 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 	public synchronized OMGraphicList prepare() {
 		// long start = System.nanoTime();
 		Iterator<TargetGraphic> it = targets.values().iterator();
+		
+		for (OMGraphic omgraphic : graphics) {
+			if(omgraphic instanceof IntendedRouteGraphic){
+				((IntendedRouteGraphic) omgraphic).showArrowHeads(getProjection().getScale() < EeINS.getSettings().getNavSettings().getShowArrowScale());
+			}
+		}
 
 		while (it.hasNext()) {
 			TargetGraphic target = it.next();

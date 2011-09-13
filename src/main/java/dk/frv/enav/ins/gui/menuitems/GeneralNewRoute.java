@@ -27,63 +27,44 @@
  * either expressed or implied, of Danish Maritime Safety Administration.
  * 
  */
-package dk.frv.enav.ins.layers.msi;
+package dk.frv.enav.ins.gui.menuitems;
 
-import com.bbn.openmap.omGraphics.OMGraphicList;
+import javax.swing.JMenuItem;
 
-import dk.frv.ais.geo.GeoLocation;
-import dk.frv.enav.common.xml.msi.MsiLocation;
-import dk.frv.enav.common.xml.msi.MsiMessage;
-import dk.frv.enav.common.xml.msi.MsiPoint;
-import dk.frv.enav.ins.msi.MsiHandler.MsiMessageExtended;
+import com.bbn.openmap.MouseDelegator;
 
-public abstract class MsiSymbolPosition extends OMGraphicList {
+import dk.frv.enav.ins.event.NavigationMouseMode;
+import dk.frv.enav.ins.gui.MainFrame;
 
+public class GeneralNewRoute extends JMenuItem implements IMapMenuAction {
+	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	protected MsiMessage msiMessage;
-	protected boolean acknowledged;
+	private MouseDelegator mouseDelegator;
+	private MainFrame mainFrame;
 
-	public MsiSymbolPosition(MsiMessageExtended message) {
+	public GeneralNewRoute(String text) {
 		super();
-		this.msiMessage = message.msiMessage;
-		MsiLocation msiLocation = msiMessage.getLocation();
-		acknowledged = message.acknowledged;		
-		
-		// Determine where to place MSI symbols
-		switch (msiLocation.getLocationType()) {
-		case POINT:
-		case POINTS:
-			/*
-			 * Place symbol in each point 
-			 */
-			for (MsiPoint point : msiLocation.getPoints()) {
-				createSymbol(new GeoLocation(point.getLatitude(), point.getLongitude()));
-			}			
-			break;
-		case POLYGON:
-			/*
-			 * Place symbol in center of polygon
-			 */
-			createSymbol(msiLocation.getCenter());
-			break;
-		case POLYLINE:
-			/*
-			 * Place a symbol in middle point 
-			 */
-			MsiPoint middle =  msiLocation.getPoints().get(msiLocation.getPoints().size() / 2);
-			createSymbol(new GeoLocation(middle.getLatitude(), middle.getLongitude()));
-			break;
-		default:
-			break;
+		setText(text);
+	}
+	
+	@Override
+	public void doAction() {
+		if(mouseDelegator.getActiveMouseModeID() == NavigationMouseMode.modeID){
+			mainFrame.getChartPanel().editMode(true);
+		} else {
+			mainFrame.getChartPanel().editMode(false);
 		}
 	}
 
-	public abstract void createSymbol(GeoLocation geoLocation);
-	
-	public MsiMessage getMsiMessage() {
-		return msiMessage;
+	public void setMouseDelegator(MouseDelegator mouseDelegator) {
+		this.mouseDelegator = mouseDelegator;
 	}
+
+	public void setMainFrame(MainFrame mainFrame) {
+		this.mainFrame = mainFrame;
+	}
+
 }

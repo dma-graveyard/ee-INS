@@ -40,6 +40,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.border.TitledBorder;
 
 import dk.frv.enav.ins.settings.AisSettings;
+import dk.frv.enav.ins.settings.NavSettings;
 
 public class AisTab extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -54,6 +55,7 @@ public class AisTab extends JPanel {
 	private JSpinner spinnerIntendedRouteMaxWps;
 	private JSpinner spinnerIntendedRouteMaxTime;
 	private AisSettings aisSettings;
+	private NavSettings navSettings;
 
 	public AisTab() {
 		
@@ -64,7 +66,7 @@ public class AisTab extends JPanel {
 		
 		spinnerCogVectorLength = new JSpinner(new SpinnerNumberModel(new Double(0), null, null, new Double(1)));
 		
-		JLabel label = new JLabel("Length of COG vector (min)");
+		JLabel lblCogVectorLength = new JLabel("Own ship and targets COG vector length (min)");
 		
 		spinnerShowMinuteMarksAISTarget = new JSpinner();
 		
@@ -88,7 +90,7 @@ public class AisTab extends JPanel {
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addGroup(gl_appearancePanel.createParallelGroup(Alignment.LEADING)
 								.addComponent(label_1)
-								.addComponent(label)
+								.addComponent(lblCogVectorLength)
 								.addComponent(label_2))
 							.addGap(48))))
 		);
@@ -99,7 +101,7 @@ public class AisTab extends JPanel {
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(gl_appearancePanel.createParallelGroup(Alignment.BASELINE)
 						.addComponent(spinnerCogVectorLength, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(label))
+						.addComponent(lblCogVectorLength))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(gl_appearancePanel.createParallelGroup(Alignment.BASELINE)
 						.addComponent(spinnerShowMinuteMarksAISTarget, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
@@ -212,8 +214,9 @@ public class AisTab extends JPanel {
 		setLayout(groupLayout);
 	}
 	
-	public void loadSettings(AisSettings aisSettings) {
+	public void loadSettings(AisSettings aisSettings, NavSettings navSettings) {
 		this.aisSettings = aisSettings;
+		this.navSettings = navSettings;
 		checkBoxAllowSending.setSelected(aisSettings.isAllowSending());
 		checkBoxStrict.setSelected(aisSettings.isStrict());
 		
@@ -234,6 +237,8 @@ public class AisTab extends JPanel {
 		
 		aisSettings.setShowNameLabels(checkBoxShowNameLabels.isSelected());
 		aisSettings.setCogVectorLength((Double) spinnerCogVectorLength.getValue());
+		navSettings.setCogVectorLength((Double) spinnerCogVectorLength.getValue());
+		
 		aisSettings.setShowMinuteMarksAISTarget((Integer) spinnerShowMinuteMarksAISTarget.getValue());
 		aisSettings.setMinRedrawInterval((Integer) spinnerMinRedrawInterval.getValue());
 		

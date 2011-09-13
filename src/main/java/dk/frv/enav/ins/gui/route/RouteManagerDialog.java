@@ -29,25 +29,6 @@
  */
 package dk.frv.enav.ins.gui.route;
 
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-
-import dk.frv.enav.ins.EeINS;
-import dk.frv.enav.ins.route.RouteLoadException;
-import dk.frv.enav.ins.route.RouteManager;
-import dk.frv.enav.ins.route.RoutesUpdateEvent;
-
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.JTable;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -55,13 +36,31 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.ListSelectionModel;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.apache.log4j.Logger;
-import javax.swing.ListSelectionModel;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
+
+import dk.frv.enav.ins.EeINS;
+import dk.frv.enav.ins.route.Route;
+import dk.frv.enav.ins.route.RouteLoadException;
+import dk.frv.enav.ins.route.RouteManager;
+import dk.frv.enav.ins.route.RoutesUpdateEvent;
 
 public class RouteManagerDialog extends JDialog implements ActionListener, ListSelectionListener, TableModelListener,
 		MouseListener {
@@ -89,6 +88,8 @@ public class RouteManagerDialog extends JDialog implements ActionListener, ListS
 	private JButton exportAllBtn;
 
 	private JButton metocBtn;
+
+	private JButton copyBtn;
 
 	public RouteManagerDialog(JFrame parent) {
 		super(parent, "Route Manager", true);
@@ -118,6 +119,8 @@ public class RouteManagerDialog extends JDialog implements ActionListener, ListS
 		closeBtn.addActionListener(this);
 		metocBtn = new JButton("METOC");
 		metocBtn.addActionListener(this);
+		copyBtn = new JButton("Copy");
+		copyBtn.addActionListener(this);
 
 		routeTable = new JTable();
 		routesTableModel = new RoutesTableModel(routeManager);
@@ -128,6 +131,7 @@ public class RouteManagerDialog extends JDialog implements ActionListener, ListS
 		routeScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		routeScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		routeTable.setFillsViewportHeight(true);
+		//TODO: Comment this line when using WindowBuilder
 		routeTable.setModel(routesTableModel);
 		for (int i = 0; i < 3; i++) {
 			if (i == 2) {
@@ -140,39 +144,61 @@ public class RouteManagerDialog extends JDialog implements ActionListener, ListS
 		routeSelectionModel.addListSelectionListener(this);
 		routeTable.setSelectionModel(routeSelectionModel);
 		routeTable.addMouseListener(this);
+		
 
 		GroupLayout groupLayout = new GroupLayout(getContentPane());
-		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.TRAILING).addGroup(
-				groupLayout.createSequentialGroup().addContainerGap().addComponent(routeScrollPane, GroupLayout.DEFAULT_SIZE,
-						428, Short.MAX_VALUE).addPreferredGap(ComponentPlacement.RELATED).addGroup(
-						groupLayout.createParallelGroup(Alignment.LEADING).addGroup(
-								groupLayout.createParallelGroup(Alignment.TRAILING, false).addComponent(closeBtn,
-										GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(
-										exportBtn, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE,
-										Short.MAX_VALUE).addComponent(deleteBtn, Alignment.LEADING, GroupLayout.DEFAULT_SIZE,
-										GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(reverseCopyBtn,
-										Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-										.addComponent(zoomToBtn, Alignment.LEADING, GroupLayout.DEFAULT_SIZE,
-												GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(activateBtn,
-												Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE,
-												Short.MAX_VALUE).addComponent(propertiesBtn, Alignment.LEADING,
-												GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)).addComponent(metocBtn,
-								GroupLayout.PREFERRED_SIZE, 131, GroupLayout.PREFERRED_SIZE).addComponent(exportAllBtn,
-								GroupLayout.PREFERRED_SIZE, 131, GroupLayout.PREFERRED_SIZE).addComponent(importBtn,
-								GroupLayout.PREFERRED_SIZE, 131, GroupLayout.PREFERRED_SIZE)).addContainerGap()));
-		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(
-				groupLayout.createSequentialGroup().addContainerGap().addGroup(
-						groupLayout.createParallelGroup(Alignment.LEADING).addGroup(
-								groupLayout.createSequentialGroup().addComponent(propertiesBtn).addPreferredGap(
-										ComponentPlacement.RELATED).addComponent(activateBtn).addPreferredGap(
-										ComponentPlacement.RELATED).addComponent(zoomToBtn).addPreferredGap(
-										ComponentPlacement.RELATED).addComponent(reverseCopyBtn).addPreferredGap(
-										ComponentPlacement.RELATED).addComponent(deleteBtn).addPreferredGap(
-										ComponentPlacement.RELATED).addComponent(exportBtn).addGap(7).addComponent(metocBtn)
-										.addPreferredGap(ComponentPlacement.RELATED).addComponent(exportAllBtn).addPreferredGap(
-												ComponentPlacement.RELATED).addComponent(importBtn)).addComponent(
-								routeScrollPane, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 289, Short.MAX_VALUE)).addGap(28)
-						.addComponent(closeBtn).addContainerGap()));
+		groupLayout.setHorizontalGroup(
+			groupLayout.createParallelGroup(Alignment.TRAILING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(routeScrollPane, GroupLayout.DEFAULT_SIZE, 427, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
+							.addComponent(closeBtn, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+							.addComponent(zoomToBtn, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+							.addComponent(activateBtn, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+							.addComponent(propertiesBtn, GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)
+							.addComponent(copyBtn, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
+							.addComponent(exportBtn, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+							.addComponent(deleteBtn, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+							.addComponent(reverseCopyBtn, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+							.addComponent(metocBtn, GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)
+							.addComponent(exportAllBtn, GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)
+							.addComponent(importBtn, GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)))
+					.addContainerGap())
+		);
+		groupLayout.setVerticalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addComponent(propertiesBtn)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(activateBtn)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(zoomToBtn)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(copyBtn)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(reverseCopyBtn)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(deleteBtn)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(exportBtn)
+							.addGap(7)
+							.addComponent(metocBtn)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(exportAllBtn)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(importBtn))
+						.addComponent(routeScrollPane, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 289, Short.MAX_VALUE))
+					.addGap(28)
+					.addComponent(closeBtn)
+					.addContainerGap())
+		);
 
 		getContentPane().setLayout(groupLayout);
 
@@ -216,6 +242,7 @@ public class RouteManagerDialog extends JDialog implements ActionListener, ListS
 		propertiesBtn.setEnabled(routeSelected);
 		zoomToBtn.setEnabled(routeSelected);
 		reverseCopyBtn.setEnabled(routeSelected);
+		copyBtn.setEnabled(routeSelected);
 		deleteBtn.setEnabled(routeSelected && !activeSelected);
 		metocBtn.setEnabled(routeSelected);
 		exportBtn.setEnabled(routeSelected);
@@ -257,6 +284,16 @@ public class RouteManagerDialog extends JDialog implements ActionListener, ListS
 		// TODO find minx, miny and maxx, maxy
 		// TODO center and scale map to include whole route
 		// 
+	}
+	
+	private void copy() {
+		if(routeTable.getSelectedRow() >= 0) {
+			Route selectedRoute = routeManager.getRoute(routeTable.getSelectedRow());
+			Route routeCopy = selectedRoute.copy();
+			routeCopy.setName(routeCopy.getName() + " copy");
+			routeManager.addRoute(routeCopy);
+			updateTable();
+		}
 	}
 
 	private void reverseCopy() {
@@ -331,6 +368,8 @@ public class RouteManagerDialog extends JDialog implements ActionListener, ListS
 			activateRoute();
 		} else if (e.getSource() == zoomToBtn) {
 			zoomTo();
+		} else if (e.getSource() == copyBtn) {
+			copy();
 		} else if (e.getSource() == reverseCopyBtn) {
 			reverseCopy();
 		} else if (e.getSource() == deleteBtn) {
@@ -342,7 +381,6 @@ public class RouteManagerDialog extends JDialog implements ActionListener, ListS
 		} else if (e.getSource() == importBtn) {
 			importFromFile();
 		}
-
 	}
 
 	@Override

@@ -54,6 +54,7 @@ import javax.swing.JPopupMenu;
 
 import com.bbn.openmap.LightMapHandlerChild;
 import com.bbn.openmap.MapBean;
+import com.bbn.openmap.MouseDelegator;
 
 import dk.frv.enav.ins.ais.AisAdressedRouteSuggestion;
 import dk.frv.enav.ins.ais.AisTargets;
@@ -65,6 +66,7 @@ import dk.frv.enav.ins.gui.menuitems.AisTargetDetails;
 import dk.frv.enav.ins.gui.menuitems.AisTargetLabelToggle;
 import dk.frv.enav.ins.gui.menuitems.GeneralClearMap;
 import dk.frv.enav.ins.gui.menuitems.GeneralHideIntendedRoutes;
+import dk.frv.enav.ins.gui.menuitems.GeneralNewRoute;
 import dk.frv.enav.ins.gui.menuitems.GeneralShowIntendedRoutes;
 import dk.frv.enav.ins.gui.menuitems.IMapMenuAction;
 import dk.frv.enav.ins.gui.menuitems.MsiAcknowledge;
@@ -105,6 +107,7 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 	private GeneralClearMap clearMap;
 	private GeneralHideIntendedRoutes hideIntendedRoutes;
 	private GeneralShowIntendedRoutes showIntendedRoutes;
+	private GeneralNewRoute newRoute;
 	private JMenu scaleMenu;
 	private AisIntendedRouteToggle aisIntendedRouteToggle;
 	private AisTargetDetails aisTargetDetails;
@@ -140,6 +143,7 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 	private NewRouteContainerLayer newRouteLayer;
 	private AisLayer aisLayer;
 	private AisTargets aisTargets;
+	private MouseDelegator mouseDelegator;
 
 	public MapMenu() {
 		super();
@@ -151,6 +155,8 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 		hideIntendedRoutes.addActionListener(this);
 		showIntendedRoutes = new GeneralShowIntendedRoutes("Show all intended routes");
 		showIntendedRoutes.addActionListener(this);
+		newRoute = new GeneralNewRoute("Add new route");
+		newRoute.addActionListener(this);
 		scaleMenu = new JMenu("Scale");
 		
 		// using treemap so scale levels are always sorted
@@ -255,11 +261,15 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 		hideIntendedRoutes.setAisTargets(aisTargets);
 		showIntendedRoutes.setAisTargets(aisTargets);
 		
+		newRoute.setMouseDelegator(mouseDelegator);
+		newRoute.setMainFrame(mainFrame);
+		
 		if(alone){
 			removeAll();
 			add(clearMap);
 			add(hideIntendedRoutes);
 			add(showIntendedRoutes);
+			add(newRoute);
 			add(scaleMenu);
 			return;
 		}
@@ -518,7 +528,7 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 			routeSuggestionDialog = (RouteSuggestionDialog) obj; 
 		}
 		if(obj instanceof MapBean){
-			mapBean  = (MapBean) obj;
+			mapBean = (MapBean) obj;
 		}
 		if(obj instanceof NewRouteContainerLayer){
 			newRouteLayer = (NewRouteContainerLayer) obj;
@@ -534,6 +544,9 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 		}
 		if (obj instanceof MainFrame) {
 			mainFrame = (MainFrame)obj;			
+		}
+		if (obj instanceof MouseDelegator) {
+			mouseDelegator = (MouseDelegator)obj;
 		}
 	}
 	

@@ -2,8 +2,6 @@ TODO:
 
 README file
 
-Copyright in all files
-
 Better comments in all files
 
 Wiki:
@@ -17,5 +15,7 @@ Wiki:
 Help dialog i app
 
 Eclipse launch file fix
+
+Make new installer project with installer parts from old project
 
 

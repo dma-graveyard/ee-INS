@@ -114,10 +114,10 @@ public class Route implements Serializable {
 	}
 	
 	/**
-	 * Copy constructor
+	 * Copy constructor, performs a shallow copy.
 	 * @param orig Original route to copy
 	 */
-	public Route(Route orig){
+	public Route(Route orig) {
 		this.waypoints = new LinkedList<RouteWaypoint>(orig.waypoints);
 		this.name = orig.name;
 		this.departure = orig.departure;
@@ -136,6 +136,36 @@ public class Route implements Serializable {
 	}
 
 	// Methods
+	
+	/**
+	 * Performs a deep copy of a route.
+	 */
+	public Route copy() {
+		Route newRoute = new Route();
+		LinkedList<RouteWaypoint> waypoints = new LinkedList<RouteWaypoint>();
+		for (RouteWaypoint routeWaypoint : this.waypoints) {
+			RouteWaypoint newRouteWaypoint = routeWaypoint.copy();
+			waypoints.add(newRouteWaypoint);
+		}
+		newRoute.setWaypoints(waypoints);
+		// Immutable objects are safe to copy this way?
+		newRoute.name = this.name;
+		newRoute.departure = this.departure;
+		newRoute.destination = this.destination;
+		newRoute.visible = this.visible;
+		newRoute.starttime = this.starttime;
+		newRoute.ttgs = this.ttgs;
+		newRoute.dtgs = this.dtgs;
+		newRoute.totalTtg = this.totalTtg;
+		newRoute.totalDtg = this.totalDtg;
+		newRoute.etas = this.etas;
+		newRoute.metocForecast = this.metocForecast;
+		newRoute.metocStarttime = this.metocStarttime;
+		newRoute.metocEta = this.metocEta;
+		newRoute.routeMetocSettings = this.routeMetocSettings;
+		
+		return newRoute;
+	}
 
 	// Calculated measures
 

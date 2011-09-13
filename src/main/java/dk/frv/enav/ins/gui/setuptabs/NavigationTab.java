@@ -45,7 +45,6 @@ public class NavigationTab extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private JCheckBox checkBoxLookAhead;
 	private JSpinner spinnerAutoFollowPctOffTolerance;
-	private JSpinner spinnerCogVectorLength;
 	private JSpinner spinnerShowMinuteMarksSelf;
 	private JSpinner spinnerShowArrowScale;
 	private JSpinner spinnerDefaultSpeed;
@@ -57,10 +56,6 @@ public class NavigationTab extends JPanel {
 		
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(null, "Own Ship", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		
-		spinnerCogVectorLength = new JSpinner(new SpinnerNumberModel(new Double(0), null, null, new Double(1)));
-		
-		JLabel label = new JLabel("COG vector length (min)");
 		
 		spinnerAutoFollowPctOffTolerance = new JSpinner();
 		
@@ -78,10 +73,6 @@ public class NavigationTab extends JPanel {
 					.addContainerGap()
 					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_panel.createSequentialGroup()
-							.addComponent(spinnerCogVectorLength, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(label))
-						.addGroup(gl_panel.createSequentialGroup()
 							.addComponent(spinnerAutoFollowPctOffTolerance, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(label_1))
@@ -90,7 +81,7 @@ public class NavigationTab extends JPanel {
 							.addComponent(spinnerShowMinuteMarksSelf, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(label_2)))
-					.addContainerGap(101, Short.MAX_VALUE))
+					.addContainerGap(75, Short.MAX_VALUE))
 		);
 		gl_panel.setVerticalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
@@ -102,13 +93,9 @@ public class NavigationTab extends JPanel {
 						.addComponent(label_1))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-						.addComponent(spinnerCogVectorLength, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(label))
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
 						.addComponent(label_2)
 						.addComponent(spinnerShowMinuteMarksSelf, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addContainerGap(13, Short.MAX_VALUE))
+					.addContainerGap(32, Short.MAX_VALUE))
 		);
 		panel.setLayout(gl_panel);
 		
@@ -181,22 +168,22 @@ public class NavigationTab extends JPanel {
 		panel_1.setLayout(gl_panel_1);
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+			groupLayout.createParallelGroup(Alignment.TRAILING)
+				.addGroup(groupLayout.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-						.addComponent(panel_1, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE)
-						.addComponent(panel, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE))
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(panel, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE)
+						.addComponent(panel_1, GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE))
 					.addContainerGap())
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addContainerGap()
-					.addComponent(panel, GroupLayout.PREFERRED_SIZE, 130, GroupLayout.PREFERRED_SIZE)
+					.addComponent(panel, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(36, Short.MAX_VALUE))
+					.addContainerGap(135, Short.MAX_VALUE))
 		);
 		setLayout(groupLayout);
 	}
@@ -205,7 +192,8 @@ public class NavigationTab extends JPanel {
 		this.navSettings = navSettings;
 		checkBoxLookAhead.setSelected(navSettings.isLookAhead());
 		spinnerAutoFollowPctOffTolerance.setValue(navSettings.getAutoFollowPctOffTollerance());
-		spinnerCogVectorLength.setValue(navSettings.getCogVectorLength());
+// 		replaced by setting on the AisTab, common for both ais-targets and own ship.
+//		spinnerCogVectorLength.setValue(navSettings.getCogVectorLength());
 		spinnerShowMinuteMarksSelf.setValue(navSettings.getShowMinuteMarksSelf());
 		
 		spinnerShowArrowScale.setValue(navSettings.getShowArrowScale());
@@ -217,7 +205,8 @@ public class NavigationTab extends JPanel {
 	public void saveSettings() {
 		navSettings.setLookAhead(checkBoxLookAhead.isSelected());
 		navSettings.setAutoFollowPctOffTollerance((Integer) spinnerAutoFollowPctOffTolerance.getValue());
-		navSettings.setCogVectorLength((Double) spinnerCogVectorLength.getValue());
+// 		replaced by setting on the AisTab, common for both ais-targets and own ship.				
+//		navSettings.setCogVectorLength((Double) spinnerCogVectorLength.getValue());
 		navSettings.setShowMinuteMarksSelf((Integer) spinnerShowMinuteMarksSelf.getValue());
 		
 		navSettings.setShowArrowScale((Float) spinnerShowArrowScale.getValue());

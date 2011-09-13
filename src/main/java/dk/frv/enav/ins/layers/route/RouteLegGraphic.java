@@ -75,7 +75,7 @@ public class RouteLegGraphic extends OMGraphicList {
 		initGraphics();
 	}
 	
-	public void initGraphics(){
+	public void initGraphics() {
 		if(routeLeg.getEndWp() != null){
 			RouteWaypoint legStart = routeLeg.getStartWp(); 
 			RouteWaypoint legEnd = routeLeg.getEndWp();

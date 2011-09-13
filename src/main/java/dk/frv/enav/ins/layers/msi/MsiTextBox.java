@@ -37,8 +37,8 @@ import com.bbn.openmap.omGraphics.OMRect;
 import com.bbn.openmap.omGraphics.OMText;
 
 import dk.frv.ais.geo.GeoLocation;
-import dk.frv.enav.common.xml.msi.MsiMessage;
 import dk.frv.enav.ins.common.StringTools;
+import dk.frv.enav.ins.msi.MsiHandler.MsiMessageExtended;
 
 public class MsiTextBox extends MsiSymbolPosition {
 	
@@ -47,8 +47,8 @@ public class MsiTextBox extends MsiSymbolPosition {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public MsiTextBox(MsiMessage msiMessage, boolean acknowledged) {
-		super(msiMessage, acknowledged);
+	public MsiTextBox(MsiMessageExtended message) {
+		super(message);
 	}
 	
 	public void createSymbol(GeoLocation pos) {	

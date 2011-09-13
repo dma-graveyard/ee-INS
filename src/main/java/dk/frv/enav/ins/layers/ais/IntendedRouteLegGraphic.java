@@ -32,6 +32,7 @@ package dk.frv.enav.ins.layers.ais;
 import java.awt.BasicStroke;
 import java.awt.Color;
 
+import com.bbn.openmap.omGraphics.OMArrowHead;
 import com.bbn.openmap.omGraphics.OMLine;
 
 import dk.frv.ais.geo.GeoLocation;
@@ -40,6 +41,7 @@ public class IntendedRouteLegGraphic extends OMLine {
 	private static final long serialVersionUID = 1L;
 	
 	private IntendedRouteGraphic intendedRouteGraphic;
+	private OMArrowHead arrow = new OMArrowHead(OMArrowHead.ARROWHEAD_DIRECTION_FORWARD, 55, 5, 15);
 	private int index;
 
 	public IntendedRouteLegGraphic(int index, IntendedRouteGraphic intendedRouteGraphic, boolean activeWaypoint, GeoLocation start,
@@ -74,4 +76,10 @@ public class IntendedRouteLegGraphic extends OMLine {
 		return index;
 	}
 	
+	public void setArrows(boolean arrowsVisible){
+		if(!arrowsVisible)
+			this.setArrowHead(null);
+		else
+			this.setArrowHead(arrow);
+	}
 }

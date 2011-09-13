@@ -31,6 +31,7 @@ package dk.frv.enav.ins.layers.ais;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.bbn.openmap.omGraphics.OMGraphicList;
@@ -47,8 +48,11 @@ public class IntendedRouteGraphic extends OMGraphicList {
 	private double[] activeWpLineLL = new double[4];
 	private Color legColor = new Color(42, 172, 12, 255);
 	private String name;
+	private boolean arrowsVisible = false;
 
 	private VesselTarget vesselTarget;
+	
+	private List<IntendedRouteLegGraphic> routeLegs = new ArrayList<IntendedRouteLegGraphic>();
 	
 	public IntendedRouteGraphic() {
 		super();
@@ -59,6 +63,7 @@ public class IntendedRouteGraphic extends OMGraphicList {
 	
 	private void makeLegLine(int index, GeoLocation start, GeoLocation end) {
 		IntendedRouteLegGraphic leg = new IntendedRouteLegGraphic(index, this, false, start, end, legColor);
+		routeLegs.add(leg);
 		add(leg);
 	}
 	
@@ -123,6 +128,15 @@ public class IntendedRouteGraphic extends OMGraphicList {
 	
 	public String getName() {
 		return name;
+	}
+	
+	public void showArrowHeads(boolean show){
+		if(this.arrowsVisible != show){
+			for (IntendedRouteLegGraphic routeLeg : routeLegs) {
+				routeLeg.setArrows(show);
+			}
+			this.arrowsVisible = show;
+		}
 	}
 	
 }
