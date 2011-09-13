@@ -371,10 +371,6 @@ public class EeINS {
 		}
 	}
 	
-	public static void wake() {
-		Thread.currentThread().interrupt();
-	}
-	
 	public static void startThread(Runnable t, String name) {
 		Thread thread = new Thread(t);
 		thread.setName(name);
