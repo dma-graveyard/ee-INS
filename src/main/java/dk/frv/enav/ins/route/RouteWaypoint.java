@@ -86,14 +86,6 @@ public class RouteWaypoint implements Serializable {
 		copy.setName(this.getName());
 		copy.setPos(this.getPos());
 		copy.setTurnRad(this.getTurnRad());
-		if(this.getOutLeg() != null) {
-			copy.outLeg = this.getOutLeg().copy(copy);
-//			copy.setOutLeg(new RouteLeg(this.getOutLeg()));
-		}
-		if(this.getInLeg() != null) {
-			copy.inLeg = this.getInLeg().copy(copy);
-//			copy.setOutLeg(new RouteLeg(this.getInLeg()));
-		}
 		return copy;
 	}
 	

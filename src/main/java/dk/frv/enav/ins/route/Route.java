@@ -147,6 +147,27 @@ public class Route implements Serializable {
 			RouteWaypoint newRouteWaypoint = routeWaypoint.copy();
 			waypoints.add(newRouteWaypoint);
 		}
+		// Iterates through the list of waypoints beginning at the second waypoint in the route, while
+		// creating route legs in a backward fashion. The values of the original leg is copied also.
+		// Perhaps this can be done more efficiently with a copy constructor (or method) for route legs, but 
+		// forward referencing a waypoint which has not been created has to be solved in some way...
+		for (int i = 1; i < waypoints.size(); i++) {
+			RouteWaypoint currWaypoint = waypoints.get(i);
+			RouteWaypoint prevWaypoint = waypoints.get(i-1);
+			RouteLeg routeLeg = this.waypoints.get(i).getInLeg();
+			
+			RouteLeg newRouteLeg = new RouteLeg();
+			newRouteLeg.setSpeed(routeLeg.getSpeed());
+			newRouteLeg.setHeading(routeLeg.getHeading());
+			newRouteLeg.setXtdStarboard(routeLeg.getXtdStarboard());
+			newRouteLeg.setXtdPort(routeLeg.getXtdPort());
+			
+			newRouteLeg.setStartWp(prevWaypoint);
+			newRouteLeg.setEndWp(currWaypoint);
+			
+			prevWaypoint.setOutLeg(newRouteLeg);
+			currWaypoint.setInLeg(newRouteLeg);
+		}
 		newRoute.setWaypoints(waypoints);
 		// Immutable objects are safe to copy this way?
 		newRoute.name = this.name;

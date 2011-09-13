@@ -84,17 +84,6 @@ public class RouteLeg implements Serializable {
 		this.startWp = startWp;
 		this.endWp = endWp;
 	}
-	
-	public RouteLeg copy(RouteWaypoint copy) {
-		RouteLeg newRouteLeg = new RouteLeg();
-		newRouteLeg.setSpeed(this.getSpeed());
-		newRouteLeg.setHeading(this.getHeading());
-		newRouteLeg.setXtdStarboard(this.getXtdStarboard());
-		newRouteLeg.setXtdPort(this.getXtdPort());
-		newRouteLeg.setEndWp(this.getStartWp());
-		newRouteLeg.setStartWp(this.getEndWp());
-		return newRouteLeg;
-	}
 
 	public double getSpeed() {
 		return speed;
