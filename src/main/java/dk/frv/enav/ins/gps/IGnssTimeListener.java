@@ -29,8 +29,15 @@
  */
 package dk.frv.enav.ins.gps;
 
+/**
+ * Interface to implement for classes wanting to receive GNSS time updates
+ */
 public interface IGnssTimeListener {
 	
+	/**
+	 * Receive GNSS time message
+	 * @param gnssTimeMessage
+	 */
 	void receive(GnssTimeMessage gnssTimeMessage);
 
 }

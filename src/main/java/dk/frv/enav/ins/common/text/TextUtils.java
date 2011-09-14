@@ -31,13 +31,26 @@ package dk.frv.enav.ins.common.text;
 
 import org.apache.commons.lang.StringUtils;
 
+/**
+ * Class with different common text utilities
+ */
 public class TextUtils {
 
+	/**
+	 * Return class name without package
+	 * @param cls
+	 * @return
+	 */
     public static String className(Class<?> cls) {
         String[] nameParts = StringUtils.split(cls.getName(), '.');
         return nameParts[nameParts.length - 1];
     }
 
+    /**
+     * Returns true if string is not null and non-empty
+     * @param str
+     * @return
+     */
     public static boolean exists(String str) {
         return (str != null && str.length() > 0);
     }

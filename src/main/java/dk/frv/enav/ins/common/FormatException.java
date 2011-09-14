@@ -29,9 +29,12 @@
  */
 package dk.frv.enav.ins.common;
 
+/**
+ * Exception class for failed parsing
+ */
 public class FormatException extends Exception {
 
-	private static final long serialVersionUID = 3888141826781247040L;
+	private static final long serialVersionUID = 1L;
 	
 	public FormatException() {	
 	}

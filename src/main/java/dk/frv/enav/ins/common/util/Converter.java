@@ -29,6 +29,9 @@
  */
 package dk.frv.enav.ins.common.util;
 
+/**
+ * Class for doing different conversions
+ */
 public class Converter {
 	
 	private static final int NM_IN_METERS = 1852;

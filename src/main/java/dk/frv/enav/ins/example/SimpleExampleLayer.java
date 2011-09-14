@@ -40,6 +40,9 @@ import com.bbn.openmap.omGraphics.OMGraphic;
 import com.bbn.openmap.omGraphics.OMGraphicList;
 import com.bbn.openmap.omGraphics.OMList;
 
+/**
+ * Simple example layer to show how to use mouse events  
+ */
 public class SimpleExampleLayer extends OMGraphicHandlerLayer implements MapMouseListener {
 
 	private static final long serialVersionUID = 1L;

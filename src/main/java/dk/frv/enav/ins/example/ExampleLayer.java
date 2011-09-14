@@ -49,11 +49,7 @@ import dk.frv.enav.ins.route.RoutesUpdateEvent;
 
 /**
  * Example layer that registers itself as listener for GPS, AIS and route updates
- * 
  * It paints small circles to make a simple track indication after vessel AIS targets
- * 
- * @author obo
- *
  */
 public class ExampleLayer extends OMGraphicHandlerLayer implements IGpsDataListener, IAisTargetListener, IRoutesUpdateListener {
 	

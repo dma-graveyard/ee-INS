@@ -33,6 +33,10 @@ import org.apache.log4j.Logger;
 
 import com.bbn.openmap.MapHandlerChild;
 
+/**
+ * An example component to show how plugin components could be added in
+ * eeins.properties. 
+ */
 public class ExampleComponent extends MapHandlerChild {
 	
 	private static final Logger LOG = Logger.getLogger(ExampleComponent.class);
@@ -41,6 +45,9 @@ public class ExampleComponent extends MapHandlerChild {
 		// Called when class is created
 	}
 	
+	/**
+	 * Find other components
+	 */
 	@Override
 	public void findAndInit(Object obj) {
 		LOG.info("findAndInit obj.getClass(): " + obj.getClass()); 

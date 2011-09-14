@@ -29,10 +29,14 @@
  */
 package dk.frv.enav.ins.gps;
 
+/**
+ * Interface to implement for classes wanting to receive GPS updates 
+ */
 public interface IGpsDataListener {
 	
 	/**
-	 * Method called when the position of ship changes, or the known position is lost 
+	 * Method called when the position of ship changes, or the known position is lost
+	 * @param gpsData 
 	 */
 	void gpsDataUpdate(GpsData gpsData);
 

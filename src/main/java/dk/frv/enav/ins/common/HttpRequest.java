@@ -44,6 +44,9 @@ import dk.frv.enav.ins.services.shore.ShoreServiceErrorCode;
 import dk.frv.enav.ins.services.shore.ShoreServiceException;
 import dk.frv.enav.ins.settings.EnavSettings;
 
+/**
+ * Class for making HTTP requests. Accepts gziped responses. 
+ */
 public class HttpRequest extends Thread {
 	
 	private static final Logger LOG = Logger.getLogger(ShoreHttp.class);
@@ -61,6 +64,11 @@ public class HttpRequest extends Thread {
 	private GetMethod method;
 	private byte[] responseBody;
 	
+	/**
+	 * Constructor given uri and enav settings
+	 * @param uri
+	 * @param enavSettings
+	 */
 	public HttpRequest(String uri, EnavSettings enavSettings) {
 		this.host = enavSettings.getServerName();
 		this.port = enavSettings.getHttpPort();
@@ -69,6 +77,25 @@ public class HttpRequest extends Thread {
 		setUri(uri);
 	}
 	
+	/**
+	 * Initialize the class
+	 */
+	public void init() {
+		httpClient = new HttpClient();
+		method = new GetMethod(url);
+		HttpConnectionManagerParams params = httpClient.getHttpConnectionManager().getParams();
+		params.setSoTimeout(readTimeout);
+		params.setConnectionTimeout(connectionTimeout);
+		method.setRequestHeader("User-Agent", USER_AGENT);
+		method.setRequestHeader("Connection", "close");
+		method.addRequestHeader("Accept", "text/*");	
+		method.addRequestHeader("Accept-Encoding", "gzip");
+	}
+	
+	/**
+	 * Make the actual request
+	 * @throws ShoreServiceException
+	 */
 	public void makeRequest() throws ShoreServiceException {
 		int statusCode;
 		try {
@@ -103,20 +130,10 @@ public class HttpRequest extends Thread {
 		method.releaseConnection();
 	}
 	
-	public void init() {
-		httpClient = new HttpClient();
-		method = new GetMethod(url);
-		HttpConnectionManagerParams params = httpClient.getHttpConnectionManager().getParams();
-		params.setSoTimeout(readTimeout);
-		params.setConnectionTimeout(connectionTimeout);
-		method.setRequestHeader("User-Agent", USER_AGENT);
-		method.setRequestHeader("Connection", "close");
-		method.addRequestHeader("Accept", "text/*");	
-		
-		// TODO if compress response
-		method.addRequestHeader("Accept-Encoding", "gzip");
-	}
-	
+	/**
+	 * Set uri
+	 * @param uri
+	 */
 	public void setUri(String uri) {
 		this.uri = uri;
 		this.url = "http://" + host;
@@ -126,10 +143,18 @@ public class HttpRequest extends Thread {
 		this.url += this.uri;
 	}
 	
+	/**
+	 * Get response
+	 * @return
+	 */
 	public byte[] getResponseBody() {
 		return responseBody;
 	}
 	
+	/**
+	 * Get URL
+	 * @return
+	 */
 	public String getUrl() {
 		return url;
 	}

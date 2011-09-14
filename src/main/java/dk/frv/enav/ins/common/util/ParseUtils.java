@@ -41,21 +41,17 @@ import dk.frv.enav.ins.common.Heading;
 
 /**
  * Utility class different parsing tasks
- * @author obo
- *
  */
 public class ParseUtils {
 	
-	public static final int METERS_PER_NM = 1852;
-	
 	public static Double nmToMeters(Double nm) {
 		if (nm == null) return null;
-		return nm * METERS_PER_NM;
+		return Converter.nmToMeters(nm);
 	}
 	
 	public static Double metersToNm(Double meters) {
 		if (meters == null) return null;
-		return meters / METERS_PER_NM;
+		return Converter.metersToNm(meters);
 	}
 	
 	public static Double parseDouble(String str) throws FormatException {

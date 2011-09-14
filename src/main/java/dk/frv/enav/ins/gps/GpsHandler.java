@@ -43,6 +43,9 @@ import dk.frv.enav.ins.nmea.SensorType;
 import dk.frv.enav.ins.status.GpsStatus;
 import dk.frv.enav.ins.status.IStatusComponent;
 
+/**
+ * Component class for handling received GPS messages. 
+ */
 public class GpsHandler extends MapHandlerChild implements IGpsListener, IStatusComponent, Runnable {
 
 	private static final long GPS_TIMEOUT = 60 * 1000; // 1 min
@@ -60,6 +63,9 @@ public class GpsHandler extends MapHandlerChild implements IGpsListener, IStatus
 		return new GpsStatus(getCurrentData());
 	}
 
+	/**
+	 * Receive GPS message
+	 */
 	@Override
 	public synchronized void receive(GpsMessage gpsMessage) {
 		Date now = new Date();
@@ -84,10 +90,16 @@ public class GpsHandler extends MapHandlerChild implements IGpsListener, IStatus
 		distributeUpdate();
 	}
 
+	/**
+	 * Mark the current data as invalid
+	 */
 	private synchronized void markBadPos() {
 		currentData.setBadPosition(true);
 	}
 
+	/**
+	 * Distribute update to all listeners
+	 */
 	private void distributeUpdate() {
 		synchronized (listeners) {
 			for (IGpsDataListener listener : listeners) {
@@ -97,11 +109,17 @@ public class GpsHandler extends MapHandlerChild implements IGpsListener, IStatus
 		}
 	}
 	
+	/**
+	 * Return if the current data has timed out
+	 */
 	public synchronized boolean gpsTimedOut() {
 		Date now = new Date();
 		return now.getTime() - currentData.getLastUpdated().getTime() > GPS_TIMEOUT;
 	}
 
+	/**
+	 * Routine for monitoring timeout
+	 */
 	@Override
 	public void run() {
 		while (true) {

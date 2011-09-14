@@ -34,6 +34,9 @@ import java.util.Date;
 
 import dk.frv.ais.geo.GeoLocation;
 
+/**
+ * Class representing GPS data position, speed over ground and course over ground. 
+ */
 public class GpsData implements Serializable {
 		
 	private static final long serialVersionUID = 1L;
@@ -48,6 +51,9 @@ public class GpsData implements Serializable {
 		
 	}
 	
+	/**
+	 * Copy constructor
+	 */
 	public GpsData(GpsData gpsData) {
 		this.lastUpdated = new Date(gpsData.lastUpdated.getTime());
 		this.position = new GeoLocation(gpsData.position);
@@ -92,6 +98,10 @@ public class GpsData implements Serializable {
 		this.sog = sog;
 	}
 	
+	/**
+	 * Is the current position valid
+	 * @return
+	 */
 	public boolean isBadPosition() {
 		return badPosition;
 	}

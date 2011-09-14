@@ -37,6 +37,9 @@ import java.util.zip.GZIPOutputStream;
 
 import org.apache.log4j.Logger;
 
+/**
+ * Class for doing compression and decompression
+ */
 public class Compressor {
 	
 	private static final Logger LOG = Logger.getLogger(Compressor.class);

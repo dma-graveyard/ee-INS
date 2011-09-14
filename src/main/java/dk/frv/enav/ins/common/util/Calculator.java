@@ -32,6 +32,9 @@ package dk.frv.enav.ins.common.util;
 import dk.frv.ais.geo.GeoLocation;
 import dk.frv.enav.ins.common.Heading;
 
+/**
+ * Class for doing different common calculations
+ */
 public class Calculator {
 
 	/**

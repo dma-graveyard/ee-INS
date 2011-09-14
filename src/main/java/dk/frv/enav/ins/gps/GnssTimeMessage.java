@@ -31,6 +31,9 @@ package dk.frv.enav.ins.gps;
 
 import java.util.Date;
 
+/**
+ * Class to represent a GNSS time message. For now just a date.  
+ */
 public class GnssTimeMessage {
 	
 	private Date time;

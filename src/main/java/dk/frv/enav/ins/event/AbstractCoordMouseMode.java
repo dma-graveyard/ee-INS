@@ -40,12 +40,13 @@ import com.bbn.openmap.MapBean;
 import com.bbn.openmap.event.AbstractMouseMode;
 import com.bbn.openmap.proj.coords.LatLonPoint;
 
+/**
+ * Abstract mouse mode base class 
+ */
 public abstract class AbstractCoordMouseMode extends AbstractMouseMode implements PropertyChangeListener {
-
-	/**
-	 * 
-	 */
+		
 	private static final long serialVersionUID = 1L;
+	
 	protected Set<IMapCoordListener> coordListeners = new HashSet<IMapCoordListener>();
 
     public AbstractCoordMouseMode() {

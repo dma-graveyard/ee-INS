@@ -36,20 +36,41 @@ import javax.swing.ImageIcon;
 import com.bbn.openmap.omGraphics.OMRaster;
 import com.bbn.openmap.proj.Projection;
 
+/**
+ * A raster graphic that is centered
+ */
 public class CenterRaster extends OMRaster {
 	private static final long serialVersionUID = 1L;
 
 	private Point2D center = null;
 	private float radius = 5;
 
+	/**
+	 * Position in lat,lon with width i and height j
+	 * @param lat
+	 * @param lon
+	 * @param i
+	 * @param j
+	 * @param imageIcon
+	 */
 	public CenterRaster(double lat, double lon, int i, int j, ImageIcon imageIcon) {
 		super(lat, lon, -(i / 2), -(j / 2), imageIcon);
 	}
 	
+	/**
+	 * Position in x,y
+	 * @param x
+	 * @param y
+	 * @param imageIcon
+	 */
 	public CenterRaster(int x, int y, ImageIcon imageIcon) {
 		super(x-(imageIcon.getIconWidth() / 2), y-(imageIcon.getIconHeight() / 2), imageIcon);
 	}
 
+	/**
+	 * Set the radius to be used in distance calculations
+	 * @param radius
+	 */
 	public void setRadius(float radius) {
 		this.radius = radius;
 	}

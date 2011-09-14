@@ -38,12 +38,12 @@ import java.awt.Stroke;
 import com.bbn.openmap.omGraphics.OMGraphic;
 import com.bbn.openmap.omGraphics.OMPoly;
 
-public class RotationalPoly extends OMPoly {
-	
-	/**
-	 * 
-	 */
+/**
+ * A OM polygon that can be rotated
+ */
+public class RotationalPoly extends OMPoly {	
 	private static final long serialVersionUID = 1L;
+	
 	private double heading;
 	private int[] origXPoints;
 	private int[] origYPoints;

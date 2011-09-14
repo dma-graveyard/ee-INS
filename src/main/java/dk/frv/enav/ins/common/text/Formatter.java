@@ -36,6 +36,9 @@ import java.util.Locale;
 import dk.frv.enav.ins.ais.AisAdressedRouteSuggestion.Status;
 import dk.frv.enav.ins.common.Heading;
 
+/**
+ * Utility class for doing different formatting
+ */
 public class Formatter {
 	
 	private static SimpleDateFormat tzConvert = new SimpleDateFormat("Z");

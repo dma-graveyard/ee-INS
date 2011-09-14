@@ -52,17 +52,22 @@ import com.bbn.openmap.image.ImageScaler;
 import com.bbn.openmap.proj.Projection;
 import com.bbn.openmap.util.PropUtils;
 
+/**
+ * Mouse mode for route edit 
+ */
 public class RouteEditMouseMode extends AbstractCoordMouseMode {
 
+	private static final long serialVersionUID = 1L;
+	
 	/**
      * Mouse Mode identifier, which is "RouteEdit".
      */
-	private static final long serialVersionUID = 1L;
-    public final static transient String modeID = "RouteEdit";
+    public final static transient String modeID = "RouteEdit";    
     public final static String OpaquenessProperty = "opaqueness";
     public final static String LeaveShadowProperty = "leaveShadow";
     public final static String UseCursorProperty = "useCursor";
     public final static float DEFAULT_OPAQUENESS = 0.5f;
+    
     private boolean isPanning = false;
     private BufferedImage bufferedMapImage = null;
     private BufferedImage bufferedRenderingImage = null;

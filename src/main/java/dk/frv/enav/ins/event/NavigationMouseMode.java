@@ -42,6 +42,9 @@ import com.bbn.openmap.proj.coords.LatLonPoint;
 import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.gui.ChartPanel;
 
+/**
+ * The mouse mode used in navigation mode
+ */
 public class NavigationMouseMode extends AbstractCoordMouseMode {
 	private static final long serialVersionUID = 1L;
 

@@ -38,6 +38,9 @@ import com.bbn.openmap.MapHandlerChild;
 import dk.frv.enav.ins.nmea.NmeaSensor;
 import dk.frv.enav.ins.nmea.SensorType;
 
+/**
+ * Singleton component class that maintains GNSS time as an offset from computer time
+ */
 public class GnssTime extends MapHandlerChild implements IGnssTimeListener {
 	
 	private static final Logger LOG = Logger.getLogger(GnssTime.class);
@@ -51,6 +54,9 @@ public class GnssTime extends MapHandlerChild implements IGnssTimeListener {
 		
 	}
 
+	/**
+	 * Receive GNSS time update
+	 */
 	@Override
 	public synchronized void receive(GnssTimeMessage gnssTimeMessage) {		
 		if (gnssTimeMessage == null) {
@@ -60,6 +66,10 @@ public class GnssTime extends MapHandlerChild implements IGnssTimeListener {
 		LOG.debug("New GPS time offset: " + offset);		
 	}
 	
+	/**
+	 * Get GNSS date
+	 * @return date
+	 */
 	public synchronized Date getDate() {
 		return new Date((new Date()).getTime() - offset);		 
 	}
@@ -78,6 +88,9 @@ public class GnssTime extends MapHandlerChild implements IGnssTimeListener {
 		}
 	}
 	
+	/**
+	 * Hook up to an NMEA sensor
+	 */
 	@Override
 	public void findAndInit(Object obj) {
 		if (nmeaSensor != null) {
@@ -98,7 +111,5 @@ public class GnssTime extends MapHandlerChild implements IGnssTimeListener {
 			nmeaSensor.removeGnssTimeListener(this);
 		}
 	}
-
-	
 
 }

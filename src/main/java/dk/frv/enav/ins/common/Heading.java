@@ -29,4 +29,7 @@
  */
 package dk.frv.enav.ins.common;
 
+/**
+ * Enumeration for heading rhumb line or great circle
+ */
 public enum Heading {RL, GC};

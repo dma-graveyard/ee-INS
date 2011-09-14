@@ -31,6 +31,15 @@ package dk.frv.enav.ins.event;
 
 import com.bbn.openmap.proj.coords.LatLonPoint;
 
+/**
+ * Interface to implement for classes wanting to receive mouse position updates
+ */
 public interface IMapCoordListener {
+
+	/**
+	 * Receive new coordinate position
+	 * @param llp
+	 */
 	void recieveCoord(LatLonPoint llp);
+	
 }

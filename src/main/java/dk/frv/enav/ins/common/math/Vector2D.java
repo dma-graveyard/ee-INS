@@ -29,6 +29,9 @@
  */
 package dk.frv.enav.ins.common.math;
 
+/**
+ * 2D vector class
+ */
 public class Vector2D {
     
     private double x1, y1, x2, y2, dx, dy;
@@ -52,6 +55,10 @@ public class Vector2D {
 		this.dy = y2 - y1;
     }
     
+    /**
+     * Copy constructor
+     * @param vector
+     */
     public Vector2D(Vector2D vector){
     	this.x1 = vector.x1;
 		this.y1 = vector.y1;

@@ -31,6 +31,9 @@ package dk.frv.enav.ins.event;
 
 import java.awt.Cursor;
 
+/**
+ * Mouse mode for MSI filter 
+ */
 public class MSIFilterMouseMode extends AbstractCoordMouseMode {
 	private static final long serialVersionUID = 1L;
 	public final static transient String modeID = "MSIFilter";
