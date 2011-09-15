@@ -96,9 +96,8 @@ To use Navicon ENC layer with ee-INS please follow the steps below
    * Version for use with OpenMap 5
    * If you are using a 64-bit machine, ask for 64-bit dongle drivers
    
-After purchasing you will receive a SDK and a USB dongle.
-   
-1. Unpack the SDK in a directory. The SDK should at least contain the following folders
+1. After purchasing you will receive a SDK and a USB dongle.
+   Unpack the SDK in a directory. The SDK should at least contain the following folders
    `lib`, `native` and `data`.
    
 1. Copy `.ant.properties` to `ant.properties`.
