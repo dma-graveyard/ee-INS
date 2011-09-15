@@ -15,17 +15,29 @@ For detailed description see Wiki.
 * JDK 1.6+ (http://java.sun.com/j2se/)
 * Apache Ant 1.7+ (http://ant.apache.org) or Eclipse IDE (http://eclipse.org)
 
-## Building ##
+## ANT targets ##
+
+### Building ###
 
 	ant
 
-## Running ##
+### Running ###
 
 	ant run
 	
-## Javadoc ##
+### Javadoc ###
 
 	ant javadoc
+	
+### Clean ###
+
+	ant clean
+	
+### Dist clean ###
+
+	ant distclean
+	
+Will remove the `dist` folder described below, erasing existing settings.
 	
 ## Project structure ###
 
