@@ -6,9 +6,7 @@ ee-INS (e-Navigation Enhanced Integrated Navigation System) is an ECDIS like
 application for demonstrating possible e-Navigation services.
    
 The application is in Java and uses OpenMap(tm) for presenting geospatial
-information and as a JavaBeans(tm) component framework.
-
-TODO more
+information, and as a JavaBeans(tm) component framework.
 
 For detailed description see Wiki.
 
@@ -60,18 +58,74 @@ for first pre-version of 2.0 and
 	
 for the final version. 
 
+Minor versions are for fixes and small improvements, while a major version is
+for the introduction of new functionality. Major and minor versions are
+reflected in the branching of the project. Branching should be done in the 
+following way.
+
+    -|-- * -- * -- * 2.x  (master branch version 2.x)
+     |             |
+     |             `-- 2.y (branch for fix or small improvement)  
+     |
+	 `-- * -- * -- 3.0-PRE1 (branch for new major version)
+         |
+	     `-- dev (branch for individual task in new version)
+ 
+
 ## ChangeLog ##
 
-TODO describe
+When changes have been made they should be logged in the file `ChangeLog` on 
+the following form
+
+    YYYY-MM-DD <name>
+        * Description of change 1
+        ...
+        * Description of change N
 
 ## ENC layer ##
 
-TODO describe how Navicon ENC layer can be incorporated
+ee-INS does not come with an ENC layer but with the possibility to add one as 
+a plugin. Currently the only known of OpenMap ENC layer is a commercial one
+from the danish company [Navicon](http://www.navicon.dk).
+
+To use Navicon ENC layer with ee-INS please follow the steps below
+
+1. Contact [Navicon sales](mailto:sales@navicon.dk) regarding a purchase of their 
+   [ENC/S52 rendering engine](http://navicon.dk/site/products.html). Mention the following:
+   * To be used with DaMSA ee-INS
+   * Version for use with OpenMap 5
+   * If you are using a 64-bit machine, ask for 64-bit dongle drivers
+   
+   After purchasing you will receive a SDK and a USB dongle.
+   
+1. Unpack the SDK in a directory. The SDK should at least contain the following folders
+   `lib`, `native` and `data`.
+   
+1. Copy `.ant.properties` to `ant.properties`.
+
+1. Edit `ant.properties` and set `navicon_enc=true` and set the path to SDK, e.g. 
+   `navicon_enc_path=../navicon`.
+
+1. Build with `ant`
+
+1. Edit `dist/enc.properties` and set S-57/S-63 settings.
+
+1. Run application
+
 
 ## Eclipse development ##
 
-TODO import as project
+To use Eclipse as IDE just import project. Eclipse `.project` and settings files
+are included.
+
+Launch configuration is also included so it is possible to run as Java application
+from Eclipse.
 
 ## Contribution ##
 
-TODO fork and make pull requests
+Fork the project and make pull requests. 
+
+Try to use the component architecture as much as possible. Implement components and 
+hook up to other components with the `findAndInit` method rather than hard-wiring.
+Try to follow the coding standards already used in the project and document within
+the code with Javadoc comments. For more extensive documentation use the Wiki.

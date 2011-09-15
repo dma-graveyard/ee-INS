@@ -1,7 +1,5 @@
 TODO:
 
-README file
-
 Better comments in all files
 
 Wiki:
@@ -14,7 +12,7 @@ Wiki:
 
 Help dialog i app
 
-Eclipse launch file fix
+Eclipse launch configuration
 
 Make new installer project with installer parts from old project
 
