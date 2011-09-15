@@ -34,12 +34,12 @@ import javax.swing.JLabel;
 
 import dk.frv.enav.ins.EeINS;
 
+/**
+ * A blinking label implementation 
+ */
 public class BlinkingLabel extends JLabel implements Runnable {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+	
 	private boolean show = false, blink = false;
 	int period;
 	ImageIcon images[];

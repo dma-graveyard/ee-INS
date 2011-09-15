@@ -48,6 +48,9 @@ import dk.frv.enav.ins.gps.GpsData;
 import dk.frv.enav.ins.gps.GpsHandler;
 import dk.frv.enav.ins.gui.MainFrame;
 
+/**
+ * Dialog with SART details
+ */
 public class SartDetailsDialog extends JDialog implements Runnable {
 	private static final long serialVersionUID = 1L;
 

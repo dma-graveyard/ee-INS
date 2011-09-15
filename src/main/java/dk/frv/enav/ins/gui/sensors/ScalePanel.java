@@ -40,12 +40,13 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
+/**
+ * Scale panel in sensor panel
+ */
 public class ScalePanel extends JPanel {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+	
 	private final JLabel scaleLabel = new JLabel("Scale N/A");
 	private final JLabel timeLabel = new JLabel("N/A");
 	

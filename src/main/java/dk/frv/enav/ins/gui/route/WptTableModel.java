@@ -47,6 +47,9 @@ import dk.frv.enav.ins.route.RouteManager;
 import dk.frv.enav.ins.route.RouteWaypoint;
 import dk.frv.enav.ins.route.RoutesUpdateEvent;
 
+/**
+ * Table model for the list waypoints in route RoutePropertiesDialog
+ */
 public class WptTableModel extends AbstractTableModel {
 
 	private static final long serialVersionUID = 1L;

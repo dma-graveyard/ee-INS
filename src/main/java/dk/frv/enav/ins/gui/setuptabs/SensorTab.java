@@ -49,6 +49,9 @@ import javax.swing.border.TitledBorder;
 import dk.frv.enav.ins.settings.SensorSettings;
 import dk.frv.enav.ins.settings.SensorSettings.SensorConnectionType;
 
+/**
+ * Sensor tab panel in setup panel
+ */
 public class SensorTab extends JPanel implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	private JTextField textFieldSimulatedOwnShip;

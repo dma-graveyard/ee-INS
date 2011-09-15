@@ -41,6 +41,9 @@ import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.status.ComponentStatus;
 import dk.frv.enav.ins.status.IStatusComponent;
 
+/**
+ * A status label with status indication icon 
+ */
 public class StatusLabel extends JLabel {
 	
 	private static final long serialVersionUID = 1L;	

@@ -48,6 +48,9 @@ import com.bbn.openmap.LightMapHandlerChild;
 import com.bbn.openmap.PropertyConsumer;
 import com.bbn.openmap.gui.WindowSupport;
 
+/**
+ * Abstract base class for frames that are also components 
+ */
 public abstract class ComponentFrame extends JFrame implements PropertyConsumer, BeanContextChild, BeanContextMembershipListener,
 		LightMapHandlerChild {
 

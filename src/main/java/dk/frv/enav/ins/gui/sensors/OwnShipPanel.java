@@ -38,6 +38,9 @@ import javax.swing.JPanel;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
 
+/**
+ * Own ship panel in sensor panel
+ */
 public class OwnShipPanel extends JPanel {
 
 	/**

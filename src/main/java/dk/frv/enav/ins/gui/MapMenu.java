@@ -95,6 +95,9 @@ import dk.frv.enav.ins.route.Route;
 import dk.frv.enav.ins.route.RouteLeg;
 import dk.frv.enav.ins.route.RouteManager;
 
+/**
+ * Right click map menu
+ */
 public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandlerChild, BeanContextChild,
 		BeanContextMembershipListener {
 
@@ -317,6 +320,9 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 		generalMenu(false);
 	}
 	
+	/**
+	 * Options for suggested route
+	 */
 	public void aisSuggestedRouteMenu(VesselTarget vesselTarget) {
 		removeAll();
 		

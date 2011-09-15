@@ -41,6 +41,9 @@ import javax.swing.border.TitledBorder;
 
 import dk.frv.enav.ins.settings.EnavSettings;
 
+/**
+ * e-Nav tab panel in setup panel
+ */
 public class ENavTab extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private JTextField textFieldServerPort;

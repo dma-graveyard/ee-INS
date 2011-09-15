@@ -44,6 +44,9 @@ import javax.swing.SwingConstants;
 import dk.frv.enav.ins.status.ComponentStatus;
 import dk.frv.enav.ins.status.IStatusComponent;
 
+/**
+ * Status dialog with detailed status for given list of status components
+ */
 public class StatusDialog extends JDialog {
 	private static final long serialVersionUID = 1L;
 	private JLabel statusLbl;

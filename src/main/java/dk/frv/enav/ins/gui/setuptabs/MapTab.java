@@ -43,6 +43,9 @@ import com.bbn.openmap.proj.coords.LatLonPoint;
 import dk.frv.enav.ins.settings.MapSettings;
 import javax.swing.SpinnerNumberModel;
 
+/**
+ * Map tab panel in setup panel
+ */
 public class MapTab extends JPanel {
 	
 	private static final long serialVersionUID = 1L;

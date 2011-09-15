@@ -42,6 +42,9 @@ import javax.swing.border.TitledBorder;
 import dk.frv.enav.ins.settings.AisSettings;
 import dk.frv.enav.ins.settings.NavSettings;
 
+/**
+ * AIS tab panel in setup panel
+ */
 public class AisTab extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private JCheckBox checkBoxAllowSending;

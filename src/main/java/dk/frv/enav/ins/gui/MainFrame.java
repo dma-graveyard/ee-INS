@@ -49,6 +49,9 @@ import dk.frv.enav.ins.gui.msi.MsiDialog;
 import dk.frv.enav.ins.gui.route.RouteSuggestionDialog;
 import dk.frv.enav.ins.settings.GuiSettings;
 
+/**
+ * The main frame containing map and panels 
+ */
 public class MainFrame extends JFrame implements WindowListener {
 	
 	private static final String TITLE = "e-Navigation enhanced INS " + EeINS.getMinorVersion();

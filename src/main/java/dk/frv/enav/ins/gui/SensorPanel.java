@@ -67,6 +67,9 @@ import dk.frv.enav.ins.route.IRoutesUpdateListener;
 import dk.frv.enav.ins.route.RouteManager;
 import dk.frv.enav.ins.route.RoutesUpdateEvent;
 
+/**
+ * Sensor panel right of map
+ */
 public class SensorPanel extends OMComponentPanel implements IGpsDataListener, Runnable, ProjectionListener, IMapCoordListener, IRoutesUpdateListener {
 	
 	private static final long serialVersionUID = 1L;
@@ -137,6 +140,9 @@ public class SensorPanel extends OMComponentPanel implements IGpsDataListener, R
 		(new Thread(this)).start();
 	}
 
+	/**
+	 * Receive GPS update
+	 */
 	@Override
 	public void gpsDataUpdate(GpsData gpsData) {
 		this.setGpsData(gpsData);
@@ -242,6 +248,9 @@ public class SensorPanel extends OMComponentPanel implements IGpsDataListener, R
 		scalePanel.getScaleLabel().setText("Scale: " + String.format(Locale.US, "%3.0f", scale));
 	}
 
+	/**
+	 * Receive mouse location
+	 */
 	@Override
 	public void recieveCoord(LatLonPoint llp) {
 		cursorPanel.getCurLatLabel().setText(Formatter.latToPrintable(llp.getLatitude()));
@@ -260,6 +269,9 @@ public class SensorPanel extends OMComponentPanel implements IGpsDataListener, R
 		
 	}
 
+	/**
+	 * Receive route update
+	 */
 	@Override
 	public void routesChanged(RoutesUpdateEvent e) {
 		if(routeManager.isRouteActive()){

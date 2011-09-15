@@ -72,6 +72,9 @@ import dk.frv.enav.ins.route.RouteLoader;
 import dk.frv.enav.ins.route.RouteManager;
 import dk.frv.enav.ins.route.RoutesUpdateEvent;
 
+/**
+ * Dialog with route properties   
+ */
 public class RoutePropertiesDialog extends JDialog implements ActionListener, Runnable, ListSelectionListener, TableModelListener, FocusListener, WindowListener {
 
     private static final long serialVersionUID = 1L;

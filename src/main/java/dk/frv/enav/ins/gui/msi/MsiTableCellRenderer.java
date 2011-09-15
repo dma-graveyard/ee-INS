@@ -38,6 +38,9 @@ import javax.swing.table.DefaultTableCellRenderer;
 import dk.frv.enav.ins.msi.MsiHandler;
 import dk.frv.enav.ins.msi.MsiHandler.MsiMessageExtended;
 
+/**
+ * Cell coloring for MSI messages
+ */
 public class MsiTableCellRenderer extends DefaultTableCellRenderer {
 
 	private static final long serialVersionUID = 1L;

@@ -80,10 +80,11 @@ public class VesselTargetGraphic extends TargetGraphic {
 	private Paint paint;
 	private Stroke stroke;
 	private IntendedRouteGraphic routeGraphic = new IntendedRouteGraphic();
-	private Boolean showNameLabel;
+	private boolean showNameLabel = true;
 
 	public VesselTargetGraphic() {
 		super();
+		this.showNameLabel = EeINS.getSettings().getAisSettings().isShowNameLabels();
 	}
 
 	private void createGraphics() {
@@ -231,11 +232,11 @@ public class VesselTargetGraphic extends TargetGraphic {
 		return vesselTarget;
 	}
 
-	public void setShowNameLabel(Boolean showNameLabel) {
+	public void setShowNameLabel(boolean showNameLabel) {
 		this.showNameLabel = showNameLabel;
 	}
 
-	public Boolean getShowNameLabel() {
+	public boolean getShowNameLabel() {
 		return showNameLabel;
 	}
 	

@@ -45,6 +45,9 @@ import dk.frv.enav.ins.route.RouteManager;
 import dk.frv.enav.ins.route.RoutesUpdateEvent;
 import dk.frv.enav.ins.services.shore.ShoreServiceException;
 
+/**
+ * Dialog shown when requesting METOC
+ */
 public class MetocRequestDialog extends JDialog implements Runnable, ActionListener {
 	
 	private static final long serialVersionUID = 1L;

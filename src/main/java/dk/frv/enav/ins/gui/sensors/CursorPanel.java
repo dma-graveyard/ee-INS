@@ -38,12 +38,13 @@ import javax.swing.JPanel;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
 
+/**
+ * Cursor panel in sensor panel 
+ */
 public class CursorPanel extends JPanel {
-
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
+	
 	private final JLabel lblCursor = new JLabel("Cursor");
 	private final JLabel curLatTitlelabel = new JLabel("LAT");
 	private final JLabel curLonTitleLabel = new JLabel("LON");

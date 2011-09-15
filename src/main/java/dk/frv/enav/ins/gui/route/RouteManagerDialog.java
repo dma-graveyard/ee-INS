@@ -62,6 +62,9 @@ import dk.frv.enav.ins.route.RouteLoadException;
 import dk.frv.enav.ins.route.RouteManager;
 import dk.frv.enav.ins.route.RoutesUpdateEvent;
 
+/**
+ * Route manager dialog
+ */
 public class RouteManagerDialog extends JDialog implements ActionListener, ListSelectionListener, TableModelListener,
 		MouseListener {
 

@@ -41,6 +41,9 @@ import javax.swing.border.TitledBorder;
 
 import dk.frv.enav.ins.settings.NavSettings;
 
+/**
+ * Navigation tab panel in setup panel
+ */
 public class NavigationTab extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private JCheckBox checkBoxLookAhead;

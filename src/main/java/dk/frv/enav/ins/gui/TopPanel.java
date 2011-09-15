@@ -46,6 +46,9 @@ import dk.frv.enav.ins.gui.msi.MsiDialog;
 import dk.frv.enav.ins.gui.route.RouteManagerDialog;
 import dk.frv.enav.ins.msi.MsiHandler;
 
+/**
+ * The top buttons panel 
+ */
 public class TopPanel extends OMComponentPanel implements ActionListener {
 
 	private static final long serialVersionUID = 1L;

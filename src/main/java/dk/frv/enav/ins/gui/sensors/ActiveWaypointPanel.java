@@ -42,11 +42,13 @@ import dk.frv.enav.ins.common.text.Formatter;
 import dk.frv.enav.ins.route.ActiveRoute;
 import dk.frv.enav.ins.route.RouteManager;
 
+/**
+ * Active waypoint panel in sensor panel
+ */
 public class ActiveWaypointPanel extends JPanel {
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
+	
 	private JLabel wptTitleLabel;
 	private JLabel brgTitleLabel;
 	private JLabel rngTitleLabel;

@@ -38,6 +38,9 @@ import dk.frv.enav.common.xml.msi.MsiLocation;
 import dk.frv.enav.ins.common.text.Formatter;
 import dk.frv.enav.ins.msi.MsiHandler;
 
+/**
+ * Table model for MSI dialog
+ */
 public class MsiTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = 1L;
 	

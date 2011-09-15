@@ -67,6 +67,9 @@ import javax.swing.event.ListSelectionListener;
 
 import org.apache.commons.lang.StringUtils;
 
+/**
+ * MSI dialog
+ */
 public class MsiDialog extends ComponentFrame implements ListSelectionListener, ActionListener, IMsiUpdateListener {
 	private static final long serialVersionUID = 1L;
 

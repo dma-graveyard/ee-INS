@@ -123,6 +123,8 @@ To use Navicon ENC layer with ee-INS please follow the steps below
 
 1. Run application
 
+1. Enter Setup -> Map and enable ENC. Restart.
+
 
 ## Eclipse development ##
 

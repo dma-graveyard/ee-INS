@@ -38,12 +38,13 @@ import javax.swing.JPanel;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
 
+/**
+ * GPS panel in sensor panel
+ */
 public class GPSPanel extends JPanel {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+	
 	private JLabel gpsTitleLabel = new JLabel("GPS");
 	private JLabel latTitleLabel = new JLabel("LAT");
 	private JLabel latLabel = new JLabel("N/A");

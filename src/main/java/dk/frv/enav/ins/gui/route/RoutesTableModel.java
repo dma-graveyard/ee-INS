@@ -37,6 +37,9 @@ import dk.frv.enav.ins.common.text.Formatter;
 import dk.frv.enav.ins.route.Route;
 import dk.frv.enav.ins.route.RouteManager;
 
+/**
+ * Table model for RouteManagerDialog
+ */
 public class RoutesTableModel extends AbstractTableModel {
 	
 	private static final long serialVersionUID = 1L;

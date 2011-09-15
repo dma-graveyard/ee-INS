@@ -49,6 +49,9 @@ import dk.frv.enav.ins.gui.setuptabs.NavigationTab;
 import dk.frv.enav.ins.gui.setuptabs.SensorTab;
 import dk.frv.enav.ins.settings.Settings;
 
+/**
+ * The setup dialog
+ */
 public class SetupDialog extends JDialog implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	private JButton btnOk;

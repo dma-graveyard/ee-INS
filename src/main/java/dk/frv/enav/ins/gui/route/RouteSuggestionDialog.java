@@ -57,6 +57,9 @@ import dk.frv.enav.ins.gui.MainFrame;
 import dk.frv.enav.ins.route.RouteManager;
 import dk.frv.enav.ins.route.RoutesUpdateEvent;
 
+/**
+ * Dialog shown when route suggestion is received
+ */
 public class RouteSuggestionDialog extends ComponentFrame implements ActionListener, Runnable {
 	private static final long serialVersionUID = 1L;
 	

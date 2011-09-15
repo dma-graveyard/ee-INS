@@ -57,6 +57,9 @@ import dk.frv.enav.ins.msi.MsiHandler.MsiMessageExtended;
 import dk.frv.enav.ins.services.shore.ShoreServices;
 import dk.frv.enav.ins.status.IStatusComponent;
 
+/**
+ * Panel shown below the chart
+ */
 public class BottomPanel extends OMComponentPanel implements IMsiUpdateListener, MouseListener, Runnable {
 
 	private static final long serialVersionUID = 1L;

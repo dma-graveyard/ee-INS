@@ -38,7 +38,10 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class InfoPanel extends JPanel {
+/**
+ * Abstract base class for panels to be shown on the map in the glass pane
+ */
+public abstract class InfoPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
 	private JLabel textLabel = new JLabel();

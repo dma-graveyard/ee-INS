@@ -61,6 +61,9 @@ import dk.frv.enav.ins.route.Route;
 import dk.frv.enav.ins.route.RouteManager;
 import dk.frv.enav.ins.route.RouteMetocSettings;
 
+/**
+ * Dialog with METOC settings 
+ */
 public class RouteMetocDialog extends JDialog implements ActionListener, FocusListener  {
 
 	private static final long serialVersionUID = 1L;

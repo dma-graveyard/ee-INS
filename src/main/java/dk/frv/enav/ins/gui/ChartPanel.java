@@ -67,6 +67,9 @@ import dk.frv.enav.ins.layers.routeEdit.RouteEditLayer;
 import dk.frv.enav.ins.route.RoutesUpdateEvent;
 import dk.frv.enav.ins.settings.MapSettings;
 
+/**
+ * The panel with chart. Initializes all layers to be shown on the map. 
+ */
 public class ChartPanel extends OMComponentPanel implements IGpsDataListener {
 
 	private static final long serialVersionUID = 1L;
@@ -290,7 +293,7 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener {
 		}
 	}
 
-	public void editMode(Boolean enable) {
+	public void editMode(boolean enable) {
 		if (enable) {
 			mouseDelegator.setActive(routeEditMouseMode);
 			routeEditLayer.setVisible(true);
@@ -308,6 +311,9 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener {
 		}
 	}
 
+	/**
+	 * Receive GPS update
+	 */
 	@Override
 	public void gpsDataUpdate(GpsData gpsData) {
 		// Do auto follow
@@ -423,6 +429,9 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener {
 		// map.setScale(newScale*5);
 	}
 	
+	/**
+	 * Called when projection has been changed by user
+	 */
 	public void manualProjChange() {
 		topPanel.disableAutoFollow();
 	}
