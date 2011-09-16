@@ -53,6 +53,9 @@ import dk.frv.enav.ins.common.text.Formatter;
 import dk.frv.enav.ins.common.util.ParseUtils;
 import dk.frv.enav.ins.settings.NavSettings;
 
+/**
+ * Utility class for loading routes in different file formats
+ */
 public class RouteLoader {
 
 	private static final Logger LOG = Logger.getLogger(RouteLoader.class);

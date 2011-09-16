@@ -43,6 +43,9 @@ import dk.frv.enav.ins.common.Heading;
 import dk.frv.enav.ins.common.util.ParseUtils;
 import dk.frv.enav.ins.settings.NavSettings;
 
+/**
+ * Class for paring ROU format route files
+ */
 public class RouParser {
 
 	private String line = null;

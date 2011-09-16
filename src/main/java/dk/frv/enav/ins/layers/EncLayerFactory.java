@@ -40,6 +40,11 @@ import com.bbn.openmap.util.PropUtils;
 
 import dk.frv.enav.ins.settings.MapSettings;
 
+/**
+ * Factory class for creating ENC layer. If ENC is enabled is uses the file
+ * enc.properties to define class and settings. 
+ * 
+ */
 public class EncLayerFactory {
 	
 	private static final Logger LOG = Logger.getLogger(EncLayerFactory.class);
@@ -85,6 +90,9 @@ public class EncLayerFactory {
 		return encLayer;
 	}
 	
+	/**
+	 * Try to set map settings for different ENC layer implementations.
+	 */
 	public void setMapSettings() {
 		if (encLayer == null) {
 			return;
@@ -97,6 +105,10 @@ public class EncLayerFactory {
 		
 	}
 
+	/**
+	 * Set Navicon settings if Navicon layer
+	 * @return if settings could be set
+	 */
 	private boolean setNaviconSettings() {		
 		Properties marinerSettings = new Properties();
 		

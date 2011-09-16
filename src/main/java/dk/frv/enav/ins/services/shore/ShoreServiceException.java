@@ -29,6 +29,9 @@
  */
 package dk.frv.enav.ins.services.shore;
 
+/**
+ * Shore service exception 
+ */
 public class ShoreServiceException extends Exception {
 	
 	private static final long serialVersionUID = 1L;

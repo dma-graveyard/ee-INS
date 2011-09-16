@@ -33,6 +33,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Generate routes from tracks using a simple algorithm
+ */
 public class SimpleRouteGenerator implements IRouteGenerator {
 	
 	protected List<TimePoint> track;
@@ -55,7 +58,6 @@ public class SimpleRouteGenerator implements IRouteGenerator {
 				lastWpTime = point.getTime();
 			}
 		}
-		
 		
 		return route;		
 	}

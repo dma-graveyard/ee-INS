@@ -32,6 +32,9 @@ package dk.frv.enav.ins.layers.route;
 import dk.frv.enav.ins.layers.common.WpCircle;
 import dk.frv.enav.ins.route.Route;
 
+/**
+ * Graphic for waypoint circle
+ */
 public class WaypointCircle extends WpCircle {
 	private static final long serialVersionUID = 1L;
 	

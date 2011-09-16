@@ -38,6 +38,9 @@ import dk.frv.ais.handler.IAisHandler;
 import dk.frv.ais.message.AisMessage;
 import dk.frv.ais.message.AisPositionMessage;
 
+/**
+ * Utility for collecting tracks from AIS feed.
+ */
 public class TrackCollector implements IAisHandler {
 	
 	private long mmsi;

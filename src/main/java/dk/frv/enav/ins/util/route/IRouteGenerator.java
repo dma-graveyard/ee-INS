@@ -31,8 +31,16 @@ package dk.frv.enav.ins.util.route;
 
 import java.util.List;
 
+/**
+ * Interface for route generators
+ */
 public interface IRouteGenerator {
-	
+
+	/**
+	 * Make route from track
+	 * @param track
+	 * @return route
+	 */
 	List<TimePoint> generateRoute(List<TimePoint> track); 
 
 }

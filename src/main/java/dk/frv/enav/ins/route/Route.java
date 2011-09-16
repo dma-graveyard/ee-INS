@@ -43,6 +43,9 @@ import dk.frv.enav.common.xml.metoc.MetocForecast;
 import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.gps.GnssTime;
 
+/**
+ * Route class
+ */
 public class Route implements Serializable {
 
 	private static final long serialVersionUID = 1L;

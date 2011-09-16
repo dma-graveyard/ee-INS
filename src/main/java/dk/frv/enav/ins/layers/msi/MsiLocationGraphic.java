@@ -47,6 +47,9 @@ import dk.frv.enav.common.xml.msi.MsiLocation;
 import dk.frv.enav.common.xml.msi.MsiMessage;
 import dk.frv.enav.common.xml.msi.MsiPoint;
 
+/**
+ * Graphic for MSI location/area 
+ */
 public class MsiLocationGraphic extends OMGraphicList {
 	private static final long serialVersionUID = 1L;
 	

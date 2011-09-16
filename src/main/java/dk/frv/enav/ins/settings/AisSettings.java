@@ -34,6 +34,9 @@ import java.util.Properties;
 
 import com.bbn.openmap.util.PropUtils;
 
+/**
+ * AIS settings
+ */
 public class AisSettings implements Serializable {
 
 	private static final long serialVersionUID = 1L;

@@ -37,6 +37,9 @@ import java.util.Set;
 
 import dk.frv.enav.ins.ais.AisAdressedRouteSuggestion;
 
+/**
+ * A serializable class for storing route information
+ */
 public class RouteStore implements Serializable {
 
 	private static final long serialVersionUID = 1L;

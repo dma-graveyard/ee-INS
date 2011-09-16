@@ -37,6 +37,9 @@ import dk.frv.enav.ins.ais.VesselTarget.AisClass;
 import dk.frv.enav.ins.common.text.Formatter;
 import dk.frv.enav.ins.gui.InfoPanel;
 
+/**
+ * AIS target mouse over info
+ */
 public class AisTargetInfoPanel extends InfoPanel {
 	private static final long serialVersionUID = 1L;
 

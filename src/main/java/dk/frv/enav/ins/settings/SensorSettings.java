@@ -41,6 +41,9 @@ import dk.frv.enav.common.FormatException;
 import dk.frv.enav.common.util.DateUtils;
 import dk.frv.enav.common.util.ParseUtils;
 
+/**
+ * Sensor settings
+ */
 public class SensorSettings implements Serializable {
 	private static final long serialVersionUID = 1L;
 	

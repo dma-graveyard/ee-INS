@@ -34,6 +34,9 @@ import java.util.Properties;
 
 import com.bbn.openmap.util.PropUtils;
 
+/**
+ * Navigational settings
+ */
 public class NavSettings implements Serializable {
 
 	private static final long serialVersionUID = 1L;

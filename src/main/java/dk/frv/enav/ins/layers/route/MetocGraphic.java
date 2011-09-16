@@ -39,6 +39,9 @@ import dk.frv.enav.common.xml.metoc.MetocForecastPoint;
 import dk.frv.enav.ins.gps.GnssTime;
 import dk.frv.enav.ins.route.Route;
 
+/**
+ * Metoc graphic for route
+ */
 public class MetocGraphic extends OMGraphicList {
 
 	private static final long serialVersionUID = 1L;

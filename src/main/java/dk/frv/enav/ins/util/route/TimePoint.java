@@ -33,6 +33,9 @@ import java.util.Date;
 
 import dk.frv.ais.geo.GeoLocation;
 
+/**
+ * Geographic location with time.  
+ */
 public class TimePoint extends GeoLocation implements Comparable<TimePoint> {
 	private static final long serialVersionUID = 1L;
 	

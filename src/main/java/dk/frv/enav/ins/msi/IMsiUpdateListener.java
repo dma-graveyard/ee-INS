@@ -29,8 +29,14 @@
  */
 package dk.frv.enav.ins.msi;
 
+/**
+ * Interface to implement for classes wanting to be notified of MSI update
+ */
 public interface IMsiUpdateListener {
 	
+	/**
+	 * MSI messages has changed
+	 */
 	void msiUpdate();
 
 }

@@ -53,6 +53,9 @@ import dk.frv.enav.ins.route.ActiveRoute;
 import dk.frv.enav.ins.settings.AisSettings;
 import dk.frv.enav.ins.settings.Settings;
 
+/**
+ * AIS service component providing an AIS link interface.
+ */
 public class AisServices extends MapHandlerChild {
 	
 	private static final Logger LOG = Logger.getLogger(AisServices.class);

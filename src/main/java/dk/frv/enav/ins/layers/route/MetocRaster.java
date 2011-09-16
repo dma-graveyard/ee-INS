@@ -36,11 +36,11 @@ import com.bbn.openmap.omGraphics.OMGraphicList;
 import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.common.graphics.CenterRaster;
 
+/**
+ * Abstract base class for metoc raster images
+ */
 public abstract class MetocRaster extends OMGraphicList {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	public MetocRaster() {

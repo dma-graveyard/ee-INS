@@ -32,11 +32,11 @@ package dk.frv.enav.ins.layers.msi;
 import dk.frv.enav.common.xml.msi.MsiMessage;
 import dk.frv.enav.ins.gui.InfoPanel;
 
+/**
+ * MSI mouse over info
+ */
 public class MsiInfoPanel extends InfoPanel {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	public MsiInfoPanel() {

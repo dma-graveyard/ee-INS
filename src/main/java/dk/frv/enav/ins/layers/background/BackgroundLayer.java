@@ -36,6 +36,9 @@ import com.bbn.openmap.layer.shape.ShapeLayer;
 
 import dk.frv.enav.ins.event.NavigationMouseMode;
 
+/**
+ * Layer for simple coastal outline background
+ */
 public class BackgroundLayer extends ShapeLayer implements MapMouseListener {
 	
 	private static final long serialVersionUID = 1L;
@@ -64,43 +67,33 @@ public class BackgroundLayer extends ShapeLayer implements MapMouseListener {
 
 	@Override
 	public boolean mouseDragged(MouseEvent arg0) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void mouseMoved() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public boolean mouseMoved(MouseEvent arg0) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 	

@@ -38,6 +38,9 @@ import javax.swing.JOptionPane;
 
 import org.apache.log4j.Logger;
 
+/**
+ * Exception handler for uncaught exceptions. 
+ */
 public class ExceptionHandler implements UncaughtExceptionHandler {
 	
 	private static final Logger LOG = Logger.getLogger(ExceptionHandler.class);

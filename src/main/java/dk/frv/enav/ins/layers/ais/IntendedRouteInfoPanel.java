@@ -38,6 +38,9 @@ import dk.frv.enav.ins.common.text.Formatter;
 import dk.frv.enav.ins.common.util.Calculator;
 import dk.frv.enav.ins.gui.InfoPanel;
 
+/**
+ * Intended route mouse over info
+ */
 public class IntendedRouteInfoPanel extends InfoPanel {
 	private static final long serialVersionUID = 1L;
 

@@ -1,21 +1,19 @@
 TODO:
 
-Better comments in all files
-
 Wiki:
 	  Configuration description
 	  Component model
-      Component diagram with event flows      
+      Component diagram with event flows
+      Layers overview      
       GUI diagram
       OpenMap information
       Plugin layers and components      
-
-Help dialog i app
 
 Eclipse launch configuration
 
 Make new installer project with installer parts from old project
 
-Place manual in project
+Place manual in project and link to from Wiki
+
 
 

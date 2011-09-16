@@ -34,6 +34,9 @@ import com.bbn.openmap.proj.Projection;
 
 import dk.frv.enav.ins.ais.AisTarget;
 
+/**
+ * Abstract base class graphic for AIS targets
+ */
 public abstract class TargetGraphic extends OMGraphicList {
 
 	private static final long serialVersionUID = 1L;
@@ -45,4 +48,5 @@ public abstract class TargetGraphic extends OMGraphicList {
 	public abstract void update(AisTarget aisTarget);
 
 	public abstract void setMarksVisible(Projection projection);
+	
 }

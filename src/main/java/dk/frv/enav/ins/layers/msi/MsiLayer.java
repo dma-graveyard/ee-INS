@@ -61,6 +61,9 @@ import dk.frv.enav.ins.gui.TopPanel;
 import dk.frv.enav.ins.msi.MsiHandler;
 import dk.frv.enav.ins.msi.MsiHandler.MsiMessageExtended;
 
+/**
+ * Layer for MSI
+ */
 public class MsiLayer extends OMGraphicHandlerLayer implements MapMouseListener {	
 	private static final long serialVersionUID = 1L;
 

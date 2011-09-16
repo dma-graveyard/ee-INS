@@ -41,6 +41,9 @@ import org.apache.log4j.Logger;
 
 import com.bbn.openmap.util.PropUtils;
 
+/**
+ * Settings class
+ */
 public class Settings implements Serializable {
 
 	private static final long serialVersionUID = 1L;

@@ -43,6 +43,10 @@ import dk.frv.ais.reader.AisReader;
 import dk.frv.ais.reader.AisStreamReader;
 import dk.frv.enav.ins.common.text.Formatter;
 
+/**
+ * Inject intended route broadcasts into AIS stream based on vessel tracks
+ * and generated routes.
+ */
 public class RouteInjector {
 
 	private String inFilename;

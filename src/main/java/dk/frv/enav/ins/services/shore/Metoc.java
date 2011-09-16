@@ -41,6 +41,9 @@ import dk.frv.enav.ins.route.Route;
 import dk.frv.enav.ins.route.RouteMetocSettings;
 import dk.frv.enav.ins.route.RouteWaypoint;
 
+/**
+ * Metoc shore service request generator 
+ */
 public class Metoc {
 	
 	private static final long MAX_FORECAST_FUTURE = 60;

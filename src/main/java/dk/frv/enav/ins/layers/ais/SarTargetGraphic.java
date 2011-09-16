@@ -43,6 +43,9 @@ import dk.frv.enav.ins.ais.AisTarget;
 import dk.frv.enav.ins.ais.SarTarget;
 import dk.frv.enav.ins.ais.VesselPositionData;
 
+/**
+ * AIS SART graphic
+ */
 public class SarTargetGraphic extends TargetGraphic {
 	private static final long serialVersionUID = 1L;
 

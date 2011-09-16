@@ -31,6 +31,9 @@ package dk.frv.enav.ins.layers.ais;
 
 import dk.frv.enav.ins.layers.common.WpCircle;
 
+/**
+ * Graphic for intended route WP circle
+ */
 public class IntendedRouteWpCircle extends WpCircle {
 	private static final long serialVersionUID = 1L;
 

@@ -51,6 +51,9 @@ import dk.frv.enav.ins.status.ComponentStatus;
 import dk.frv.enav.ins.status.IStatusComponent;
 import dk.frv.enav.ins.status.ShoreServiceStatus;
 
+/**
+ * Shore service component providing the functional link to shore.
+ */
 public class ShoreServices extends MapHandlerChild implements IStatusComponent {
 	
 	private static final Logger LOG = Logger.getLogger(ShoreServices.class);

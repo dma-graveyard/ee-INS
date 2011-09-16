@@ -35,6 +35,9 @@ import java.util.Set;
 
 import dk.frv.enav.common.xml.metoc.MetocDataTypes;
 
+/**
+ * Metoc settings for route
+ */
 public class RouteMetocSettings implements Serializable {
 	
 	private static final long serialVersionUID = 1L;

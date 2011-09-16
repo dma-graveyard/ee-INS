@@ -60,6 +60,9 @@ import dk.frv.enav.ins.gps.GpsHandler;
 import dk.frv.enav.ins.gui.MainFrame;
 import dk.frv.enav.ins.gui.MapMenu;
 
+/**
+ * AIS layer. Showing AIS targets and intended routes. 
+ */
 public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListener, Runnable, MapMouseListener {
 
 	private static final Logger LOG = Logger.getLogger(AisLayer.class);

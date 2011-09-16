@@ -48,6 +48,9 @@ import dk.frv.ais.reader.ISendResultListener;
 import dk.frv.ais.reader.SendException;
 import dk.frv.ais.reader.SendRequest;
 
+/**
+ * Serial port NMEA sensor 
+ */
 public class NmeaSerialSensor extends NmeaSensor implements SerialPortEventListener{
 	
 	private static Logger LOG = Logger.getLogger(NmeaSerialSensor.class);

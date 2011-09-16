@@ -29,4 +29,7 @@
  */
 package dk.frv.enav.ins.nmea;
 
+/**
+ * Different sensor types
+ */
 public enum SensorType {GPS, AIS, UNKNOWN}

@@ -37,7 +37,11 @@ import com.bbn.openmap.omGraphics.OMLine;
 
 import dk.frv.ais.geo.GeoLocation;
 
+/**
+ * Graphic for intended route leg graphic
+ */
 public class IntendedRouteLegGraphic extends OMLine {
+	
 	private static final long serialVersionUID = 1L;
 	
 	private IntendedRouteGraphic intendedRouteGraphic;

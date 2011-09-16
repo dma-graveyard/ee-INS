@@ -67,6 +67,9 @@ import dk.frv.enav.ins.services.shore.ShoreServiceException;
 import dk.frv.enav.ins.services.shore.ShoreServices;
 import dk.frv.enav.ins.settings.EnavSettings;
 
+/**
+ * Manager for handling a collection of routes and active route 
+ */
 public class RouteManager extends MapHandlerChild implements Runnable, Serializable, IGpsDataListener, IAisRouteSuggestionListener {
 
 	private static final long serialVersionUID = 1L;

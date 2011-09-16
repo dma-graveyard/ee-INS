@@ -33,6 +33,9 @@ import javax.swing.ImageIcon;
 
 import dk.frv.enav.ins.common.graphics.CenterRaster;
 
+/**
+ * Graphic for AIS SART symbol
+ */
 public class SartGraphic extends CenterRaster {
 	private static final long serialVersionUID = 1L;
 	

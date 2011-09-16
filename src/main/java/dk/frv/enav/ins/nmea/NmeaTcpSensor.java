@@ -42,6 +42,9 @@ import dk.frv.ais.reader.ISendResultListener;
 import dk.frv.ais.reader.SendException;
 import dk.frv.ais.reader.SendRequest;
 
+/**
+ * TCP NMEA sensor
+ */
 public class NmeaTcpSensor extends NmeaSensor {
 
 	private static final Logger LOG = Logger.getLogger(NmeaTcpSensor.class);

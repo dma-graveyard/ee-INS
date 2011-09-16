@@ -50,6 +50,9 @@ import dk.frv.enav.ins.common.Heading;
 import dk.frv.enav.ins.common.graphics.CenterRaster;
 import dk.frv.enav.ins.common.util.Calculator;
 
+/**
+ * Graphic for MSI icon showing relevant off chart MSI
+ */
 public class MsiDirectionalIcon extends OMGraphicList implements ProjectionListener {
 	private static final long serialVersionUID = -6808339529053676255L;
 	private Point2D intersection;

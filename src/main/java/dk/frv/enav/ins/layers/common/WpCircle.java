@@ -31,6 +31,9 @@ package dk.frv.enav.ins.layers.common;
 
 import com.bbn.openmap.omGraphics.OMCircle;
 
+/**
+ * Graphic for a WP circle 
+ */
 public class WpCircle extends OMCircle {
 	private static final long serialVersionUID = 1L;
 	

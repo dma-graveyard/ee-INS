@@ -36,6 +36,9 @@ import dk.frv.enav.ins.common.Heading;
 import dk.frv.enav.ins.common.util.Calculator;
 import dk.frv.enav.ins.common.util.Converter;
 
+/**
+ * Route leg class
+ */
 public class RouteLeg implements Serializable {
 
 	private static final int R = 6371; // earths radius in km

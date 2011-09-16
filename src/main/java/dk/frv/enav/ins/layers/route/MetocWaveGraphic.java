@@ -31,11 +31,11 @@ package dk.frv.enav.ins.layers.route;
 
 import dk.frv.enav.ins.EeINS;
 
+/**
+ * Metoc wave graphic
+ */
 public class MetocWaveGraphic extends MetocRaster {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	String markerDir = "/images/metoc/wave/mark";

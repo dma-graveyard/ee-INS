@@ -51,6 +51,9 @@ import dk.frv.enav.ins.layers.common.WpCircle;
 import dk.frv.enav.ins.route.RouteLeg;
 import dk.frv.enav.ins.route.RouteWaypoint;
 
+/**
+ * Layer for drawing new route. When active it will use a panning mouse mode. 
+ */
 public class RouteEditLayer extends OMGraphicHandlerLayer implements MapMouseListener {
 
 	private static final long serialVersionUID = 1L;
@@ -80,8 +83,9 @@ public class RouteEditLayer extends OMGraphicHandlerLayer implements MapMouseLis
 	@Override
 	public synchronized OMGraphicList prepare() {
 		graphics.project(getProjection());
-		if(waypoints.size() <= 0)
+		if(waypoints.size() <= 0) {
 			wpLeg.setVisible(false);
+		}
 		return graphics;
 	}
 	
@@ -113,7 +117,6 @@ public class RouteEditLayer extends OMGraphicHandlerLayer implements MapMouseLis
 	
 	@Override
 	public void findAndUndo(Object obj) {
-		// TODO Auto-generated method stub
 		super.findAndUndo(obj);
 	}
 	
@@ -163,7 +166,6 @@ public class RouteEditLayer extends OMGraphicHandlerLayer implements MapMouseLis
 
 	@Override
 	public boolean mouseDragged(MouseEvent e) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -181,8 +183,6 @@ public class RouteEditLayer extends OMGraphicHandlerLayer implements MapMouseLis
 
 	@Override
 	public void mouseMoved() {
-		// TODO Auto-generated method stub
-		
 	}
 	
 	@Override
@@ -218,13 +218,11 @@ public class RouteEditLayer extends OMGraphicHandlerLayer implements MapMouseLis
 
 	@Override
 	public boolean mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 }

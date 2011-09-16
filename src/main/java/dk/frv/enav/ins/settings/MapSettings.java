@@ -35,6 +35,9 @@ import java.util.Properties;
 import com.bbn.openmap.proj.coords.LatLonPoint;
 import com.bbn.openmap.util.PropUtils;
 
+/**
+ * Map/chart settings
+ */
 public class MapSettings implements Serializable {
 
 	private static final long serialVersionUID = 1L;

@@ -58,9 +58,14 @@ import dk.frv.enav.ins.gps.GnssTime;
 import dk.frv.enav.ins.route.ActiveRoute;
 import dk.frv.enav.ins.route.Route;
 
+/**
+ * Serializable class to store MSI information
+ */
 public class MsiStore implements Serializable {
-	// TODO: If class changed, generate a new serial version ID
+	
+	// If class changed, generate a new serial version ID	
 	private static final long serialVersionUID = -5653288769636767014L;
+	
 	private static final Logger LOG = Logger.getLogger(MsiStore.class);	
 	private static final String msiFile = ".msi";
 	

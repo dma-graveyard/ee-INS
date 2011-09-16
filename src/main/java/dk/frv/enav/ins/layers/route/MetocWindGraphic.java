@@ -29,10 +29,11 @@
  */
 package dk.frv.enav.ins.layers.route;
 
+/**
+ * Graphic for showing wind  
+ */
 public class MetocWindGraphic extends MetocRaster {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	
 	String markerDir = "/images/metoc/wind/mark";

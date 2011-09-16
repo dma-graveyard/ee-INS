@@ -32,6 +32,9 @@ package dk.frv.enav.ins.status;
 import dk.frv.enav.ins.common.text.Formatter;
 import dk.frv.enav.ins.gps.GpsData;
 
+/**
+ * GPS status
+ */
 public class GpsStatus extends ComponentStatus {
 	
 	private GpsData currentData;

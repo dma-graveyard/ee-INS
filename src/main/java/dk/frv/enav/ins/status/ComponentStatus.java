@@ -29,6 +29,9 @@
  */
 package dk.frv.enav.ins.status;
 
+/**
+ * Abstract base class for status components
+ */
 public abstract class ComponentStatus {
 	
 	public enum Status {

@@ -38,6 +38,9 @@ import dk.frv.ais.geo.GeoLocation;
 import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.msi.MsiHandler.MsiMessageExtended;
 
+/**
+ * Graphic for MSI symbol 
+ */
 public class MsiSymbolGraphic extends MsiSymbolPosition {
 	private static final long serialVersionUID = 1L;
 	

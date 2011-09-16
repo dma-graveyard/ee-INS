@@ -37,6 +37,9 @@ import java.util.TimeZone;
 import dk.frv.ais.sentence.SentenceException;
 import dk.frv.enav.ins.gps.GnssTimeMessage;
 
+/**
+ * Proprietary PSTT sentence parser.
+ */
 public class PsttSentence {
 	
 	private GnssTimeMessage gnssTimeMessage = null;

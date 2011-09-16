@@ -33,6 +33,9 @@ import java.util.Date;
 
 import dk.frv.enav.ins.common.text.Formatter;
 
+/**
+ * AIS status
+ */
 public class AisStatus extends ComponentStatus {
 	
 	private static final long RECEPTION_INTERVAL = 30000; // 30 secs

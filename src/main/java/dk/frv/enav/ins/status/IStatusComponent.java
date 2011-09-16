@@ -29,6 +29,9 @@
  */
 package dk.frv.enav.ins.status;
 
+/**
+ * Interface for components able to deliver status
+ */
 public interface IStatusComponent {
 	
 	ComponentStatus getStatus();

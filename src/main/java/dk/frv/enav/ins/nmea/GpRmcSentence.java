@@ -40,6 +40,9 @@ import dk.frv.enav.ins.common.FormatException;
 import dk.frv.enav.ins.common.util.ParseUtils;
 import dk.frv.enav.ins.gps.GnssTimeMessage;
 
+/**
+ * GPRMC sentence representation
+ */
 public class GpRmcSentence extends Sentence {
 	
 	private GpsMessage gpsMessage;

@@ -34,6 +34,9 @@ import java.util.Properties;
 
 import com.bbn.openmap.util.PropUtils;
 
+/**
+ * Specific e-Navigation settings
+ */
 public class EnavSettings implements Serializable {
 
 	private static final long serialVersionUID = 1L;

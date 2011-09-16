@@ -35,7 +35,9 @@ import java.util.List;
 import com.bbn.openmap.geo.Geo;
 import com.bbn.openmap.proj.Length;
 
-
+/**
+ * Divide and conquer algorithm for generating route from track.
+ */
 public class ApproxRouteGenerator extends SimpleRouteGenerator {
 
 	private double tolleranceMeters = 185.2; // 1/10 nm

@@ -41,6 +41,9 @@ import com.bbn.openmap.MapHandlerChild;
 import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.common.HttpRequest;
 
+/**
+ * Thread to check for new version
+ */
 public class UpdateCheckerThread extends MapHandlerChild implements Runnable {
 	
 	private static final Logger LOG = Logger.getLogger(UpdateCheckerThread.class);
@@ -112,4 +115,5 @@ public class UpdateCheckerThread extends MapHandlerChild implements Runnable {
 			LOG.error("Failed to get newest version number: " + e.getMessage());
 		}
 	}
+	
 }

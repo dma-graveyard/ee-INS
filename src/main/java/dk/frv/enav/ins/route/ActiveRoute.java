@@ -36,6 +36,9 @@ import dk.frv.enav.ins.common.util.Calculator;
 import dk.frv.enav.ins.gps.GnssTime;
 import dk.frv.enav.ins.gps.GpsData;
 
+/**
+ * Class representing an active route
+ */
 public class ActiveRoute extends Route {
 
 	public enum ActiveWpSelectionResult {NO_CHANGE, CHANGED, ROUTE_FINISHED};

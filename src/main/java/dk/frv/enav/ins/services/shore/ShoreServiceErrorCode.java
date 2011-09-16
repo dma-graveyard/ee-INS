@@ -31,6 +31,9 @@ package dk.frv.enav.ins.services.shore;
 
 import java.util.HashMap;
 
+/**
+ * Error codes for shore services
+*/
 public class ShoreServiceErrorCode {
 	
 	public static final int OK = 0;

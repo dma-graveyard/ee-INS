@@ -32,14 +32,20 @@ package dk.frv.enav.ins.nmea;
 import dk.frv.ais.message.AisMessage;
 
 /**
- * Interface to implement to allow receiption of AIS messages 
- * @author obo
- *
+ * Interface to implement to allow reception of AIS messages 
  */
 public interface IAisListener {
 	
+	/**
+	 * Receive messages from others
+	 * @param aisMessage
+	 */
 	void receive(AisMessage aisMessage);
 	
+	/**
+	 * Receive own ship messages
+	 * @param aisMessage
+	 */
 	void receiveOwnMessage(AisMessage aisMessage);
 
 }

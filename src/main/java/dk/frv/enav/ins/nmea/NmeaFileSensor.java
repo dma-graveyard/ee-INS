@@ -44,6 +44,9 @@ import dk.frv.ais.reader.SendRequest;
 import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.settings.SensorSettings;
 
+/**
+ * NMEA sensor reading from file
+ */
 public class NmeaFileSensor extends NmeaSensor {
 	
 	private static final Logger LOG = Logger.getLogger(NmeaFileSensor.class);

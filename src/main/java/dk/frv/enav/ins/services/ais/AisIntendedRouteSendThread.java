@@ -31,6 +31,9 @@ package dk.frv.enav.ins.services.ais;
 
 import dk.frv.ais.reader.SendRequest;
 
+/**
+ * Thread for sending intended routes
+ */
 public class AisIntendedRouteSendThread extends AisSendThread {
 
 	public AisIntendedRouteSendThread(SendRequest sendRequest, AisServices aisServices) {

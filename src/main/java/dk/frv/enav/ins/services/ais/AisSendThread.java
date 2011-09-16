@@ -36,6 +36,9 @@ import dk.frv.ais.reader.SendException;
 import dk.frv.ais.reader.SendRequest;
 import dk.frv.ais.sentence.Abk;
 
+/**
+ * Thread for sending AIS messages
+ */
 public class AisSendThread extends Thread implements ISendResultListener {
 	
 	private static final Logger LOG = Logger.getLogger(AisSendThread.class);

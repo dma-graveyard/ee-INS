@@ -42,11 +42,11 @@ import dk.frv.enav.ins.route.Route;
 import dk.frv.enav.ins.route.RouteLeg;
 import dk.frv.enav.ins.route.RouteWaypoint;
 
+/**
+ * Graphic for showing routes
+ */
 public class RouteGraphic extends OMGraphicList {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	private Route route;

@@ -40,11 +40,11 @@ import dk.frv.enav.common.xml.metoc.MetocForecastPoint;
 import dk.frv.enav.common.xml.metoc.MetocForecastTriplet;
 import dk.frv.enav.ins.route.RouteMetocSettings;
 
+/**
+ * Graphic for a metoc point. Combining graphics for different metocs. 
+ */
 public class MetocPointGraphic extends OMGraphicList {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	private MetocWindGraphic 	windMarker;

@@ -63,6 +63,9 @@ import dk.frv.enav.ins.route.RouteManager;
 import dk.frv.enav.ins.route.RouteWaypoint;
 import dk.frv.enav.ins.route.RoutesUpdateEvent;
 
+/**
+ * Layer for showing routes
+ */
 public class RouteLayer extends OMGraphicHandlerLayer implements IRoutesUpdateListener, MapMouseListener {
 
 	private static final long serialVersionUID = 1L;

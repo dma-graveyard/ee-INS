@@ -49,6 +49,9 @@ import dk.frv.ais.message.binary.BroadcastRouteInformation;
 import dk.frv.ais.proprietary.IProprietarySourceTag;
 import dk.frv.ais.sentence.Vdm;
 
+/**
+ * Receive AIS messages and inject intended route broadcasts
+ */
 public class AisRouteInject implements IAisHandler {
 	
 	private List<TimePoint> route;
@@ -56,8 +59,7 @@ public class AisRouteInject implements IAisHandler {
 	private int currentWpIndex;
 	private long mmsi;
 	private int routePoints = 15;
-	private Date lastBroadcast = null;
-	
+	private Date lastBroadcast = null;	
 	
 	public AisRouteInject(String outFilename, List<TimePoint> route, long mmsi) throws IOException {
 		this.route = route;

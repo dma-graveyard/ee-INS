@@ -34,6 +34,9 @@ import java.io.Serializable;
 import dk.frv.ais.geo.GeoLocation;
 import dk.frv.enav.ins.common.Heading;
 
+/**
+ * A route waypoint
+ */
 public class RouteWaypoint implements Serializable {
 
 	private static final long serialVersionUID = 1L;

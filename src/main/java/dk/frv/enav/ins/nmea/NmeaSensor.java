@@ -64,10 +64,7 @@ import dk.frv.enav.ins.gps.GnssTimeMessage;
 import dk.frv.enav.ins.gps.IGnssTimeListener;
 
 /**
- * Abstract class for handling NMEA messages
- * 
- * @author obo
- * 
+ * Abstract class for reading and handling NMEA messages
  */
 public abstract class NmeaSensor extends MapHandlerChild implements Runnable {
 

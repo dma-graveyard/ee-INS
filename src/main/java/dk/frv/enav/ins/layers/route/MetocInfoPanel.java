@@ -37,6 +37,9 @@ import dk.frv.enav.ins.common.text.Formatter;
 import dk.frv.enav.ins.gui.InfoPanel;
 import dk.frv.enav.ins.route.RouteMetocSettings;
 
+/**
+ * Metoc mouse over info
+ */
 public class MetocInfoPanel extends InfoPanel {
 	private static final long serialVersionUID = 1L;
 

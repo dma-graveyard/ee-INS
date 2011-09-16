@@ -34,6 +34,9 @@ import java.util.Date;
 import dk.frv.enav.ins.common.text.Formatter;
 import dk.frv.enav.ins.services.shore.ShoreServiceException;
 
+/**
+ * Status for shore services
+ */
 public class ShoreServiceStatus extends ComponentStatus {
 
 	private Date lastContact = null;

@@ -63,6 +63,12 @@ import dk.frv.enav.ins.settings.Settings;
 import dk.frv.enav.ins.util.OneInstanceGuard;
 import dk.frv.enav.ins.util.UpdateCheckerThread;
 
+/**
+ * Main class with main method.
+ * 
+ * Starts up components, bean context and GUI. 
+ *
+ */
 public class EeINS {
 	
 	private static String VERSION;

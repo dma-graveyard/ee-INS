@@ -43,11 +43,11 @@ import com.bbn.openmap.omGraphics.OMLine;
 import dk.frv.ais.geo.GeoLocation;
 import dk.frv.enav.ins.ais.AisAdressedRouteSuggestion;
 
+/**
+ * Graphic for a suggested route
+ */
 public class SuggestedRouteGraphic extends OMGraphicList {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private List<GeoLocation> routeWaypoints;
@@ -63,25 +63,6 @@ public class SuggestedRouteGraphic extends OMGraphicList {
 	}
 
 	public void initGraphics() {
-
-		// extract llpoints from geolocations
-		/*
-		 * int length = routeWaypoints.size() * 2; double[] llpoints = new
-		 * double[length]; int llpoint = 0; for (int i = 0; i < length/2; i++) {
-		 * GeoLocation geoLocation = routeWaypoints.get(i); llpoints[llpoint] =
-		 * geoLocation.getLatitude(); llpoints[llpoint+1] =
-		 * geoLocation.getLongitude(); llpoint += 2; } OMDecoratedSpline omds =
-		 * new OMDecoratedSpline(llpoints, OMSpline.DECIMAL_DEGREES,
-		 * OMSpline.LINETYPE_RHUMB); omds.setNumSegs(1); ShapeDecorator sd = new
-		 * ShapeDecorator(); //sd.addDecoration(new LineShapeDecoration(5,
-		 * OMColor.clear)); //sd.addDecoration(new IceAreaShapeDecoration(7, 7,
-		 * IceAreaShapeDecoration.LEFT)); sd.addDecoration(new
-		 * SuggestedRouteDecoration(10, 2, SuggestedRouteDecoration.LEFT));
-		 * //sd.addDecoration(new TurbulanceShapeDecoration(10, 4));
-		 * omds.setDecorator(sd);
-		 * 
-		 * add(omds);
-		 */
 
 		Stroke backgroundStroke = new BasicStroke(
 				10.0f, // Width

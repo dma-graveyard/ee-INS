@@ -57,6 +57,9 @@ import dk.frv.enav.ins.services.shore.ShoreServiceException;
 import dk.frv.enav.ins.services.shore.ShoreServices;
 import dk.frv.enav.ins.settings.EnavSettings;
 
+/**
+ * Component for handling MSI messages
+ */
 public class MsiHandler extends MapHandlerChild implements Runnable, IRoutesUpdateListener, IGpsDataListener {
 	
 	private static final Logger LOG = Logger.getLogger(MsiHandler.class);

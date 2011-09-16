@@ -37,12 +37,13 @@ import dk.frv.enav.common.xml.msi.MsiMessage;
 import dk.frv.enav.common.xml.msi.MsiPoint;
 import dk.frv.enav.ins.msi.MsiHandler.MsiMessageExtended;
 
+/**
+ * Graphic for MSI
+ */
 public abstract class MsiSymbolPosition extends OMGraphicList {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+	
 	protected MsiMessage msiMessage;
 	protected boolean acknowledged;
 

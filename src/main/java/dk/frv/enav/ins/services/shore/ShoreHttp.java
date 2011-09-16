@@ -50,6 +50,9 @@ import org.apache.log4j.Logger;
 import dk.frv.enav.ins.common.util.Compressor;
 import dk.frv.enav.ins.settings.EnavSettings;
 
+/**
+ * Encapsulation of HTTP connection to shore. 
+ */
 public class ShoreHttp {
 
 	private static final Logger LOG = Logger.getLogger(ShoreHttp.class);

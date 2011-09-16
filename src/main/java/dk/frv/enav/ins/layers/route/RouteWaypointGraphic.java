@@ -42,11 +42,11 @@ import com.bbn.openmap.omGraphics.OMText;
 import dk.frv.enav.ins.route.Route;
 import dk.frv.enav.ins.route.RouteWaypoint;
 
+/**
+ * Graphic for a route waypoint
+ */
 public class RouteWaypointGraphic extends OMGraphicList {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	private RouteWaypoint routeWaypoint;

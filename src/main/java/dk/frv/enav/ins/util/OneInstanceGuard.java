@@ -38,6 +38,9 @@ import java.nio.channels.FileLock;
 
 import org.apache.log4j.Logger;
 
+/**
+ * Class for checking if other instances are running.
+ */
 public class OneInstanceGuard {
 	
 	private static final Logger LOG = Logger.getLogger(OneInstanceGuard.class);

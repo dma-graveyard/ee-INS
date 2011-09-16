@@ -36,6 +36,9 @@ import java.util.Properties;
 
 import com.bbn.openmap.util.PropUtils;
 
+/**
+ * General GUI settings
+ */
 public class GuiSettings implements Serializable {
 
 	private static final long serialVersionUID = 1L;

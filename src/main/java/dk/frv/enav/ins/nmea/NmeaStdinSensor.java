@@ -37,6 +37,9 @@ import dk.frv.ais.reader.ISendResultListener;
 import dk.frv.ais.reader.SendException;
 import dk.frv.ais.reader.SendRequest;
 
+/**
+ * NMEA sensor taking input from STDIN
+ */
 public class NmeaStdinSensor extends NmeaSensor {
 	
 	private static final Logger LOG = Logger.getLogger(NmeaStdinSensor.class);

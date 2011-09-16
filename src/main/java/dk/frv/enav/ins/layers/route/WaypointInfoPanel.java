@@ -38,6 +38,9 @@ import dk.frv.enav.ins.route.ActiveRoute;
 import dk.frv.enav.ins.route.Route;
 import dk.frv.enav.ins.route.RouteWaypoint;
 
+/**
+ * Mouse over info for waypoint. 
+ */
 public class WaypointInfoPanel extends InfoPanel {
 	private static final long serialVersionUID = 1L;
 	

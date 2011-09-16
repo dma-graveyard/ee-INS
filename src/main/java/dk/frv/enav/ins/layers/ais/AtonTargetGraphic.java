@@ -36,6 +36,9 @@ import dk.frv.ais.geo.GeoLocation;
 import dk.frv.enav.ins.ais.AisTarget;
 import dk.frv.enav.ins.ais.AtoNTarget;
 
+/**
+ * Graphic for AtoN target
+ */
 public class AtonTargetGraphic extends TargetGraphic {
 
 	private static final long serialVersionUID = 1L;

@@ -56,7 +56,11 @@ import dk.frv.enav.ins.ais.VesselTargetSettings;
 import dk.frv.enav.ins.common.graphics.RotationalPoly;
 import dk.frv.enav.ins.common.math.Vector2D;
 
+/**
+ * Graphic for vessel target
+ */
 public class VesselTargetGraphic extends TargetGraphic {
+
 	private static final long serialVersionUID = 1L;
 
 	public static final float STROKE_WIDTH = 1.5f;

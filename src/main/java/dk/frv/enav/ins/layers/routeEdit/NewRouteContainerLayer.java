@@ -40,12 +40,13 @@ import dk.frv.enav.ins.layers.route.RouteGraphic;
 import dk.frv.enav.ins.route.Route;
 import dk.frv.enav.ins.route.RouteWaypoint;
 
+/**
+ * Container layer for new route drawing.
+ */
 public class NewRouteContainerLayer extends OMGraphicHandlerLayer {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+	
 	private LinkedList<RouteWaypoint> waypoints = new LinkedList<RouteWaypoint>();
 	private Route route;
 	private OMGraphicList graphics = new OMGraphicList();
@@ -72,7 +73,6 @@ public class NewRouteContainerLayer extends OMGraphicHandlerLayer {
 	
 	@Override
 	public void findAndUndo(Object obj) {
-		// TODO Auto-generated method stub
 		super.findAndUndo(obj);
 	}
 	

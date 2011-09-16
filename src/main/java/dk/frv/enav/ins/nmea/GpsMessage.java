@@ -31,6 +31,9 @@ package dk.frv.enav.ins.nmea;
 
 import dk.frv.ais.geo.GeoLocation;
 
+/**
+ * Class representing a GPS message
+ */
 public class GpsMessage {
 	
 	private GeoLocation pos;

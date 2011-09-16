@@ -40,6 +40,9 @@ import dk.frv.ais.geo.GeoLocation;
 import dk.frv.enav.ins.ais.AisIntendedRoute;
 import dk.frv.enav.ins.ais.VesselTarget;
 
+/**
+ * Graphic for intended route
+ */
 public class IntendedRouteGraphic extends OMGraphicList {
 	private static final long serialVersionUID = 1L;
 	
