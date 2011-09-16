@@ -52,8 +52,8 @@ public class MsiSymbolGraphic extends MsiSymbolPosition {
 			Image msiSymbolImage = Toolkit.getDefaultToolkit().getImage(EeINS.class.getResource("/images/msi/msi_symbol_32.png"));
 			msiSymbol = new OMRaster(pos.getLatitude(), pos.getLongitude(), -16, -16, msiSymbolImage);
 		} else {
-			Image msiSymbolImage = Toolkit.getDefaultToolkit().getImage(EeINS.class.getResource("/images/msi/msi_unack_symbol_34.png"));
-			msiSymbol = new OMRaster(pos.getLatitude(), pos.getLongitude(), -17, -17, msiSymbolImage);
+			Image msiSymbolImage = Toolkit.getDefaultToolkit().getImage(EeINS.class.getResource("/images/msi/msi_unack_symbol_32.png"));
+			msiSymbol = new OMRaster(pos.getLatitude(), pos.getLongitude(), -16, -16, msiSymbolImage);
 		}
 		//msiSymbol.scaleTo(32, 32, OMRasterObject.SMOOTH_SCALING);
 		add(msiSymbol);

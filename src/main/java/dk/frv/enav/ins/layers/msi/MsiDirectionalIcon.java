@@ -52,6 +52,7 @@ import dk.frv.enav.ins.common.util.Calculator;
 
 public class MsiDirectionalIcon extends OMGraphicList implements ProjectionListener {
 	private static final long serialVersionUID = -6808339529053676255L;
+	private static final int IMAGE_SIZE = 42;
 	private Point2D intersection;
 	private MapBean mapBean;
 	private CenterRaster directionRaster;
@@ -63,8 +64,8 @@ public class MsiDirectionalIcon extends OMGraphicList implements ProjectionListe
 	MsiDirectionalIcon(MapBean mapBean) {
 		this.mapBean = mapBean;
 		mapBean.addProjectionListener(this);
-		directionImage = new ImageIcon(EeINS.class.getResource("/images/msi/msi_direction_arrow.png"));
-		markerImage = new ImageIcon(EeINS.class.getResource("/images/msi/msi_direction.png"));
+		directionImage = new ImageIcon(EeINS.class.getResource("/images/msi/msi_direction_arrow_transparent_42.png"));
+		markerImage = new ImageIcon(EeINS.class.getResource("/images/msi/msi_direction_transparent_42.png"));
 	}
 	
 	public void setMarker(GeoLocation nearestMSI) {
@@ -79,12 +80,12 @@ public class MsiDirectionalIcon extends OMGraphicList implements ProjectionListe
 		Point2D origin = new Point2D.Double(mapBean.getWidth()*0.5f, mapBean.getHeight()*0.5f);
 		Line2D direction = new Line2D.Double(origin, projectedMSI);
 		
-		double boxWidth = mapBean.getWidth()-16;
-		double boxHeight = mapBean.getHeight()-16;
-		Line2D topFrame = new Line2D.Double(16,16,boxWidth,16);
-		Line2D rightFrame = new Line2D.Double(boxWidth,16,boxWidth,boxHeight);
-		Line2D bottomFrame = new Line2D.Double(16,boxHeight,boxWidth,boxHeight);
-		Line2D leftFrame = new Line2D.Double(16,16,16,boxHeight); 
+		double boxWidth = mapBean.getWidth()-IMAGE_SIZE/2;
+		double boxHeight = mapBean.getHeight()-IMAGE_SIZE/2;
+		Line2D topFrame = new Line2D.Double(IMAGE_SIZE/2,IMAGE_SIZE/2,boxWidth,IMAGE_SIZE/2);
+		Line2D rightFrame = new Line2D.Double(boxWidth,IMAGE_SIZE/2,boxWidth,boxHeight);
+		Line2D bottomFrame = new Line2D.Double(IMAGE_SIZE/2,boxHeight,boxWidth,boxHeight);
+		Line2D leftFrame = new Line2D.Double(IMAGE_SIZE/2,IMAGE_SIZE/2,IMAGE_SIZE/2,boxHeight); 
 		
 		boolean intersects = false;
 		
