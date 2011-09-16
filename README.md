@@ -12,7 +12,7 @@ For detailed description see Wiki.
 
 ## Prerequisites ##
 
-* JDK 1.6+ (http://java.sun.com/j2se/)
+* JDK 1.6+ (http://www.oracle.com/technetwork/java/javase/)
 * Apache Ant 1.7+ (http://ant.apache.org) or Eclipse IDE (http://eclipse.org)
 
 ## ANT targets ##
