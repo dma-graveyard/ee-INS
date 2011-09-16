@@ -211,7 +211,8 @@ public class MsiHandler extends MapHandlerChild implements Runnable, IRoutesUpda
 		// Determine if there are pending relevant MSI 
 		boolean previous = pendingImportantMessages;
 		
-		pendingImportantMessages = msiStore.hasValidUnacknowledged();
+//		pendingImportantMessages = msiStore.hasValidUnacknowledged();
+		pendingImportantMessages = msiStore.hasValidVisibleUnacknowledged();
 		return (previous != pendingImportantMessages);
 		
 		// TODO check against current position and active route
