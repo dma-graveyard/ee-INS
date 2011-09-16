@@ -365,7 +365,7 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 		removeAll();
 		
 		msiDetails.setTopPanel(topPanel);
-		msiDetails.setMsiSymbolGraphic(selectedGraphic);
+		msiDetails.setMsiMessage(selectedGraphic.getMsiMessage());
 		add(msiDetails);
 		
 		Boolean isAcknowledged = msiHandler.isAcknowledged(selectedGraphic.getMsiMessage().getMessageId());
@@ -376,6 +376,8 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 
 		generalMenu(false);
 	}
+	
+	
 	
 	public void generalRouteMenu(int routeIndex){		
 		if(routeManager.getActiveRouteIndex() == routeIndex){

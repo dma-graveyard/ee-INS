@@ -72,7 +72,7 @@ public class MsiLayer extends OMGraphicHandlerLayer implements MapMouseListener 
 	private MainFrame mainFrame = null;	
 	private MsiInfoPanel msiInfoPanel = null;	
 	private OMGraphic closest = null;
-	private MsiSymbolGraphic selectedGraphic;
+	private OMGraphic selectedGraphic;
 	private MapMenu msiMenu;
 
 	private MouseDelegator mouseDelegator;
@@ -123,7 +123,7 @@ public class MsiLayer extends OMGraphicHandlerLayer implements MapMouseListener 
 			
 			if(mapBean != null && message.relevant){
 				MsiDirectionalIcon direction = new MsiDirectionalIcon(mapBean);
-				direction.setMarker(message.msiMessage.getLocation().getCenter());
+				direction.setMarker(message);
 				graphics.add(direction);
 			}
 		}
@@ -222,19 +222,24 @@ public class MsiLayer extends OMGraphicHandlerLayer implements MapMouseListener 
 				selectedGraphic = null;
 				OMList<OMGraphic> allClosest = graphics.findAll(e.getX(), e.getY(), 5.0f);
 				for (OMGraphic omGraphic : allClosest) {
-					if (omGraphic instanceof MsiSymbolGraphic) {
-						selectedGraphic = (MsiSymbolGraphic) omGraphic;
+					if (omGraphic instanceof MsiMessage || omGraphic instanceof MsiDirectionalIcon) {
+						selectedGraphic = (MsiMessage) omGraphic;
 						break;
 					}
 				}
 				
-				if(selectedGraphic instanceof MsiSymbolGraphic){
+				if(selectedGraphic instanceof MsiMessage){
+					MsiMessage msi = (MsiMessage) selectedGraphic;
 					mainFrame.getGlassPane().setVisible(false);
-					msiMenu.msiMenu(topPanel, selectedGraphic);
+					msiMenu.msiMenu(topPanel, msi);
 					msiMenu.setVisible(true);
 					msiMenu.show(this, e.getX()-2, e.getY()-2);
 					msiInfoPanel.setVisible(false);				
 					return true;
+				}
+				if(selectedGraphic instanceof MsiDirectionalIcon) {
+					MsiDirectionalIcon direction = (MsiDirectionalIcon) selectedGraphic;
+					mainFrame.getGlassPane().setVisible(false);
 				}
 			}
 		//}
@@ -281,7 +286,7 @@ public class MsiLayer extends OMGraphicHandlerLayer implements MapMouseListener 
 		OMList<OMGraphic> allClosest = graphics.findAll(e.getX(), e.getY(), 3.0f);
 		
 		for (OMGraphic omGraphic : allClosest) {
-			if (omGraphic instanceof MsiSymbolGraphic) {
+			if (omGraphic instanceof MsiMessage) {
 				newClosest = omGraphic;
 				break;
 			}
@@ -289,9 +294,9 @@ public class MsiLayer extends OMGraphicHandlerLayer implements MapMouseListener 
 		
 		if (newClosest != closest) {
 			Point containerPoint = SwingUtilities.convertPoint(mapBean, e.getPoint(), mainFrame);
-			if (newClosest instanceof MsiSymbolGraphic) {
+			if (newClosest instanceof MsiMessage) {
 				closest = newClosest;
-				MsiSymbolGraphic msiSymbolGraphic = (MsiSymbolGraphic)newClosest;
+				MsiMessage msiSymbolGraphic = (MsiMessage)newClosest;
 				msiInfoPanel.setPos((int)containerPoint.getX(), (int)containerPoint.getY() - 10);
 				msiInfoPanel.showMsiInfo(msiSymbolGraphic.msiMessage);
 				mainFrame.getGlassPane().setVisible(true);
