@@ -35,6 +35,7 @@ import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
 import dk.frv.enav.common.xml.msi.MsiLocation;
+import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.common.text.Formatter;
 import dk.frv.enav.ins.msi.MsiHandler;
 
@@ -53,7 +54,11 @@ public class MsiTableModel extends AbstractTableModel {
 	}
 	
 	public void updateMessages() {
-		messages = msiHandler.getMessageList();
+		if(EeINS.getSettings().getEnavSettings().isMsiFilter()) {
+			messages = msiHandler.getFilteredMessageList();
+		} else {
+			messages = msiHandler.getMessageList();
+		}
 	}
 	
 	public List<MsiHandler.MsiMessageExtended> getMessages() {
@@ -72,7 +77,7 @@ public class MsiTableModel extends AbstractTableModel {
 
 	@Override
 	public int getRowCount() {
-		return msiHandler.getMessages().size();
+		return messages.size();
 	}
 
 	@Override
