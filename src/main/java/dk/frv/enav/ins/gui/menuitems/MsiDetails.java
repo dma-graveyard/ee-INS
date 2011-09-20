@@ -31,8 +31,8 @@ package dk.frv.enav.ins.gui.menuitems;
 
 import javax.swing.JMenuItem;
 
+import dk.frv.enav.common.xml.msi.MsiMessage;
 import dk.frv.enav.ins.gui.TopPanel;
-import dk.frv.enav.ins.layers.msi.MsiSymbolGraphic;
 
 public class MsiDetails extends JMenuItem implements IMapMenuAction {
 
@@ -41,7 +41,7 @@ public class MsiDetails extends JMenuItem implements IMapMenuAction {
 	 */
 	private static final long serialVersionUID = 1L;
 	private TopPanel topPanel;
-	private MsiSymbolGraphic message;
+	private MsiMessage message;
 
 	public MsiDetails(String text) {
 		super();
@@ -51,7 +51,7 @@ public class MsiDetails extends JMenuItem implements IMapMenuAction {
 	@Override
 	public void doAction() {
 		if (topPanel != null && topPanel.getMsiDialog() != null) {
-			topPanel.getMsiDialog().showMessage(message.getMsiMessage().getMessageId());
+			topPanel.getMsiDialog().showMessage(message.getMessageId());
 		}
 	}
 
@@ -59,7 +59,7 @@ public class MsiDetails extends JMenuItem implements IMapMenuAction {
 		this.topPanel = topPanel;
 	}
 	
-	public void setMsiMessage(MsiSymbolGraphic message) {
+	public void setMsiMessage(MsiMessage message) {
 		this.message = message;
 	}
 	

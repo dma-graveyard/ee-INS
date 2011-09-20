@@ -71,6 +71,7 @@ import dk.frv.enav.ins.gui.menuitems.GeneralShowIntendedRoutes;
 import dk.frv.enav.ins.gui.menuitems.IMapMenuAction;
 import dk.frv.enav.ins.gui.menuitems.MsiAcknowledge;
 import dk.frv.enav.ins.gui.menuitems.MsiDetails;
+import dk.frv.enav.ins.gui.menuitems.MsiZoomTo;
 import dk.frv.enav.ins.gui.menuitems.RouteActivateToggle;
 import dk.frv.enav.ins.gui.menuitems.RouteAppendWaypoint;
 import dk.frv.enav.ins.gui.menuitems.RouteDelete;
@@ -88,6 +89,8 @@ import dk.frv.enav.ins.gui.menuitems.SuggestedRouteDetails;
 import dk.frv.enav.ins.gui.route.RouteSuggestionDialog;
 import dk.frv.enav.ins.layers.ais.AisLayer;
 import dk.frv.enav.ins.layers.ais.VesselTargetGraphic;
+import dk.frv.enav.ins.layers.msi.MsiDirectionalIcon;
+import dk.frv.enav.ins.layers.msi.MsiLayer;
 import dk.frv.enav.ins.layers.msi.MsiSymbolGraphic;
 import dk.frv.enav.ins.layers.routeEdit.NewRouteContainerLayer;
 import dk.frv.enav.ins.msi.MsiHandler;
@@ -115,6 +118,7 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 	private AisTargetLabelToggle aisTargetLabelToggle;
 	private MsiAcknowledge msiAcknowledge;
 	private MsiDetails msiDetails;
+	private MsiZoomTo msiZoomTo;
 	private RouteActivateToggle routeActivateToggle;
 	private RouteAppendWaypoint routeAppendWaypoint;
 	private RouteHide routeHide;
@@ -179,6 +183,8 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 		msiDetails.addActionListener(this);
 		msiAcknowledge = new MsiAcknowledge("Acknowledge MSI");
 		msiAcknowledge.addActionListener(this);
+		msiZoomTo = new MsiZoomTo("Zoom to MSI");
+		msiZoomTo.addActionListener(this);
 		
 		// route general items
 		routeActivateToggle = new RouteActivateToggle();
@@ -377,7 +383,19 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 		generalMenu(false);
 	}
 	
-	
+	public void msiDirectionalMenu(TopPanel topPanel, MsiDirectionalIcon selectedGraphic, MsiLayer msiLayer) {
+		removeAll();
+		
+		msiDetails.setTopPanel(topPanel);
+		msiDetails.setMsiMessage(selectedGraphic.getMessage().msiMessage);
+		add(msiDetails);
+		
+		msiZoomTo.setMsiLayer(msiLayer);
+		msiZoomTo.setMsiMessageExtended(selectedGraphic.getMessage());
+		add(msiZoomTo);
+		
+		generalMenu(false);		
+	}
 	
 	public void generalRouteMenu(int routeIndex){		
 		if(routeManager.getActiveRouteIndex() == routeIndex){

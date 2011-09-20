@@ -51,7 +51,7 @@ public class MsiGraphic extends OMGraphicList {
 //		msiTextBox.setVisible(false);
 		
 		// Create symbol graphic
-		MsiMessage msiSymbolGrahic = new MsiMessage(message);
+		MsiSymbolGraphic msiSymbolGrahic = new MsiSymbolGraphic(message);
 		add(msiSymbolGrahic);
 		
 		// Create location grahic

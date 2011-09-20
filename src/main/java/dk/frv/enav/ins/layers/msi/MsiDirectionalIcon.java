@@ -54,20 +54,20 @@ import dk.frv.enav.ins.msi.MsiHandler.MsiMessageExtended;
 public class MsiDirectionalIcon extends OMGraphicList implements ProjectionListener {
 	private static final long serialVersionUID = -6808339529053676255L;
 	private static final int IMAGE_SIZE = 42;
+	private static final ImageIcon directionImage = new ImageIcon(EeINS.class.getResource("/images/msi/msi_direction_arrow_transparent_42.png"));
+	private static final ImageIcon markerImage = new ImageIcon(EeINS.class.getResource("/images/msi/msi_direction_transparent_42.png"));
 	private Point2D intersection;
 	private MapBean mapBean;
 	private CenterRaster directionRaster;
 	private CenterRaster markerRaster;
 	private GeoLocation msiLocation;
-	private ImageIcon directionImage;
-	private ImageIcon markerImage;
 	private MsiMessageExtended message;
 	
 	MsiDirectionalIcon(MapBean mapBean) {
+		super();
+		setVague(true);
 		this.mapBean = mapBean;
 		mapBean.addProjectionListener(this);
-		directionImage = new ImageIcon(EeINS.class.getResource("/images/msi/msi_direction_arrow_transparent_42.png"));
-		markerImage = new ImageIcon(EeINS.class.getResource("/images/msi/msi_direction_transparent_42.png"));
 	}
 	
 	public void setMarker(MsiMessageExtended message) {
@@ -103,9 +103,7 @@ public class MsiDirectionalIcon extends OMGraphicList implements ProjectionListe
 		
 		if(!intersects)
 			return;
-		
 
-		
 		int x = Math.round((float) intersection.getX());
 		int y = Math.round((float) intersection.getY());
 		
