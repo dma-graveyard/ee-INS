@@ -38,6 +38,24 @@ For detailed description see Wiki.
 	ant distclean
 	
 Will remove the `dist` folder described below, erasing existing settings.
+
+## Quick start ##
+
+To be able to see AIS targets and possible own ship, the sensor should be
+configurated. In the main window press the Setup button in the top and 
+go to the Sensor tab. Choose either TCP or serial connection type for AIS and
+configure TCP host/port or serial port.
+
+If a separate sensor is used for GPS this can be configured the same way.
+
+If the AIS source is not a transponder providing own ship information, an 
+own ship can be simulated by choosing a vessel target present in the AIS stream.
+In to bottom of the sensor tab enable Simulated GPS and enter MMSI. If the 
+AIS source provides lots of targets, the targets shown can be limited by 
+selecting a sensor range so targets farther than this distance away not will
+be shown.
+
+Press OK and restart application.
 	
 ## Project structure ###
 
