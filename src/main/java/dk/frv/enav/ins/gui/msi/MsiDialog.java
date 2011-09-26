@@ -204,8 +204,8 @@ public class MsiDialog extends ComponentFrame implements ListSelectionListener, 
 	
 	private void updateButtons() {
 		int selected = msiTable.getSelectedRow();
-		boolean ackAble = false;		
-		if (selected >= 0) {
+		boolean ackAble = false;
+		if (selected >= 0 && msiTableModel.getMessages().size() > 0) {
 			MsiMessageExtended message = msiTableModel.getMessages().get(selected);
 			if (!message.acknowledged) {
 				ackAble = true;

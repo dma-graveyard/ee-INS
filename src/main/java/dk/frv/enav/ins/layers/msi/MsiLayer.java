@@ -29,7 +29,6 @@
  */
 package dk.frv.enav.ins.layers.msi;
 
-import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.util.Date;
