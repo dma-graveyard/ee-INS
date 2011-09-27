@@ -59,6 +59,7 @@ import org.apache.log4j.Logger;
 import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.route.Route;
 import dk.frv.enav.ins.route.RouteLoadException;
+import dk.frv.enav.ins.route.RouteLoader;
 import dk.frv.enav.ins.route.RouteManager;
 import dk.frv.enav.ins.route.RoutesUpdateEvent;
 
@@ -248,7 +249,7 @@ public class RouteManagerDialog extends JDialog implements ActionListener, ListS
 		copyBtn.setEnabled(routeSelected);
 		deleteBtn.setEnabled(routeSelected && !activeSelected);
 		metocBtn.setEnabled(routeSelected);
-		exportBtn.setEnabled(routeSelected);
+		exportBtn.setEnabled(routeSelected);		
 	}
 
 	private void updateTable() {
@@ -326,10 +327,47 @@ public class RouteManagerDialog extends JDialog implements ActionListener, ListS
 			updateTable();
 		}
 	}
-
+	
 	private void exportToFile() {
-		// TODO: Get filename from dialog
-		// TODO: Call method to save route
+		exportToFile(routeTable.getSelectedRow());
+	}
+
+	private void exportToFile(int routeId) {
+		if (routeId < 0) {
+			return;
+		}
+		
+		Route route = routeManager.getRoute(routeId);
+		
+		JFileChooser fc = new JFileChooser(System.getProperty("user.dir") + "/routes/");
+		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		fc.setMultiSelectionEnabled(false);
+		
+		fc.addChoosableFileFilter(new FileNameExtensionFilter("Simple route text format", "txt", "TXT"));
+		fc.setAcceptAllFileFilterUsed(true);
+		File f = new File(route.getName() + ".txt");
+		fc.setSelectedFile(f);
+		
+		if (fc.showSaveDialog(this) != JFileChooser.APPROVE_OPTION) {
+			return;
+		}
+		File file = fc.getSelectedFile();
+				
+		if (!fc.getSelectedFile().toString().contains(".txt")) {
+			file = new File(fc.getSelectedFile().getPath() + ".txt");
+		}
+		
+		if (file.exists()) {
+			if (JOptionPane.showConfirmDialog(this, "File exists. Overwrite?", "Overwrite?", JOptionPane.YES_NO_OPTION) != 0) {
+				exportToFile(routeId);
+				return;
+			}
+		}
+
+		if(!RouteLoader.saveSimple(route, file)) {
+			JOptionPane.showMessageDialog(EeINS.getMainFrame(), "Route save error", "Route not saved", JOptionPane.ERROR_MESSAGE);
+		}
+		
 	}
 
 	private void importFromFile() {
@@ -360,6 +398,12 @@ public class RouteManagerDialog extends JDialog implements ActionListener, ListS
 		updateTable();
 		routeSelectionModel.setSelectionInterval(routeTable.getRowCount() - 1, routeTable.getRowCount() - 1);
 	}
+	
+	private void exportAllToFile() {
+		for (int i=0; i < routeTable.getRowCount(); i++) {
+			exportToFile(i);
+		}		
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -381,6 +425,8 @@ public class RouteManagerDialog extends JDialog implements ActionListener, ListS
 			metocProperties();
 		} else if (e.getSource() == exportBtn) {
 			exportToFile();
+		} else if (e.getSource() == exportAllBtn) {
+			exportAllToFile();
 		} else if (e.getSource() == importBtn) {
 			importFromFile();
 		}

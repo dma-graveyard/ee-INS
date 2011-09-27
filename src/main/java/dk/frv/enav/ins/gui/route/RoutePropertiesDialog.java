@@ -38,14 +38,12 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.io.File;
 import java.util.Date;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -61,14 +59,11 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
-import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.common.text.Formatter;
 import dk.frv.enav.ins.common.util.ParseUtils;
 import dk.frv.enav.ins.route.ActiveRoute;
 import dk.frv.enav.ins.route.Route;
-import dk.frv.enav.ins.route.RouteLoader;
 import dk.frv.enav.ins.route.RouteManager;
 import dk.frv.enav.ins.route.RoutesUpdateEvent;
 
@@ -109,7 +104,6 @@ public class RoutePropertiesDialog extends JDialog implements ActionListener, Ru
 	private WptTableModel wptTableModel;
 	private RouteManager routeManager;
 	private ActiveRoute activeRoute = null;
-	private JButton saveBtn;
     
     public RoutePropertiesDialog(Window parent, RouteManager routeManager, int routeId) {        
         super(parent, "Route Properties", Dialog.ModalityType.APPLICATION_MODAL);
@@ -230,27 +224,6 @@ public class RoutePropertiesDialog extends JDialog implements ActionListener, Ru
         	route.deleteWaypoint(index);
         	routeManager.notifyListeners(RoutesUpdateEvent.ROUTE_WAYPOINT_DELETED);
         	updateTable();
-        } else if (e.getSource() == saveBtn){
-        	JFileChooser fc = new JFileChooser(System.getProperty("user.dir") + "/routes");
-    		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-    		fc.setMultiSelectionEnabled(false);
-    		fc.addChoosableFileFilter(new FileNameExtensionFilter("Simple route text format", "txt", "TXT"));
-    		fc.setAcceptAllFileFilterUsed(true);
-    		
-    		
-			
-    		if (fc.showSaveDialog(this) != JFileChooser.APPROVE_OPTION) {
-    			return;
-    		}
-    		File file = fc.getSelectedFile();
-			if (!fc.getSelectedFile().toString().contains(".txt"))
-				file = new File(fc.getSelectedFile().getPath() + ".txt");
-
-    		if(RouteLoader.saveSimple(route, file))
-    			JOptionPane.showMessageDialog(EeINS.getMainFrame(), "Route saved successfully", "Route Saved", JOptionPane.INFORMATION_MESSAGE);
-    		else
-    			JOptionPane.showMessageDialog(EeINS.getMainFrame(), "Route save error", "Route not saved", JOptionPane.ERROR_MESSAGE);
-    		
         }
     }
     
@@ -331,9 +304,6 @@ public class RoutePropertiesDialog extends JDialog implements ActionListener, Ru
         etaField.setEnabled(false);
         etaField.setColumns(10);
         
-        saveBtn = new JButton("Save");
-        saveBtn.addActionListener(this);
-
         GroupLayout groupLayout = new GroupLayout(getContentPane());
         groupLayout.setHorizontalGroup(
         	groupLayout.createParallelGroup(Alignment.TRAILING)
@@ -342,8 +312,6 @@ public class RoutePropertiesDialog extends JDialog implements ActionListener, Ru
         			.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
         				.addComponent(propertiesPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
-        					.addComponent(saveBtn)
-        					.addPreferredGap(ComponentPlacement.RELATED)
         					.addComponent(closeBtn))
         				.addComponent(waypointsPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         			.addContainerGap())
@@ -357,8 +325,7 @@ public class RoutePropertiesDialog extends JDialog implements ActionListener, Ru
         			.addComponent(waypointsPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         			.addGap(13)
         			.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-        				.addComponent(closeBtn)
-        				.addComponent(saveBtn))
+        				.addComponent(closeBtn))
         			.addContainerGap())
         );
                 
