@@ -97,7 +97,7 @@ following way.
      |             |
      |             `-- 2.y (branch for fix or small improvement)  
      |
-	 `-- * -- * -- 3.0-PRE1 (branch for new major version)
+	 `-- * -- * -- 3.0 (branch for new major version)
          |
 	     `-- dev (branch for individual task in new version)
  
