@@ -149,8 +149,8 @@ To use Navicon ENC layer with ee-INS please follow the steps below
 To use Eclipse as IDE just import project. Eclipse `.project` and settings files
 are included.
 
-Launch configuration is also included so it is possible to run as Java application
-from Eclipse.
+Launch configuration `EeINS.launch` is included, so it is possible to run as Java 
+application from Eclipse. You will need to do a manual build before running.
 
 ## Contribution ##
 
