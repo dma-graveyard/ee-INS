@@ -35,6 +35,7 @@ import java.awt.Component;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.msi.MsiHandler;
 import dk.frv.enav.ins.msi.MsiHandler.MsiMessageExtended;
 
@@ -57,7 +58,12 @@ public class MsiTableCellRenderer extends DefaultTableCellRenderer {
 		if (column == 0) {
 			boolean acked = false;
 			if (row >= 0) {
-				MsiMessageExtended msg = msiHandler.getMessageList().get(row);
+				MsiMessageExtended msg;
+				if(EeINS.getSettings().getEnavSettings().isMsiFilter()) {
+					msg = msiHandler.getFilteredMessageList().get(row);
+				} else {
+					msg = msiHandler.getMessageList().get(row);
+				}
 				if (msg != null) {
 					acked = msg.acknowledged;
 				}
