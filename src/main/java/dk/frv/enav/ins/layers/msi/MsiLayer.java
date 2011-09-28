@@ -306,15 +306,17 @@ public class MsiLayer extends OMGraphicHandlerLayer implements MapMouseListener 
 				msiInfoPanel.showMsiInfo(msiSymbolGraphic.getMsiMessage());
 				mainFrame.getGlassPane().setVisible(true);
 				return true;
-			}
-			if (newClosest instanceof MsiDirectionalIcon) {
+			} else if (newClosest instanceof MsiDirectionalIcon) {
+				closest = newClosest;
 				mainFrame.getGlassPane().setVisible(true);
 				return true;
-			} 
+			} else {
+				msiInfoPanel.setVisible(false);
+				mainFrame.getGlassPane().setVisible(false);
+				closest = null;
+				return false;				
+			}
 		}
-		msiInfoPanel.setVisible(false);
-		mainFrame.getGlassPane().setVisible(false);
-		closest = null;
 		return false;
 	}
 
