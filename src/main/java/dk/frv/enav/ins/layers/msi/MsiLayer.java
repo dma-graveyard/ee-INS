@@ -244,7 +244,7 @@ public class MsiLayer extends OMGraphicHandlerLayer implements MapMouseListener 
 			mainFrame.getGlassPane().setVisible(false);
 			msiMenu.msiDirectionalMenu(topPanel, direction, this);
 			msiMenu.setVisible(true);
-			msiMenu.show(this, e.getX()-2, e.getY()-2);
+			msiMenu.show(this, e.getX()-10, e.getY()-10);
 			msiInfoPanel.setVisible(false);			
 			return true;
 		}
