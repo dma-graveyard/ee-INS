@@ -42,7 +42,7 @@ import dk.frv.ais.message.AisMessage8;
 import dk.frv.ais.message.AisPosition;
 import dk.frv.ais.message.binary.AddressedRouteInformation;
 import dk.frv.ais.message.binary.AsmAcknowledge;
-import dk.frv.ais.message.binary.BroadcastRouteInformation;
+import dk.frv.ais.message.binary.BroadcastIntendedRoute;
 import dk.frv.ais.message.binary.RouteSuggestionReply;
 import dk.frv.ais.reader.SendRequest;
 import dk.frv.enav.ins.ais.AisAdressedRouteSuggestion;
@@ -151,7 +151,7 @@ public class AisServices extends MapHandlerChild {
 		}
 		
 		// Create intended route ASM
-		BroadcastRouteInformation intendedRoute;
+		BroadcastIntendedRoute intendedRoute;
 		if (activeRoute == null) {
 			intendedRoute = noIntendedRoute();
 		} else {
@@ -178,8 +178,8 @@ public class AisServices extends MapHandlerChild {
 		aisSendThread.start();
 	}
 	
-	private static BroadcastRouteInformation intendedRouteFromActiveRoute(ActiveRoute activeRoute, AisSettings aisSettings) {
-		BroadcastRouteInformation intendedRoute = new BroadcastRouteInformation();
+	private static BroadcastIntendedRoute intendedRouteFromActiveRoute(ActiveRoute activeRoute, AisSettings aisSettings) {
+		BroadcastIntendedRoute intendedRoute = new BroadcastIntendedRoute();
 		
 		// Recalculate all remaining ETA's
 		if (!activeRoute.reCalcRemainingWpEta()) {
@@ -233,8 +233,8 @@ public class AisServices extends MapHandlerChild {
 		return intendedRoute;
 	}
 	
-	private static BroadcastRouteInformation noIntendedRoute() {
-		BroadcastRouteInformation intendedRoute = new BroadcastRouteInformation();
+	private static BroadcastIntendedRoute noIntendedRoute() {
+		BroadcastIntendedRoute intendedRoute = new BroadcastIntendedRoute();
 		
 		// Use start as now
 		Calendar cal = Calendar.getInstance();
