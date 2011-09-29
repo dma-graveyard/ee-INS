@@ -51,7 +51,7 @@ import dk.frv.ais.message.AisMessage6;
 import dk.frv.ais.message.AisPositionMessage;
 import dk.frv.ais.message.binary.AddressedRouteInformation;
 import dk.frv.ais.message.binary.AisApplicationMessage;
-import dk.frv.ais.message.binary.BroadcastRouteInformation;
+import dk.frv.ais.message.binary.BroadcastIntendedRoute;
 import dk.frv.ais.message.binary.RouteInformation;
 import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.gps.GnssTime;
@@ -159,8 +159,8 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 			// Handle broadcast messages
 			if (aisMessage.getMsgId() == 8 && appMessage != null) {
 				// Handle route information
-				if (appMessage.getDac() == 1 && appMessage.getFi() == 27) {
-					BroadcastRouteInformation routeInformation = (BroadcastRouteInformation)appMessage;
+				if (appMessage.getDac() == 219 && appMessage.getFi() == 27) {
+					BroadcastIntendedRoute routeInformation = (BroadcastIntendedRoute)appMessage;
 					//LOG.info("BroadcastRouteInformation: " + routeInformation);
 					// Handle intended route
 					if (routeInformation.getRouteType() == RouteInformation.RouteType.SHIP_ROUTE.getType()
