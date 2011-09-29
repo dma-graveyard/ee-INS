@@ -388,6 +388,7 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 			}
 		}
 
+		
 		if (newClosest != closest) {
 			Point containerPoint = SwingUtilities.convertPoint(mapBean, e.getPoint(), mainFrame);
 			if (newClosest instanceof IntendedRouteWpCircle) {
