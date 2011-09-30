@@ -368,6 +368,9 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 	public void mouseMoved() {
 	}
 
+	/**
+	 * Handle mouse moved
+	 */
 	@Override
 	public boolean mouseMoved(MouseEvent e) {
 		if (!this.isVisible()) {
