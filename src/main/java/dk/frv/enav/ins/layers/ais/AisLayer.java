@@ -45,6 +45,7 @@ import org.apache.log4j.Logger;
 import com.bbn.openmap.MapBean;
 import com.bbn.openmap.event.MapMouseListener;
 import com.bbn.openmap.layer.OMGraphicHandlerLayer;
+import com.bbn.openmap.omGraphics.OMCircle;
 import com.bbn.openmap.omGraphics.OMGraphic;
 import com.bbn.openmap.omGraphics.OMGraphicList;
 import com.bbn.openmap.omGraphics.OMList;
@@ -87,6 +88,7 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 	private OMGraphic closest = null;
 	private OMGraphic selectedGraphic;
 	private ChartPanel chartPanel;
+	private OMCircle dummyCircle = new OMCircle();
 
 	public AisLayer() {
 		// graphics.setVague(false);
@@ -391,6 +393,7 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 		
 		if (newClosest != closest) {
 			Point containerPoint = SwingUtilities.convertPoint(mapBean, e.getPoint(), mainFrame);
+			
 			if (newClosest instanceof IntendedRouteWpCircle) {
 				closest = newClosest;
 				IntendedRouteWpCircle wpCircle = (IntendedRouteWpCircle) newClosest;
@@ -402,7 +405,7 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 				return true;
 			} else if (newClosest instanceof IntendedRouteLegGraphic) {
 				// lets user see ETA continually along route leg
-//				closest = newClosest;
+				closest = dummyCircle;
 				Point2D worldLocation = chartPanel.getMap().getProjection().inverse(e.getPoint());
 				IntendedRouteLegGraphic legGraphic = (IntendedRouteLegGraphic) newClosest;
 				intendedRouteInfoPanel.setPos((int) containerPoint.getX(), (int) containerPoint.getY() - 10);					
@@ -436,9 +439,9 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 				sarTargetInfoPanel.setVisible(false);
 				mainFrame.getGlassPane().setVisible(false);
 				// causes intended route leg info panel to hang...
-//				if(closest != null) {
-//					closest = null;
-//				}
+				if(closest != null) {
+					closest = null;
+				}
 			}
 		}
 		return false;
