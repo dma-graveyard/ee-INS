@@ -29,22 +29,24 @@
  */
 package dk.frv.enav.ins.layers.ais;
 
-import com.bbn.openmap.omGraphics.OMRect;
+import javax.swing.ImageIcon;
+
 import com.bbn.openmap.proj.Projection;
 
 import dk.frv.ais.geo.GeoLocation;
+import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.ais.AisTarget;
 import dk.frv.enav.ins.ais.AtoNTarget;
+import dk.frv.enav.ins.common.graphics.CenterRaster;
 
 public class AtonTargetGraphic extends TargetGraphic {
 
 	private static final long serialVersionUID = 1L;
-	
-	private OMRect rect = new OMRect(0, 0, 0, 0, 10, 10);
+	private ImageIcon atonImage = new ImageIcon(EeINS.class.getResource("/images/aton/aton.png"));
+	private CenterRaster atonMark;
 	
 	public AtonTargetGraphic() {
 		super();
-		add(rect);
 	}
 	
 	@Override
@@ -54,8 +56,8 @@ public class AtonTargetGraphic extends TargetGraphic {
 		float lat = (float)pos.getLatitude();
 		float lon = (float)pos.getLongitude();
 		
-		rect.setLocation(lat, lon, -5, -5, 5, 5);
-		 
+		atonMark = new CenterRaster(lat, lon, atonImage.getIconWidth(), atonImage.getIconHeight(),atonImage);
+		add(atonMark);
 	}
 
 	@Override
