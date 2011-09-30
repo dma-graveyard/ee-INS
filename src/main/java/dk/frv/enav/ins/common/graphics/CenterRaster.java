@@ -43,7 +43,10 @@ public class CenterRaster extends OMRaster {
 	private static final long serialVersionUID = 1L;
 
 	private Point2D center = null;
+	private Boolean notGeolocation = false;
 	private float radius = 5;
+	private int x;
+	private int y;
 
 	/**
 	 * Position in lat,lon with width i and height j
@@ -65,6 +68,9 @@ public class CenterRaster extends OMRaster {
 	 */
 	public CenterRaster(int x, int y, ImageIcon imageIcon) {
 		super(x-(imageIcon.getIconWidth() / 2), y-(imageIcon.getIconHeight() / 2), imageIcon);
+		this.x = x;
+		this.y = y;
+		notGeolocation = true;
 	}
 
 	/**
@@ -77,7 +83,11 @@ public class CenterRaster extends OMRaster {
 
 	@Override
 	public boolean generate(Projection proj) {
-		center = proj.forward(getLat(), getLon());
+		if(notGeolocation) {
+			center = new Point2D.Double(x, y);
+		} else {
+			center = proj.forward(getLat(), getLon());
+		}
 		return super.generate(proj);
 	}
 

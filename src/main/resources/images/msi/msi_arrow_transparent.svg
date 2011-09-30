@@ -15,9 +15,9 @@
    version="1.1"
    inkscape:version="0.48.1 "
    sodipodi:docname="msi_arrow_transparent.svg"
-   inkscape:export-filename="C:\workspace\eeins\src\main\resources\images\msi\msi_direction.png"
-   inkscape:export-xdpi="87.272728"
-   inkscape:export-ydpi="87.272728">
+   inkscape:export-filename="C:\workspace\eeins\src\main\resources\images\msi\msi_direction_arrow_transparent_42.png"
+   inkscape:export-xdpi="114.55"
+   inkscape:export-ydpi="114.55">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -27,11 +27,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="22.4"
-     inkscape:cx="14.937323"
-     inkscape:cy="14.806483"
+     inkscape:zoom="11.2"
+     inkscape:cx="12.710575"
+     inkscape:cy="9.6560305"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="layer2"
      showgrid="false"
      inkscape:snap-center="false"
      inkscape:snap-object-midpoints="false"
@@ -39,9 +39,9 @@
      inkscape:snap-smooth-nodes="false"
      inkscape:object-nodes="false"
      inkscape:object-paths="true"
-     inkscape:window-width="1280"
-     inkscape:window-height="738"
-     inkscape:window-x="-8"
+     inkscape:window-width="1680"
+     inkscape:window-height="988"
+     inkscape:window-x="1272"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
      fit-margin-top="0"
@@ -65,7 +65,7 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(-223.32488,-391.14791)"
-     style="opacity:0.5;display:inline">
+     style="opacity:0.75;display:none">
     <path
        transform="matrix(0.28883883,0,0,0.28883883,169.6783,287.71645)"
        style="fill:#ad56a2;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dashoffset:0"
@@ -89,7 +89,7 @@
      inkscape:groupmode="layer"
      id="layer2"
      inkscape:label="arrow"
-     style="opacity:0.5;display:none">
+     style="opacity:0.75;display:inline">
     <path
        inkscape:connector-curvature="0"
        style="font-size:medium;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:normal;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;baseline-shift:baseline;color:#000000;fill:#ad56a2;fill-opacity:1;stroke:none;stroke-width:2;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Sans;-inkscape-font-specification:Sans"

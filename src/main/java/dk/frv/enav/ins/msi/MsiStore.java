@@ -62,10 +62,8 @@ import dk.frv.enav.ins.route.Route;
  * Serializable class to store MSI information
  */
 public class MsiStore implements Serializable {
-	
-	// If class changed, generate a new serial version ID	
+	// TODO: If class changed, generate a new serial version ID
 	private static final long serialVersionUID = -5653288769636767014L;
-	
 	private static final Logger LOG = Logger.getLogger(MsiStore.class);	
 	private static final String msiFile = ".msi";
 	
@@ -89,6 +87,21 @@ public class MsiStore implements Serializable {
 				continue;
 			}
 			if (!acknowledged.contains(msgId)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public synchronized boolean hasValidVisibleUnacknowledged() {
+		Date now = GnssTime.getInstance().getDate();
+		for (Integer msgId : messages.keySet()) {
+			MsiMessage msg = messages.get(msgId);
+			if(msg.getValidFrom() != null && msg.getValidFrom().after(now)) {
+				continue;
+			}
+			
+			if(!acknowledged.contains(msgId) && (visibleGPS.contains(msgId) || visibleRoute.contains(msgId))) {
 				return true;
 			}
 		}
@@ -119,6 +132,10 @@ public class MsiStore implements Serializable {
 		saveToFile();
 	}
 	
+	/**
+	 * Sets msi warnings visible if they are in the radius of the given location (ship location)
+	 * @param calculationPosition Current location of own ship
+	 */
 	public void setVisibility(GeoLocation calculationPosition) {
 		visibleGPS.clear();
 		Iterator<Map.Entry<Integer, MsiMessage>> it = messages.entrySet().iterator();
@@ -139,6 +156,10 @@ public class MsiStore implements Serializable {
 				+ calculationPosition.getLongitude() + " yielded " + visibleGPS.size() + " visible warnings");
 	}
 	
+	/**
+	 * Sets msi warnings visible if they are within a rectangle given by the routes' waypoints.
+	 * @param routes List of routes for which to enable msi warnings at
+	 */
 	public void setVisibility(List<Route> routes) {
 		visibleRoute.clear();
 		if(routes == null || routes.size() == 0) {

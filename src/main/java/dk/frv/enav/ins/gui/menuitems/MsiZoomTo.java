@@ -27,42 +27,38 @@
  * either expressed or implied, of Danish Maritime Safety Administration.
  * 
  */
-package dk.frv.enav.ins.layers.msi;
+package dk.frv.enav.ins.gui.menuitems;
 
-import javax.swing.ImageIcon;
+import javax.swing.JMenuItem;
 
-import dk.frv.ais.geo.GeoLocation;
-import dk.frv.enav.ins.EeINS;
-import dk.frv.enav.ins.common.graphics.CenterRaster;
+import dk.frv.enav.ins.layers.msi.MsiLayer;
 import dk.frv.enav.ins.msi.MsiHandler.MsiMessageExtended;
 
-/**
- * Graphic for MSI symbol 
- */
-public class MsiSymbolGraphic extends MsiSymbolPosition {
+public class MsiZoomTo extends JMenuItem implements IMapMenuAction {
+	
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = 1L;
-	
-	public MsiSymbolGraphic(MsiMessageExtended message) {
-		super(message);
-		setVague(true);
+	private MsiLayer msiLayer;
+	private MsiMessageExtended msiMessageExtended;
+
+	public MsiZoomTo(String text) {
+		super();
+		setText(text);
 	}
 	
-	public void createSymbol(GeoLocation pos) {
-		CenterRaster msiSymbol;
-		ImageIcon msiSymbolImage;
-		int imageWidth;
-		int imageHeight;
-		if(acknowledged) {
-			msiSymbolImage = new ImageIcon(EeINS.class.getResource("/images/msi/msi_symbol_32.png"));
-			imageWidth = msiSymbolImage.getIconWidth();
-			imageHeight = msiSymbolImage.getIconHeight();
-		} else {
-			msiSymbolImage = new ImageIcon(EeINS.class.getResource("/images/msi/msi_unack_symbol_32.png"));
-			imageWidth = msiSymbolImage.getIconWidth();
-			imageHeight = msiSymbolImage.getIconHeight();
-		}
-		msiSymbol = new CenterRaster(pos.getLatitude(), pos.getLongitude(), imageWidth, imageHeight, msiSymbolImage);
-		add(msiSymbol);
+	@Override
+	public void doAction() {
+		msiLayer.zoomTo(msiMessageExtended.msiMessage);
 	}
 	
+	public void setMsiLayer(MsiLayer msiLayer) {
+		this.msiLayer = msiLayer;
+	}
+	
+	public void setMsiMessageExtended(MsiMessageExtended msiMessageExtended) {
+		this.msiMessageExtended = msiMessageExtended;
+	}
+
 }

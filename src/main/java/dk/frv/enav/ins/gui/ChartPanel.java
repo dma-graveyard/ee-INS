@@ -31,6 +31,8 @@ package dk.frv.enav.ins.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.Properties;
@@ -70,7 +72,7 @@ import dk.frv.enav.ins.settings.MapSettings;
 /**
  * The panel with chart. Initializes all layers to be shown on the map. 
  */
-public class ChartPanel extends OMComponentPanel implements IGpsDataListener {
+public class ChartPanel extends OMComponentPanel implements IGpsDataListener, MouseWheelListener {
 
 	private static final long serialVersionUID = 1L;
 	private static final Logger LOG = Logger.getLogger(ChartPanel.class);
@@ -94,6 +96,7 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener {
 	private NewRouteContainerLayer newRouteContainerLayer;
 	public int maxScale = 5000;
 	private MSIFilterMouseMode msiFilterMouseMode;
+	private GpsData gpsData;
 
 	public ChartPanel(SensorPanel sensorPanel) {
 		super();
@@ -220,6 +223,8 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener {
 		map.setScale(mapSettings.getScale());
 
 		add(map);
+	
+		
 
 		// Force a route layer and sensor panel update
 		routeLayer.routesChanged(RoutesUpdateEvent.ROUTE_ADDED);
@@ -238,6 +243,7 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener {
 		// Show ENC or not
 		encVisible(EeINS.getSettings().getMapSettings().isEncVisible());
 		
+		getMap().addMouseWheelListener(this);
 	}
 
 	public void saveSettings() {
@@ -316,6 +322,7 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener {
 	 */
 	@Override
 	public void gpsDataUpdate(GpsData gpsData) {
+		this.gpsData = gpsData;
 		// Do auto follow
 		if (!EeINS.getSettings().getNavSettings().isAutoFollow()) {
 			return;
@@ -332,9 +339,16 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener {
 		double desiredX;
 		double desiredY;
 		if (lookahead) {
-			// TODO something else for lookahead
-			desiredX = map.getWidth() / 2.0;
-			desiredY = map.getHeight() / 2.0;
+			double factor = 0;
+			if(gpsData.getSog() == 0) {
+				factor = 0;
+			} else if (gpsData.getSog() > 0 && gpsData.getSog() < 30) {
+				factor = gpsData.getSog() * 1/30;
+			} else {
+				factor = 1.0;
+			}
+			desiredX = (map.getWidth() - 10) * factor * Math.cos(360-Math.toRadians(gpsData.getCog()));
+			desiredY = (map.getHeight() - 10) * factor * Math.sin(360-Math.toRadians(gpsData.getCog()));
 		} else {
 			desiredX = map.getWidth() / 2.0;
 			desiredY = map.getHeight() / 2.0;
@@ -355,8 +369,8 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener {
 		}
 
 		if (lookahead) {
-			// TODO something else
-			map.setCenter((float) gpsData.getPosition().getLatitude(), (float) gpsData.getPosition().getLongitude());
+			Point2D forwardCenter = map.getProjection().inverse(desiredX + shipXY.getX(), desiredY + shipXY.getY());
+			map.setCenter((float) forwardCenter.getY(), (float) forwardCenter.getX());
 		} else {
 			map.setCenter((float) gpsData.getPosition().getLatitude(), (float) gpsData.getPosition().getLongitude());
 		}
@@ -486,6 +500,17 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener {
 			if (encLayer == null) {
 				topPanel.setEncDisabled();
 			}
+		}
+	}
+
+	//TODO: must latch on to the real zoom event instead of just zooming with mouse wheel.
+	@Override
+	public void mouseWheelMoved(MouseWheelEvent e) {
+		if(!EeINS.getSettings().getNavSettings().isLookAhead()) {
+			return;
+		}
+		if(this.gpsData != null) {
+			gpsDataUpdate(this.gpsData);
 		}
 	}
 }

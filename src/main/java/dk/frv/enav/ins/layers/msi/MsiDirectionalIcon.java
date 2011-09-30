@@ -49,45 +49,49 @@ import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.common.Heading;
 import dk.frv.enav.ins.common.graphics.CenterRaster;
 import dk.frv.enav.ins.common.util.Calculator;
+import dk.frv.enav.ins.msi.MsiHandler.MsiMessageExtended;
 
 /**
  * Graphic for MSI icon showing relevant off chart MSI
  */
 public class MsiDirectionalIcon extends OMGraphicList implements ProjectionListener {
 	private static final long serialVersionUID = -6808339529053676255L;
+	private static final int IMAGE_SIZE = 42;
+	private static final ImageIcon directionImage = new ImageIcon(EeINS.class.getResource("/images/msi/msi_direction_arrow_transparent_42.png"));
+	private static final ImageIcon markerImage = new ImageIcon(EeINS.class.getResource("/images/msi/msi_direction_transparent_42.png"));
 	private Point2D intersection;
 	private MapBean mapBean;
 	private CenterRaster directionRaster;
 	private CenterRaster markerRaster;
-	private GeoLocation nearestMSI;
-	private ImageIcon directionImage;
-	private ImageIcon markerImage;
+	private GeoLocation msiLocation;
+	private MsiMessageExtended message;
 	
 	MsiDirectionalIcon(MapBean mapBean) {
+		super();
+		setVague(true);
 		this.mapBean = mapBean;
 		mapBean.addProjectionListener(this);
-		directionImage = new ImageIcon(EeINS.class.getResource("/images/msi/msi_direction_arrow.png"));
-		markerImage = new ImageIcon(EeINS.class.getResource("/images/msi/msi_direction.png"));
 	}
 	
-	public void setMarker(GeoLocation nearestMSI) {
-		this.nearestMSI = nearestMSI;
+	public void setMarker(MsiMessageExtended message) {
+		this.message = message;
+		this.msiLocation = message.msiMessage.getLocation().getCenter();
 		LatLonPoint center = (LatLonPoint) mapBean.getCenter();
 		GeoLocation geoCenter = new GeoLocation(center.getLatitude(), center.getLongitude());
-		double bearing = Calculator.bearing(geoCenter, nearestMSI, Heading.RL);
+		double bearing = Calculator.bearing(geoCenter, msiLocation, Heading.RL);
 		
 		Projection projection = mapBean.getProjection();
-		Point2D projectedMSI = projection.forward(nearestMSI.getLatitude(), nearestMSI.getLongitude());
+		Point2D projectedMSI = projection.forward(msiLocation.getLatitude(), msiLocation.getLongitude());
 		
 		Point2D origin = new Point2D.Double(mapBean.getWidth()*0.5f, mapBean.getHeight()*0.5f);
 		Line2D direction = new Line2D.Double(origin, projectedMSI);
 		
-		double boxWidth = mapBean.getWidth()-16;
-		double boxHeight = mapBean.getHeight()-16;
-		Line2D topFrame = new Line2D.Double(16,16,boxWidth,16);
-		Line2D rightFrame = new Line2D.Double(boxWidth,16,boxWidth,boxHeight);
-		Line2D bottomFrame = new Line2D.Double(16,boxHeight,boxWidth,boxHeight);
-		Line2D leftFrame = new Line2D.Double(16,16,16,boxHeight); 
+		double boxWidth = mapBean.getWidth()-IMAGE_SIZE/2;
+		double boxHeight = mapBean.getHeight()-IMAGE_SIZE/2;
+		Line2D topFrame = new Line2D.Double(IMAGE_SIZE/2,IMAGE_SIZE/2,boxWidth,IMAGE_SIZE/2);
+		Line2D rightFrame = new Line2D.Double(boxWidth,IMAGE_SIZE/2,boxWidth,boxHeight);
+		Line2D bottomFrame = new Line2D.Double(IMAGE_SIZE/2,boxHeight,boxWidth,boxHeight);
+		Line2D leftFrame = new Line2D.Double(IMAGE_SIZE/2,IMAGE_SIZE/2,IMAGE_SIZE/2,boxHeight); 
 		
 		boolean intersects = false;
 		
@@ -102,9 +106,7 @@ public class MsiDirectionalIcon extends OMGraphicList implements ProjectionListe
 		
 		if(!intersects)
 			return;
-		
 
-		
 		int x = Math.round((float) intersection.getX());
 		int y = Math.round((float) intersection.getY());
 		
@@ -146,7 +148,7 @@ public class MsiDirectionalIcon extends OMGraphicList implements ProjectionListe
 	@Override
 	public void projectionChanged(ProjectionEvent e) {
 		clear();
-		setMarker(nearestMSI);
+		setMarker(message);
 	}
 	
 	@Override
@@ -154,5 +156,9 @@ public class MsiDirectionalIcon extends OMGraphicList implements ProjectionListe
 		Graphics2D image = (Graphics2D) gr;
 		image.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
 		super.render(image);
+	}
+	
+	public MsiMessageExtended getMessage() {
+		return message;
 	}
 }

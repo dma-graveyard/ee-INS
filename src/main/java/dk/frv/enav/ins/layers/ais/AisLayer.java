@@ -32,6 +32,7 @@ package dk.frv.enav.ins.layers.ais;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -44,19 +45,21 @@ import org.apache.log4j.Logger;
 import com.bbn.openmap.MapBean;
 import com.bbn.openmap.event.MapMouseListener;
 import com.bbn.openmap.layer.OMGraphicHandlerLayer;
+import com.bbn.openmap.omGraphics.OMCircle;
 import com.bbn.openmap.omGraphics.OMGraphic;
 import com.bbn.openmap.omGraphics.OMGraphicList;
 import com.bbn.openmap.omGraphics.OMList;
 
 import dk.frv.enav.ins.EeINS;
-import dk.frv.enav.ins.ais.AisTarget;
 import dk.frv.enav.ins.ais.AisHandler;
+import dk.frv.enav.ins.ais.AisTarget;
 import dk.frv.enav.ins.ais.AtoNTarget;
 import dk.frv.enav.ins.ais.IAisTargetListener;
 import dk.frv.enav.ins.ais.SarTarget;
 import dk.frv.enav.ins.ais.VesselTarget;
 import dk.frv.enav.ins.event.NavigationMouseMode;
 import dk.frv.enav.ins.gps.GpsHandler;
+import dk.frv.enav.ins.gui.ChartPanel;
 import dk.frv.enav.ins.gui.MainFrame;
 import dk.frv.enav.ins.gui.MapMenu;
 
@@ -86,6 +89,8 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 
 	private OMGraphic closest = null;
 	private OMGraphic selectedGraphic;
+	private ChartPanel chartPanel;
+	private OMCircle dummyCircle = new OMCircle();
 
 	public AisLayer() {
 		// graphics.setVague(false);
@@ -260,6 +265,9 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 		if (obj instanceof MapMenu) {
 			aisTargetMenu = (MapMenu) obj;
 		}
+		if (obj instanceof ChartPanel) {
+			chartPanel = (ChartPanel) obj;
+		}
 	}
 
 	@Override
@@ -362,74 +370,80 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 
 	@Override
 	public boolean mouseMoved(MouseEvent e) {
-		if (this.isVisible()) {
-			OMGraphic newClosest = null;
-			OMList<OMGraphic> allClosest = graphics.findAll(e.getX(), e.getY(), 3.0f);
-
-			for (OMGraphic omGraphic : allClosest) {
-
-				//System.out.println("omGraphic: " + omGraphic.getClass());
-
-				if (omGraphic instanceof IntendedRouteWpCircle || omGraphic instanceof IntendedRouteLegGraphic
-						|| omGraphic instanceof VesselTargetTriangle || omGraphic instanceof SartGraphic) {
-					// System.out.println("omGraphic: " + omGraphic.getClass());
-					newClosest = omGraphic;
-					break;
-				}
-			}
-
-			if (newClosest != closest) {
-				Point containerPoint = SwingUtilities.convertPoint(mapBean, e.getPoint(), mainFrame);
-				if (newClosest instanceof IntendedRouteWpCircle) {
-					closest = newClosest;
-					IntendedRouteWpCircle wpCircle = (IntendedRouteWpCircle) newClosest;
-					intendedRouteInfoPanel.setPos((int) containerPoint.getX(), (int) containerPoint.getY() - 10);
-					intendedRouteInfoPanel.showWpInfo(wpCircle);
-					mainFrame.getGlassPane().setVisible(true);
-					aisTargetInfoPanel.setVisible(false);
-					sarTargetInfoPanel.setVisible(false);
-					return true;
-				} else if (newClosest instanceof IntendedRouteLegGraphic) {
-					closest = newClosest;
-					IntendedRouteLegGraphic legGraphic = (IntendedRouteLegGraphic) newClosest;
-					intendedRouteInfoPanel.setPos((int) containerPoint.getX(), (int) containerPoint.getY() - 10);					
-					intendedRouteInfoPanel.showLegInfo(legGraphic);
-					mainFrame.getGlassPane().setVisible(true);
-					aisTargetInfoPanel.setVisible(false);
-					sarTargetInfoPanel.setVisible(false);
-					return true;
-				} else if (newClosest instanceof VesselTargetTriangle) {
-					closest = newClosest;
-					VesselTargetTriangle vesselTargetTriangle = (VesselTargetTriangle) newClosest;
-					VesselTarget vesselTarget = vesselTargetTriangle.getVesselTargetGraphic().getVesselTarget();
-					aisTargetInfoPanel.setPos((int) containerPoint.getX(), (int) containerPoint.getY() - 10);
-					aisTargetInfoPanel.showAisInfo(vesselTarget);
-					mainFrame.getGlassPane().setVisible(true);
-					intendedRouteInfoPanel.setVisible(false);
-					sarTargetInfoPanel.setVisible(false);
-					return true;
-				} else if (newClosest instanceof SartGraphic) {
-					closest = newClosest;
-					SartGraphic sartGraphic = (SartGraphic) newClosest;
-					sarTargetInfoPanel.setPos((int) containerPoint.getX(), (int) containerPoint.getY() - 10);
-					sarTargetInfoPanel.showSarInfo(sartGraphic.getSarTargetGraphic().getSarTarget());
-					mainFrame.getGlassPane().setVisible(true);
-					intendedRouteInfoPanel.setVisible(false);
-					aisTargetInfoPanel.setVisible(false);
-					return true;
-				} else {
-					intendedRouteInfoPanel.setVisible(false);
-					aisTargetInfoPanel.setVisible(false);
-					sarTargetInfoPanel.setVisible(false);
-					mainFrame.getGlassPane().setVisible(false);
-					closest = null;
-				}
-
-			}
-		} else {
+		if (!this.isVisible()) {
 			intendedRouteInfoPanel.setVisible(false);
 			aisTargetInfoPanel.setVisible(false);
 			sarTargetInfoPanel.setVisible(false);
+			return false;
+		}
+		
+		OMGraphic newClosest = null;
+		OMList<OMGraphic> allClosest = graphics.findAll(e.getX(), e.getY(), 3.0f);
+
+		for (OMGraphic omGraphic : allClosest) {
+
+//			System.out.println("omGraphic: " + omGraphic.getClass());
+
+			if (omGraphic instanceof IntendedRouteWpCircle || omGraphic instanceof IntendedRouteLegGraphic
+					|| omGraphic instanceof VesselTargetTriangle || omGraphic instanceof SartGraphic) {
+				// System.out.println("omGraphic: " + omGraphic.getClass());
+				newClosest = omGraphic;
+				break;
+			}
+		}
+
+		
+		if (newClosest != closest) {
+			Point containerPoint = SwingUtilities.convertPoint(mapBean, e.getPoint(), mainFrame);
+			
+			if (newClosest instanceof IntendedRouteWpCircle) {
+				closest = newClosest;
+				IntendedRouteWpCircle wpCircle = (IntendedRouteWpCircle) newClosest;
+				intendedRouteInfoPanel.setPos((int) containerPoint.getX(), (int) containerPoint.getY() - 10);
+				intendedRouteInfoPanel.showWpInfo(wpCircle);
+				mainFrame.getGlassPane().setVisible(true);
+				aisTargetInfoPanel.setVisible(false);
+				sarTargetInfoPanel.setVisible(false);
+				return true;
+			} else if (newClosest instanceof IntendedRouteLegGraphic) {
+				// lets user see ETA continually along route leg
+				closest = dummyCircle;
+				Point2D worldLocation = chartPanel.getMap().getProjection().inverse(e.getPoint());
+				IntendedRouteLegGraphic legGraphic = (IntendedRouteLegGraphic) newClosest;
+				intendedRouteInfoPanel.setPos((int) containerPoint.getX(), (int) containerPoint.getY() - 10);					
+				intendedRouteInfoPanel.showLegInfo(legGraphic, worldLocation);
+				mainFrame.getGlassPane().setVisible(true);
+				aisTargetInfoPanel.setVisible(false);
+				sarTargetInfoPanel.setVisible(false);
+				return true;
+			} else if (newClosest instanceof VesselTargetTriangle) {
+				closest = newClosest;
+				VesselTargetTriangle vesselTargetTriangle = (VesselTargetTriangle) newClosest;
+				VesselTarget vesselTarget = vesselTargetTriangle.getVesselTargetGraphic().getVesselTarget();
+				aisTargetInfoPanel.setPos((int) containerPoint.getX(), (int) containerPoint.getY() - 10);
+				aisTargetInfoPanel.showAisInfo(vesselTarget);
+				mainFrame.getGlassPane().setVisible(true);
+				intendedRouteInfoPanel.setVisible(false);
+				sarTargetInfoPanel.setVisible(false);
+				return true;
+			} else if (newClosest instanceof SartGraphic) {
+				closest = newClosest;
+				SartGraphic sartGraphic = (SartGraphic) newClosest;
+				sarTargetInfoPanel.setPos((int) containerPoint.getX(), (int) containerPoint.getY() - 10);
+				sarTargetInfoPanel.showSarInfo(sartGraphic.getSarTargetGraphic().getSarTarget());
+				mainFrame.getGlassPane().setVisible(true);
+				intendedRouteInfoPanel.setVisible(false);
+				aisTargetInfoPanel.setVisible(false);
+				return true;
+			} else {
+				intendedRouteInfoPanel.setVisible(false);
+				aisTargetInfoPanel.setVisible(false);
+				sarTargetInfoPanel.setVisible(false);
+				mainFrame.getGlassPane().setVisible(false);
+				if(closest != null) {
+					closest = null;
+				}
+			}
 		}
 		return false;
 	}

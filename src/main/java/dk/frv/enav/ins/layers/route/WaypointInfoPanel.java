@@ -93,18 +93,19 @@ public class WaypointInfoPanel extends InfoPanel {
 		str.append("<html>");
 		str.append(wp.getName() + "<br/>");
 		str.append(Formatter.latToPrintable(wp.getPos().getLatitude()) + " - " + Formatter.lonToPrintable(wp.getPos().getLongitude()) + "<br/>");
+		str.append("<table border='0' cellpadding='2'>");
 		if (ttg != null) {
-			str.append("TTG: " + Formatter.formatTime(ttg) + "<br/>");
+			str.append("<tr><td>TTG:</td><td>" + Formatter.formatTime(ttg) + "</td></tr>");
 		}
 		if (dtg != null) {
-			str.append("DTG: " + Formatter.formatDistNM(dtg, 2) + "<br/>");
+			str.append("<tr><td>DTG:</td><td>" + Formatter.formatDistNM(dtg, 2) + "</td></tr>");
 		}
-		str.append("ETA: " + Formatter.formatShortDateTime(eta) + "<br/>");
+		str.append("<tr><td>ETA:</td><td>" + Formatter.formatShortDateTime(eta) + "</td></tr>");
 		
 		if (wp.getOutLeg() != null) {
-			str.append("SPD: " + Formatter.formatSpeed(wp.getOutLeg().getSpeed()));
+			str.append("<tr><td>SPD:</td><td>" + Formatter.formatSpeed(wp.getOutLeg().getSpeed()) + "</td></tr>");
 		}
-		
+		str.append("</table>");
 		str.append("</html>");
 		showText(str.toString());
 	}
