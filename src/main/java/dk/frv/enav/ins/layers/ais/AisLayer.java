@@ -438,7 +438,6 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 				aisTargetInfoPanel.setVisible(false);
 				sarTargetInfoPanel.setVisible(false);
 				mainFrame.getGlassPane().setVisible(false);
-				// causes intended route leg info panel to hang...
 				if(closest != null) {
 					closest = null;
 				}
