@@ -102,7 +102,7 @@
 
 	<target name="enc" depends="navicon_enc" />
 
-	<target name="navicon_enc" if="${navicon_enc}">
+	<target name="navicon_enc" if="navicon_enc">
 		<echo>Using Navicon ENC layer</echo>
 		<copy todir="${distdir}/lib" overwrite="false">
 			<fileset dir="${navicon_enc_path}/lib">
