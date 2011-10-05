@@ -138,7 +138,7 @@ public class TopPanel extends OMComponentPanel implements ActionListener {
 		if (e.getSource() == autoFollowBtn) {
 			EeINS.getSettings().getNavSettings().setAutoFollow(autoFollowBtn.isSelected());
 			if (autoFollowBtn.isSelected()) {
-				mainFrame.getChartPanel().centreOnShip();
+				mainFrame.getChartPanel().autoFollow();
 			}
 		} else if (e.getSource() == centreBtn) {
 			mainFrame.getChartPanel().centreOnShip();

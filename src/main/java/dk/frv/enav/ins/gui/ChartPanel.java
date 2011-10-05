@@ -287,6 +287,7 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 			newScale = maxScale;
 		}
 		map.setScale(newScale);
+		autoFollow();
 	}
 
 	public void aisVisible(boolean visible) {
@@ -316,13 +317,8 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 			EeINS.getMainFrame().getTopPanel().getNewRouteBtn().setSelected(false);
 		}
 	}
-
-	/**
-	 * Receive GPS update
-	 */
-	@Override
-	public void gpsDataUpdate(GpsData gpsData) {
-		this.gpsData = gpsData;
+	
+	public void autoFollow() {
 		// Do auto follow
 		if (!EeINS.getSettings().getNavSettings().isAutoFollow()) {
 			return;
@@ -336,22 +332,36 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 		boolean lookahead = EeINS.getSettings().getNavSettings().isLookAhead();
 
 		// Find desired location (depends on look-ahead or not)
-		double desiredX;
-		double desiredY;
+				
+		double centerX = map.getWidth() / 2.0;
+		double centerY = map.getHeight() / 2.0;
+		double desiredX = centerX;
+		double desiredY = centerY;
+		
 		if (lookahead) {
+			double lookAheadBorder = 100.0;
+			double lookAheadMinSpd = 1.0;
+			double lookAheadMaxSpd = 15.0;
+			
+			// Calculate a factor [0;1] from speed
 			double factor = 0;
-			if(gpsData.getSog() == 0) {
+			if(gpsData.getSog() < lookAheadMinSpd) {
 				factor = 0;
-			} else if (gpsData.getSog() > 0 && gpsData.getSog() < 30) {
-				factor = gpsData.getSog() * 1/30;
+			} else if (gpsData.getSog() < lookAheadMaxSpd) {
+				factor = gpsData.getSog() / lookAheadMaxSpd;
 			} else {
 				factor = 1.0;
 			}
-			desiredX = (map.getWidth() - 10) * factor * Math.cos(360-Math.toRadians(gpsData.getCog()));
-			desiredY = (map.getHeight() - 10) * factor * Math.sin(360-Math.toRadians(gpsData.getCog()));
-		} else {
-			desiredX = map.getWidth() / 2.0;
-			desiredY = map.getHeight() / 2.0;
+			
+			double phiX = Math.cos(Math.toRadians(gpsData.getCog()) - 3 * Math.PI / 2);
+			double phiY = Math.sin(Math.toRadians(gpsData.getCog()) - 3 * Math.PI / 2);
+			
+			double fx = factor * phiX;
+			double fy = factor * phiY;
+			
+			desiredX = centerX + (centerX - lookAheadBorder) * fx; 
+			desiredY = centerY + (centerY - lookAheadBorder) * fy;
+						
 		}
 
 		// Get projected x,y of current position
@@ -361,7 +371,7 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 		double pctOffX = (Math.abs(desiredX - shipXY.getX()) / map.getWidth()) * 100.0;
 		double pctOffY = (Math.abs(desiredY - shipXY.getY()) / map.getHeight()) * 100.0;
 
-		// LOG.info("pctOffX: " + pctOffX + " pctOffY: " + pctOffY);
+		//LOG.info("pctOffX: " + pctOffX + " pctOffY: " + pctOffY);
 
 		int tollerated = EeINS.getSettings().getNavSettings().getAutoFollowPctOffTollerance();
 		if (pctOffX < tollerated && pctOffY < tollerated) {
@@ -369,12 +379,21 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 		}
 
 		if (lookahead) {
-			Point2D forwardCenter = map.getProjection().inverse(desiredX + shipXY.getX(), desiredY + shipXY.getY());
+			Point2D forwardCenter = map.getProjection().inverse(centerX - desiredX + shipXY.getX(), centerY - desiredY + shipXY.getY());
 			map.setCenter((float) forwardCenter.getY(), (float) forwardCenter.getX());
 		} else {
 			map.setCenter((float) gpsData.getPosition().getLatitude(), (float) gpsData.getPosition().getLongitude());
 		}
 
+	}
+
+	/**
+	 * Receive GPS update
+	 */
+	@Override
+	public void gpsDataUpdate(GpsData gpsData) {
+		this.gpsData = gpsData;
+		autoFollow();
 	}
 
 	/**
@@ -503,14 +522,11 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 		}
 	}
 
-	//TODO: must latch on to the real zoom event instead of just zooming with mouse wheel.
+	/**
+	 * Call auto follow when zooming
+	 */
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
-		if(!EeINS.getSettings().getNavSettings().isLookAhead()) {
-			return;
-		}
-		if(this.gpsData != null) {
-			gpsDataUpdate(this.gpsData);
-		}
+		autoFollow();
 	}
 }
