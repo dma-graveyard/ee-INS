@@ -21,7 +21,7 @@ public class ASArc extends OMArc {
 	private static final long serialVersionUID = 1L;
 
 	public ASArc(int scaleFactor, int precision, double latitude, double longitude, int radius, int leftBound, int rightBound) {
-		super(latitude, longitude, (int) radius, Length.METER, leftBound, leftBound - rightBound);
+		super(latitude, longitude, radius, Length.METER, leftBound, leftBound - rightBound);
 		super.setLineType(OMGraphic.LINETYPE_STRAIGHT);
 		Length units = Length.METER;
 		// super.setFillPaint(Color.red);
