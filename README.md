@@ -102,16 +102,6 @@ following way.
 	     `-- dev (branch for individual task in new version)
  
 
-## ChangeLog ##
-
-When changes have been made they should be logged in the file `ChangeLog` on 
-the following form
-
-    YYYY-MM-DD <name>
-        * Description of change 1
-        ...
-        * Description of change N
-
 ## ENC layer ##
 
 ee-INS does not come with an ENC layer but with the possibility to add one as 

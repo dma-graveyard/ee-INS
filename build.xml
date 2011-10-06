@@ -82,7 +82,7 @@
 		<copy todir="${distdir}" overwrite="false">
 			<fileset dir="${src.main.resources.dir}" />
 		</copy>
-
+		<copy file="${basedir}/LICENSE.txt" todir="${distdir}" overwrite="false"/>
 	</target>
 
 	<target name="run" depends="dist">
