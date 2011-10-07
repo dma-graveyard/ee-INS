@@ -159,7 +159,7 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 			// Handle broadcast messages
 			if (aisMessage.getMsgId() == 8 && appMessage != null) {
 				// Handle route information
-				if (appMessage.getDac() == 219 && appMessage.getFi() == 27) {
+				if (appMessage.getDac() == BroadcastIntendedRoute.DAC && appMessage.getFi() == BroadcastIntendedRoute.FI) {
 					BroadcastIntendedRoute routeInformation = (BroadcastIntendedRoute)appMessage;
 					//LOG.info("BroadcastRouteInformation: " + routeInformation);
 					// Handle intended route
