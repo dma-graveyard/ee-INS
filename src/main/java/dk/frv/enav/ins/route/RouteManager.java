@@ -47,6 +47,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import com.bbn.openmap.MapHandlerChild;
+import com.bbn.openmap.proj.coords.UTMPoint;
 
 import dk.frv.enav.common.xml.metoc.MetocForecast;
 import dk.frv.enav.ins.EeINS;
@@ -145,8 +146,11 @@ public class RouteManager extends MapHandlerChild implements Runnable, Serializa
 			route.setVisible(true);
 			// Set active route index
 			activeRouteIndex = index;
+			
+			
 			// Create new
-			activeRoute = new ActiveRoute(route);
+			activeRoute = new ActiveRoute(route, gpsHandler.getCurrentData());
+						
 			// Set the minimum WP circle radius
 			activeRoute.setWpCircleMin(EeINS.getSettings().getNavSettings().getMinWpRadius());
 			// Set relaxed WP change
