@@ -301,7 +301,17 @@ public class RouteManagerDialog extends JDialog implements ActionListener, ListS
 	}
 
 	private void reverseCopy() {
-		// TODO
+		if(routeTable.getSelectedRow() >= 0) {
+			Route selectedRoute = routeManager.getRoute(routeTable.getSelectedRow());
+			routeManager.getRoute(routeTable.getSelectedRow()).setVisible(false);
+			Route routeReversed = selectedRoute.reverse();
+			routeReversed.setName(routeReversed.getName() + " reversed");
+			routeReversed.setVisible(true);
+			routeManager.addRoute(routeReversed);
+
+			updateTable();
+		}
+		
 	}
 
 	private void properties() {

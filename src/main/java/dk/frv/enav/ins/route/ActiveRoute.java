@@ -130,6 +130,7 @@ public class ActiveRoute extends Route {
 		if (gpsData.isBadPosition() || gpsData.getSog() < 3)
 		{
 			return 0;
+			
 		}
 		else
 		{		

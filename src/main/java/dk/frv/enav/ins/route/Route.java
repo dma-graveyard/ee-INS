@@ -190,6 +190,72 @@ public class Route implements Serializable {
 		
 		return newRoute;
 	}
+	
+	/**
+	 * Performs a deep reverse of a route.
+	 */
+	public Route reverse() {
+		Route newRoute = new Route();
+		LinkedList<RouteWaypoint> waypoints = new LinkedList<RouteWaypoint>();
+		
+		int routeSize = this.waypoints.size() -1;
+		int j = 0;
+		
+		RouteWaypoint current = this.waypoints.get(routeSize);
+				
+		for (int i = routeSize ; i > -1 ; i--){
+			RouteWaypoint newRouteWaypoint = this.waypoints.get(i).copy();
+			newRouteWaypoint.setName(this.waypoints.get(j).getName()); //Do we want to reverse the name too?
+			waypoints.add(newRouteWaypoint);
+			j++;
+		}
+		
+		// Iterates through the list of waypoints beginning at the second waypoint in the route, while
+		// creating route legs in a backward fashion. The values of the original leg is copied also.
+		// Perhaps this can be done more efficiently with a copy constructor (or method) for route legs, but 
+		// forward referencing a waypoint which has not been created has to be solved in some way...
+		for (int i = 1; i < waypoints.size(); i++) {
+			RouteWaypoint currWaypoint = waypoints.get(i);
+			RouteWaypoint prevWaypoint = waypoints.get(i-1);
+			RouteLeg routeLeg = this.waypoints.get(i).getInLeg();
+			
+			RouteLeg newRouteLeg = new RouteLeg();
+			newRouteLeg.setSpeed(routeLeg.getSpeed());
+			newRouteLeg.setHeading(routeLeg.getHeading());
+			newRouteLeg.setXtdStarboard(routeLeg.getXtdStarboard());
+			newRouteLeg.setXtdPort(routeLeg.getXtdPort());
+			
+			newRouteLeg.setStartWp(prevWaypoint);
+			newRouteLeg.setEndWp(currWaypoint);
+			
+			prevWaypoint.setOutLeg(newRouteLeg);
+			currWaypoint.setInLeg(newRouteLeg);
+		}
+		newRoute.setWaypoints(waypoints);
+
+		
+		// Immutable objects are safe to copy this way?
+		newRoute.name = this.name;
+		newRoute.departure = this.departure;
+		newRoute.destination = this.destination;
+		newRoute.visible = this.visible;
+		newRoute.starttime = this.starttime;
+		newRoute.ttgs = this.ttgs;
+		newRoute.dtgs = this.dtgs;
+		newRoute.totalTtg = this.totalTtg;
+		newRoute.totalDtg = this.totalDtg;
+		newRoute.etas = this.etas;
+		newRoute.metocForecast = this.metocForecast;
+		newRoute.metocStarttime = this.metocStarttime;
+		newRoute.metocEta = this.metocEta;
+		newRoute.routeMetocSettings = this.routeMetocSettings;
+		
+
+		return newRoute;
+	}
+		
+	
+	
 
 	// Calculated measures
 
