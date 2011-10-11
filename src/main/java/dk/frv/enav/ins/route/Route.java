@@ -440,7 +440,7 @@ public class Route implements Serializable {
 	}
 
 	protected boolean isLastWaypoint(int index) {
-		return (index == waypoints.size() - 1);
+		return (index == waypoints.size() );
 	}
 
 	public void calcValues(boolean force) {

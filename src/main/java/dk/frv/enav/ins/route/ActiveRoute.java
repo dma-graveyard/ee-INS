@@ -105,6 +105,8 @@ public class ActiveRoute extends Route {
 	 */
 	protected boolean relaxedWpChange = true;
 
+	protected int lastWpCounter = 0;
+	
 	public ActiveRoute(Route route, GpsData gpsData) {
 		super();
 		this.waypoints = route.waypoints;
@@ -130,7 +132,6 @@ public class ActiveRoute extends Route {
 		if (gpsData.isBadPosition() || gpsData.getSog() < 3)
 		{
 			return 0;
-			
 		}
 		else
 		{		
@@ -140,18 +141,11 @@ public class ActiveRoute extends Route {
 				{
 					GeoLocation wpPos = route.getWaypoints().get(i).getPos();
 					double distance = gpsData.getPosition().getRhumbLineDistance(wpPos);
-					
 					double angleToWpDeg = gpsData.getPosition().getRhumbLineBearing(wpPos);
-
 					double weight = 1 - ( Math.toRadians(gpsData.getCog()) - Math.toRadians(angleToWpDeg) );
 					double result = ( Math.abs(weight) * (0.5 * Converter.metersToNm(distance)) );
-//					double result = Math.abs(Math.toRadians(gpsData.getCog()) - Math.toRadians(angleToWpDeg));
-				//	weightedDistance.add(result);
-
 					double upper = gpsData.getCog()+90;
 					double lower = gpsData.getCog()-90;
-					
-
 					
 					if (result < smallestDist && (angleToWpDeg < upper && angleToWpDeg > lower))
 					{
@@ -226,15 +220,20 @@ public class ActiveRoute extends Route {
 		if (activeWpRng < radius) {
 			inWpCircle = true;
 		}
-		
-		// If heading for last wp and in circle, we finish route
+
+		// If heading for last wp and in circle, we finish route - hack for waiting 1 cycle to check if in circle
 		if (isLastWp()) {
-			if (inWpCircle) {
-				return ActiveWpSelectionResult.ROUTE_FINISHED;
-			} else {
+				if (lastWpCounter ==1){
+				if (inWpCircle) {
+					return ActiveWpSelectionResult.ROUTE_FINISHED;
+				} else {
+					return ActiveWpSelectionResult.NO_CHANGE;
+				}		
+			}else
+				lastWpCounter++;
 				return ActiveWpSelectionResult.NO_CHANGE;
-			}		
 		}
+
 		
 		// Calculate distance from ship to next waypoint		
 		RouteLeg nextLeg = getActiveWp().getOutLeg();
@@ -255,6 +254,9 @@ public class ActiveRoute extends Route {
 				}
 			}
 		}
+		
+		
+		
 		
 		return ActiveWpSelectionResult.NO_CHANGE;
 	}
