@@ -96,12 +96,17 @@ public class BottomPanel extends OMComponentPanel implements IMsiUpdateListener,
 		
 		shoreServiceStatus = new StatusLabel("Shore services");
 		addToolbarComponent(shoreServiceStatus);
+
+		
+		//MSI Icon
 		
 		ImageIcon[] msiAnim = new ImageIcon[2];
 		msiAnim[0] = new ImageIcon(EeINS.class.getResource("/images/msi/msi_symbol_16.png"));
 		msiAnim[1] = new ImageIcon(EeINS.class.getResource("/images/msi/blank.png"));
 		msiIcon = new BlinkingLabel(400, msiAnim);
-		addToolbarComponent(msiIcon);		
+		//addToolbarComponent(msiIcon);
+		
+				
 		
 		new Thread(this).start();
 	}

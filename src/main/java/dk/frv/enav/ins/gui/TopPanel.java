@@ -29,13 +29,19 @@
  */
 package dk.frv.enav.ins.gui;
 
+import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
+import javax.swing.Box;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JSeparator;
 import javax.swing.JToggleButton;
+import javax.swing.SwingConstants;
 
 import com.bbn.openmap.MouseDelegator;
 import com.bbn.openmap.gui.OMComponentPanel;
@@ -44,12 +50,14 @@ import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.event.NavigationMouseMode;
 import dk.frv.enav.ins.gui.msi.MsiDialog;
 import dk.frv.enav.ins.gui.route.RouteManagerDialog;
+import dk.frv.enav.ins.msi.IMsiUpdateListener;
 import dk.frv.enav.ins.msi.MsiHandler;
+import dk.frv.enav.ins.msi.MsiHandler.MsiMessageExtended;
 
 /**
  * The top buttons panel 
  */
-public class TopPanel extends OMComponentPanel implements ActionListener {
+public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUpdateListener, MouseListener {
 
 	private static final long serialVersionUID = 1L;
 
@@ -68,8 +76,9 @@ public class TopPanel extends OMComponentPanel implements ActionListener {
 	private MsiDialog msiDialog = null;
 	private MouseDelegator mouseDelegator;
 	private final JToggleButton tglbtnMsiFilter = new JToggleButton("MSI filter");
-
 	private MsiHandler msiHandler;
+	private BlinkingLabel msiIcon;
+	private int notifyMsgId = -1;
 	
 	public TopPanel() {
 		super();		
@@ -102,7 +111,27 @@ public class TopPanel extends OMComponentPanel implements ActionListener {
 		add(aisBtn);
 		add(encBtn);
 		add(tglbtnMsiFilter);
+		
+		
+		Component horizontalStrut = Box.createHorizontalStrut(5);
+		JSeparator separator = new JSeparator();
+		separator.setOrientation(SwingConstants.VERTICAL);
+		horizontalStrut = Box.createHorizontalStrut(5);
+		
+		
+		ImageIcon[] msiAnim = new ImageIcon[2];
+		msiAnim[0] = new ImageIcon(EeINS.class.getResource("/images/msi/msi_symbol_64x20.png"));
+		msiAnim[1] = new ImageIcon(EeINS.class.getResource("/images/msi/blank64x20.png"));
+		msiIcon = new BlinkingLabel(400, msiAnim);
+		
+		
+		add(horizontalStrut);
+		//add(separator);
+		//add(horizontalStrut);
+		add(msiIcon);
+	
 
+		msiIcon.addMouseListener(this);
 		zoomInBtn.addActionListener(this);
 		zoomOutBtn.addActionListener(this);
 		centreBtn.addActionListener(this);
@@ -200,6 +229,68 @@ public class TopPanel extends OMComponentPanel implements ActionListener {
 	
 	public JToggleButton getNewRouteBtn() {
 		return newRouteBtn;
+	}
+
+	@Override
+	public void msiUpdate() {
+		if (msiHandler.isPendingImportantMessages()) {
+			msiIcon.setBlink(true);
+			String encText = "";
+			
+			if (EeINS.getSettings().getEnavSettings().isMsiFilter())
+			{
+				int firstUnAckFiltered = msiHandler.getFirstNonAcknowledgedFiltered();
+				MsiMessageExtended msiMessageFiltered = msiHandler.getFilteredMessageList().get(firstUnAckFiltered);
+				notifyMsgId = msiMessageFiltered.msiMessage.getMessageId();
+				encText = msiMessageFiltered.msiMessage.getEncText();
+			}else
+			{
+				int firstUnAck = msiHandler.getFirstNonAcknowledged();
+				MsiMessageExtended msiMessage = msiHandler.getMessageList().get(firstUnAck);
+				notifyMsgId = msiMessage.msiMessage.getMessageId();
+				encText = msiMessage.msiMessage.getEncText();
+			}
+			msiIcon.setToolTipText(encText);		
+		} else {
+			notifyMsgId = -1;
+			msiIcon.setBlink(false);
+			msiIcon.setToolTipText(null); 			
+		}
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		if (e.getSource() == msiIcon) {
+			if (notifyMsgId > 0) {
+				msiDialog.showMessage(notifyMsgId);
+			} else {
+				msiDialog.setVisible(true);
+			}
+		}
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
