@@ -33,7 +33,6 @@ import javax.swing.JMenuItem;
 
 import dk.frv.enav.ins.route.Route;
 import dk.frv.enav.ins.route.RouteManager;
-import dk.frv.enav.ins.route.RoutesUpdateEvent;
 
 public class RouteReverse extends JMenuItem implements IMapMenuAction {
 	

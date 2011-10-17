@@ -234,15 +234,20 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 	@Override
 	public void msiUpdate() {
 		if (msiHandler.isPendingImportantMessages()) {
+			msiIcon.setVisible(true);
 			msiIcon.setBlink(true);
 			String encText = "";
 			
 			if (EeINS.getSettings().getEnavSettings().isMsiFilter())
 			{
 				int firstUnAckFiltered = msiHandler.getFirstNonAcknowledgedFiltered();
-				MsiMessageExtended msiMessageFiltered = msiHandler.getFilteredMessageList().get(firstUnAckFiltered);
-				notifyMsgId = msiMessageFiltered.msiMessage.getMessageId();
-				encText = msiMessageFiltered.msiMessage.getEncText();
+				//There are no MSI to acknowledge
+				if (firstUnAckFiltered != -1){
+					MsiMessageExtended msiMessageFiltered = msiHandler.getFilteredMessageList().get(firstUnAckFiltered);
+					notifyMsgId = msiMessageFiltered.msiMessage.getMessageId();
+					encText = msiMessageFiltered.msiMessage.getEncText();
+				}
+				
 			}else
 			{
 				int firstUnAck = msiHandler.getFirstNonAcknowledged();
@@ -253,7 +258,8 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 			msiIcon.setToolTipText(encText);		
 		} else {
 			notifyMsgId = -1;
-			msiIcon.setBlink(false);
+			msiIcon.setVisible(false);
+			//msiIcon.setBlink(false);
 			msiIcon.setToolTipText(null); 			
 		}
 	}

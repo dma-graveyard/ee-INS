@@ -47,16 +47,15 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import com.bbn.openmap.MapHandlerChild;
-import com.bbn.openmap.proj.coords.UTMPoint;
 
 import dk.frv.enav.common.xml.metoc.MetocForecast;
 import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.ais.AisAdressedRouteSuggestion;
-import dk.frv.enav.ins.ais.AisBroadcastRouteSuggestion;
-import dk.frv.enav.ins.ais.AisRouteData;
-import dk.frv.enav.ins.ais.AisHandler;
-import dk.frv.enav.ins.ais.IAisRouteSuggestionListener;
 import dk.frv.enav.ins.ais.AisAdressedRouteSuggestion.Status;
+import dk.frv.enav.ins.ais.AisBroadcastRouteSuggestion;
+import dk.frv.enav.ins.ais.AisHandler;
+import dk.frv.enav.ins.ais.AisRouteData;
+import dk.frv.enav.ins.ais.IAisRouteSuggestionListener;
 import dk.frv.enav.ins.gps.GnssTime;
 import dk.frv.enav.ins.gps.GpsData;
 import dk.frv.enav.ins.gps.GpsHandler;

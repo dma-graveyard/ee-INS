@@ -30,7 +30,6 @@
 package dk.frv.enav.ins.route;
 
 import java.util.Date;
-import java.util.LinkedList;
 
 import dk.frv.ais.geo.GeoLocation;
 import dk.frv.enav.common.xml.metoc.MetocForecast;
@@ -223,13 +222,13 @@ public class ActiveRoute extends Route {
 
 		// If heading for last wp and in circle, we finish route - hack for waiting 1 cycle to check if in circle
 		if (isLastWp()) {
-				if (lastWpCounter ==1){
-				if (inWpCircle) {
-					return ActiveWpSelectionResult.ROUTE_FINISHED;
-				} else {
-					return ActiveWpSelectionResult.NO_CHANGE;
-				}		
-			}else
+				if (lastWpCounter >0){
+					if (inWpCircle) {
+						return ActiveWpSelectionResult.ROUTE_FINISHED;
+					} else {
+						return ActiveWpSelectionResult.NO_CHANGE;
+					}		
+				}else
 				lastWpCounter++;
 				return ActiveWpSelectionResult.NO_CHANGE;
 		}

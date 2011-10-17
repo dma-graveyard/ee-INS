@@ -200,9 +200,7 @@ public class Route implements Serializable {
 		
 		int routeSize = this.waypoints.size() -1;
 		int j = 0;
-		
-		RouteWaypoint current = this.waypoints.get(routeSize);
-				
+
 		for (int i = routeSize ; i > -1 ; i--){
 			RouteWaypoint newRouteWaypoint = this.waypoints.get(i).copy();
 			newRouteWaypoint.setName(this.waypoints.get(j).getName()); //Do we want to reverse the name too?
@@ -233,7 +231,6 @@ public class Route implements Serializable {
 		}
 		newRoute.setWaypoints(waypoints);
 
-		
 		// Immutable objects are safe to copy this way?
 		newRoute.name = this.name;
 		newRoute.departure = this.departure;
@@ -263,6 +260,7 @@ public class Route implements Serializable {
 		calcValues();
 		if (isLastWaypoint(index))
 			return null;
+
 		return dtgs[index];
 	}
 	
@@ -440,7 +438,7 @@ public class Route implements Serializable {
 	}
 
 	protected boolean isLastWaypoint(int index) {
-		return (index == waypoints.size() );
+		return (index == waypoints.size() -1);
 	}
 
 	public void calcValues(boolean force) {
