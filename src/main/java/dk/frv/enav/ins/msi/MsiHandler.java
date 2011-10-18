@@ -184,7 +184,7 @@ public class MsiHandler extends MapHandlerChild implements Runnable, IRoutesUpda
 			updateMsi();
 		}
 	}
-	public synchronized void updateMsi() {
+	public void updateMsi() {
 		boolean msiUpdated = false;
 		
 		Date now = new Date();
