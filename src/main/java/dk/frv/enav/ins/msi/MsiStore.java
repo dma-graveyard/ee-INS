@@ -136,7 +136,7 @@ public class MsiStore implements Serializable {
 	 * Sets msi warnings visible if they are in the radius of the given location (ship location)
 	 * @param calculationPosition Current location of own ship
 	 */
-	public void setVisibility(GeoLocation calculationPosition) {
+	public synchronized void setVisibility(GeoLocation calculationPosition) {
 		visibleGPS.clear();
 		Iterator<Map.Entry<Integer, MsiMessage>> it = messages.entrySet().iterator();
 		while (it.hasNext()) {
@@ -160,7 +160,7 @@ public class MsiStore implements Serializable {
 	 * Sets msi warnings visible if they are within a rectangle given by the routes' waypoints.
 	 * @param routes List of routes for which to enable msi warnings at
 	 */
-	public void setVisibility(List<Route> routes) {
+	public synchronized void setVisibility(List<Route> routes) {
 		visibleRoute.clear();
 		if(routes == null || routes.size() == 0) {
 			return;
@@ -192,7 +192,7 @@ public class MsiStore implements Serializable {
 	 * box method, but later should be implemented with calculation of cross track distance from route to point
 	 * @param route Active route
 	 */
-	public void setRelevance(ActiveRoute route) {
+	public synchronized void setRelevance(ActiveRoute route) {
 		relevant.clear();
 		Iterator<Map.Entry<Integer, MsiMessage>> it = messages.entrySet().iterator();
 		while (it.hasNext()) {
@@ -213,7 +213,7 @@ public class MsiStore implements Serializable {
 		}
 	}
 	
-	public void clearRelevance() {
+	public synchronized void clearRelevance() {
 		relevant.clear();
 	}
 	

@@ -150,6 +150,19 @@ public class MsiHandler extends MapHandlerChild implements Runnable, IRoutesUpda
 		return list.size() - 1;
 	}
 	
+	
+	public synchronized int getFirstNonAcknowledgedFiltered() {
+		int index = 0;
+		List<MsiMessageExtended> list = getFilteredMessageList();
+		while (index < list.size()) {
+			if (!list.get(index).acknowledged) {
+				return index;
+			}
+			index++;
+		}
+		return list.size() - 1;
+	}	
+	
 	public synchronized void setAcknowledged(MsiMessage msiMessage) {
 		msiStore.getAcknowledged().add(msiMessage.getMessageId());
 		saveToFile();
@@ -171,7 +184,7 @@ public class MsiHandler extends MapHandlerChild implements Runnable, IRoutesUpda
 			updateMsi();
 		}
 	}
-	public synchronized void updateMsi() {
+	public void updateMsi() {
 		boolean msiUpdated = false;
 		
 		Date now = new Date();

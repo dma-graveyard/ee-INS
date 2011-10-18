@@ -81,6 +81,7 @@ import dk.frv.enav.ins.gui.menuitems.RouteLegInsertWaypoint;
 import dk.frv.enav.ins.gui.menuitems.RouteMetocProperties;
 import dk.frv.enav.ins.gui.menuitems.RouteProperties;
 import dk.frv.enav.ins.gui.menuitems.RouteRequestMetoc;
+import dk.frv.enav.ins.gui.menuitems.RouteReverse;
 import dk.frv.enav.ins.gui.menuitems.RouteShowMetocToggle;
 import dk.frv.enav.ins.gui.menuitems.RouteWaypointActivateToggle;
 import dk.frv.enav.ins.gui.menuitems.RouteWaypointDelete;
@@ -125,6 +126,7 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 	private RouteActivateToggle routeActivateToggle;
 	private RouteAppendWaypoint routeAppendWaypoint;
 	private RouteHide routeHide;
+	private RouteReverse routeReverse;
 	private RouteDelete routeDelete;
 	private RouteProperties routeProperties;
 	private RouteMetocProperties routeMetocProperties;
@@ -194,6 +196,10 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 		routeActivateToggle.addActionListener(this);
 		routeHide = new RouteHide("Hide route");
 		routeHide.addActionListener(this);
+		
+		routeReverse = new RouteReverse("Reverse route");
+		routeReverse.addActionListener(this);
+		
 		routeDelete = new RouteDelete("Delete route");
 		routeDelete.addActionListener(this);
 		routeRequestMetoc = new RouteRequestMetoc("Request METOC");
@@ -433,6 +439,10 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 		routeDelete.setRouteManager(routeManager);
 		routeDelete.setRouteIndex(routeIndex);
 		add(routeDelete);		
+		
+		routeReverse.setRouteManager(routeManager);
+		routeReverse.setRouteIndex(routeIndex);
+		add(routeReverse);
 		
 		route = routeManager.getRoute(routeIndex);
 		if (routeManager.isActiveRoute(routeIndex)) {

@@ -31,8 +31,10 @@ package dk.frv.enav.ins.route;
 
 import java.util.Date;
 
+import dk.frv.ais.geo.GeoLocation;
 import dk.frv.enav.common.xml.metoc.MetocForecast;
 import dk.frv.enav.ins.common.util.Calculator;
+import dk.frv.enav.ins.common.util.Converter;
 import dk.frv.enav.ins.gps.GnssTime;
 import dk.frv.enav.ins.gps.GpsData;
 
@@ -102,7 +104,9 @@ public class ActiveRoute extends Route {
 	 */
 	protected boolean relaxedWpChange = true;
 
-	public ActiveRoute(Route route) {
+	protected int lastWpCounter = 0;
+	
+	public ActiveRoute(Route route, GpsData gpsData) {
 		super();
 		this.waypoints = route.waypoints;
 		this.name = route.name;
@@ -114,7 +118,49 @@ public class ActiveRoute extends Route {
 		this.routeMetocSettings = route.routeMetocSettings;
 		this.metocForecast = route.metocForecast;
 		calcValues(true);
-		changeActiveWaypoint(0);
+		changeActiveWaypoint(getBestWaypoint(route, gpsData));
+	}
+	/*
+	 * Get's the most optimal route choice
+	 * If speed is lower than 3 we start at point 0, otherwise we take bearing and distance into account and
+	 * select the best match.
+	 * It will never select a waypoint behind itself.
+	 */
+	private int getBestWaypoint(Route route, GpsData gpsData) {
+	//	LinkedList<Double> weightedDistance = new LinkedList<Double>();
+		if (gpsData.isBadPosition() || gpsData.getSog() < 3)
+		{
+			return 0;
+		}
+		else
+		{		
+				double smallestDist = 99999999.0;
+				int index = 0;
+				for (int i = 0; i <= route.getWaypoints().size()-1; i++)
+				{
+					GeoLocation wpPos = route.getWaypoints().get(i).getPos();
+					double distance = gpsData.getPosition().getRhumbLineDistance(wpPos);
+					double angleToWpDeg = gpsData.getPosition().getRhumbLineBearing(wpPos);
+					double weight = 1 - ( Math.toRadians(gpsData.getCog()) - Math.toRadians(angleToWpDeg) );
+					double result = ( Math.abs(weight) * (0.5 * Converter.metersToNm(distance)) );
+					double upper = gpsData.getCog()+90;
+					double lower = gpsData.getCog()-90;
+					
+					if (result < smallestDist && (angleToWpDeg < upper && angleToWpDeg > lower))
+					{
+						smallestDist = result;
+						index = i;
+					}
+
+				}
+				//System.out.println(smallestDist);
+	//			System.out.println(weightedDistance);
+				return index;
+				
+			}
+			
+
+
 	}
 
 	public synchronized void update(GpsData gpsData) {
@@ -173,15 +219,20 @@ public class ActiveRoute extends Route {
 		if (activeWpRng < radius) {
 			inWpCircle = true;
 		}
-		
-		// If heading for last wp and in circle, we finish route
+
+		// If heading for last wp and in circle, we finish route - hack for waiting 1 cycle to check if in circle
 		if (isLastWp()) {
-			if (inWpCircle) {
-				return ActiveWpSelectionResult.ROUTE_FINISHED;
-			} else {
+				if (lastWpCounter >0){
+					if (inWpCircle) {
+						return ActiveWpSelectionResult.ROUTE_FINISHED;
+					} else {
+						return ActiveWpSelectionResult.NO_CHANGE;
+					}		
+				}else
+				lastWpCounter++;
 				return ActiveWpSelectionResult.NO_CHANGE;
-			}		
 		}
+
 		
 		// Calculate distance from ship to next waypoint		
 		RouteLeg nextLeg = getActiveWp().getOutLeg();
@@ -202,6 +253,9 @@ public class ActiveRoute extends Route {
 				}
 			}
 		}
+		
+		
+		
 		
 		return ActiveWpSelectionResult.NO_CHANGE;
 	}

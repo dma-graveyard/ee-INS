@@ -38,7 +38,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.Box;
-import javax.swing.ImageIcon;
 import javax.swing.JSeparator;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
@@ -50,29 +49,23 @@ import com.bbn.openmap.gui.OMComponentPanel;
 import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.ais.AisHandler;
 import dk.frv.enav.ins.gps.GpsHandler;
-import dk.frv.enav.ins.gui.msi.MsiDialog;
-import dk.frv.enav.ins.msi.IMsiUpdateListener;
-import dk.frv.enav.ins.msi.MsiHandler;
-import dk.frv.enav.ins.msi.MsiHandler.MsiMessageExtended;
 import dk.frv.enav.ins.services.shore.ShoreServices;
 import dk.frv.enav.ins.status.IStatusComponent;
 
 /**
  * Panel shown below the chart
  */
-public class BottomPanel extends OMComponentPanel implements IMsiUpdateListener, MouseListener, Runnable {
+public class BottomPanel extends OMComponentPanel implements MouseListener, Runnable {
 
 	private static final long serialVersionUID = 1L;
-	private MsiHandler msiHandler;
-	private MsiDialog msiDialog;
+	//private MsiHandler msiHandler;
+	//private MsiDialog msiDialog;
 	private ShoreServices shoreServices;
 	private AisHandler aisHandler;
 	private GpsHandler gpsHandler;
 	private StatusLabel gpsStatus;
 	private StatusLabel aisStatus;
 	private StatusLabel shoreServiceStatus;
-	private BlinkingLabel msiIcon;
-	private int notifyMsgId = -1;
 	private JToolBar toolBar;
 	private List<IStatusComponent> statusComponents = new ArrayList<IStatusComponent>();
 	
@@ -97,12 +90,6 @@ public class BottomPanel extends OMComponentPanel implements IMsiUpdateListener,
 		shoreServiceStatus = new StatusLabel("Shore services");
 		addToolbarComponent(shoreServiceStatus);
 		
-		ImageIcon[] msiAnim = new ImageIcon[2];
-		msiAnim[0] = new ImageIcon(EeINS.class.getResource("/images/msi/msi_symbol_16.png"));
-		msiAnim[1] = new ImageIcon(EeINS.class.getResource("/images/msi/blank.png"));
-		msiIcon = new BlinkingLabel(400, msiAnim);
-		addToolbarComponent(msiIcon);		
-		
 		new Thread(this).start();
 	}
 	
@@ -120,12 +107,7 @@ public class BottomPanel extends OMComponentPanel implements IMsiUpdateListener,
 
 	@Override
 	public void findAndInit(Object obj) {
-		if (obj instanceof MsiHandler) {
-			msiHandler = (MsiHandler)obj;
-			msiHandler.addListener(this);
-		} else if (obj instanceof MsiDialog) {
-			msiDialog = (MsiDialog)obj;
-		} else if (obj instanceof AisHandler) {
+		if (obj instanceof AisHandler) {
 			aisHandler = (AisHandler)obj;
 			statusComponents.add(aisHandler);
 		} else if (obj instanceof GpsHandler) {
@@ -139,29 +121,17 @@ public class BottomPanel extends OMComponentPanel implements IMsiUpdateListener,
 	}
 
 	@Override
-	public void msiUpdate() {
-		if (msiHandler.isPendingImportantMessages()) {
-			msiIcon.setBlink(true);
-			int firstUnAck = msiHandler.getFirstNonAcknowledged();
-			MsiMessageExtended msiMessage = msiHandler.getMessageList().get(firstUnAck);
-			notifyMsgId = msiMessage.msiMessage.getMessageId();
-			msiIcon.setToolTipText(msiMessage.msiMessage.getEncText());
-		} else {
-			notifyMsgId = -1;
-			msiIcon.setBlink(false);
-			msiIcon.setToolTipText(null); 			
-		}
-	}
-
-	@Override
 	public void mouseClicked(MouseEvent e) {
+		/**
 		if (e.getSource() == msiIcon) {
 			if (notifyMsgId > 0) {
 				msiDialog.showMessage(notifyMsgId);
 			} else {
 				msiDialog.setVisible(true);
 			}
-		} else if (e.getSource() instanceof StatusLabel) {
+		} else
+		**/ 
+			if (e.getSource() instanceof StatusLabel) {
 			StatusDialog statusDialog = new StatusDialog();
 			statusDialog.showStatus(statusComponents);
 		}
