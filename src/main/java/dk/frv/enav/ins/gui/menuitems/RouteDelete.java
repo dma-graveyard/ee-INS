@@ -33,7 +33,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
 import dk.frv.enav.ins.route.RouteManager;
-import dk.frv.enav.ins.route.RoutesUpdateEvent;
 
 public class RouteDelete extends JMenuItem implements IMapMenuAction {
 	
@@ -53,7 +52,6 @@ public class RouteDelete extends JMenuItem implements IMapMenuAction {
 	public void doAction() {
 		if (JOptionPane.showConfirmDialog(this, "Delete route?", "Route dele", JOptionPane.YES_NO_OPTION) == 0) {
 			routeManager.removeRoute(routeIndex);
-			routeManager.notifyListeners(RoutesUpdateEvent.ROUTE_REMOVED);
 		}
 	}
 	

@@ -163,6 +163,28 @@ public class RouteManager extends MapHandlerChild implements Runnable, Serializa
 		// Notify listeners
 		notifyListeners(RoutesUpdateEvent.ROUTE_ACTIVATED);
 	}
+	
+
+	
+	public void routeCopy(int index) {
+		Route selectedRoute = getRoute(index);
+		if (selectedRoute == null) return;
+		selectedRoute.setVisible(selectedRoute instanceof ActiveRoute);
+		Route routeCopy = selectedRoute.copy();
+		routeCopy.setName(routeCopy.getName() + " copy");
+		routeCopy.setVisible(true);
+		addRoute(routeCopy);
+	}
+	
+	public void routeReverse(int index) {
+		Route selectedRoute = getRoute(index);
+		if (selectedRoute == null) return;
+		selectedRoute.setVisible(selectedRoute instanceof ActiveRoute);
+		Route routeReversed = selectedRoute.reverse();
+		routeReversed.setName(routeReversed.getName() + " reversed");
+		routeReversed.setVisible(true);
+		addRoute(routeReversed);
+	}
 
 	public void deactivateRoute() {
 		synchronized (routes) {
@@ -207,7 +229,10 @@ public class RouteManager extends MapHandlerChild implements Runnable, Serializa
 				LOG.error("Cannot remove active route");
 				return;
 			}
-			routes.remove(index);
+			if (index < activeRouteIndex) {
+				activeRouteIndex--;
+			}
+			routes.remove(index);			
 		}
 
 		notifyListeners(RoutesUpdateEvent.ROUTE_REMOVED);
@@ -246,6 +271,9 @@ public class RouteManager extends MapHandlerChild implements Runnable, Serializa
 
 	public Route getRoute(int index) {
 		synchronized (routes) {
+			if (index == activeRouteIndex) {
+				return activeRoute;
+			}
 			return getRoutes().get(index);
 		}
 	}

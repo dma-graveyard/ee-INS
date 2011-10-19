@@ -33,7 +33,7 @@ import javax.swing.JMenuItem;
 
 import dk.frv.enav.ins.route.RouteManager;
 
-public class RouteReverse extends JMenuItem implements IMapMenuAction {
+public class RouteCopy extends JMenuItem implements IMapMenuAction {
 	
 	/**
 	 * 
@@ -42,14 +42,14 @@ public class RouteReverse extends JMenuItem implements IMapMenuAction {
 	private int routeIndex;
 	private RouteManager routeManager;
 	
-	public RouteReverse(String text) {
+	public RouteCopy(String text) {
 		super();
 		setText(text);
 	}
 	
 	@Override
 	public void doAction() {
-		routeManager.routeReverse(routeIndex);
+		routeManager.routeCopy(routeIndex);
 	}
 	
 	public void setRouteIndex(int routeIndex) {

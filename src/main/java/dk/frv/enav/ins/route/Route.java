@@ -178,15 +178,9 @@ public class Route implements Serializable {
 		newRoute.destination = this.destination;
 		newRoute.visible = this.visible;
 		newRoute.starttime = this.starttime;
-		newRoute.ttgs = this.ttgs;
-		newRoute.dtgs = this.dtgs;
-		newRoute.totalTtg = this.totalTtg;
-		newRoute.totalDtg = this.totalDtg;
-		newRoute.etas = this.etas;
-		newRoute.metocForecast = this.metocForecast;
-		newRoute.metocStarttime = this.metocStarttime;
-		newRoute.metocEta = this.metocEta;
-		newRoute.routeMetocSettings = this.routeMetocSettings;
+		
+		adjustStartTime();
+		calcValues(true);		
 		
 		return newRoute;
 	}
@@ -233,27 +227,17 @@ public class Route implements Serializable {
 
 		// Immutable objects are safe to copy this way?
 		newRoute.name = this.name;
-		newRoute.departure = this.departure;
-		newRoute.destination = this.destination;
+		newRoute.departure = this.destination;
+		newRoute.destination = this.departure;
 		newRoute.visible = this.visible;
 		newRoute.starttime = this.starttime;
-		newRoute.ttgs = this.ttgs;
-		newRoute.dtgs = this.dtgs;
-		newRoute.totalTtg = this.totalTtg;
-		newRoute.totalDtg = this.totalDtg;
-		newRoute.etas = this.etas;
-		newRoute.metocForecast = this.metocForecast;
-		newRoute.metocStarttime = this.metocStarttime;
-		newRoute.metocEta = this.metocEta;
-		newRoute.routeMetocSettings = this.routeMetocSettings;
 		
-
+		adjustStartTime();
+		calcValues(true);		
+		
 		return newRoute;
 	}
 		
-	
-	
-
 	// Calculated measures
 
 	public Double getWpRng(int index) {
