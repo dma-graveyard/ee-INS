@@ -12,8 +12,8 @@
 2011-10-07 Version 1.6 (Hotfix version)
 
 	* Changed intended route broadcast messages not to influence with
-      implementations of route information messages using different
-      interpretation.
+	  implementations of route information messages using different
+	  interpretation.
       
 2011-10-06 Version 2.0
 
