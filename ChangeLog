@@ -1,3 +1,7 @@
+2011-10-19 Version 2.4
+
+	* Fixed error in intended route broadcast
+
 2011-10-19 Version 2.3
 
 	* Fixed problem with enabled ENC but non-working ENC
