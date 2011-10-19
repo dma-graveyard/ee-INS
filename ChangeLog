@@ -1,0 +1,33 @@
+2011-10-19 Version 2.2
+
+	* Active waypoint prediction on route activate
+	* Route reversal functionality
+	* Relocation of MSI notification
+	* Fixed MSI deadlock
+
+2011-10-07 Version 2.1
+
+	* Merged with temporary version 1.6.
+	
+2011-10-07 Version 1.6 (Hotfix version)
+
+	* Changed intended route broadcast messages not to influence with
+      implementations of route information messages using different
+      interpretation.
+      
+2011-10-06 Version 2.0
+
+	* Route copy fuctionality
+	* Nem MSI symbol
+	* Larger directional MSI symbols
+	* Only showing MSI warning when relevant messages not acknowledged
+	* MSI dialog only showing non-filtered away messages
+	* Right click option on directional MSI symbols
+ 	* Look-ahead implemented
+ 	* ETA anywhere on intended route of other vessels
+ 	* AtoN symbol
+
+2011-09-29 Version 1.5 
+
+	* First version on GitHub
+
