@@ -39,6 +39,8 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.border.TitledBorder;
 
+import dk.frv.enav.ins.common.FormatException;
+import dk.frv.enav.ins.common.util.ParseUtils;
 import dk.frv.enav.ins.settings.EnavSettings;
 
 /**
@@ -282,11 +284,10 @@ public class ENavTab extends JPanel {
 		spinnerActiveRouteMetocPoll.setValue(enavSettings.getActiveRouteMetocPollInterval());
 		spinnerMetocTimeDiffTolerance.setValue(enavSettings.getMetocTimeDiffTolerance());
 		
-		//TODO: make proper input text fields with filter
 		textFieldServerName.setText(enavSettings.getServerName());
-//		textFieldServerPort.setText(enavSettings.getHttpPort());
-//		textFieldConnectionTimeout.setText(enavSettings.getConnectTimeout());
-//		textFieldReadTimeout.setText(enavSettings.getReadTimeout());
+		textFieldServerPort.setText(Integer.toString(enavSettings.getHttpPort()));
+		textFieldConnectionTimeout.setText(Integer.toString(enavSettings.getConnectTimeout()));
+		textFieldReadTimeout.setText(Integer.toString(enavSettings.getReadTimeout()));
 		
 		spinnerMsiPollInterval.setValue(enavSettings.getMsiPollInterval());
 		spinnerMsiTextboxesVisibleAtScale.setValue(enavSettings.getMsiTextboxesVisibleAtScale());
@@ -302,7 +303,9 @@ public class ENavTab extends JPanel {
 		enavSettings.setMetocTimeDiffTolerance((Integer) spinnerMetocTimeDiffTolerance.getValue());
 		
 		enavSettings.setServerName(textFieldServerName.getText());
-		//TODO: get rest of settings from text fields when they have filter on
+		enavSettings.setHttpPort(getIntVal(textFieldServerPort.getText(), enavSettings.getHttpPort()));
+		enavSettings.setReadTimeout(getIntVal(textFieldReadTimeout.getText(), enavSettings.getReadTimeout()));
+		enavSettings.setConnectTimeout(getIntVal(textFieldConnectionTimeout.getText(), enavSettings.getConnectTimeout()));
 		
 		enavSettings.setMsiPollInterval((Integer) spinnerMsiPollInterval.getValue());
 		enavSettings.setMsiTextboxesVisibleAtScale((Integer) spinnerMsiTextboxesVisibleAtScale.getValue());
@@ -310,5 +313,16 @@ public class ENavTab extends JPanel {
 		enavSettings.setMsiRelevanceGpsUpdateRange((Double) spinnerMsiRelevanceGpsUpdateRange.getValue());
 		enavSettings.setMsiRelevanceFromOwnShipRange((Double) spinnerMsiVisibilityFromOwnShipRange.getValue());
 		enavSettings.setMsiVisibilityFromNewWaypoint((Double) spinnerMsiVisibilityFromNewWaypoint.getValue());
+	}
+	
+	private static int getIntVal(String fieldVal, int defaultValue) {
+		Integer val;
+		try {
+			val = ParseUtils.parseInt(fieldVal);
+		} catch (FormatException e) {
+			val = null;
+		}
+		if (val == null) return defaultValue;
+		return val.intValue();
 	}
 }
