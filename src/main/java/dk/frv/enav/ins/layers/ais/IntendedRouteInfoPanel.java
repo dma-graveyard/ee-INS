@@ -82,7 +82,7 @@ public class IntendedRouteInfoPanel extends InfoPanel {
 		double midRange = Calculator.range(startPos, midPos, Heading.RL);
 		double hdg = Calculator.bearing(startPos, endPos, Heading.RL);
 		Date startEta = routeData.getEta(legIndex - 1);
-		//TODO: google says 1 nautical miles / knots = 1 hour
+		
 		Date midEta = new Date((long)((midRange / routeData.getSpeed()) * 3600000 + startEta.getTime()));
 		Date endEta = routeData.getEta(legIndex);
 		
@@ -91,9 +91,9 @@ public class IntendedRouteInfoPanel extends InfoPanel {
 		str.append("<b>Intended route leg</b><br/>");
 		str.append(legGraphic.getIntendedRouteGraphic().getName() + "<br/>");
 		str.append("<table border='0' cellpadding='2'>");
-		str.append("<tr><td>DST:</td><td>" + Formatter.formatDistNM(range) + " HDG " + Formatter.formatDegrees(hdg, 0) + "</td></tr>");
+		str.append("<tr><td>DST:</td><td>" + Formatter.formatDistNM(range) + "  HDG " + Formatter.formatDegrees(hdg, 0) + "</td></tr>");
 		str.append("<tr><td>START:</td><td>" + Formatter.formatShortDateTime(startEta) + "</td></tr>");
-		str.append("<tr><td>ETA Mid:</td><td>" + Formatter.formatShortDateTime(midEta) + "</td></tr>");
+		str.append("<tr><td>ETA here:</td><td>" + Formatter.formatShortDateTime(midEta) + "</td></tr>");
 		str.append("<tr><td>END:</td><td>" + Formatter.formatShortDateTime(endEta) + "");
 		str.append("<tr><td>AVG SPD:</td><td>" + Formatter.formatSpeed(routeData.getSpeed()) + "</td></tr>");
 		str.append("</table>");

@@ -67,6 +67,11 @@ public class AisIntendedRoute extends AisRouteData {
 			return;
 		}
 		
+		if (waypoints.size() == 0) {
+			// Cancel route
+			return;
+		}
+		
 		// Calculate avg speed
 		speed = ranges.get(waypoints.size() - 1) / ((double)routeInformation.getDuration() / 60.0);
 		

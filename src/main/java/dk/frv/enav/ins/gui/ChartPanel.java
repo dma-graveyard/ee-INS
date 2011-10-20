@@ -242,6 +242,10 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 		aisVisible(EeINS.getSettings().getAisSettings().isVisible());
 		// Show ENC or not
 		encVisible(EeINS.getSettings().getMapSettings().isEncVisible());
+		// Maybe disable ENC
+		if (encLayer == null && topPanel != null) {
+			topPanel.setEncDisabled();			
+		}
 		
 		getMap().addMouseWheelListener(this);
 	}

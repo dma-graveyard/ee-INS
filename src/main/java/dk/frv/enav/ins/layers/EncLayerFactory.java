@@ -78,6 +78,8 @@ public class EncLayerFactory {
 			layer.setAddAsBackground(true);
 			layer.setVisible(true);
 			encLayer = layer;
+		} catch (NullPointerException e) {
+			LOG.error("Could not set up layer instance of class: \"" + className + "\"");
 		} catch (ClassNotFoundException e) {
 			LOG.error("Layer class not found: \"" + className + "\"");
 		} catch (IOException e) {
