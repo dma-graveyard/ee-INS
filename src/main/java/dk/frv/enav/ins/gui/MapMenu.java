@@ -72,6 +72,7 @@ import dk.frv.enav.ins.gui.menuitems.IMapMenuAction;
 import dk.frv.enav.ins.gui.menuitems.MsiAcknowledge;
 import dk.frv.enav.ins.gui.menuitems.MsiDetails;
 import dk.frv.enav.ins.gui.menuitems.MsiZoomTo;
+import dk.frv.enav.ins.gui.menuitems.NogoRequest;
 import dk.frv.enav.ins.gui.menuitems.RouteActivateToggle;
 import dk.frv.enav.ins.gui.menuitems.RouteAppendWaypoint;
 import dk.frv.enav.ins.gui.menuitems.RouteDelete;
@@ -120,6 +121,7 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 	private AisTargetDetails aisTargetDetails;
 	private SarTargetDetails sarTargetDetails;
 	private AisTargetLabelToggle aisTargetLabelToggle;
+	private NogoRequest nogoRequest;
 	private MsiAcknowledge msiAcknowledge;
 	private MsiDetails msiDetails;
 	private MsiZoomTo msiZoomTo;
@@ -202,6 +204,10 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 		
 		routeDelete = new RouteDelete("Delete route");
 		routeDelete.addActionListener(this);
+		
+		nogoRequest = new NogoRequest("Request NoGo area");
+		nogoRequest.addActionListener(this);
+		
 		routeRequestMetoc = new RouteRequestMetoc("Request METOC");
 		routeRequestMetoc.addActionListener(this);
 		routeShowMetocToggle = new RouteShowMetocToggle();
@@ -415,6 +421,8 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 			routeHide.setEnabled(false);
 			routeDelete.setEnabled(false);
 			routeAppendWaypoint.setEnabled(false);
+			
+			
 		} else {
 			routeActivateToggle.setText("Activate route");
 			routeHide.setEnabled(true);
@@ -449,6 +457,8 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 			route = routeManager.getActiveRoute();
 		}
 
+		add(nogoRequest);
+		
 		routeRequestMetoc.setRouteManager(routeManager);
 		routeRequestMetoc.setRouteIndex(routeIndex);
 		add(routeRequestMetoc);

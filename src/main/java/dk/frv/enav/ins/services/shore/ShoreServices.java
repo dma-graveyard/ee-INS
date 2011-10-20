@@ -30,7 +30,6 @@
 package dk.frv.enav.ins.services.shore;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -52,7 +51,6 @@ import dk.frv.enav.common.xml.nogo.request.NogoRequest;
 import dk.frv.enav.common.xml.nogo.response.NogoResponse;
 import dk.frv.enav.ins.ais.AisHandler;
 import dk.frv.enav.ins.ais.VesselPositionData;
-import dk.frv.enav.ins.common.Heading;
 import dk.frv.enav.ins.gps.GpsData;
 import dk.frv.enav.ins.gps.GpsHandler;
 import dk.frv.enav.ins.route.ActiveRoute;
@@ -117,16 +115,16 @@ public class ShoreServices extends MapHandlerChild implements IStatusComponent {
 			waypointEnavshore.setRot(waypointEeins.getRot());
 
 			//Speed
-			//waypointEnavshore.setSpeed(waypointEeins.);
+			//waypointEnavshore.setSpeed(waypointEeins.getOutLeg().getSpeed());
 			
 			//Turn radius
 			waypointEnavshore.setTurnRad(waypointEeins.getTurnRad());		
 			
 			//Port XTD
-			//waypointEnavshore.setXtdPort(waypointEeins.);
+			//waypointEnavshore.setXtdPort(waypointEeins.getOutLeg().getXtdPort());
 			
 			//Starboard XTD
-			//waypointEnavshore.setXtdStarboard(waypointEeins.)
+			//waypointEnavshore.setXtdStarboard(waypointEeins.getOutLeg().getXtdStarboard());
 			
 			waypoints.add(waypointEnavshore);
 	
@@ -157,12 +155,11 @@ public class ShoreServices extends MapHandlerChild implements IStatusComponent {
 
 		//Different type of route?
 		//Convert the route
-		nogoRequest.setRoute(convertRoute(route));
+		//nogoRequest.setRoute(convertRoute(route));
 		
 		// Add request parameters
 		addRequestParameters(nogoRequest);
 		NogoResponse nogoResponse = (NogoResponse)makeRequest("/api/xml/nogo", "dk.frv.enav.common.xml.nogo.request", "dk.frv.enav.common.xml.nogo.response", nogoRequest);
-		System.out.println(nogoResponse);
 		return nogoResponse;
 	}
 	

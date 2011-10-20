@@ -37,9 +37,6 @@ import com.bbn.openmap.MapHandlerChild;
 
 import dk.frv.enav.common.xml.nogo.response.NogoResponse;
 import dk.frv.enav.ins.EeINS;
-import dk.frv.enav.ins.gps.GpsHandler;
-import dk.frv.enav.ins.layers.msi.MsiLayer;
-import dk.frv.enav.ins.msi.IMsiUpdateListener;
 import dk.frv.enav.ins.route.ActiveRoute;
 import dk.frv.enav.ins.route.IRoutesUpdateListener;
 import dk.frv.enav.ins.route.RouteManager;
@@ -79,7 +76,6 @@ public class NogoHandler extends MapHandlerChild implements Runnable, IRoutesUpd
 		}
 	}
 	public void updateNogo() {
-		System.out.println("Nogo update called");
 		boolean nogoUpdated = false;
 		
 		Date now = new Date();
@@ -110,14 +106,10 @@ public class NogoHandler extends MapHandlerChild implements Runnable, IRoutesUpd
 	}
 	
 	public boolean poll() throws ShoreServiceException {
-		System.out.println("entering poll");
 
 		if (shoreServices == null || routeManager.getActiveRoute() == null) {
-			System.out.println("shoreServices is null");
 			return false;
 		}
-
-
 		ActiveRoute route = routeManager.getActiveRoute();
 		
 		NogoResponse nogoResponse = shoreServices.nogoPoll(route);
