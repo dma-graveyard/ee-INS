@@ -129,6 +129,7 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 		//add(separator);
 		//add(horizontalStrut);
 		add(msiIcon);
+		msiIcon.setVisible(false);
 	
 
 		msiIcon.addMouseListener(this);
