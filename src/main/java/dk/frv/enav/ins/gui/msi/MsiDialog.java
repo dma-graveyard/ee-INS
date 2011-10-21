@@ -36,6 +36,7 @@ import javax.swing.JDialog;
 import dk.frv.enav.common.xml.msi.MsiLocation;
 import dk.frv.enav.common.xml.msi.MsiMessage;
 import dk.frv.enav.common.xml.msi.MsiPoint;
+import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.common.text.Formatter;
 import dk.frv.enav.ins.gui.ComponentFrame;
 import dk.frv.enav.ins.layers.msi.MsiLayer;
@@ -319,9 +320,16 @@ public class MsiDialog extends ComponentFrame implements ListSelectionListener, 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == ackButton) {
+			int selected;
 			msiHandler.setAcknowledged(getMessage(msiTable.getSelectedRow()).msiMessage);
-			int selected = msiHandler.getFirstNonAcknowledged();
+			if (EeINS.getSettings().getEnavSettings().isMsiFilter()){
+				selected = msiHandler.getFirstNonAcknowledgedFiltered();
+			}else{
+				selected = msiHandler.getFirstNonAcknowledged();
+			}
+
 			setSelected(selected);
+			
 			//updateTable();
 			msiHandler.notifyUpdate();
 		} else if (e.getSource() == gotoBtn) {
