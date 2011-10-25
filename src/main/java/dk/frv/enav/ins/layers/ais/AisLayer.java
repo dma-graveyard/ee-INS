@@ -62,6 +62,7 @@ import dk.frv.enav.ins.gps.GpsHandler;
 import dk.frv.enav.ins.gui.ChartPanel;
 import dk.frv.enav.ins.gui.MainFrame;
 import dk.frv.enav.ins.gui.MapMenu;
+import dk.frv.enav.ins.gui.TopPanel;
 
 /**
  * AIS layer. Showing AIS targets and intended routes. 
@@ -91,6 +92,8 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 	private OMGraphic selectedGraphic;
 	private ChartPanel chartPanel;
 	private OMCircle dummyCircle = new OMCircle();
+	
+	private TopPanel topPanel;
 
 	public AisLayer() {
 		// graphics.setVague(false);
@@ -268,6 +271,9 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 		if (obj instanceof ChartPanel) {
 			chartPanel = (ChartPanel) obj;
 		}
+		if (obj instanceof TopPanel) {
+			topPanel = (TopPanel) obj;
+		}		
 	}
 
 	@Override
@@ -307,7 +313,7 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 					VesselTargetTriangle vtt = (VesselTargetTriangle) selectedGraphic;
 					VesselTargetGraphic vesselTargetGraphic = vtt.getVesselTargetGraphic();
 					mainFrame.getGlassPane().setVisible(false);
-					aisTargetMenu.aisMenu(vesselTargetGraphic);
+					aisTargetMenu.aisMenu(vesselTargetGraphic, topPanel);
 					aisTargetMenu.setVisible(true);
 					aisTargetMenu.show(this, e.getX() - 2, e.getY() - 2);
 					aisTargetInfoPanel.setVisible(false);

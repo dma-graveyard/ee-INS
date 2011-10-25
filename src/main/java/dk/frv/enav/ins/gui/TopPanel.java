@@ -53,6 +53,7 @@ import dk.frv.enav.ins.gui.route.RouteManagerDialog;
 import dk.frv.enav.ins.msi.IMsiUpdateListener;
 import dk.frv.enav.ins.msi.MsiHandler;
 import dk.frv.enav.ins.msi.MsiHandler.MsiMessageExtended;
+import dk.frv.enav.ins.gui.ais.*;
 
 /**
  * The top buttons panel 
@@ -74,6 +75,7 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 	private JToggleButton newRouteBtn = new JToggleButton("New route");
 	private MainFrame mainFrame;
 	private MsiDialog msiDialog = null;
+	private AisDialog aisDialog = null;
 	private MouseDelegator mouseDelegator;
 	private final JToggleButton tglbtnMsiFilter = new JToggleButton("MSI filter");
 	private MsiHandler msiHandler;
@@ -217,11 +219,18 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 		if (obj instanceof MsiHandler) {
 			msiHandler = (MsiHandler) obj;
 		}
+		if (obj instanceof AisDialog) {
+			aisDialog = (AisDialog)obj;
+		}
 	}
 	
 	public MsiDialog getMsiDialog() {
 		return msiDialog;
 	}
+	
+	public AisDialog getAisDialog() {
+		return aisDialog;
+	}	
 	
 	public void setEncDisabled() {
 		encBtn.setEnabled(false);
