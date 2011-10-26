@@ -30,9 +30,7 @@
 package dk.frv.enav.ins.gui.menuitems;
 
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 
-import dk.frv.enav.common.xml.msi.MsiMessage;
 import dk.frv.enav.ins.gui.TopPanel;
 
 public class AisTargetDetails extends JMenuItem implements IMapMenuAction {
@@ -42,7 +40,7 @@ public class AisTargetDetails extends JMenuItem implements IMapMenuAction {
 	 */
 	private static final long serialVersionUID = 1L;
 	private TopPanel topPanel;
-	private MsiMessage message;	
+	private long MMSI;	
 
 	public AisTargetDetails(String text) {
 		super();
@@ -53,8 +51,7 @@ public class AisTargetDetails extends JMenuItem implements IMapMenuAction {
 	public void doAction() {
 		//JOptionPane.showMessageDialog(null, "To be implemented...");
 		if (topPanel != null && topPanel.getAisDialog() != null) {
-			System.out.println("Show this?");
-			//topPanel.getAisDialog().showMessage(message.getMessageId());
+			topPanel.getAisDialog().setSelection(this.MMSI);
 			topPanel.getAisDialog().setVisible(true);
 		}		
 	}
@@ -63,8 +60,8 @@ public class AisTargetDetails extends JMenuItem implements IMapMenuAction {
 		this.topPanel = topPanel;
 	}
 	
-	public void setMsiMessage(MsiMessage message) {
-		this.message = message;
+	public void setMSSI(long MSSI) {
+		this.MMSI = MSSI;
 	}	
 
 }

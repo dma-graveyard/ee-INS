@@ -32,6 +32,7 @@ package dk.frv.enav.ins.ais;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -53,9 +54,12 @@ import dk.frv.ais.message.binary.AddressedRouteInformation;
 import dk.frv.ais.message.binary.AisApplicationMessage;
 import dk.frv.ais.message.binary.BroadcastIntendedRoute;
 import dk.frv.ais.message.binary.RouteInformation;
+import dk.frv.enav.common.xml.msi.MsiMessage;
 import dk.frv.enav.ins.EeINS;
+import dk.frv.enav.ins.common.util.Converter;
 import dk.frv.enav.ins.gps.GnssTime;
 import dk.frv.enav.ins.gps.GpsData;
+import dk.frv.enav.ins.msi.MsiHandler.MsiMessageExtended;
 import dk.frv.enav.ins.nmea.IAisListener;
 import dk.frv.enav.ins.nmea.NmeaSensor;
 import dk.frv.enav.ins.nmea.SensorType;
@@ -70,6 +74,21 @@ import dk.frv.enav.ins.status.IStatusComponent;
 public class AisHandler extends MapHandlerChild implements IAisListener, IStatusComponent, Runnable {
 
 	private static final Logger LOG = Logger.getLogger(AisHandler.class);
+	
+	public class AisMessageExtended {
+		public String name;
+		public long MMSI;
+		public double hdg;
+		public double dst;
+		public AisMessageExtended(String name, Long key, double hdg, double dst) {
+			this.name = name;
+			this.MMSI = key;
+			this.hdg = hdg;
+			this.dst = dst;
+		}
+
+	}	
+	
 
 	// How long targets are saved without reports
 	private static final long TARGET_TTL = 60 * 60 * 1000; // One hour
@@ -194,7 +213,7 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 				}
 			}			
 		}
-		
+		getShipList();
 	}
 	
 	public synchronized void hideAllIntendedRoutes() {
@@ -622,4 +641,43 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 	public Map<Long, VesselTarget> getVesselTargets() {
 		return vesselTargets;
 	}
+	
+	@SuppressWarnings("static-access")
+	public synchronized List<AisMessageExtended> getShipList() {
+		List<AisMessageExtended> list = new ArrayList<AisMessageExtended>();
+	
+		if (this.getVesselTargets() != null){
+			AisMessage aisMessage = null;
+			GeoLocation ownPosition;
+			double dst = -1;
+			double hdg = -1;
+			GeoLocation targetPosition = null;
+			
+			
+			if (this.getOwnShip().getPositionData() == null){
+				ownPosition = new GeoLocation(0, 0);
+			}else{
+				ownPosition = this.getOwnShip().getPositionData().getPos();
+			}
+			for (Long key : this.getVesselTargets().keySet()) {
+				String name = " N/A";	
+				VesselTarget currentTarget = this.getVesselTargets().get(key);
+				
+				if (currentTarget.getStaticData() != null ){
+					name = " " + aisMessage.trimText(this.getVesselTargets().get(key).getStaticData().getName());
+				}
+				if (currentTarget.getPositionData().getPos() != null){
+					targetPosition = this.getVesselTargets().get(key).getPositionData().getPos();
+					dst = Converter.metersToNm(ownPosition.getRhumbLineDistance(targetPosition))/1000;
+				}
+				hdg = currentTarget.getPositionData().getCog();								
+				
+			    //System.out.println("Key: " + key + ", Value: " + this.getVesselTargets().get(key));
+			    AisMessageExtended newEntry = new AisMessageExtended(name, key, hdg, dst);
+			    list.add(newEntry);
+			}
+		}
+		return list;
+	}
+	
 }
