@@ -1,7 +1,7 @@
-xxxx-xx-xx Version x.x
+2011-10-28 Version 2.5
 
 	* Fixed copy route errors
-	* Fixed route delete error when route active
+	* Fixed route delete error when active route
 	* Changed message when settings have changed
 
 2011-10-19 Version 2.4
