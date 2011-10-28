@@ -128,7 +128,7 @@ public class SetupDialog extends JDialog implements ActionListener {
 		if(e.getSource() == btnOk){
 			saveSettings();
 			this.setVisible(false);
-			int choice = JOptionPane.showOptionDialog(EeINS.getMainFrame(), "A restart of the program is required to apply settings.\nWould you like to restart now?", "Restart required", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, JOptionPane.YES_OPTION);
+			int choice = JOptionPane.showOptionDialog(EeINS.getMainFrame(), "The settings will take effect next time the application is started.\nStop now?", "Restart required", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, JOptionPane.YES_OPTION);
 			if(choice == JOptionPane.YES_OPTION) {
 				EeINS.closeApp();
 			}
