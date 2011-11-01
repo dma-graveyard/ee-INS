@@ -50,6 +50,9 @@ import com.bbn.openmap.omGraphics.OMGraphic;
 import com.bbn.openmap.omGraphics.OMGraphicList;
 import com.bbn.openmap.omGraphics.OMList;
 
+import dk.frv.ais.geo.GeoLocation;
+import dk.frv.enav.common.xml.msi.MsiLocation;
+import dk.frv.enav.common.xml.msi.MsiMessage;
 import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.ais.AisHandler;
 import dk.frv.enav.ins.ais.AisTarget;
@@ -467,4 +470,9 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 		return false;
 	}
 
+	public void zoomTo(GeoLocation position) {
+		mapBean.setCenter(position.getLatitude(), position.getLongitude());
+		//mapBean.setScale(EeINS.getSettings().getEnavSettings().getMsiTextboxesVisibleAtScale());		
+	}	
+	
 }

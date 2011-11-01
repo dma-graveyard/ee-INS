@@ -29,6 +29,7 @@
  */
 package dk.frv.enav.ins.ais;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -79,12 +80,12 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 		public String name;
 		public long MMSI;
 		public double hdg;
-		public double dst;
-		public AisMessageExtended(String name, Long key, double hdg, double dst) {
+		public String dst;
+		public AisMessageExtended(String name, Long key, double hdg, String dst2) {
 			this.name = name;
 			this.MMSI = key;
 			this.hdg = hdg;
-			this.dst = dst;
+			this.dst = dst2;
 		}
 
 	}	
@@ -649,27 +650,31 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 		if (this.getVesselTargets() != null){
 			AisMessage aisMessage = null;
 			GeoLocation ownPosition;
-			double dst = -1;
 			double hdg = -1;
 			GeoLocation targetPosition = null;
 			
-			
-			if (this.getOwnShip().getPositionData() == null){
-				ownPosition = new GeoLocation(0, 0);
-			}else{
-				ownPosition = this.getOwnShip().getPositionData().getPos();
-			}
+
 			for (Long key : this.getVesselTargets().keySet()) {
 				String name = " N/A";	
+				String dst = "N/A";
 				VesselTarget currentTarget = this.getVesselTargets().get(key);
+				
+		
 				
 				if (currentTarget.getStaticData() != null ){
 					name = " " + aisMessage.trimText(this.getVesselTargets().get(key).getStaticData().getName());
 				}
-				if (currentTarget.getPositionData().getPos() != null){
-					targetPosition = this.getVesselTargets().get(key).getPositionData().getPos();
-					dst = Converter.metersToNm(ownPosition.getRhumbLineDistance(targetPosition))/1000;
-				}
+				if (EeINS.getGpsHandler().getCurrentData().isBadPosition() == false){
+					ownPosition = EeINS.getGpsHandler().getCurrentData().getPosition();
+					
+					if (currentTarget.getPositionData().getPos() != null){
+						targetPosition = this.getVesselTargets().get(key).getPositionData().getPos();
+						NumberFormat nf = NumberFormat.getInstance();  
+						nf.setMaximumFractionDigits(2);
+						dst = nf.format(Converter.metersToNm(ownPosition.getRhumbLineDistance(targetPosition))) + " NM";
+						
+					}				
+				}	
 				hdg = currentTarget.getPositionData().getCog();								
 				
 			    //System.out.println("Key: " + key + ", Value: " + this.getVesselTargets().get(key));

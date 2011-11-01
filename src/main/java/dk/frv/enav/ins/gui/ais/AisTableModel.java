@@ -114,8 +114,8 @@ public class AisTableModel extends AbstractTableModel {
 		case 3:
 		      NumberFormat nf = NumberFormat.getInstance();  
 		      nf.setMaximumFractionDigits(2);// set as you need  
-		      String dst = nf.format(ship.dst);  
-			return dst + " NM";
+		      //String dst = nf.format(ship.dst);  
+			return ship.dst;
 			//return "DST";
 		default:
 			return "";

@@ -33,7 +33,6 @@ import java.awt.Color;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -42,26 +41,20 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.ListSelectionModel;
+import javax.swing.RowSorter;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.border.BevelBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.apache.commons.lang.StringUtils;
-
 import dk.frv.ais.geo.GeoLocation;
 import dk.frv.ais.message.AisMessage;
-import dk.frv.enav.common.xml.msi.MsiLocation;
-import dk.frv.enav.common.xml.msi.MsiMessage;
-import dk.frv.enav.common.xml.msi.MsiPoint;
 import dk.frv.enav.ins.ais.AisHandler;
 import dk.frv.enav.ins.ais.AisHandler.AisMessageExtended;
 import dk.frv.enav.ins.ais.AisTarget;
@@ -69,12 +62,7 @@ import dk.frv.enav.ins.ais.IAisTargetListener;
 import dk.frv.enav.ins.ais.VesselTarget;
 import dk.frv.enav.ins.common.text.Formatter;
 import dk.frv.enav.ins.gui.ComponentFrame;
-import dk.frv.enav.ins.gui.msi.MsiTableCellRenderer;
 import dk.frv.enav.ins.layers.ais.AisLayer;
-import dk.frv.enav.ins.layers.msi.MsiLayer;
-import dk.frv.enav.ins.msi.IMsiUpdateListener;
-import dk.frv.enav.ins.msi.MsiHandler;
-import dk.frv.enav.ins.msi.MsiHandler.MsiMessageExtended;
 
 /**
  * MSI dialog
@@ -82,7 +70,7 @@ import dk.frv.enav.ins.msi.MsiHandler.MsiMessageExtended;
 public class AisDialog extends ComponentFrame implements ListSelectionListener, ActionListener, IAisTargetListener {
 	private static final long serialVersionUID = 1L;
 
-	private MsiHandler msiHandler;
+	private AisLayer aisLayer;
 	private AisHandler aisHandler;
 	
 	private JButton closeBtn;
@@ -108,18 +96,7 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
         setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
         setLocationRelativeTo(parent);
 	}
-	
-	public void showMessage(int msgId) {
-		setVisible(true);
-		List<AisMessageExtended> messages = aisTableModel.getShips();
-		for (int i = 0; i < messages.size(); i++) {
-			AisMessageExtended message = messages.get(i);
 
-				return;
-			}			
-		}
-	
-	
 	private void initGui() {
 	
         closeBtn = new JButton("Close");
@@ -155,26 +132,19 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 		JLabel detailsLabel = new JLabel("Details");
 		
 		
+		
 	
 		aisTableModel = new AisTableModel(aisHandler);		
 
 		aisTable.setModel(aisTableModel);
-		//aisTable.getColumnModel().getColumn(0).setPreferredWidth(50);
-		//aisTable.getColumnModel().getColumn(1).setPreferredWidth(50);
-		//aisTable.getColumnModel().getColumn(2).setPreferredWidth(50);
-		//aisTable.getColumnModel().getColumn(0).setCellRenderer(new MsiTableCellRenderer(msiHandler));
 		aisSelectionModel = aisTable.getSelectionModel();
 		aisTable.setSelectionModel(aisSelectionModel);
 		aisTable.setAutoCreateRowSorter(true);
 		aisSelectionModel = aisTable.getSelectionModel();
 		aisSelectionModel.addListSelectionListener(this);
 		aisTable.setSelectionModel(aisSelectionModel);		
+		aisTable.setSelectionMode(0);
 		
-		//int preSelected = msiHandler.getFirstNonAcknowledged();
-		//setSelected(preSelected);
-
-
-        
         
 		GroupLayout gl_detailsPanel =  new GroupLayout(getContentPane());
 
@@ -223,11 +193,13 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 	
 	private void setSelected(int selectedRow) {
 		aisSelectionModel.setSelectionInterval(selectedRow, selectedRow);
-		aisTable.scrollRectToVisible(aisTable.getCellRect(selectedRow, -1, true));
 	}
 	
 	private void updateTable() {
 		int selectedRow = aisTable.getSelectedRow();
+		@SuppressWarnings("rawtypes")
+		RowSorter rs = aisTable.getRowSorter();
+
 		Long selectedMMSI = 0L;
 		if (selectedRow >=0){
 			selectedMMSI = (Long) aisTable.getValueAt(selectedRow, 1);
@@ -246,7 +218,7 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 			}
 		}
 		updateDetails();
-		
+		rs.allRowsChanged();
 		setSelection(selectedMMSI);
 	}
 	
@@ -285,10 +257,13 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 		
 		if (vesselTarget.getStaticData() != null ){
 			name = aisMessage.trimText(vesselTarget.getStaticData().getName());
-			callsign = vesselTarget.getStaticData().getCallsign();
+			callsign = aisMessage.trimText(vesselTarget.getStaticData().getCallsign());
 			imo = Long.toString(vesselTarget.getStaticData().getImo());
 			type = Integer.toString(vesselTarget.getStaticData().getShipType());
 			destination = aisMessage.trimText(vesselTarget.getStaticData().getDestination());
+			if (destination == null){
+				destination = "unknown";
+			}
 			draught = Float.toString(vesselTarget.getStaticData().getDraught());
 			trueHeading = Float.toString(vesselTarget.getPositionData().getTrueHeading());
 			length = Integer.toString(vesselTarget.getStaticData().getDimBow() + vesselTarget.getStaticData().getDimStern()) + " M";
@@ -309,11 +284,12 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 		buf.append("<tr><td><b>Draught:</b></td><td>" + draught + "</td></tr>");		
 		buf.append("<tr><td><b>Nav status:</b></td><td>" + navStatus + "</td></tr>");
 		buf.append("<tr><td><b>Type:</b></td><td>" + type + "</td></tr>");
-		buf.append("<tr><td><b>Position:</b></td><td>" + aisLocation.getLatitude() + aisLocation.getLongitude() + "</td></tr>");
+		buf.append("<tr><td><b>Lat:</b></td><td>" + Formatter.latToPrintable(aisLocation.getLatitude())+ "</td></tr>");
+		buf.append("<tr><td><b>Long:</b></td><td>" + Formatter.lonToPrintable(aisLocation.getLongitude()) + "</td></tr>");
 		buf.append("<tr><td><b>Last Recieved:</b></td><td>" + lastRecieved + "</td></tr>");
 		//buf.append("<tr><td><b>IMO:</b></td><td>" + imo + "</td></tr>");
 		buf.append("<tr><td><b>Destination:</b></td><td>" + destination + "</td></tr>");
-		buf.append("<tr><td><b>ETA::</b></td><td>" + eta + "</td></tr>");
+		buf.append("<tr><td><b>ETA:</b></td><td>" + eta + "</td></tr>");
 		
 		buf.append("<tr><td><b>Heading:</b></td><td>" + trueHeading + "</td></tr>");
 		buf.append("<tr><td><b>COG:</b></td><td>" + vesselTarget.getPositionData().getCog() + "</td></tr>");
@@ -337,18 +313,19 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 	if (e.getSource() == gotoBtn) {
-			//msiLayer.zoomTo(getMessage(msiTable.getSelectedRow()).AisMessage);
-		System.out.println("gotoBtm clicked - not implemented yet");
+		int selectedRow = aisTable.getSelectedRow();
+		long selectedMMSI = (Long) aisTable.getValueAt(selectedRow, 1);
+		
+		aisLayer.zoomTo(aisHandler.getVesselTargets().get(selectedMMSI).getPositionData().getPos());
 		} else if (e.getSource() == closeBtn) {
 			setVisible(false);
-
 		}		
 	}
 
 	@Override
 	public void findAndInit(Object obj) {
-		if (obj instanceof MsiHandler) {
-			msiHandler = (MsiHandler)obj;
+		if (obj instanceof AisLayer) {
+			aisLayer = (AisLayer)obj;
 		}
 		if (obj instanceof AisHandler) {
 			aisHandler = (AisHandler)obj;
