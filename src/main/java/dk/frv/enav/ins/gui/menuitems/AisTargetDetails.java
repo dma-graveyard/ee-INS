@@ -49,9 +49,8 @@ public class AisTargetDetails extends JMenuItem implements IMapMenuAction {
 	
 	@Override
 	public void doAction() {
-		//JOptionPane.showMessageDialog(null, "To be implemented...");
 		if (topPanel != null && topPanel.getAisDialog() != null) {
-			topPanel.getAisDialog().setSelection(this.MMSI);
+			topPanel.getAisDialog().setSelection(this.MMSI, true);
 			topPanel.getAisDialog().setVisible(true);
 		}		
 	}

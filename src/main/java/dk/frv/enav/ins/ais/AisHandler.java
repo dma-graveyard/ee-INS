@@ -656,8 +656,6 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 				String dst = "N/A";
 				VesselTarget currentTarget = this.getVesselTargets().get(key);
 				
-		
-				
 				if (currentTarget.getStaticData() != null ){
 					name = " " + aisMessage.trimText(this.getVesselTargets().get(key).getStaticData().getName());
 				}
@@ -676,7 +674,10 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 				
 			    //System.out.println("Key: " + key + ", Value: " + this.getVesselTargets().get(key));
 			    AisMessageExtended newEntry = new AisMessageExtended(name, key, hdg, dst);
-			    list.add(newEntry);
+			    
+			    if (!this.getVesselTargets().get(key).isGone()){
+			    	list.add(newEntry);
+			    }
 			}
 		}
 		return list;

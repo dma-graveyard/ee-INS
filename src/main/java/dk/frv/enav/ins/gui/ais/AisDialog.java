@@ -59,6 +59,7 @@ import dk.frv.enav.ins.ais.AisHandler.AisMessageExtended;
 import dk.frv.enav.ins.ais.AisTarget;
 import dk.frv.enav.ins.ais.IAisTargetListener;
 import dk.frv.enav.ins.ais.VesselTarget;
+import dk.frv.enav.ins.ais.VesselTarget.AisClass;
 import dk.frv.enav.ins.common.text.Formatter;
 import dk.frv.enav.ins.gui.ComponentFrame;
 import dk.frv.enav.ins.layers.ais.AisLayer;
@@ -76,9 +77,9 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 	private JButton gotoBtn;
 	
 	private JTable aisTable;
+	private JTable aisTableDetails;
 	private JScrollPane aisScrollPane;
 	
-	private JTextPane aisDetails;
 	private JScrollPane detailsScrollPane; 
 	
 	//private MsiTableModel msiTableModel;
@@ -89,8 +90,8 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 	
 	public AisDialog(Window parent) {
 		super();
-		setTitle("Maritime Safety Information");
-		setSize(580, 560);
+		setTitle("AIS Vessel Target");
+		setSize(580, 437);
 		
         setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
         setLocationRelativeTo(parent);
@@ -106,11 +107,41 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 		detailsPanel = new JPanel();
         //detailsPanel.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
         
-        aisDetails = new JTextPane();
-        aisDetails.setContentType("text/html");
-        aisDetails.setEditable(true);
+        String[] columnNames = {"Type", "Details"};
         
-        detailsScrollPane = new JScrollPane(aisDetails);
+        Object[][] data = {
+        	    {" MMSI", ""},
+        	    {" AIS", ""},
+        	    {" Name", ""},
+        	    {" Call Sign", ""},
+        	    {" Length", ""},
+        	    {" Width", ""},
+        	    {" Draught", ""},
+        	    {" Nav status", ""},
+        	    {" Type", ""},
+        	    {" Cargo", ""},
+        	    {" Lat", ""},
+        	    {" Long", ""},
+        	    {" Last Recieved", ""},
+        	    {" Destination", ""},
+        	    {" ETA", ""},
+        	    {" Heading", ""},
+        	    {" COG", ""},
+        	    {" SOG", ""},
+        	    {" ROT", ""}
+        	};
+        
+        
+        aisTableDetails = new JTable(data, columnNames);
+        
+        aisTableDetails.setBorder(new LineBorder(new Color(0, 0, 0)));
+        aisTableDetails.setShowHorizontalLines(false);
+        aisTableDetails.setEnabled(false);
+        
+        
+        
+        //detailsScrollPane = new JScrollPane(aisDetails);
+        detailsScrollPane = new JScrollPane(aisTableDetails);
         detailsScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         detailsScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         
@@ -190,8 +221,11 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
                 
 	}
 	
-	private void setSelected(int selectedRow) {
+	private void setSelected(int selectedRow, boolean opening) {
 		aisSelectionModel.setSelectionInterval(selectedRow, selectedRow);
+		if (opening){
+			aisTable.scrollRectToVisible(aisTable.getCellRect(selectedRow, -1, true));
+		}
 	}
 	
 	private void updateTable() throws InterruptedException {
@@ -215,16 +249,16 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 		// Update table
 		aisTableModel.fireTableDataChanged();
 		if (selectedRow >= 0 && selectedRow < aisTable.getRowCount()) {
-			setSelected(selectedRow);
+			setSelected(selectedRow, false);
 		} else {
 			if (selectedRow >= 0) {
 				selectedRow = aisTable.getRowCount() - 1;
-				setSelected(selectedRow);
+				setSelected(selectedRow, false);
 			}
 		}
 		updateDetails();
 //		rs.allRowsChanged();
-		setSelection(selectedMMSI);
+		setSelection(selectedMMSI, false);
 	}
 	
 	private void updateDetails() {
@@ -233,19 +267,13 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 			Object mmsi = aisTable.getValueAt(selected, 1);
 			if (aisHandler.getVesselTargets().get(mmsi) != null) {
 			setDetails(aisHandler.getVesselTargets().get(mmsi));
-			}else{
-				System.out.println("Crash averted");
 			}
 		}
 	}
 
 	@SuppressWarnings("static-access")
 	private void setDetails(VesselTarget vesselTarget) {
-		if (vesselTarget == null) {
-			aisDetails.setText("");
-			return;
-		}
-		StringBuilder buf = new StringBuilder();
+
 		GeoLocation aisLocation = vesselTarget.getPositionData().getPos();
 		
 		String name = "N/A";	
@@ -264,7 +292,7 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 		Date currentDate = new Date();
 		AisMessage aisMessage = null;
 		
-		
+
 		if (vesselTarget.getStaticData() != null ){
 			name = aisMessage.trimText(vesselTarget.getStaticData().getName());
 			callsign = aisMessage.trimText(vesselTarget.getStaticData().getCallsign());
@@ -283,41 +311,105 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 			lastRecieved = Long.toString((currentDate.getTime() - vesselTarget.getLastReceived().getTime()) / 1000) + " seconds ago";
 
 			eta = Long.toString(vesselTarget.getStaticData().getEta());
-			
-		}		
-
-		buf.append("<table>");		
-		buf.append("<tr><td><b>MMSI:</b></td><td>" + vesselTarget.getMmsi() + "</td></tr>");
-		buf.append("<tr><td><b>AIS Unit:</b></td><td>" + "Class " + vesselTarget.getAisClass() + "</td></tr>");
-		buf.append("<tr><td><b>Name:</b></td><td>" + name + "</td></tr>");
-		buf.append("<tr><td><b>Call sign:</b></td><td>" + callsign + "</td></tr>");
-		buf.append("<tr><td><b>Length:</b></td><td>" + length + "</td></tr>");
-		buf.append("<tr><td><b>Width:</b></td><td>" + width + "</td></tr>");
-		buf.append("<tr><td><b>Draught:</b></td><td>" + draught + "</td></tr>");		
-		buf.append("<tr><td><b>Nav status:</b></td><td>" + navStatus + "</td></tr>");
-		buf.append("<tr><td><b>Type:</b></td><td>" + type + "</td></tr>");
-		buf.append("<tr><td><b>Cargo:</b></td><td>" + cargo + "</td></tr>");
-		buf.append("<tr><td><b>Lat:</b></td><td>" + Formatter.latToPrintable(aisLocation.getLatitude())+ "</td></tr>");
-		buf.append("<tr><td><b>Long:</b></td><td>" + Formatter.lonToPrintable(aisLocation.getLongitude()) + "</td></tr>");
-		buf.append("<tr><td><b>Last Recieved:</b></td><td>" + lastRecieved + "</td></tr>");
-		//buf.append("<tr><td><b>IMO:</b></td><td>" + imo + "</td></tr>");
-		buf.append("<tr><td><b>Destination:</b></td><td>" + destination + "</td></tr>");
-		buf.append("<tr><td><b>ETA:</b></td><td>" + eta + "</td></tr>");
+		}
 		
-		buf.append("<tr><td><b>Heading:</b></td><td>" + trueHeading + "</td></tr>");
-		buf.append("<tr><td><b>COG:</b></td><td>" + vesselTarget.getPositionData().getCog() + "</td></tr>");
-		buf.append("<tr><td><b>SOG:</b></td><td>" + vesselTarget.getPositionData().getSog() + "</td></tr>");
-		buf.append("<tr><td><b>ROT:</b></td><td>" + vesselTarget.getPositionData().getRot() + "</td></tr>");
-
-		buf.append("</table>");
-		
-		aisDetails.setText("");
-		aisDetails.setText(buf.toString());
-		
-		aisDetails.setSelectionStart(0);
-		aisDetails.setSelectionEnd(0);
+		updateTable(vesselTarget.getMmsi(), vesselTarget.getAisClass(), name, callsign, length, 
+				width, draught, navStatus, type, cargo, Formatter.latToPrintable(aisLocation.getLatitude()), 
+						Formatter.lonToPrintable(aisLocation.getLongitude()), lastRecieved, destination, 
+								eta, trueHeading, vesselTarget.getPositionData().getCog(), 
+								vesselTarget.getPositionData().getSog(), vesselTarget.getPositionData().getRot());
 	}
 
+
+	private void updateTable(long mmsi, AisClass aisClass, String name, String callSign,
+			String length, String width, String draught, String navStatus, String type,
+			String cargo, String lat, String longi, String lastRecieved, String destination,
+			String eta, String trueHeading, float cog, float sog, float rot){
+		
+		if (!compare(aisTableDetails.getValueAt(0, 1), mmsi)){
+		aisTableDetails.setValueAt(mmsi, 0, 1);
+		}
+		
+		if (!compare(aisTableDetails.getValueAt(1, 1), "Class " + aisClass)){		
+		aisTableDetails.setValueAt("Class " + aisClass, 1, 1);
+		}
+		
+		if (!compare(aisTableDetails.getValueAt(2, 1), name)){
+		aisTableDetails.setValueAt(name, 2, 1);
+		}
+		
+		if (!compare(aisTableDetails.getValueAt(3, 1), callSign)){
+		aisTableDetails.setValueAt(callSign, 3, 1);
+		}
+		
+		if (!compare(aisTableDetails.getValueAt(4, 1), length)){
+		aisTableDetails.setValueAt(length, 4, 1);
+		}
+		
+		if (!compare(aisTableDetails.getValueAt(5, 1), width)){
+		aisTableDetails.setValueAt(width, 5, 1);
+		}
+		
+		if (!compare(aisTableDetails.getValueAt(6, 1), draught)){
+		aisTableDetails.setValueAt(draught, 6, 1);
+		}
+		
+		if (!compare(aisTableDetails.getValueAt(7, 1), navStatus)){
+		aisTableDetails.setValueAt(navStatus, 7, 1);
+		}
+		
+		if (!compare(aisTableDetails.getValueAt(8, 1), type)){
+		aisTableDetails.setValueAt(type, 8, 1);
+		}
+		
+		if (!compare(aisTableDetails.getValueAt(9, 1), cargo)){
+		aisTableDetails.setValueAt(cargo, 9, 1);
+		}
+		
+		if (!compare(aisTableDetails.getValueAt(10, 1), lat)){
+		aisTableDetails.setValueAt(lat, 10, 1);
+		}
+		
+		if (!compare(aisTableDetails.getValueAt(11, 1), callSign)){
+		aisTableDetails.setValueAt(callSign, 11, 1);
+		}
+		
+		if (!compare(aisTableDetails.getValueAt(12, 1), lastRecieved)){
+		aisTableDetails.setValueAt(lastRecieved, 12, 1);
+		}
+		
+		if (!compare(aisTableDetails.getValueAt(13, 1), destination)){
+		aisTableDetails.setValueAt(destination, 13, 1);
+		}
+		
+		if (!compare(aisTableDetails.getValueAt(14, 1), eta)){
+		aisTableDetails.setValueAt(eta, 14, 1);
+		}
+		
+		if (!compare(aisTableDetails.getValueAt(15, 1), trueHeading)){
+		aisTableDetails.setValueAt(trueHeading, 15, 1);
+		}
+		
+		if (!compare(aisTableDetails.getValueAt(16, 1), cog)){
+		aisTableDetails.setValueAt(cog, 16, 1);
+		}
+		
+		if (!compare(aisTableDetails.getValueAt(17, 1), sog)){
+		aisTableDetails.setValueAt(sog, 17, 1);
+		}
+		
+		if (!compare(aisTableDetails.getValueAt(18, 1), rot)){
+		aisTableDetails.setValueAt(rot, 18, 1);
+		}
+		
+	}
+	
+private boolean compare(Object value1, Object value2){
+	if (value1.toString().equals(value2.toString())){
+		return true;
+	}
+	return false;
+}
 
 	public AisMessageExtended getMessage(int i) {
 		List<AisMessageExtended> messages = aisTableModel.getShips();
@@ -348,8 +440,8 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 		}		
 	}
 
-	public void setSelection(long mmsi) {
-		setSelected(getMMSISelection(mmsi));
+	public void setSelection(long mmsi, boolean opening) {
+		setSelected(getMMSISelection(mmsi), opening);
 	}
 	
 	public int getMMSISelection(long mmsi){
