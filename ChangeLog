@@ -1,3 +1,8 @@
+2011-11-xx Version 3.0
+
+	* Fixed selection of next un-acknowledged MSI upon acknowledge 
+	* AIS targets dialog
+
 2011-10-28 Version 2.5
 
 	* Fixed copy route errors
