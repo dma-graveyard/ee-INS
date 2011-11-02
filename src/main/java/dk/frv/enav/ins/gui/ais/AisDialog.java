@@ -47,7 +47,6 @@ import javax.swing.JTable;
 import javax.swing.JTextPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.ListSelectionModel;
-import javax.swing.RowSorter;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
@@ -139,7 +138,7 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 		aisTable.setModel(aisTableModel);
 		aisSelectionModel = aisTable.getSelectionModel();
 		aisTable.setSelectionModel(aisSelectionModel);
-		aisTable.setAutoCreateRowSorter(true);
+//		aisTable.setAutoCreateRowSorter(true);
 		aisSelectionModel = aisTable.getSelectionModel();
 		aisSelectionModel.addListSelectionListener(this);
 		aisTable.setSelectionModel(aisSelectionModel);		
@@ -195,10 +194,16 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 		aisSelectionModel.setSelectionInterval(selectedRow, selectedRow);
 	}
 	
-	private void updateTable() {
-		int selectedRow = aisTable.getSelectedRow();
-		@SuppressWarnings("rawtypes")
-		RowSorter rs = aisTable.getRowSorter();
+	private void updateTable() throws InterruptedException {
+		int selectedRow = -1;
+		if (aisTable.getSize().height > 0){
+			selectedRow = aisTable.getSelectedRow();
+		}else{
+			//System.out.println("Possible error occured");
+			Thread.sleep(1);
+		}
+//		@SuppressWarnings("rawtypes")
+//		RowSorter rs = aisTable.getRowSorter();
 
 		Long selectedMMSI = 0L;
 		if (selectedRow >=0){
@@ -218,16 +223,19 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 			}
 		}
 		updateDetails();
-		rs.allRowsChanged();
+//		rs.allRowsChanged();
 		setSelection(selectedMMSI);
 	}
 	
 	private void updateDetails() {
-		//System.out.println("detailsSet");
 		int selected = aisTable.getSelectedRow();
 		if (selected >= 0 && aisHandler.getVesselTargets() != null){
 			Object mmsi = aisTable.getValueAt(selected, 1);
+			if (aisHandler.getVesselTargets().get(mmsi) != null) {
 			setDetails(aisHandler.getVesselTargets().get(mmsi));
+			}else{
+				System.out.println("Crash averted");
+			}
 		}
 	}
 
@@ -242,7 +250,7 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 		
 		String name = "N/A";	
 		String callsign = "N/A";
-		String imo = "unknown";
+//		String imo = "unknown";
 		String type = "unknown";
 		String destination = "unknown";
 		String draught = "N/A";
@@ -252,14 +260,17 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 		String navStatus = "N/A";
 		String lastRecieved = "N/A";
 		String eta = "N/A";
+		String cargo = "unknown";
 		Date currentDate = new Date();
 		AisMessage aisMessage = null;
+		
 		
 		if (vesselTarget.getStaticData() != null ){
 			name = aisMessage.trimText(vesselTarget.getStaticData().getName());
 			callsign = aisMessage.trimText(vesselTarget.getStaticData().getCallsign());
-			imo = Long.toString(vesselTarget.getStaticData().getImo());
-			type = Integer.toString(vesselTarget.getStaticData().getShipType());
+//			imo = Long.toString(vesselTarget.getStaticData().getImo());
+			type = vesselTarget.getStaticData().getShipType().prettyType();
+			cargo = vesselTarget.getStaticData().getShipType().prettyCargo();
 			destination = aisMessage.trimText(vesselTarget.getStaticData().getDestination());
 			if (destination == null){
 				destination = "unknown";
@@ -268,8 +279,9 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 			trueHeading = Float.toString(vesselTarget.getPositionData().getTrueHeading());
 			length = Integer.toString(vesselTarget.getStaticData().getDimBow() + vesselTarget.getStaticData().getDimStern()) + " M";
 			width = Integer.toString(vesselTarget.getStaticData().getDimPort() + vesselTarget.getStaticData().getDimStarboard()) + " M";
-			navStatus = Integer.toString(vesselTarget.getPositionData().getNavStatus());
-			lastRecieved = Long.toString((currentDate.getTime() - vesselTarget.getLastReceived().getTime()) / 60) + " seconds ago";
+			navStatus = vesselTarget.getPositionData().getEnumNavStatus().prettyStatus();
+			lastRecieved = Long.toString((currentDate.getTime() - vesselTarget.getLastReceived().getTime()) / 1000) + " seconds ago";
+
 			eta = Long.toString(vesselTarget.getStaticData().getEta());
 			
 		}		
@@ -284,6 +296,7 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 		buf.append("<tr><td><b>Draught:</b></td><td>" + draught + "</td></tr>");		
 		buf.append("<tr><td><b>Nav status:</b></td><td>" + navStatus + "</td></tr>");
 		buf.append("<tr><td><b>Type:</b></td><td>" + type + "</td></tr>");
+		buf.append("<tr><td><b>Cargo:</b></td><td>" + cargo + "</td></tr>");
 		buf.append("<tr><td><b>Lat:</b></td><td>" + Formatter.latToPrintable(aisLocation.getLatitude())+ "</td></tr>");
 		buf.append("<tr><td><b>Long:</b></td><td>" + Formatter.lonToPrintable(aisLocation.getLongitude()) + "</td></tr>");
 		buf.append("<tr><td><b>Last Recieved:</b></td><td>" + lastRecieved + "</td></tr>");
@@ -298,6 +311,7 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 
 		buf.append("</table>");
 		
+		aisDetails.setText("");
 		aisDetails.setText(buf.toString());
 		
 		aisDetails.setSelectionStart(0);
@@ -350,7 +364,12 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 
 	@Override
 	public void targetUpdated(AisTarget aisTarget) {
-		updateTable();	
+		try {
+			updateTable();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
 	}
 
 	@Override

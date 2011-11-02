@@ -51,8 +51,6 @@ import com.bbn.openmap.omGraphics.OMGraphicList;
 import com.bbn.openmap.omGraphics.OMList;
 
 import dk.frv.ais.geo.GeoLocation;
-import dk.frv.enav.common.xml.msi.MsiLocation;
-import dk.frv.enav.common.xml.msi.MsiMessage;
 import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.ais.AisHandler;
 import dk.frv.enav.ins.ais.AisTarget;
