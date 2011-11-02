@@ -31,6 +31,7 @@ package dk.frv.enav.ins.ais;
 
 import dk.frv.ais.message.AisMessage24;
 import dk.frv.ais.message.AisMessage5;
+import dk.frv.ais.message.ShipTypeCargo;
 
 /**
  * Class representing the static data of an AIS vessel target
@@ -40,7 +41,7 @@ public class VesselStaticData {
 	private long imo;
 	private String callsign;
 	private String name;
-	private int shipType;
+	private ShipTypeCargo shipType = new ShipTypeCargo(-1);
 	private int dimBow;
 	private int dimStern;
 	private int dimPort;
@@ -77,7 +78,7 @@ public class VesselStaticData {
 		imo = msg5.getImo();
 		callsign = msg5.getCallsign();
 		name = msg5.getName();
-		shipType = msg5.getShipType();
+		shipType = new ShipTypeCargo(msg5.getShipType());
 		dimBow = msg5.getDimBow();
 		dimStern = msg5.getDimStern();
 		dimPort = msg5.getDimPort();
@@ -108,7 +109,7 @@ public class VesselStaticData {
 		}
 		// part B
 		callsign = msg24.getCallsign();
-		shipType = msg24.getShipType();
+		shipType = new ShipTypeCargo(msg24.getShipType());
 		dimBow = msg24.getDimBow();
 		dimStern = msg24.getDimStern();
 		dimPort = msg24.getDimPort();
@@ -139,11 +140,11 @@ public class VesselStaticData {
 		this.name = name;
 	}
 
-	public int getShipType() {
+	public ShipTypeCargo getShipType() {
 		return shipType;
 	}
 
-	public void setShipType(int shipType) {
+	public void setShipType(ShipTypeCargo shipType) {
 		this.shipType = shipType;
 	}
 

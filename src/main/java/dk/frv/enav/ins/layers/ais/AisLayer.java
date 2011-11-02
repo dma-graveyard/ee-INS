@@ -50,6 +50,7 @@ import com.bbn.openmap.omGraphics.OMGraphic;
 import com.bbn.openmap.omGraphics.OMGraphicList;
 import com.bbn.openmap.omGraphics.OMList;
 
+import dk.frv.ais.geo.GeoLocation;
 import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.ais.AisHandler;
 import dk.frv.enav.ins.ais.AisTarget;
@@ -62,6 +63,7 @@ import dk.frv.enav.ins.gps.GpsHandler;
 import dk.frv.enav.ins.gui.ChartPanel;
 import dk.frv.enav.ins.gui.MainFrame;
 import dk.frv.enav.ins.gui.MapMenu;
+import dk.frv.enav.ins.gui.TopPanel;
 
 /**
  * AIS layer. Showing AIS targets and intended routes. 
@@ -91,6 +93,8 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 	private OMGraphic selectedGraphic;
 	private ChartPanel chartPanel;
 	private OMCircle dummyCircle = new OMCircle();
+	
+	private TopPanel topPanel;
 
 	public AisLayer() {
 		// graphics.setVague(false);
@@ -268,6 +272,9 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 		if (obj instanceof ChartPanel) {
 			chartPanel = (ChartPanel) obj;
 		}
+		if (obj instanceof TopPanel) {
+			topPanel = (TopPanel) obj;
+		}		
 	}
 
 	@Override
@@ -307,7 +314,7 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 					VesselTargetTriangle vtt = (VesselTargetTriangle) selectedGraphic;
 					VesselTargetGraphic vesselTargetGraphic = vtt.getVesselTargetGraphic();
 					mainFrame.getGlassPane().setVisible(false);
-					aisTargetMenu.aisMenu(vesselTargetGraphic);
+					aisTargetMenu.aisMenu(vesselTargetGraphic, topPanel);
 					aisTargetMenu.setVisible(true);
 					aisTargetMenu.show(this, e.getX() - 2, e.getY() - 2);
 					aisTargetInfoPanel.setVisible(false);
@@ -461,4 +468,9 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 		return false;
 	}
 
+	public void zoomTo(GeoLocation position) {
+		mapBean.setCenter(position.getLatitude(), position.getLongitude());
+		//mapBean.setScale(EeINS.getSettings().getEnavSettings().getMsiTextboxesVisibleAtScale());		
+	}	
+	
 }

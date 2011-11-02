@@ -53,6 +53,7 @@ import dk.frv.enav.ins.gui.route.RouteManagerDialog;
 import dk.frv.enav.ins.msi.IMsiUpdateListener;
 import dk.frv.enav.ins.msi.MsiHandler;
 import dk.frv.enav.ins.msi.MsiHandler.MsiMessageExtended;
+import dk.frv.enav.ins.gui.ais.*;
 
 /**
  * The top buttons panel 
@@ -69,11 +70,13 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 	private JToggleButton routeBtn = new JToggleButton("R");
 	private JButton routeManagerBtn = new JButton("Routes");		
 	private JButton msiButton = new JButton("MSI");
+	private JButton aisButton = new JButton("AIS Targets");
 	private JToggleButton aisBtn = new JToggleButton("AIS");
 	private JToggleButton encBtn = new JToggleButton("ENC");
 	private JToggleButton newRouteBtn = new JToggleButton("New route");
 	private MainFrame mainFrame;
 	private MsiDialog msiDialog = null;
+	private AisDialog aisDialog = null;
 	private MouseDelegator mouseDelegator;
 	private final JToggleButton tglbtnMsiFilter = new JToggleButton("MSI filter");
 	private MsiHandler msiHandler;
@@ -94,6 +97,7 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 		newRouteBtn.setToolTipText("Add a new route");
 		routeManagerBtn.setToolTipText("Routes Manager");		
 		msiButton.setToolTipText("Maritime Safety Information");
+		aisButton.setToolTipText("Show nearby vessels");
 		aisBtn.setToolTipText("Show/hide AIS targets");
 		encBtn.setToolTipText("Show/hide ENC");
 		tglbtnMsiFilter.setToolTipText("Enable/disable MSI message filtering based on position and routes");
@@ -107,6 +111,7 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 		add(newRouteBtn);
 		add(routeManagerBtn);		
 		add(msiButton);
+		add(aisButton);
 		add(new JSeparator());
 		add(aisBtn);
 		add(encBtn);
@@ -129,6 +134,7 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 		//add(separator);
 		//add(horizontalStrut);
 		add(msiIcon);
+		msiIcon.setVisible(false);
 	
 
 		msiIcon.addMouseListener(this);
@@ -141,6 +147,7 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 		newRouteBtn.addActionListener(this);
 		routeManagerBtn.addActionListener(this);		
 		msiButton.addActionListener(this);
+		aisButton.addActionListener(this);
 		aisBtn.addActionListener(this);
 		encBtn.addActionListener(this);
 		tglbtnMsiFilter.addActionListener(this);
@@ -190,6 +197,9 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 			setupDialog.setVisible(true);
 		} else if (e.getSource() == msiButton) {			
 			msiDialog.setVisible(true);
+		} else if (e.getSource() == aisButton) {			
+			aisDialog.setVisible(true);		
+			aisDialog.setSelection(-1, true);
 		} else if (e.getSource() == newRouteBtn) {
 			if(mouseDelegator.getActiveMouseModeID() == NavigationMouseMode.modeID){
 				mainFrame.getChartPanel().editMode(true);
@@ -216,11 +226,18 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 		if (obj instanceof MsiHandler) {
 			msiHandler = (MsiHandler) obj;
 		}
+		if (obj instanceof AisDialog) {
+			aisDialog = (AisDialog)obj;
+		}
 	}
 	
 	public MsiDialog getMsiDialog() {
 		return msiDialog;
 	}
+	
+	public AisDialog getAisDialog() {
+		return aisDialog;
+	}	
 	
 	public void setEncDisabled() {
 		encBtn.setEnabled(false);

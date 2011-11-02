@@ -32,6 +32,7 @@ package dk.frv.enav.ins.ais;
 import dk.frv.ais.geo.GeoLocation;
 import dk.frv.ais.message.AisMessage18;
 import dk.frv.ais.message.AisPositionMessage;
+import dk.frv.ais.message.NavigationalStatus;
 
 /**
  * Class representing position data for an AIS vessel target
@@ -39,6 +40,7 @@ import dk.frv.ais.message.AisPositionMessage;
 public class VesselPositionData {
 	
 	private GeoLocation pos;
+	private NavigationalStatus navEnumStatus = new NavigationalStatus(-1);
 	private int navStatus = -1;
 	private float rot;
 	private float sog;
@@ -70,6 +72,7 @@ public class VesselPositionData {
 	public VesselPositionData(AisPositionMessage aisPositionMessage) {
 		pos = aisPositionMessage.getPos().getGeoLocation();
 		navStatus = aisPositionMessage.getNavStatus();
+		navEnumStatus = new NavigationalStatus(aisPositionMessage.getNavStatus());
 		rot = aisPositionMessage.getRot();
 		sog = aisPositionMessage.getSog() / (float)10.0;
 		posAcc = aisPositionMessage.getPosAcc();
@@ -130,6 +133,15 @@ public class VesselPositionData {
 	public void setNavStatus(int navStatus) {
 		this.navStatus = navStatus;
 	}
+	
+	public NavigationalStatus getEnumNavStatus() {
+		return navEnumStatus;
+	}
+
+	public void setEnumNavStatus(NavigationalStatus navEnumStatus) {
+		this.navEnumStatus = navEnumStatus;
+	}	
+
 
 	public float getRot() {
 		return rot;

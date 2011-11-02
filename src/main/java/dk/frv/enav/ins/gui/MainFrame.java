@@ -45,6 +45,7 @@ import org.apache.log4j.Logger;
 import com.bbn.openmap.MapHandler;
 
 import dk.frv.enav.ins.EeINS;
+import dk.frv.enav.ins.gui.ais.AisDialog;
 import dk.frv.enav.ins.gui.msi.MsiDialog;
 import dk.frv.enav.ins.gui.route.RouteSuggestionDialog;
 import dk.frv.enav.ins.settings.GuiSettings;
@@ -67,6 +68,7 @@ public class MainFrame extends JFrame implements WindowListener {
 	private BottomPanel bottomPanel;
 	private JPanel glassPanel;
 	private MsiDialog msiDialog;
+	private AisDialog aisDialog;
 	private RouteSuggestionDialog routeSuggestionDialog;
 
 	private MapMenu mapMenu;
@@ -136,6 +138,11 @@ public class MainFrame extends JFrame implements WindowListener {
 		// Init MSI dialog
 		msiDialog = new MsiDialog(this);
 		mapHandler.add(msiDialog);
+		
+		// Init MSI dialog
+		aisDialog = new AisDialog(this);
+		mapHandler.add(aisDialog);
+				
 		
 		// Init Route suggestion dialog
 		routeSuggestionDialog = new RouteSuggestionDialog(this);
