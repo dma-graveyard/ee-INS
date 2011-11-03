@@ -49,7 +49,7 @@ public class AisSettings implements Serializable {
 	private boolean allowSending = true;
 	private boolean broadcastIntendedRoute = true;
 	private boolean showIntendedRouteByDefault = false;
-	private int intendedRouteMaxWps = 16;
+	private int intendedRouteMaxWps = 8;
 	private int intendedRouteMaxTime = 0; // In minutes 0 = inf
 	private int sartPrefix = 970;
 	private boolean showNameLabels = true;

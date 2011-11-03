@@ -183,7 +183,7 @@ public class AisServices extends MapHandlerChild {
 		
 		int maxWps = aisSettings.getIntendedRouteMaxWps();
 		if (maxWps == 0) {
-			maxWps = 16;
+			maxWps = 8;
 		}
 		long maxTimeLen = aisSettings.getIntendedRouteMaxTime() * 60 * 1000;
 		if (maxTimeLen == 0) {
