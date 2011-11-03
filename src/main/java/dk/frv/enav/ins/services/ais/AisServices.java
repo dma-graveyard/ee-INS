@@ -157,12 +157,6 @@ public class AisServices extends MapHandlerChild {
 		} else {
 			intendedRoute = intendedRouteFromActiveRoute(activeRoute, settings.getAisSettings());
 		}
-
-		// Set general info
-		intendedRoute.setSenderClassification(0);
-		intendedRoute.setRouteType(5);
-		// TODO What to set to?
-		intendedRoute.setMsgLinkId(0);
 		
 		// Create AIS message 8
 		AisMessage8 msg8 = new AisMessage8();

@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import dk.frv.ais.message.binary.RouteInformation;
+import dk.frv.ais.message.binary.RouteMessage;
 
 /**
  * Class representing an AIS intended route
@@ -60,8 +60,8 @@ public class AisIntendedRoute extends AisRouteData {
 	 * Constructor given AIS route information
 	 * @param routeInformation
 	 */
-	public AisIntendedRoute(RouteInformation routeInformation) {
-		super(routeInformation);
+	public AisIntendedRoute(RouteMessage routeMessage) {
+		super(routeMessage);
 		if (duration == 0) {
 			// Cancel route
 			return;
@@ -73,7 +73,7 @@ public class AisIntendedRoute extends AisRouteData {
 		}
 		
 		// Calculate avg speed
-		speed = ranges.get(waypoints.size() - 1) / ((double)routeInformation.getDuration() / 60.0);
+		speed = ranges.get(waypoints.size() - 1) / ((double)routeMessage.getDuration() / 60.0);
 		
 		// ETA's
 		long start = etaFirst.getTime();
