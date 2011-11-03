@@ -1,5 +1,6 @@
 2011-11-xx Version 3.0
 
+	* Using new intended route AIS application specific message DAC=219, FI=1
 	* Fixed selection of next un-acknowledged MSI upon acknowledge 
 	* AIS targets dialog
 
