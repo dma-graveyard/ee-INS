@@ -60,7 +60,8 @@ public class AisSendThread extends Thread implements ISendResultListener {
 			aisServices.getNmeaSensor().send(sendRequest, this);
 		} catch (SendException e) {
 			LOG.error("Failed to send AIS message: " + sendRequest + ": " + e.getMessage());
-			// TODO log this somehow
+			aisServices.sendResult(false);
+			return;
 		}
 		
 		// Busy wait

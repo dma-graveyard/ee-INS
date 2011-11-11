@@ -44,7 +44,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
@@ -65,7 +64,7 @@ import dk.frv.enav.ins.gui.ComponentFrame;
 import dk.frv.enav.ins.layers.ais.AisLayer;
 
 /**
- * MSI dialog
+ * AIS targets dialog
  */
 public class AisDialog extends ComponentFrame implements ListSelectionListener, ActionListener, IAisTargetListener {
 	private static final long serialVersionUID = 1L;
@@ -82,7 +81,6 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 	
 	private JScrollPane detailsScrollPane; 
 	
-	//private MsiTableModel msiTableModel;
 	private AisTableModel aisTableModel;
 	private ListSelectionModel aisSelectionModel;
 	

@@ -1,5 +1,8 @@
 2011-11-xx Version 3.0
 
+	* Fixed memory leak when no sensor connection and active route
+	* Changing default intended route waypoints to 8. Limits ASM to 3 slots.
+	* Using new intended route AIS application specific message DAC=219, FI=1
 	* Fixed selection of next un-acknowledged MSI upon acknowledge 
 	* AIS targets dialog
 

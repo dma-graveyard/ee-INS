@@ -38,6 +38,7 @@ import java.util.TimeZone;
 
 import dk.frv.ais.geo.GeoLocation;
 import dk.frv.ais.message.binary.RouteInformation;
+import dk.frv.ais.message.binary.RouteMessage;
 import dk.frv.enav.ins.gps.GnssTime;
 
 /**
@@ -72,19 +73,11 @@ public abstract class AisRouteData implements Serializable {
 		this.etaLast = routeData.etaLast;
 	}
 	
-	/**
-	 * Constructor given AIS route information
-	 * @param routeInformation
-	 */
-	public AisRouteData(RouteInformation routeInformation) {
+	public AisRouteData(RouteMessage routeMessage) {
 		received = GnssTime.getInstance().getDate();
 		
-		msgLinkId = routeInformation.getMsgLinkId();
-		routeType = routeInformation.getRouteType();
-		senderClassification = routeInformation.getSenderClassification();
-		
-		for (int i=0; i < routeInformation.getWaypoints().size(); i++) {
-			GeoLocation wp = routeInformation.getWaypoints().get(i).getGeoLocation();
+		for (int i=0; i < routeMessage.getWaypoints().size(); i++) {
+			GeoLocation wp = routeMessage.getWaypoints().get(i).getGeoLocation();
 			
 			if (wp.getLatitude() < 54 || wp.getLatitude() > 60 || wp.getLongitude() < 8 || wp.getLongitude() > 14) {
 				System.out.println("ERROR: Wrong wp in AIS broadcast");				
@@ -93,17 +86,17 @@ public abstract class AisRouteData implements Serializable {
 			}
 		}		
 		
-		if (routeInformation.getStartMonth() > 0 && routeInformation.getStartDay() > 0) {
+		if (routeMessage.getStartMonth() > 0 && routeMessage.getStartDay() > 0) {
 			Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT+0000"));
-			cal.set(Calendar.MONTH, routeInformation.getStartMonth() - 1);
-			cal.set(Calendar.DAY_OF_MONTH, routeInformation.getStartDay());
-			cal.set(Calendar.HOUR_OF_DAY, routeInformation.getStartHour());
-			cal.set(Calendar.MINUTE, routeInformation.getStartMin());
+			cal.set(Calendar.MONTH, routeMessage.getStartMonth() - 1);
+			cal.set(Calendar.DAY_OF_MONTH, routeMessage.getStartDay());
+			cal.set(Calendar.HOUR_OF_DAY, routeMessage.getStartHour());
+			cal.set(Calendar.MINUTE, routeMessage.getStartMin());
 			cal.set(Calendar.MILLISECOND, 0);
 			etaFirst = cal.getTime();
 		}
 		
-		duration = routeInformation.getDuration() * 60 * 1000;
+		duration = routeMessage.getDuration() * 60 * 1000;
 		if (duration > 0 && etaFirst != null) {
 			etaLast = new Date(etaFirst.getTime() + duration);
 		}
@@ -116,6 +109,17 @@ public abstract class AisRouteData implements Serializable {
 			routeRange += dist;
 			ranges.add(routeRange);
 		}
+	}
+	
+	/**
+	 * Constructor given AIS route information
+	 * @param routeInformation
+	 */
+	public AisRouteData(RouteInformation routeInformation) {
+		this((RouteMessage)routeInformation);		
+		msgLinkId = routeInformation.getMsgLinkId();
+		routeType = routeInformation.getRouteType();
+		senderClassification = routeInformation.getSenderClassification();
 	}
 	
 	public boolean isCancel() {
