@@ -55,6 +55,7 @@ import dk.frv.enav.ins.nmea.NmeaSerialSensor;
 import dk.frv.enav.ins.nmea.NmeaStdinSensor;
 import dk.frv.enav.ins.nmea.NmeaTcpSensor;
 import dk.frv.enav.ins.nmea.SensorType;
+import dk.frv.enav.ins.nogo.NogoHandler;
 import dk.frv.enav.ins.route.RouteManager;
 import dk.frv.enav.ins.services.ais.AisServices;
 import dk.frv.enav.ins.services.shore.ShoreServices;
@@ -86,6 +87,7 @@ public class EeINS {
 	private static ShoreServices shoreServices;
 	private static AisServices aisServices;
 	private static MsiHandler msiHandler;
+	private static NogoHandler nogoHandler;
 	private static UpdateCheckerThread updateThread;
 	private static ExceptionHandler exceptionHandler = new ExceptionHandler();
 	
@@ -160,6 +162,10 @@ public class EeINS {
         // Create MSI handler
         msiHandler = new MsiHandler(getSettings().getEnavSettings());
         mapHandler.add(msiHandler);
+        
+        // Create NoGo handler
+        nogoHandler = new NogoHandler(getSettings().getEnavSettings());
+        mapHandler.add(nogoHandler);        
         
         // Create plugin components
         createPluginComponents();
