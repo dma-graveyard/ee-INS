@@ -77,7 +77,6 @@ public class NogoHandler extends MapHandlerChild implements Runnable, IRoutesUpd
 	}
 	public void updateNogo() {
 		boolean nogoUpdated = false;
-		
 		Date now = new Date();
 		if (getLastUpdate() == null || (now.getTime() - getLastUpdate().getTime() > pollInterval * 1000)) {
 			// Poll for new messages from shore
@@ -107,13 +106,14 @@ public class NogoHandler extends MapHandlerChild implements Runnable, IRoutesUpd
 	
 	public boolean poll() throws ShoreServiceException {
 
-		if (shoreServices == null || routeManager.getActiveRoute() == null) {
+/**		if (shoreServices == null || routeManager.getActiveRoute() == null) {
 			return false;
 		}
+**/
 		ActiveRoute route = routeManager.getActiveRoute();
-		
+		System.out.println("The nogo Response is:");
 		NogoResponse nogoResponse = shoreServices.nogoPoll(route);
-		
+		System.out.println(nogoResponse.getShoreMmsi());
 		if (nogoResponse == null || nogoResponse.getNogoShape() == null) {
 			return false;
 		}
