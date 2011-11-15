@@ -63,6 +63,7 @@ import dk.frv.enav.ins.layers.GeneralLayer;
 import dk.frv.enav.ins.layers.ais.AisLayer;
 import dk.frv.enav.ins.layers.gps.GpsLayer;
 import dk.frv.enav.ins.layers.msi.MsiLayer;
+import dk.frv.enav.ins.layers.nogo.NogoLayer;
 import dk.frv.enav.ins.layers.route.RouteLayer;
 import dk.frv.enav.ins.layers.routeEdit.NewRouteContainerLayer;
 import dk.frv.enav.ins.layers.routeEdit.RouteEditLayer;
@@ -90,6 +91,7 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 	private SensorPanel sensorPanel;
 	private RouteLayer routeLayer;
 	private MsiLayer msiLayer;
+	private NogoLayer nogoLayer;	
 	private TopPanel topPanel;
 	private RouteEditMouseMode routeEditMouseMode;
 	private RouteEditLayer routeEditLayer;
@@ -177,6 +179,12 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 		msiLayer = new MsiLayer();
 		msiLayer.setVisible(true);
 		mapHandler.add(msiLayer);
+		
+		// Create Nogo layer
+		nogoLayer = new NogoLayer();
+		nogoLayer.setVisible(true);
+		mapHandler.add(nogoLayer);
+		
 
 		// Create AIS layer
 		aisLayer = new AisLayer();
@@ -229,6 +237,7 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 		// Force a route layer and sensor panel update
 		routeLayer.routesChanged(RoutesUpdateEvent.ROUTE_ADDED);
 		sensorPanel.routesChanged(RoutesUpdateEvent.ROUTE_ADDED);
+		
 		// Force a MSI layer update
 		msiLayer.doUpdate();
 

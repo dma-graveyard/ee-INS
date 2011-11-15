@@ -30,13 +30,16 @@
 package dk.frv.enav.ins.nogo;
 
 import java.util.Date;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
 import com.bbn.openmap.MapHandlerChild;
 
 import dk.frv.enav.common.xml.nogo.response.NogoResponse;
+import dk.frv.enav.common.xml.nogo.types.NogoPolygon;
 import dk.frv.enav.ins.EeINS;
+import dk.frv.enav.ins.layers.nogo.NogoLayer;
 import dk.frv.enav.ins.route.ActiveRoute;
 import dk.frv.enav.ins.route.IRoutesUpdateListener;
 import dk.frv.enav.ins.route.RouteManager;
@@ -56,13 +59,14 @@ public class NogoHandler extends MapHandlerChild implements Runnable, IRoutesUpd
 	private RouteManager routeManager;
 
 	//Create a seperate layer for the nogo information
-	//private NogoLayer nogoLayer;
+	private NogoLayer nogoLayer;
 	
 	//Do we need to store anything?
-	//private MsiStore msiStore;
 	private Date lastUpdate;
 	private long pollInterval;
 
+	private List<NogoPolygon> nogoPolygons;
+	
 	public NogoHandler(EnavSettings enavSettings) {
 		//pollInterval = enavSettings.getNogoPollInterval();
 		EeINS.startThread(this, "NogoHandler");
@@ -99,26 +103,34 @@ public class NogoHandler extends MapHandlerChild implements Runnable, IRoutesUpd
 	
 	public void notifyUpdate() {
 		// Update layer - todo
-//		if (nogoLayer != null) {
-//			nogoLayer.doUpdate();
-//		}
+		if (nogoLayer != null) {
+			nogoLayer.doUpdate();
+		}
 	}
 	
 	public boolean poll() throws ShoreServiceException {
 
-/**		if (shoreServices == null || routeManager.getActiveRoute() == null) {
+		if (shoreServices == null ) {
 			return false;
 		}
-**/
+
 		ActiveRoute route = routeManager.getActiveRoute();
-		System.out.println("The nogo Response is:");
 		NogoResponse nogoResponse = shoreServices.nogoPoll(route);
-		System.out.println(nogoResponse.getShoreMmsi());
-		if (nogoResponse == null || nogoResponse.getNogoShape() == null) {
+		
+		nogoPolygons = nogoResponse.getPolygons();
+		
+		System.out.println(nogoResponse.getValidFrom());
+		System.out.println(nogoResponse.getPolygons().get(0).getPolygon().get(0));
+		
+		if (nogoResponse == null || nogoResponse.getPolygons() == null) {
 			return false;
 		}
 		LOG.info("Received something from nogo...what exactly we don't know yet");
 		return true;
+	}
+	
+	public synchronized List<NogoPolygon> getPolygons() {
+		return nogoPolygons;
 	}
 	
 	public synchronized Date getLastUpdate() {
@@ -137,6 +149,9 @@ public class NogoHandler extends MapHandlerChild implements Runnable, IRoutesUpd
 		if (obj instanceof RouteManager) {
 			routeManager = (RouteManager)obj;
 		}
+		if (obj instanceof NogoLayer) {
+			nogoLayer = (NogoLayer)obj;
+		}		
 	}	
 	
 	@Override
