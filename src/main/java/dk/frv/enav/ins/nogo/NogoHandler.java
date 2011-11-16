@@ -66,6 +66,7 @@ public class NogoHandler extends MapHandlerChild implements Runnable, IRoutesUpd
 	private long pollInterval;
 
 	private List<NogoPolygon> nogoPolygons;
+	private Boolean isVisible = true;
 	
 	public NogoHandler(EnavSettings enavSettings) {
 		//pollInterval = enavSettings.getNogoPollInterval();
@@ -119,13 +120,13 @@ public class NogoHandler extends MapHandlerChild implements Runnable, IRoutesUpd
 		
 		nogoPolygons = nogoResponse.getPolygons();
 		
-		System.out.println(nogoResponse.getValidFrom());
-		System.out.println(nogoResponse.getPolygons().get(0).getPolygon().get(0));
+//		System.out.println(nogoResponse.getValidFrom());
+//		System.out.println(nogoResponse.getPolygons().get(0).getPolygon().get(0));
 		
 		if (nogoResponse == null || nogoResponse.getPolygons() == null) {
 			return false;
 		}
-		LOG.info("Received something from nogo...what exactly we don't know yet");
+//		LOG.info("Received something from nogo...what exactly we don't know yet");
 		return true;
 	}
 	
@@ -141,6 +142,17 @@ public class NogoHandler extends MapHandlerChild implements Runnable, IRoutesUpd
 		this.lastUpdate = lastUpdate;
 	}
 	
+	public void toggleLayer(){
+		if (isVisible){
+			nogoLayer.setVisible(false);
+			isVisible = false;
+		}else{
+			nogoLayer.setVisible(true);
+			isVisible = true;
+		}
+	}
+	
+	
 	@Override
 	public void findAndInit(Object obj) {
 		if (obj instanceof ShoreServices) {
@@ -153,6 +165,7 @@ public class NogoHandler extends MapHandlerChild implements Runnable, IRoutesUpd
 			nogoLayer = (NogoLayer)obj;
 		}		
 	}	
+	
 	
 	@Override
 	public void routesChanged(RoutesUpdateEvent e) {

@@ -71,7 +71,6 @@ public class NogoLayer extends OMGraphicHandlerLayer  {
 	}
 	
 	public void doUpdate() {
-		
 		graphics.clear();
 		Date now = GnssTime.getInstance().getDate();
 		
@@ -79,7 +78,7 @@ public class NogoLayer extends OMGraphicHandlerLayer  {
 		List<NogoPolygon> polygons = nogoHandler.getPolygons();
 
 		for (NogoPolygon polygon : polygons) {
-			System.out.println("We found a polygon");
+//			System.out.println("We found a polygon");
 			
 			// Create Nogo graphic
 			NogoGraphic nogoGraphic = new NogoGraphic(polygon);

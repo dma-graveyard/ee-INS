@@ -228,35 +228,38 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 	
 	private void updateTable() throws InterruptedException {
 		int selectedRow = -1;
-		if (aisTable.getSize().height > 0){
-			selectedRow = aisTable.getSelectedRow();
-		}else{
-			//System.out.println("Possible error occured");
-			Thread.sleep(1);
-		}
-//		@SuppressWarnings("rawtypes")
-//		RowSorter rs = aisTable.getRowSorter();
-
-		Long selectedMMSI = 0L;
-		if (selectedRow >=0){
-			selectedMMSI = (Long) aisTable.getValueAt(selectedRow, 1);
-		}
-			
-		
-		aisTableModel.updateShips();
-		// Update table
-		aisTableModel.fireTableDataChanged();
-		if (selectedRow >= 0 && selectedRow < aisTable.getRowCount()) {
-			setSelected(selectedRow, false);
-		} else {
-			if (selectedRow >= 0) {
-				selectedRow = aisTable.getRowCount() - 1;
+		if (aisTable != null) {
+			if (aisTable.getSize().height > 0){
+				selectedRow = aisTable.getSelectedRow();
+			}else{
+				//System.out.println("Possible error occured");
+				Thread.sleep(1);
+			}
+	//		@SuppressWarnings("rawtypes")
+	//		RowSorter rs = aisTable.getRowSorter();
+	
+			Long selectedMMSI = 0L;
+			if (selectedRow >=0){
+				selectedMMSI = (Long) aisTable.getValueAt(selectedRow, 1);
+			}
+				
+			if (aisTableModel != null) {
+			aisTableModel.updateShips();
+			// Update table
+			aisTableModel.fireTableDataChanged();
+			if (selectedRow >= 0 && selectedRow < aisTable.getRowCount()) {
 				setSelected(selectedRow, false);
+			} else {
+				if (selectedRow >= 0) {
+					selectedRow = aisTable.getRowCount() - 1;
+					setSelected(selectedRow, false);
+				}
+			}
+			updateDetails();
+	//		rs.allRowsChanged();
+			setSelection(selectedMMSI, false);
 			}
 		}
-		updateDetails();
-//		rs.allRowsChanged();
-		setSelection(selectedMMSI, false);
 	}
 	
 	private void updateDetails() {
