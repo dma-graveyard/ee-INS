@@ -158,6 +158,10 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 		encBtn.addActionListener(this);
 		tglbtnMsiFilter.addActionListener(this);
 		
+		
+		nogoButton.setSelected(true);
+		
+		
 		updateButtons();
 	}
 	
@@ -206,8 +210,8 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 		} else if (e.getSource() == aisButton) {			
 			aisDialog.setVisible(true);		
 			aisDialog.setSelection(-1, true);
-		} else if (e.getSource() == nogoButton) {			
-			nogoHandler.toggleLayer();
+		} else if (e.getSource() == nogoButton) {	
+			nogoButton.setSelected(nogoHandler.toggleLayer());
 		} else if (e.getSource() == newRouteBtn) {
 			if(mouseDelegator.getActiveMouseModeID() == NavigationMouseMode.modeID){
 				mainFrame.getChartPanel().editMode(true);

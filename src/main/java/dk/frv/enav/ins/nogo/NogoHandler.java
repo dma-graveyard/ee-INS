@@ -142,7 +142,7 @@ public class NogoHandler extends MapHandlerChild implements Runnable, IRoutesUpd
 		this.lastUpdate = lastUpdate;
 	}
 	
-	public void toggleLayer(){
+	public boolean toggleLayer(){
 		if (isVisible){
 			nogoLayer.setVisible(false);
 			isVisible = false;
@@ -150,6 +150,7 @@ public class NogoHandler extends MapHandlerChild implements Runnable, IRoutesUpd
 			nogoLayer.setVisible(true);
 			isVisible = true;
 		}
+		return isVisible;		
 	}
 	
 	

@@ -46,10 +46,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.ListSelectionModel;
+import javax.swing.RowSorter;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 import dk.frv.ais.geo.GeoLocation;
 import dk.frv.ais.message.AisMessage;
@@ -167,7 +170,14 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 		aisTable.setModel(aisTableModel);
 		aisSelectionModel = aisTable.getSelectionModel();
 		aisTable.setSelectionModel(aisSelectionModel);
-//		aisTable.setAutoCreateRowSorter(true);
+
+		//		aisTable.setAutoCreateRowSorter(true);
+		TableRowSorter<TableModel> sorter 
+	    = new TableRowSorter<TableModel>(aisTable.getModel());
+		aisTable.setRowSorter(sorter);		
+		
+		
+		
 		aisSelectionModel = aisTable.getSelectionModel();
 		aisSelectionModel.addListSelectionListener(this);
 		aisTable.setSelectionModel(aisSelectionModel);		
@@ -235,8 +245,8 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 				//System.out.println("Possible error occured");
 				Thread.sleep(1);
 			}
-	//		@SuppressWarnings("rawtypes")
-	//		RowSorter rs = aisTable.getRowSorter();
+			@SuppressWarnings("rawtypes")
+			RowSorter rs = aisTable.getRowSorter();
 	
 			Long selectedMMSI = 0L;
 			if (selectedRow >=0){
@@ -256,7 +266,7 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 				}
 			}
 			updateDetails();
-	//		rs.allRowsChanged();
+			rs.allRowsChanged();
 			setSelection(selectedMMSI, false);
 			}
 		}
