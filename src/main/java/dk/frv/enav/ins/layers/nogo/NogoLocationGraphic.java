@@ -29,7 +29,9 @@
  */
 package dk.frv.enav.ins.layers.nogo;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -60,19 +62,31 @@ public class NogoLocationGraphic extends OMGraphicList {
 	public NogoLocationGraphic(NogoPolygon polygon) {
 		super();
 		this.polygon = polygon;
+		
+		
 
-		hatchFill = new BufferedImage(2, 2, BufferedImage.TYPE_INT_ARGB);
+		hatchFill = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D big = hatchFill.createGraphics();
+		Composite originalComposite = big.getComposite();
+	    big.setComposite(makeComposite(0.2f));
 		big.setColor(nogoColor);
 	    big.drawLine(0, 0, 10, 10);
+	    
+	    
 		hatchFillRectangle = new Rectangle(0, 0, 10, 10);
-
+		big.setComposite(originalComposite);
+		
 //		drawTestTriangle();
 		
 		drawPolygon();
 		
 	}
 	
+	
+	 private AlphaComposite makeComposite(float alpha) {
+		  int type = AlphaComposite.SRC_OVER;
+		  return(AlphaComposite.getInstance(type, alpha));
+		 }
 
 	
 	private void drawPolygon() {
