@@ -29,42 +29,26 @@
  */
 package dk.frv.enav.ins.layers.nogo;
 
-import java.util.Date;
 import java.util.List;
 
-import com.bbn.openmap.MapBean;
-import com.bbn.openmap.MouseDelegator;
 import com.bbn.openmap.layer.OMGraphicHandlerLayer;
-import com.bbn.openmap.omGraphics.OMGraphic;
 import com.bbn.openmap.omGraphics.OMGraphicList;
-import com.bbn.openmap.proj.coords.LatLonPoint;
 
 import dk.frv.enav.common.xml.nogo.types.NogoPolygon;
-import dk.frv.enav.ins.gps.GnssTime;
-import dk.frv.enav.ins.gui.MainFrame;
-import dk.frv.enav.ins.gui.MapMenu;
-import dk.frv.enav.ins.gui.TopPanel;
-import dk.frv.enav.ins.msi.MsiHandler;
 import dk.frv.enav.ins.nogo.NogoHandler;
 
 public class NogoLayer extends OMGraphicHandlerLayer  {	
 	private static final long serialVersionUID = 1L;
 
-	private MsiHandler msiHandler = null;
 	
 	private NogoHandler nogoHandler = null;
 	
 	private OMGraphicList graphics = new OMGraphicList();
-	private MapBean mapBean = null;
-	private TopPanel topPanel = null;
-	private MainFrame mainFrame = null;	
-//	private MsiInfoPanel msiInfoPanel = null;	
-	private OMGraphic closest = null;
-	private OMGraphic selectedGraphic;
-	private MapMenu msiMenu;
-
-	private MouseDelegator mouseDelegator;
-	private LatLonPoint mousePosition;
+//	private MapBean mapBean = null;
+//	private TopPanel topPanel = null;
+//	private MainFrame mainFrame = null;	
+//	private OMGraphic closest = null;
+//	private OMGraphic selectedGraphic;
 	
 	public NogoLayer() {
 		
@@ -72,7 +56,7 @@ public class NogoLayer extends OMGraphicHandlerLayer  {
 	
 	public void doUpdate() {
 		graphics.clear();
-		Date now = GnssTime.getInstance().getDate();
+//		Date now = GnssTime.getInstance().getDate();
 		
 		// Get polygons
 		List<NogoPolygon> polygons = nogoHandler.getPolygons();
@@ -144,24 +128,9 @@ public class NogoLayer extends OMGraphicHandlerLayer  {
 	
 	@Override
 	public void findAndInit(Object obj) {
-		if (obj instanceof MsiHandler) {
-			msiHandler = (MsiHandler)obj;
-		}
 		if (obj instanceof NogoHandler) {
 			nogoHandler = (NogoHandler)obj;
 		}		
-		if (obj instanceof MapBean){
-			mapBean = (MapBean)obj;
-		}
-		if (obj instanceof TopPanel) {
-			topPanel = (TopPanel)obj;
-		}
-		if (obj instanceof MapMenu){
-			msiMenu = (MapMenu) obj;
-		}
-		if (obj instanceof MouseDelegator) {
-			mouseDelegator = (MouseDelegator) obj;
-		}
 	}
 
 }

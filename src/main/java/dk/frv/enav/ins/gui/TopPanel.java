@@ -224,6 +224,14 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 		}
 	}
 	
+	public void newRoute(){
+		if(mouseDelegator.getActiveMouseModeID() == NavigationMouseMode.modeID){
+			mainFrame.getChartPanel().editMode(true);
+		} else {
+			mainFrame.getChartPanel().editMode(false);
+		}
+	}
+	
 	@Override
 	public void findAndInit(Object obj) {
 		if (obj instanceof MainFrame) {

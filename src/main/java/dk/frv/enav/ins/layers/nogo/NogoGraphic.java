@@ -31,15 +31,11 @@ package dk.frv.enav.ins.layers.nogo;
 
 import com.bbn.openmap.omGraphics.OMGraphicList;
 
-import dk.frv.enav.common.xml.msi.MsiMessage;
 import dk.frv.enav.common.xml.nogo.types.NogoPolygon;
-import dk.frv.enav.ins.msi.MsiHandler.MsiMessageExtended;
 
 public class NogoGraphic extends OMGraphicList {
 	private static final long serialVersionUID = 1L;
-	MsiMessageExtended message;
-	private MsiMessage msiMessage;
-	
+
 	private NogoPolygon polygon;
 	
 	//private MsiTextBox msiTextBox;
@@ -62,7 +58,7 @@ public class NogoGraphic extends OMGraphicList {
 //		add(msiSymbolGrahic);
 		
 		// Create location grahic
-		NogoLocationGraphic nogoLocationGraphic = new NogoLocationGraphic(polygon);
+		NogoLocationGraphic nogoLocationGraphic = new NogoLocationGraphic(this.polygon);
 		add(nogoLocationGraphic);
 	}
 	

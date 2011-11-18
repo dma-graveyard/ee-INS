@@ -465,7 +465,7 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 	 * Publish the update of a target to all listeners
 	 * @param aisTarget
 	 */
-	private void publishUpdate(AisTarget aisTarget) {		
+	private synchronized void publishUpdate(AisTarget aisTarget) {		
 		for (IAisTargetListener listener : listeners) {
 			//listener.targetUpdated(copy);
 			listener.targetUpdated(aisTarget);
