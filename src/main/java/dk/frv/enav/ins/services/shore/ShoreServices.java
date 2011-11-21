@@ -202,6 +202,7 @@ public class ShoreServices extends MapHandlerChild implements IStatusComponent {
 	private void addRequestParameters(ShoreServiceRequest request) throws ShoreServiceException {		
 		if (aisHandler != null && aisHandler.getOwnShip() != null) {
 		    request.setMmsi(aisHandler.getOwnShip().getMmsi());
+		    if (aisHandler.getOwnShip().getPositionData() != null)
 		    request.setPositionReport(convertPositionReport(aisHandler.getOwnShip().getPositionData()));
 		}
 	

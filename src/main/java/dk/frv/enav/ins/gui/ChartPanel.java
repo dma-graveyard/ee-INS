@@ -31,6 +31,7 @@ package dk.frv.enav.ins.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.Point2D;
@@ -49,6 +50,8 @@ import com.bbn.openmap.MapHandler;
 import com.bbn.openmap.MouseDelegator;
 import com.bbn.openmap.gui.OMComponentPanel;
 import com.bbn.openmap.layer.shape.ShapeLayer;
+import com.bbn.openmap.proj.Proj;
+import com.bbn.openmap.proj.Projection;
 import com.bbn.openmap.proj.coords.LatLonPoint;
 
 import dk.frv.ais.geo.GeoLocation;
@@ -315,6 +318,7 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 
 	public void editMode(boolean enable) {
 		if (enable) {
+			System.out.println("Enabled");
 			mouseDelegator.setActive(routeEditMouseMode);
 			routeEditLayer.setVisible(true);
 			routeEditLayer.setEnabled(true);
@@ -542,4 +546,33 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		autoFollow();
 	}
+	
+	/**
+	 * 
+	 * @param direction
+	 * 1 == Up
+	 * 2 == Down
+	 * 3 == Left
+	 * 4 == Right
+	 * 
+	 * Moving by 100 units in each direction
+	 * Map center is [745, 445]
+	 */
+	  public void pan(int direction) {
+		Point point = null;
+	    switch (direction) {
+	    	case 1:  point = new Point(745,345);	break;
+        	case 2:  point = new Point(745,545);	break;
+            case 3:  point = new Point(645,445);	break;
+            case 4:  point = new Point(845,445);	break;
+	        }
+	    
+        Projection projection = map.getProjection();
+        Proj p = (Proj) projection;
+        LatLonPoint llp = projection.inverse(point);
+        p.setCenter(llp);
+        map.setProjection(p);
+        manualProjChange();
+	   }
+	    
 }

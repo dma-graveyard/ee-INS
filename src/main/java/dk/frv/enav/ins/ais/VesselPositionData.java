@@ -54,7 +54,7 @@ public class VesselPositionData {
 	 */
 	public VesselPositionData(VesselPositionData vesselPositionData) {
 		if (vesselPositionData.pos != null) {
-			pos = new GeoLocation(pos);
+			pos = new GeoLocation(vesselPositionData.pos);
 		}
 	    navStatus = vesselPositionData.navStatus;
 	    rot = vesselPositionData.rot;

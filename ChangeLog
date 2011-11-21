@@ -4,7 +4,11 @@
 	* Changing default intended route waypoints to 8. Limits ASM to 3 slots.
 	* Using new intended route AIS application specific message DAC=219, FI=1
 	* Fixed selection of next un-acknowledged MSI upon acknowledge 
-	* AIS targets dialog
+	* AIS targets dialog: 
+	* Added keyboard shortcuts: Numpad + Zooms in, Numpad - Zooms out, Numpad Up pans up
+	* Numpad Down pans down, Numpad Left pans left, Numpad Right pans right, 
+	* Arrow Up pans up, Arrow Down pans down, Arrow Right pans right, Arrow Left pans left, 
+	* Ctrl n creates a new route, Ctrl r opens route window, Ctrl m opens msi window, Ctrl a opens AIS Window
 
 2011-10-28 Version 2.5
 

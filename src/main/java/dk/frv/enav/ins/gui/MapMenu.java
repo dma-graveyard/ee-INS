@@ -168,7 +168,7 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 		hideIntendedRoutes.addActionListener(this);
 		showIntendedRoutes = new GeneralShowIntendedRoutes("Show all intended routes");
 		showIntendedRoutes.addActionListener(this);
-		newRoute = new GeneralNewRoute("Add new route");
+		newRoute = new GeneralNewRoute("Add new route - Ctrl N");
 		newRoute.addActionListener(this);
 		scaleMenu = new JMenu("Scale");
 		

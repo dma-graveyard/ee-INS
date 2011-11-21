@@ -90,17 +90,17 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 		super();		
 		setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		
-		zoomInBtn.setToolTipText("Zoom in");
-		zoomOutBtn.setToolTipText("Zoom out");
-		centreBtn.setToolTipText("Centre on ship");
+		zoomInBtn.setToolTipText("Zoom in : Shortcut Numpad +");
+		zoomOutBtn.setToolTipText("Zoom out : Shortcut Numpad -");
+		centreBtn.setToolTipText("Centre on ship : Shortcut C");
 		autoFollowBtn.setToolTipText("Auto follow own ship");
 		setupBtn.setToolTipText("Setup");
 		routeBtn.setToolTipText("New route");
 		routeBtn.setVisible(false);
-		newRouteBtn.setToolTipText("Add a new route");
-		routeManagerBtn.setToolTipText("Routes Manager");		
-		msiButton.setToolTipText("Maritime Safety Information");
-		aisButton.setToolTipText("Show nearby vessels");
+		newRouteBtn.setToolTipText("Add a new route : Shortcut Ctrl N");
+		routeManagerBtn.setToolTipText("Routes Manager : Shortcut Ctrl R");		
+		msiButton.setToolTipText("Maritime Safety Information : Shortcut Ctrl M");
+		aisButton.setToolTipText("Show nearby vessels : Shortcut Ctrl A");
 		nogoButton.setToolTipText("Show/hide NoGo area");
 		aisBtn.setToolTipText("Show/hide AIS targets");
 		encBtn.setToolTipText("Show/hide ENC");

@@ -341,11 +341,45 @@ public class EeINS {
 			public void actionPerformed(ActionEvent actionEvent) {
 				mainFrame.getTopPanel().getAisDialog().setVisible(true);
 				 }
-			};	  		      
-      
+			};	  	
+			
+		@SuppressWarnings("serial")
+		Action panUp = new AbstractAction() {
+			public void actionPerformed(ActionEvent actionEvent) {
+				mainFrame.getChartPanel().pan(1);
+				}
+			};
+		@SuppressWarnings("serial")
+		Action panDown = new AbstractAction() {
+			public void actionPerformed(ActionEvent actionEvent) {
+				mainFrame.getChartPanel().pan(2);
+				}
+			};			
+			
+		@SuppressWarnings("serial")
+		Action panLeft = new AbstractAction() {
+			public void actionPerformed(ActionEvent actionEvent) {
+				mainFrame.getChartPanel().pan(3);
+				}
+			};
+		@SuppressWarnings("serial")
+		Action panRight = new AbstractAction() {
+			public void actionPerformed(ActionEvent actionEvent) {
+				mainFrame.getChartPanel().pan(4);
+				}
+			};			
+	   			
 	      inputMap.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ADD, 0), "ZoomIn");
 	      inputMap.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_SUBTRACT, 0), "ZoomOut");
 	      inputMap.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, 0), "centre");
+	      inputMap.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_UP, 0), "panUp");
+	      inputMap.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_DOWN, 0), "panDown");
+	      inputMap.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_LEFT, 0), "panLeft");
+	      inputMap.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_RIGHT, 0), "panRight");
+	      inputMap.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_KP_UP, 0), "panUp");
+	      inputMap.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_KP_DOWN, 0), "panDown");
+	      inputMap.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_KP_LEFT, 0), "panLeft");
+	      inputMap.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_KP_RIGHT, 0), "panRight");	      
 	      inputMap.put(KeyStroke.getKeyStroke("control N"), "newRoute");	      
 	      inputMap.put(KeyStroke.getKeyStroke("control R"), "routes");
 	      inputMap.put(KeyStroke.getKeyStroke("control M"), "msi");
@@ -357,7 +391,11 @@ public class EeINS {
 	      content.getActionMap().put("newRoute", newRoute);
 	      content.getActionMap().put("routes", routes);
 	      content.getActionMap().put("msi", msi);
-	      content.getActionMap().put("ais", ais);	      
+	      content.getActionMap().put("ais", ais);	   
+	      content.getActionMap().put("panUp", panUp);	
+	      content.getActionMap().put("panDown", panDown);	
+	      content.getActionMap().put("panLeft", panLeft);	
+	      content.getActionMap().put("panRight", panRight);	
 	      
 	}
 	
