@@ -39,10 +39,14 @@ import java.awt.RenderingHints;
 import java.awt.TexturePaint;
 import java.awt.image.BufferedImage;
 
+import com.bbn.openmap.omGraphics.OMCircle;
 import com.bbn.openmap.omGraphics.OMGraphic;
 import com.bbn.openmap.omGraphics.OMGraphicList;
+import com.bbn.openmap.omGraphics.OMPoint;
 import com.bbn.openmap.omGraphics.OMPoly;
+import com.bbn.openmap.proj.Length;
 
+import dk.frv.enav.common.xml.msi.MsiPoint;
 import dk.frv.enav.common.xml.nogo.types.NogoPolygon;
 
 /**
@@ -78,7 +82,8 @@ public class NogoLocationGraphic extends OMGraphicList {
 		
 //		drawTestTriangle();
 		
-		drawPolygon();
+		//drawPolygon();
+		drawPoints();
 		
 	}
 	
@@ -89,13 +94,26 @@ public class NogoLocationGraphic extends OMGraphicList {
 		 }
 
 	
+	private void drawPoints() {
+			//OMCircle radiusCircle = new OMCircle(point.getLatitude(), point.getLongitude(), point.getRadius(), Length.METER);
+		for (int i = 0; i < polygon.getPolygon().size(); i++) {
+			OMPoint polyPoint = new OMPoint(polygon.getPolygon().get(i).getLat(),polygon.getPolygon().get(i).getLon());
+			polyPoint.setLinePaint(nogoColor);
+			polyPoint.setFillPaint(new Color(0, 0, 0, 1));
+			polyPoint.setTextureMask(new TexturePaint(hatchFill, hatchFillRectangle));
+			add(polyPoint);
+		}
+		
+			
+
+		}
+	 
 	private void drawPolygon() {
 		// space for lat-lon points plus first lat-lon pair to close the polygon
 		double[] polyPoints = new double[polygon.getPolygon().size() * 2 + 2];
 		int j = 0;
 		for (int i = 0; i < polygon.getPolygon().size(); i++) {
 			polyPoints[j] = polygon.getPolygon().get(i).getLat();
-			
 			polyPoints[j+1] = polygon.getPolygon().get(i).getLon();
 			j+=2;
 		}

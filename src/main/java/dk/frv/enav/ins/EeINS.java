@@ -317,7 +317,8 @@ public class EeINS {
 		@SuppressWarnings("serial")			
 		Action newRoute = new AbstractAction() {
 			public void actionPerformed(ActionEvent actionEvent) {
-				 mainFrame.getTopPanel().newRoute();
+				 //newRouteBtn.requestFocusInWindow();
+				mainFrame.getTopPanel().activateNewRouteButton();
 				  }
 			};	
 			

@@ -48,13 +48,13 @@ import com.bbn.openmap.gui.OMComponentPanel;
 
 import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.event.NavigationMouseMode;
+import dk.frv.enav.ins.gui.ais.AisDialog;
 import dk.frv.enav.ins.gui.msi.MsiDialog;
 import dk.frv.enav.ins.gui.route.RouteManagerDialog;
 import dk.frv.enav.ins.msi.IMsiUpdateListener;
 import dk.frv.enav.ins.msi.MsiHandler;
 import dk.frv.enav.ins.msi.MsiHandler.MsiMessageExtended;
 import dk.frv.enav.ins.nogo.NogoHandler;
-import dk.frv.enav.ins.gui.ais.*;
 
 /**
  * The top buttons panel 
@@ -213,11 +213,7 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 		} else if (e.getSource() == nogoButton) {	
 			nogoButton.setSelected(nogoHandler.toggleLayer());
 		} else if (e.getSource() == newRouteBtn) {
-			if(mouseDelegator.getActiveMouseModeID() == NavigationMouseMode.modeID){
-				mainFrame.getChartPanel().editMode(true);
-			} else {
-				mainFrame.getChartPanel().editMode(false);
-			}
+			newRoute();
 		} else if (e.getSource() == tglbtnMsiFilter) {
 			EeINS.getSettings().getEnavSettings().setMsiFilter(tglbtnMsiFilter.isSelected());
 			msiHandler.notifyUpdate();
@@ -231,6 +227,11 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 			mainFrame.getChartPanel().editMode(false);
 		}
 	}
+
+	public void activateNewRouteButton(){
+		newRouteBtn.doClick();
+	}
+	
 	
 	@Override
 	public void findAndInit(Object obj) {
