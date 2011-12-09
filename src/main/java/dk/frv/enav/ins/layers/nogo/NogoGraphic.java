@@ -29,6 +29,8 @@
  */
 package dk.frv.enav.ins.layers.nogo;
 
+import java.util.Date;
+
 import com.bbn.openmap.omGraphics.OMGraphicList;
 
 import dk.frv.enav.common.xml.nogo.types.NogoPolygon;
@@ -40,7 +42,7 @@ public class NogoGraphic extends OMGraphicList {
 	
 	//private MsiTextBox msiTextBox;
 	
-	public NogoGraphic(NogoPolygon polygon) {
+	public NogoGraphic(NogoPolygon polygon, Date validFrom, Date validTo) {
 		super();
 		
 		this.polygon = polygon;
@@ -58,7 +60,7 @@ public class NogoGraphic extends OMGraphicList {
 //		add(msiSymbolGrahic);
 		
 		// Create location grahic
-		NogoLocationGraphic nogoLocationGraphic = new NogoLocationGraphic(this.polygon);
+		NogoLocationGraphic nogoLocationGraphic = new NogoLocationGraphic(this.polygon, validFrom, validTo);
 		add(nogoLocationGraphic);
 	}
 	

@@ -29,6 +29,7 @@
  */
 package dk.frv.enav.ins.layers.nogo;
 
+import java.util.Date;
 import java.util.List;
 
 import com.bbn.openmap.layer.OMGraphicHandlerLayer;
@@ -55,6 +56,9 @@ public class NogoLayer extends OMGraphicHandlerLayer  {
 	}
 	
 	public void doUpdate() {
+		Date validFrom = nogoHandler.getValidFrom();
+		Date validTo = nogoHandler.getValidTo();
+		
 		graphics.clear();
 //		Date now = GnssTime.getInstance().getDate();
 		
@@ -65,7 +69,7 @@ public class NogoLayer extends OMGraphicHandlerLayer  {
 //			System.out.println("We found a polygon");
 			
 			// Create Nogo graphic
-			NogoGraphic nogoGraphic = new NogoGraphic(polygon);
+			NogoGraphic nogoGraphic = new NogoGraphic(polygon, validFrom, validTo);
 			graphics.add(nogoGraphic);
 			
 		}

@@ -97,6 +97,7 @@ import dk.frv.enav.ins.layers.msi.MsiLayer;
 import dk.frv.enav.ins.layers.msi.MsiSymbolGraphic;
 import dk.frv.enav.ins.layers.routeEdit.NewRouteContainerLayer;
 import dk.frv.enav.ins.msi.MsiHandler;
+import dk.frv.enav.ins.nogo.NogoHandler;
 import dk.frv.enav.ins.route.Route;
 import dk.frv.enav.ins.route.RouteLeg;
 import dk.frv.enav.ins.route.RouteManager;
@@ -156,6 +157,7 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 	private NewRouteContainerLayer newRouteLayer;
 	private AisLayer aisLayer;
 	private AisHandler aisHandler;
+	private NogoHandler nogoHandler;
 	private MouseDelegator mouseDelegator;
 
 	public MapMenu() {
@@ -170,6 +172,10 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 		showIntendedRoutes.addActionListener(this);
 		newRoute = new GeneralNewRoute("Add new route - Ctrl N");
 		newRoute.addActionListener(this);
+		
+		nogoRequest = new NogoRequest("Request NoGo area");
+		nogoRequest.addActionListener(this);
+		
 		scaleMenu = new JMenu("Scale");
 		
 		// using treemap so scale levels are always sorted
@@ -210,8 +216,7 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 		routeDelete = new RouteDelete("Delete route");
 		routeDelete.addActionListener(this);
 		
-		nogoRequest = new NogoRequest("Request NoGo area");
-		nogoRequest.addActionListener(this);
+
 		
 		routeRequestMetoc = new RouteRequestMetoc("Request METOC");
 		routeRequestMetoc.addActionListener(this);
@@ -290,12 +295,17 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 		newRoute.setMouseDelegator(mouseDelegator);
 		newRoute.setMainFrame(mainFrame);
 		
+		nogoRequest.setNogoHandler(nogoHandler);
+		nogoRequest.setTopPanel(mainFrame.getTopPanel());
+		
+		
 		if(alone){
 			removeAll();
 			add(clearMap);
 			add(hideIntendedRoutes);
 			add(showIntendedRoutes);
 			add(newRoute);
+			add(nogoRequest);
 			add(scaleMenu);
 			return;
 		}
@@ -467,8 +477,7 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 			route = routeManager.getActiveRoute();
 		}
 
-		add(nogoRequest);
-		
+	
 		routeRequestMetoc.setRouteManager(routeManager);
 		routeRequestMetoc.setRouteIndex(routeIndex);
 		add(routeRequestMetoc);
@@ -561,6 +570,7 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 		routeEditEndRoute.setRouteManager(routeManager);
 		add(routeEditEndRoute);
 		
+		
 		generalMenu(false);
 	}
 	
@@ -598,6 +608,9 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 		if (obj instanceof GpsHandler) {
 			gpsHandler = (GpsHandler)obj;
 		}
+		if (obj instanceof NogoHandler) {
+			nogoHandler = (NogoHandler)obj;
+		}		
 		if (obj instanceof MainFrame) {
 			mainFrame = (MainFrame)obj;			
 		}

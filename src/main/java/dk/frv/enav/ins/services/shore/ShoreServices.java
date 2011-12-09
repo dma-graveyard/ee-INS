@@ -30,6 +30,7 @@
 package dk.frv.enav.ins.services.shore;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -149,13 +150,17 @@ public class ShoreServices extends MapHandlerChild implements IStatusComponent {
 		return enavshorePos;
 	}
 	
-	public NogoResponse nogoPoll(Route route) throws ShoreServiceException {
+	public NogoResponse nogoPoll(double draught, GeoLocation northWestPoint, GeoLocation southEastPoint, Date startDate, Date endDate) throws ShoreServiceException {
 		// Create request
 		NogoRequest nogoRequest = new NogoRequest();
 
-		//Different type of route?
-		//Convert the route
-		//nogoRequest.setRoute(convertRoute(route));
+		nogoRequest.setDraught(draught);
+		nogoRequest.setNorthWestPointLat(northWestPoint.getLatitude());
+		nogoRequest.setNorthWestPointLon(northWestPoint.getLongitude());
+		nogoRequest.setSouthEastPointLat(southEastPoint.getLatitude());
+		nogoRequest.setSouthEastPointLon(southEastPoint.getLongitude());
+		nogoRequest.setStartDate(startDate);
+		nogoRequest.setEndDate(endDate);
 		
 		// Add request parameters
 		addRequestParameters(nogoRequest);

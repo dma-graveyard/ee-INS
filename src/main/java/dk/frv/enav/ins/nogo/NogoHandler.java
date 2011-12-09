@@ -36,13 +36,12 @@ import org.apache.log4j.Logger;
 
 import com.bbn.openmap.MapHandlerChild;
 
+import dk.frv.ais.geo.GeoLocation;
 import dk.frv.enav.common.xml.nogo.response.NogoResponse;
 import dk.frv.enav.common.xml.nogo.types.NogoPolygon;
 import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.layers.nogo.NogoLayer;
-import dk.frv.enav.ins.route.ActiveRoute;
 import dk.frv.enav.ins.route.IRoutesUpdateListener;
-import dk.frv.enav.ins.route.RouteManager;
 import dk.frv.enav.ins.route.RoutesUpdateEvent;
 import dk.frv.enav.ins.services.shore.ShoreServiceException;
 import dk.frv.enav.ins.services.shore.ShoreServices;
@@ -55,19 +54,35 @@ public class NogoHandler extends MapHandlerChild implements Runnable, IRoutesUpd
 	
 	private static final Logger LOG = Logger.getLogger(NogoHandler.class);
 	
+	GeoLocation northWestPoint;
+	GeoLocation southEastPoint;
+	
 	private ShoreServices shoreServices;
-	private RouteManager routeManager;
+
 
 	//Create a seperate layer for the nogo information
 	private NogoLayer nogoLayer;
 	
+	public void setNorthWestPoint(GeoLocation northWestPoint) {
+		this.northWestPoint = northWestPoint;
+	}
+	public void setSouthEastPoint(GeoLocation southEastPoint) {
+		this.southEastPoint = southEastPoint;
+	}
+
+
 	//Do we need to store anything?
 	private Date lastUpdate;
 	private long pollInterval;
 
+	//Data from the nogo response
 	private List<NogoPolygon> nogoPolygons;
-	private Boolean isVisible = true;
+	private Date validFrom;
+	private Date validTo;
 	
+	
+	private Boolean isVisible = true;
+
 	public NogoHandler(EnavSettings enavSettings) {
 		//pollInterval = enavSettings.getNogoPollInterval();
 		EeINS.startThread(this, "NogoHandler");
@@ -77,10 +92,10 @@ public class NogoHandler extends MapHandlerChild implements Runnable, IRoutesUpd
 	public void run() {
 		while (true) {
 			EeINS.sleep(30000);
-			updateNogo();
+			//updateNogo();
 		}
 	}
-	public void updateNogo() {
+	public synchronized void updateNogo() {
 		boolean nogoUpdated = false;
 		Date now = new Date();
 		if (getLastUpdate() == null || (now.getTime() - getLastUpdate().getTime() > pollInterval * 1000)) {
@@ -100,6 +115,8 @@ public class NogoHandler extends MapHandlerChild implements Runnable, IRoutesUpd
 		if (nogoUpdated) {
 			notifyUpdate();
 		}
+		
+		
 	}
 	
 	public void notifyUpdate() {
@@ -115,21 +132,28 @@ public class NogoHandler extends MapHandlerChild implements Runnable, IRoutesUpd
 			return false;
 		}
 
-		ActiveRoute route = routeManager.getActiveRoute();
-		NogoResponse nogoResponse = shoreServices.nogoPoll(route);
-		
+		Date date = new Date();
+		NogoResponse nogoResponse = shoreServices.nogoPoll(5.0, northWestPoint, southEastPoint, date, date);
+	
 		nogoPolygons = nogoResponse.getPolygons();
-		
-//		System.out.println(nogoResponse.getValidFrom());
-//		System.out.println(nogoResponse.getPolygons().get(0).getPolygon().get(0));
+		validFrom = nogoResponse.getValidFrom();
+		validTo = nogoResponse.getValidTo();
 		
 		if (nogoResponse == null || nogoResponse.getPolygons() == null) {
 			return false;
 		}
-//		LOG.info("Received something from nogo...what exactly we don't know yet");
 		return true;
+		
+
+		
 	}
 	
+	public Date getValidFrom() {
+		return validFrom;
+	}
+	public Date getValidTo() {
+		return validTo;
+	}
 	public synchronized List<NogoPolygon> getPolygons() {
 		return nogoPolygons;
 	}
@@ -158,9 +182,6 @@ public class NogoHandler extends MapHandlerChild implements Runnable, IRoutesUpd
 	public void findAndInit(Object obj) {
 		if (obj instanceof ShoreServices) {
 			shoreServices = (ShoreServices)obj;
-		}
-		if (obj instanceof RouteManager) {
-			routeManager = (RouteManager)obj;
 		}
 		if (obj instanceof NogoLayer) {
 			nogoLayer = (NogoLayer)obj;

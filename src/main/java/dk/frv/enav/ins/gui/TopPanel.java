@@ -84,6 +84,7 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 	private MsiHandler msiHandler;
 	private NogoHandler nogoHandler;
 	private BlinkingLabel msiIcon;
+	private boolean noGoIsPressed = true;
 	private int notifyMsgId = -1;
 	
 	public TopPanel() {
@@ -211,6 +212,11 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 			aisDialog.setVisible(true);		
 			aisDialog.setSelection(-1, true);
 		} else if (e.getSource() == nogoButton) {	
+			if (noGoIsPressed){
+				noGoIsPressed = false;
+			}else{
+				noGoIsPressed = true;
+			}
 			nogoButton.setSelected(nogoHandler.toggleLayer());
 		} else if (e.getSource() == newRouteBtn) {
 			newRoute();
@@ -230,6 +236,14 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 
 	public void activateNewRouteButton(){
 		newRouteBtn.doClick();
+	}
+	
+	public void activateNogoButton(){
+		if (!noGoIsPressed)
+		{
+		nogoButton.doClick();
+		noGoIsPressed = true;
+		}
 	}
 	
 	
