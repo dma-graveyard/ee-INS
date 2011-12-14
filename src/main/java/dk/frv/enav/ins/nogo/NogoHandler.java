@@ -40,6 +40,7 @@ import dk.frv.ais.geo.GeoLocation;
 import dk.frv.enav.common.xml.nogo.response.NogoResponse;
 import dk.frv.enav.common.xml.nogo.types.NogoPolygon;
 import dk.frv.enav.ins.EeINS;
+import dk.frv.enav.ins.gui.MainFrame;
 import dk.frv.enav.ins.layers.nogo.NogoLayer;
 import dk.frv.enav.ins.route.IRoutesUpdateListener;
 import dk.frv.enav.ins.route.RoutesUpdateEvent;
@@ -58,6 +59,7 @@ public class NogoHandler extends MapHandlerChild implements Runnable, IRoutesUpd
 	GeoLocation southEastPoint;
 	
 	private ShoreServices shoreServices;
+
 
 
 	//Create a seperate layer for the nogo information
@@ -186,6 +188,7 @@ public class NogoHandler extends MapHandlerChild implements Runnable, IRoutesUpd
 		if (obj instanceof NogoLayer) {
 			nogoLayer = (NogoLayer)obj;
 		}		
+
 	}	
 	
 	
@@ -203,6 +206,7 @@ public class NogoHandler extends MapHandlerChild implements Runnable, IRoutesUpd
 			//Request new nogo?
 			updateNogo();			
 		}
+		
 	}
 	
 	

@@ -30,6 +30,7 @@
 package dk.frv.enav.ins.layers.nogo;
 
 import java.awt.AlphaComposite;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Font;
@@ -38,17 +39,25 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.Shape;
+import java.awt.Stroke;
 import java.awt.TexturePaint;
+import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.util.Date;
+import java.util.Random;
 
-import com.bbn.openmap.examples.hello.HelloWorld;
+import com.bbn.openmap.omGraphics.OMBitmap;
 import com.bbn.openmap.omGraphics.OMGraphic;
 import com.bbn.openmap.omGraphics.OMGraphicList;
 import com.bbn.openmap.omGraphics.OMPoint;
 import com.bbn.openmap.omGraphics.OMPoly;
+import com.bbn.openmap.omGraphics.OMRaster;
 
+import dk.frv.enav.common.xml.msi.MsiLocation;
+import dk.frv.enav.common.xml.msi.MsiPoint;
 import dk.frv.enav.common.xml.nogo.types.NogoPolygon;
+import dk.frv.enav.ins.gui.ChartPanel;
 
 /**
  * Graphic for MSI location/area
@@ -59,6 +68,7 @@ public class NogoLocationGraphic extends OMGraphicList {
 	private NogoPolygon polygon;
 	private Date validFrom;
 	private Date validTo;
+	double lastBitMapScale = 0;
 	
 	private Color nogoColor = Color.red;
 
@@ -81,27 +91,87 @@ public class NogoLocationGraphic extends OMGraphicList {
 		hatchFillRectangle = new Rectangle(0, 0, 10, 10);
 		big.setComposite(originalComposite);
 
+		//drawPolyline();
 		// drawTestTriangle();
 
-		// drawPolygon();
-		drawPoints();
+		drawPolygon();
+		//drawPoints();
+		//55.070, 11.668
+		
 
+		/**		
+		byte[] bytes = new byte[50*50];
+		for (int i = 0; i < bytes.length; i++) {
+			if(i % 2 == 0){
+				bytes[i] = 1;	
+			}else{
+				bytes[i] = 1;
+			}
+			
+		}
+		
+		
 
+		bitmap = new OMBitmap(55.070, 11.668, 100, 100, bytes);
+		bitmap.setFillPaint(nogoColor);
+		add(bitmap);
+		System.out.println("Bitmap created");
+**/
 	}
 
 	private AlphaComposite makeComposite(float alpha) {
 		int type = AlphaComposite.SRC_OVER;
 		return (AlphaComposite.getInstance(type, alpha));
 	}
+	
+	private void drawPolyline() {
+		// space for lat-lon points plus first lat-lon pair to close the polygon
+		double[] polyPoints = new double[polygon.getPolygon().size() * 2 ];
+		int j = 0;
+		for (int i = 0; i < polygon.getPolygon().size(); i++) {
+			polyPoints[j] = polygon.getPolygon().get(i).getLat();
+			polyPoints[j + 1] = polygon.getPolygon().get(i).getLon();
+			j += 2;
+		}
+		OMPoly poly = new OMPoly(polyPoints, OMGraphic.DECIMAL_DEGREES,
+				OMGraphic.LINETYPE_RHUMB, 1);
+		
+		
+		poly.setLinePaint(nogoColor);
+		//poly.setFillPaint(nogoColor);
+		poly.setTextureMask(new TexturePaint(hatchFill, hatchFillRectangle));
+
+		poly.setDoShapes(true);
+		
+		poly.setIsPolygon(false);
+		//Stroke broadstroke = new BasicStroke(14.0f);
+		Stroke broadstroke = new DoubleStroke(8.0f, 2.0f);
+		//poly.setStroke(broadstroke);
+		
+		
+		add(poly);
+
+	}
+	
 
 	private void drawPoints() {
-		// OMCircle radiusCircle = new OMCircle(point.getLatitude(),
-		// point.getLongitude(), point.getRadius(), Length.METER);
 		for (int i = 0; i < polygon.getPolygon().size(); i++) {
 			OMPoint polyPoint = new OMPoint(polygon.getPolygon().get(i)
 					.getLat(), polygon.getPolygon().get(i).getLon());
+			
+			
+			Graphics2D big = hatchFill.createGraphics();
+			Composite originalComposite = big.getComposite();
+			big.setComposite(makeComposite(0.2f));
+			big.setColor(nogoColor);
+			big.drawLine(0, 0, 10, 10);
+			
+			hatchFillRectangle = new Rectangle(0, 0, 10, 10);
+			big.setComposite(originalComposite);
+			
+			
 			polyPoint.setLinePaint(nogoColor);
-			polyPoint.setFillPaint(new Color(0, 0, 0, 1));
+			polyPoint.setFillPaint(new Color(0, 0, 0, 10));
 			polyPoint.setTextureMask(new TexturePaint(hatchFill,
 					hatchFillRectangle));
 			add(polyPoint);
@@ -122,22 +192,23 @@ public class NogoLocationGraphic extends OMGraphicList {
 		polyPoints[j + 1] = polyPoints[1];
 		OMPoly poly = new OMPoly(polyPoints, OMGraphic.DECIMAL_DEGREES,
 				OMGraphic.LINETYPE_RHUMB, 1);
-		poly.setLinePaint(nogoColor);
+		poly.setLinePaint(clear);
 		poly.setFillPaint(new Color(0, 0, 0, 1));
 		poly.setTextureMask(new TexturePaint(hatchFill, hatchFillRectangle));
 
+		
+		
 		add(poly);
 
 	}
 
 	@Override
 	public void render(Graphics gr) {
+
 		Graphics2D image = (Graphics2D) gr;
 		image.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
 		super.render(image);
-		
-		
 		Font font = new Font("TimesRoman", Font.BOLD, 16);
 		
 		String message = "NoGo Active, only valid from " + validFrom + " to " + validTo;
@@ -151,6 +222,42 @@ public class NogoLocationGraphic extends OMGraphicList {
         gr.drawString(message1,
                 5,
                 40);
-				
+
+//map.getScale()
+
+//        Random random = new Random();
+//        int value = random.nextInt(100);
+        //System.out.println("Scaling to: " + value);
+//        if(value <= 0){
+//        	value = 10;
+//        }
+        //bitmap.setHeight(value);
+        //bitmap.setWidth(value);
+       // bitmap.scaleTo(value, value, 0);
+       // bitmap.setVisible(true);
 	}
+	
+		
+	
 }
+
+class DoubleStroke implements Stroke {
+	  BasicStroke stroke1, stroke2; // the two strokes to use
+
+	  public DoubleStroke(float width1, float width2) {
+	    stroke1 = new BasicStroke(width1); // Constructor arguments specify
+	    stroke2 = new BasicStroke(width2); // the line widths for the strokes
+	  }
+		@Override
+	  public Shape createStrokedShape(Shape s) {
+	    // Use the first stroke to create an outline of the shape
+	    Shape outline = stroke1.createStrokedShape(s);
+	    
+	    // Use the second stroke to create an outline of that outline.
+	    // It is this outline of the outline that will be filled in
+	    return stroke2.createStrokedShape(outline);
+	  }
+
+
+
+	}

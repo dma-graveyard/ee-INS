@@ -34,6 +34,7 @@ import java.util.Date;
 import com.bbn.openmap.omGraphics.OMGraphicList;
 
 import dk.frv.enav.common.xml.nogo.types.NogoPolygon;
+import dk.frv.enav.ins.gui.ChartPanel;
 
 public class NogoGraphic extends OMGraphicList {
 	private static final long serialVersionUID = 1L;

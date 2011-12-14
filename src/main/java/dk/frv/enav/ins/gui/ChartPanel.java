@@ -306,6 +306,9 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 		autoFollow();
 	}
 
+	
+	
+	
 	public void aisVisible(boolean visible) {
 		aisLayer.setVisible(visible);
 	}
@@ -527,7 +530,7 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 	public int getMaxScale() {
 		return maxScale;
 	}
-
+	
 	@Override
 	public void findAndInit(Object obj) {
 		if (obj instanceof TopPanel) {
@@ -574,5 +577,7 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
         map.setProjection(p);
         manualProjChange();
 	   }
+	  
+	  
 	    
 }

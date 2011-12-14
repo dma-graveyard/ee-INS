@@ -36,6 +36,8 @@ import com.bbn.openmap.layer.OMGraphicHandlerLayer;
 import com.bbn.openmap.omGraphics.OMGraphicList;
 
 import dk.frv.enav.common.xml.nogo.types.NogoPolygon;
+import dk.frv.enav.ins.gui.ChartPanel;
+import dk.frv.enav.ins.gui.MainFrame;
 import dk.frv.enav.ins.nogo.NogoHandler;
 
 public class NogoLayer extends OMGraphicHandlerLayer  {	
@@ -45,6 +47,8 @@ public class NogoLayer extends OMGraphicHandlerLayer  {
 	private NogoHandler nogoHandler = null;
 	
 	private OMGraphicList graphics = new OMGraphicList();
+	private ChartPanel chartPanel = null;
+	
 //	private MapBean mapBean = null;
 //	private TopPanel topPanel = null;
 //	private MainFrame mainFrame = null;	
@@ -65,14 +69,19 @@ public class NogoLayer extends OMGraphicHandlerLayer  {
 		// Get polygons
 		List<NogoPolygon> polygons = nogoHandler.getPolygons();
 
+		System.out.println(polygons.size());
+		
 		for (NogoPolygon polygon : polygons) {
-//			System.out.println("We found a polygon");
+			//System.out.println("We found a polygon");
 			
 			// Create Nogo graphic
-			NogoGraphic nogoGraphic = new NogoGraphic(polygon, validFrom, validTo);
-			graphics.add(nogoGraphic);
-			
+		NogoGraphic nogoGraphic = new NogoGraphic(polygon, validFrom, validTo);
+		
+		graphics.add(nogoGraphic);
+		
 		}
+		
+		
 		
 		doPrepare();
 		/**
@@ -136,5 +145,6 @@ public class NogoLayer extends OMGraphicHandlerLayer  {
 			nogoHandler = (NogoHandler)obj;
 		}		
 	}
+	
 
 }
