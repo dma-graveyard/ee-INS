@@ -296,7 +296,8 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 		newRoute.setMainFrame(mainFrame);
 		
 		nogoRequest.setNogoHandler(nogoHandler);
-		nogoRequest.setTopPanel(mainFrame.getTopPanel());
+		nogoRequest.setMainFrame(mainFrame);
+		nogoRequest.setAisHandler(aisHandler);
 		
 		
 		if(alone){

@@ -61,6 +61,7 @@ import dk.frv.enav.ins.event.NavigationMouseMode;
 import dk.frv.enav.ins.event.RouteEditMouseMode;
 import dk.frv.enav.ins.gps.GpsData;
 import dk.frv.enav.ins.gps.IGpsDataListener;
+import dk.frv.enav.ins.gui.nogo.NogoDialog;
 import dk.frv.enav.ins.layers.EncLayerFactory;
 import dk.frv.enav.ins.layers.GeneralLayer;
 import dk.frv.enav.ins.layers.ais.AisLayer;
@@ -102,6 +103,9 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 	public int maxScale = 5000;
 	private MSIFilterMouseMode msiFilterMouseMode;
 	private GpsData gpsData;
+	private boolean nogoMode = false;
+	
+	private NogoDialog nogoDialog;
 
 	public ChartPanel(SensorPanel sensorPanel) {
 		super();
@@ -530,6 +534,23 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 	public int getMaxScale() {
 		return maxScale;
 	}
+	
+	public void setNogoMode(boolean value){
+		nogoMode = value;
+	}
+	
+	public boolean getNogoMode(){
+		return nogoMode;
+	}
+		
+	public void setNogoDialog(NogoDialog dialog){
+		this.nogoDialog = dialog;
+	}
+	
+	public NogoDialog getNogoDialog(){
+		return nogoDialog;
+	}
+	
 	
 	@Override
 	public void findAndInit(Object obj) {

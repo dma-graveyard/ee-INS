@@ -33,6 +33,7 @@ import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
 
 import com.bbn.openmap.MapBean;
 import com.bbn.openmap.proj.Proj;
@@ -196,6 +197,8 @@ public class NavigationMouseMode extends AbstractCoordMouseMode {
             int dx = Math.abs(point2.x - point1.x);
             int dy = Math.abs(point2.y - point1.y);
 
+
+            
             // Don't bother redrawing if the rectangle is too small
             if ((dx < 10) || (dy < 10)) {
                 // clean up the rectangle, since point2 has the old
@@ -208,6 +211,30 @@ public class NavigationMouseMode extends AbstractCoordMouseMode {
                 return;
             }
 
+            //Are we in a nogo selection mode?
+            if(chartPanel.getNogoMode()){
+            	//System.out.println("Mouse has been dragged in NoGo mode!");
+            	//System.out.println("The selected points are: " + point1.getX() + " : " + point1.getY());
+            	
+            	Point2D value1 = projection.inverse(point1);
+            	Point2D value2 = projection.inverse(point2);
+            	
+            	Point2D points[] = new Point2D[2];	
+            	
+            	points[0] = value1;
+            	points[1] = value2;
+            	
+            	
+            	chartPanel.getNogoDialog().setSelectedArea(points);
+            	chartPanel.setNogoMode(false);
+                chartPanel.getNogoDialog().setVisible(true);
+                
+                paintRectangle((MapBean) e.getSource(), point1, point2);
+                point2 = null;
+                
+                return;
+            }
+            
             // Figure out the new scale
             float newScale;
 			if (point1.x < point2.x) {
@@ -242,6 +269,8 @@ public class NavigationMouseMode extends AbstractCoordMouseMode {
             point1 = null;
             point2 = null;
 
+
+            
             map.setProjection(p);
             chartPanel.manualProjChange();
         }
