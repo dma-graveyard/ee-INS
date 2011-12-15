@@ -34,7 +34,6 @@ import java.util.Date;
 import com.bbn.openmap.omGraphics.OMGraphicList;
 
 import dk.frv.enav.common.xml.nogo.types.NogoPolygon;
-import dk.frv.enav.ins.gui.ChartPanel;
 
 public class NogoGraphic extends OMGraphicList {
 	private static final long serialVersionUID = 1L;
@@ -43,7 +42,7 @@ public class NogoGraphic extends OMGraphicList {
 	
 	//private MsiTextBox msiTextBox;
 	
-	public NogoGraphic(NogoPolygon polygon, Date validFrom, Date validTo) {
+	public NogoGraphic(NogoPolygon polygon, Date validFrom, Date validTo, double draught, String message) {
 		super();
 		
 		this.polygon = polygon;
@@ -61,7 +60,7 @@ public class NogoGraphic extends OMGraphicList {
 //		add(msiSymbolGrahic);
 		
 		// Create location grahic
-		NogoLocationGraphic nogoLocationGraphic = new NogoLocationGraphic(this.polygon, validFrom, validTo);
+		NogoLocationGraphic nogoLocationGraphic = new NogoLocationGraphic(this.polygon, validFrom, validTo, draught, message);
 		add(nogoLocationGraphic);
 	}
 	

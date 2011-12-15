@@ -154,6 +154,7 @@ public class ShoreServices extends MapHandlerChild implements IStatusComponent {
 		// Create request
 		NogoRequest nogoRequest = new NogoRequest();
 
+		// Set request parameters
 		nogoRequest.setDraught(draught);
 		nogoRequest.setNorthWestPointLat(northWestPoint.getLatitude());
 		nogoRequest.setNorthWestPointLon(northWestPoint.getLongitude());
@@ -164,6 +165,7 @@ public class ShoreServices extends MapHandlerChild implements IStatusComponent {
 		
 		// Add request parameters
 		addRequestParameters(nogoRequest);
+		
 		NogoResponse nogoResponse = (NogoResponse)makeRequest("/api/xml/nogo", "dk.frv.enav.common.xml.nogo.request", "dk.frv.enav.common.xml.nogo.response", nogoRequest);
 		return nogoResponse;
 	}

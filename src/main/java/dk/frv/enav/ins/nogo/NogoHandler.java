@@ -40,10 +40,7 @@ import dk.frv.ais.geo.GeoLocation;
 import dk.frv.enav.common.xml.nogo.response.NogoResponse;
 import dk.frv.enav.common.xml.nogo.types.NogoPolygon;
 import dk.frv.enav.ins.EeINS;
-import dk.frv.enav.ins.gui.MainFrame;
 import dk.frv.enav.ins.layers.nogo.NogoLayer;
-import dk.frv.enav.ins.route.IRoutesUpdateListener;
-import dk.frv.enav.ins.route.RoutesUpdateEvent;
 import dk.frv.enav.ins.services.shore.ShoreServiceException;
 import dk.frv.enav.ins.services.shore.ShoreServices;
 import dk.frv.enav.ins.settings.EnavSettings;
@@ -51,57 +48,57 @@ import dk.frv.enav.ins.settings.EnavSettings;
 /**
  * Component for handling MSI messages
  */
-public class NogoHandler extends MapHandlerChild implements Runnable, IRoutesUpdateListener {
-	
+public class NogoHandler extends MapHandlerChild implements Runnable {
+
 	private static final Logger LOG = Logger.getLogger(NogoHandler.class);
-	
+
 	GeoLocation northWestPoint;
 	GeoLocation southEastPoint;
-	
+	Double draught;
+
 	private ShoreServices shoreServices;
 
-
-
-	//Create a seperate layer for the nogo information
+	// Create a seperate layer for the nogo information
 	private NogoLayer nogoLayer;
-	
+
 	public void setNorthWestPoint(GeoLocation northWestPoint) {
 		this.northWestPoint = northWestPoint;
 	}
+
 	public void setSouthEastPoint(GeoLocation southEastPoint) {
 		this.southEastPoint = southEastPoint;
 	}
 
-
-	//Do we need to store anything?
 	private Date lastUpdate;
 	private long pollInterval;
 
-	//Data from the nogo response
+	// Data from the nogo response
 	private List<NogoPolygon> nogoPolygons;
 	private Date validFrom;
 	private Date validTo;
-	
-	
+
 	private Boolean isVisible = true;
 
 	public NogoHandler(EnavSettings enavSettings) {
-		//pollInterval = enavSettings.getNogoPollInterval();
+		// pollInterval = enavSettings.getNogoPollInterval();
 		EeINS.startThread(this, "NogoHandler");
 	}
+
 	@Override
-	
 	public void run() {
 		while (true) {
 			EeINS.sleep(30000);
-			//updateNogo();
+			// updateNogo();
 		}
 	}
+
 	public synchronized void updateNogo() {
+		notifyUpdate(false);
 		boolean nogoUpdated = false;
 		Date now = new Date();
-		if (getLastUpdate() == null || (now.getTime() - getLastUpdate().getTime() > pollInterval * 1000)) {
-			// Poll for new messages from shore
+		if (getLastUpdate() == null
+				|| (now.getTime() - getLastUpdate().getTime() > pollInterval * 1000)) {
+			// Poll for data from shore
 			try {
 				if (poll()) {
 					nogoUpdated = true;
@@ -111,103 +108,89 @@ public class NogoHandler extends MapHandlerChild implements Runnable, IRoutesUpd
 				LOG.error("Failed to get NoGo from shore: " + e.getMessage());
 			}
 		}
-		
-		
 		// Notify if update
 		if (nogoUpdated) {
-			notifyUpdate();
+			notifyUpdate(true);
 		}
-		
-		
+
 	}
-	
-	public void notifyUpdate() {
-		// Update layer - todo
+
+	public void notifyUpdate(boolean completed) {
 		if (nogoLayer != null) {
-			nogoLayer.doUpdate();
+			nogoLayer.doUpdate(completed);
 		}
 	}
-	
+
 	public boolean poll() throws ShoreServiceException {
 
-		if (shoreServices == null ) {
+		if (shoreServices == null) {
 			return false;
 		}
 
 		Date date = new Date();
-		NogoResponse nogoResponse = shoreServices.nogoPoll(5.0, northWestPoint, southEastPoint, date, date);
-	
+		//Send a rest to shoreServices for NoGo
+		NogoResponse nogoResponse = shoreServices.nogoPoll(draught,
+				northWestPoint, southEastPoint, date, date);
+
 		nogoPolygons = nogoResponse.getPolygons();
 		validFrom = nogoResponse.getValidFrom();
 		validTo = nogoResponse.getValidTo();
-		
+
 		if (nogoResponse == null || nogoResponse.getPolygons() == null) {
 			return false;
 		}
 		return true;
-		
 
-		
 	}
-	
+
+	public Double getDraught() {
+		return draught;
+	}
+
+	public void setDraught(Double draught) {
+		this.draught = -draught;
+	}
+
 	public Date getValidFrom() {
 		return validFrom;
 	}
+
 	public Date getValidTo() {
 		return validTo;
 	}
+
 	public synchronized List<NogoPolygon> getPolygons() {
 		return nogoPolygons;
 	}
-	
+
 	public synchronized Date getLastUpdate() {
 		return lastUpdate;
 	}
-	
+
 	private synchronized void setLastUpdate(Date lastUpdate) {
 		this.lastUpdate = lastUpdate;
 	}
-	
-	public boolean toggleLayer(){
-		if (isVisible){
+
+	public boolean toggleLayer() {
+		if (isVisible) {
 			nogoLayer.setVisible(false);
 			isVisible = false;
-		}else{
+		} else {
 			nogoLayer.setVisible(true);
 			isVisible = true;
 		}
-		return isVisible;		
+		return isVisible;
 	}
-	
-	
+
 	@Override
 	public void findAndInit(Object obj) {
 		if (obj instanceof ShoreServices) {
-			shoreServices = (ShoreServices)obj;
+			shoreServices = (ShoreServices) obj;
 		}
 		if (obj instanceof NogoLayer) {
-			nogoLayer = (NogoLayer)obj;
-		}		
+			nogoLayer = (NogoLayer) obj;
+		}
 
-	}	
-	
-	
-	@Override
-	public void routesChanged(RoutesUpdateEvent e) {
-		if(e == RoutesUpdateEvent.ROUTE_ACTIVATED) {
-			//Get the nogo area?
-			notifyUpdate();
-		}
-		if(e == RoutesUpdateEvent.ROUTE_DEACTIVATED) {
-			//Disable the nogo layer?
-			notifyUpdate();
-		}
-		if(e == RoutesUpdateEvent.ROUTE_MSI_UPDATE || e == RoutesUpdateEvent.ROUTE_ADDED || e == RoutesUpdateEvent.ROUTE_REMOVED || e == RoutesUpdateEvent.ROUTE_CHANGED) {
-			//Request new nogo?
-			updateNogo();			
-		}
-		
 	}
-	
-	
+
 }

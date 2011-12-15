@@ -193,11 +193,13 @@ public class NavigationMouseMode extends AbstractCoordMouseMode {
         Proj p = (Proj) projection;
 
         synchronized (this) {
+        	if (!chartPanel.getNogoMode()){
             point2 = getRatioPoint((MapBean) e.getSource(), point1, e.getPoint());
+        	}else{
+        	point2 = e.getPoint();
+        	}
             int dx = Math.abs(point2.x - point1.x);
             int dy = Math.abs(point2.y - point1.y);
-
-
             
             // Don't bother redrawing if the rectangle is too small
             if ((dx < 10) || (dy < 10)) {
@@ -343,7 +345,13 @@ public class NavigationMouseMode extends AbstractCoordMouseMode {
 	            paintRectangle((MapBean) e.getSource(), point1, point2);
 	            // paint new rectangle
 	            // point2 = e.getPoint();
+	            if (!chartPanel.getNogoMode()){
 	            point2 = getRatioPoint((MapBean) e.getSource(), point1, e.getPoint());
+	            }
+	            else{
+	            	point2 = e.getPoint();
+	            	
+	            }
 	            paintRectangle((MapBean) e.getSource(), point1, point2);
 			}
     	}

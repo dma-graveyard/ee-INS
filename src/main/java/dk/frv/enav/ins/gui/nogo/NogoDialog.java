@@ -66,112 +66,117 @@ public class NogoDialog extends JDialog implements ActionListener, Runnable {
 	private JButton requestNogo;
 	private JButton cancelButton;
 	private JButton btnSelectArea;
-	
+	JSpinner spinnerDraught;
+
 	JLabel nwPtlbl;
 	JLabel nePtlbl;
 	JLabel swPtlbl;
 	JLabel sePtlbl;
-	
+
 	ChartPanel chartPanel;
 	NogoHandler nogoHandler;
 	MainFrame mainFrame;
-	
+
 	GeoLocation northWestPoint = null;
 	GeoLocation southEastPoint = null;
-	
-	
-	
-	public NogoDialog(JFrame parent, NogoHandler nogoHandler, AisHandler aisHandler) {
+
+	public NogoDialog(JFrame parent, NogoHandler nogoHandler,
+			AisHandler aisHandler) {
 		super(parent, "Request Nogo", true);
-		
+
 		MainFrame mainFrame = (MainFrame) parent;
-		
-		
+
 		this.chartPanel = mainFrame.getChartPanel();
 		this.nogoHandler = nogoHandler;
-		
-		
-		
+
 		setSize(384, 412);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setLocationRelativeTo(parent);
 		setResizable(false);
-		
+
 		JPanel contentPanel = new JPanel();
-		
+
 		getContentPane().setLayout(new BorderLayout());
-		
+
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		
+
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		
+
 		JPanel panel = new JPanel();
-		panel.setBorder(new TitledBorder(null, "Area Selection", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel.setBorder(new TitledBorder(null, "Area Selection",
+				TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel.setBounds(15, 30, 327, 115);
-		
+
 		JLabel lblNogoRequest = new JLabel("Nogo Request:");
 		lblNogoRequest.setBounds(15, 5, 81, 14);
 		lblNogoRequest.setFont(new Font("Tahoma", Font.BOLD, 11));
 		contentPanel.setLayout(null);
 		panel.setLayout(null);
 		contentPanel.add(panel);
-		
+
 		btnSelectArea = new JButton("Select Area");
 		btnSelectArea.setBounds(204, 81, 113, 23);
 		panel.add(btnSelectArea);
 		btnSelectArea.addActionListener(this);
-		
-		nwPtlbl = new JLabel("NorthWest");
-		nwPtlbl.setBounds(10, 26, 134, 14);
+
+		nwPtlbl = new JLabel("Select the area you want to request NoGo for");
+		nwPtlbl.setBounds(10, 26, 300, 14);
 		panel.add(nwPtlbl);
-		
-		nePtlbl = new JLabel("NorthEast");
+
+		nePtlbl = new JLabel("");
 		nePtlbl.setBounds(176, 26, 141, 14);
 		panel.add(nePtlbl);
-		
-		swPtlbl = new JLabel("SouthWest");
+
+		swPtlbl = new JLabel("");
 		swPtlbl.setBounds(10, 51, 134, 14);
 		panel.add(swPtlbl);
-		
-		sePtlbl = new JLabel("SouthEast");
+
+		sePtlbl = new JLabel("");
 		sePtlbl.setBounds(176, 51, 127, 14);
 		panel.add(sePtlbl);
 		contentPanel.add(lblNogoRequest);
-		
+
 		JPanel panel_1 = new JPanel();
-		panel_1.setBorder(new TitledBorder(null, "Time Selected", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel_1.setBorder(new TitledBorder(null, "Time Selected",
+				TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel_1.setBounds(15, 156, 327, 94);
 		contentPanel.add(panel_1);
 		panel_1.setLayout(null);
-		
+
 		JLabel lblNogoBetween = new JLabel("NoGo valid between:");
 		lblNogoBetween.setBounds(10, 24, 137, 14);
 		panel_1.add(lblNogoBetween);
-		
+
 		JSpinner spinnerTimeStart = new JSpinner();
-		spinnerTimeStart.setModel(new SpinnerDateModel(new Date(1323212400000L), null, null, Calendar.HOUR));
+		spinnerTimeStart.setModel(new SpinnerDateModel(
+				new Date(1323212400000L), null, null, Calendar.HOUR));
 		spinnerTimeStart.setBounds(10, 41, 98, 20);
 		panel_1.add(spinnerTimeStart);
 		spinnerTimeStart.setEnabled(false);
-		
+
 		JSpinner spinnerTimeEnd = new JSpinner();
-		spinnerTimeEnd.setModel(new SpinnerDateModel(new Date(1323219600000L), null, null, Calendar.HOUR));
+		spinnerTimeEnd.setModel(new SpinnerDateModel(new Date(1323219600000L),
+				null, null, Calendar.HOUR));
 		spinnerTimeEnd.setBounds(10, 64, 98, 20);
 		panel_1.add(spinnerTimeEnd);
 		spinnerTimeEnd.setEnabled(false);
-		
+
 		JPanel panel_2 = new JPanel();
-		panel_2.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Draught", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panel_2.setBorder(new TitledBorder(UIManager
+				.getBorder("TitledBorder.border"), "Draught",
+				TitledBorder.LEADING, TitledBorder.TOP, null,
+				new Color(0, 0, 0)));
 		panel_2.setBounds(15, 259, 327, 59);
 		contentPanel.add(panel_2);
 		panel_2.setLayout(null);
-		
+
 		JLabel lblNewLabel = new JLabel("Current Draught:");
 		lblNewLabel.setBounds(12, 26, 114, 16);
 		panel_2.add(lblNewLabel);
-		
-		JSpinner spinnerDraught = new JSpinner();
-		spinnerDraught.setModel(new SpinnerNumberModel(new Integer(5), new Integer(0), null, new Integer(1)));
+
+		spinnerDraught = new JSpinner();
+		spinnerDraught.setModel(new SpinnerNumberModel(new Integer(10),
+				new Integer(0), null, new Integer(1)));
 		spinnerDraught.setBounds(107, 24, 38, 20);
 		panel_2.add(spinnerDraught);
 		{
@@ -181,7 +186,7 @@ public class NogoDialog extends JDialog implements ActionListener, Runnable {
 			{
 				requestNogo = new JButton("Request NoGo");
 				requestNogo.addActionListener(this);
-				
+
 				buttonPane.add(requestNogo);
 				getRootPane().setDefaultButton(requestNogo);
 			}
@@ -191,91 +196,78 @@ public class NogoDialog extends JDialog implements ActionListener, Runnable {
 				buttonPane.add(cancelButton);
 			}
 		}
-		
-		
-		if (aisHandler != null && aisHandler.getOwnShip().getStaticData() != null){
-			System.out.println(aisHandler.getOwnShip().getStaticData().getDraught());
-			spinnerDraught.setValue(aisHandler.getOwnShip().getStaticData().getDraught());
-		}
-		
-	}
-	
 
-	public void setSelectedArea(Point2D[] points){
-		System.out.println(points[0].getX());
-		System.out.println(points[0].getY());
+		if (aisHandler != null
+				&& aisHandler.getOwnShip().getStaticData() != null) {
+			Integer draught = (int) aisHandler.getOwnShip().getStaticData()
+					.getDraught();
+			spinnerDraught.setValue(draught);
+		}
+
+	}
+
+	public void setSelectedArea(Point2D[] points) {
 		
-		if (points[0].getY() > points[1].getY()){
-			//points 0 is the top left
+		//Find out what is the max of the selection made
+		if (points[0].getY() > points[1].getY()) {
+			// points 0 is the top left
 			northWestPoint = new GeoLocation(points[0].getY(), points[0].getX());
 			southEastPoint = new GeoLocation(points[1].getY(), points[1].getX());
-		}else{
+		} else {
 			northWestPoint = new GeoLocation(points[1].getY(), points[1].getX());
-			southEastPoint = new GeoLocation(points[0].getY(), points[0].getX());			
+			southEastPoint = new GeoLocation(points[0].getY(), points[0].getX());
 		}
-		
+
 		nwPtlbl.setText(Formatter.latToPrintable(northWestPoint.getLatitude())
-		+ Formatter.lonToPrintable(northWestPoint.getLongitude())
-		);
+				+ Formatter.lonToPrintable(northWestPoint.getLongitude()));
 
 		nePtlbl.setText(Formatter.latToPrintable(southEastPoint.getLatitude())
-		+ Formatter.lonToPrintable(northWestPoint.getLongitude())
-		);
+				+ Formatter.lonToPrintable(northWestPoint.getLongitude()));
 
 		swPtlbl.setText(Formatter.latToPrintable(northWestPoint.getLatitude())
-		+ Formatter.lonToPrintable(southEastPoint.getLongitude())
-		);
+				+ Formatter.lonToPrintable(southEastPoint.getLongitude()));
 
 		sePtlbl.setText(Formatter.latToPrintable(southEastPoint.getLatitude())
-		+ Formatter.lonToPrintable(southEastPoint.getLongitude())
-		);
-
-		
-//		nePtlbl;
-//		swPtlbl;
-//		sePtlbl;
-		//latToPrintable
-		//Formatter.latToPrintable
-		
-		
-		
+				+ Formatter.lonToPrintable(southEastPoint.getLongitude()));
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() == requestNogo){
-			if (northWestPoint != null & southEastPoint != null){
+		if (e.getSource() == requestNogo) {
+			// Send off the request
+			if (northWestPoint != null & southEastPoint != null) {
 				this.setVisible(false);
 				nogoHandler.setNorthWestPoint(northWestPoint);
 				nogoHandler.setSouthEastPoint(southEastPoint);
-				
-				if (mainFrame != null)
-					mainFrame.getTopPanel().activateNogoButton();
-				
+				double draught = ((Integer) spinnerDraught.getValue())
+						.doubleValue();
+				nogoHandler.setDraught(draught);
 				(new Thread(this)).start();
-
+			} else {
+				nwPtlbl.setText("You must select an area");
 			}
-			//Send off the request
+
 		}
-		if(e.getSource() == cancelButton){
-			//Cancel the request
+		if (e.getSource() == cancelButton) {
+			// Cancel the request
 			this.dispose();
 		}
-		if(e.getSource() == btnSelectArea){
+		if (e.getSource() == btnSelectArea) {
+			//Make a selection on the chartmap
 			this.setVisible(false);
-			//chartPanel.setNoGoMouseMode();
 			chartPanel.setNogoDialog(this);
 			chartPanel.setNogoMode(true);
-		}		
+		}
 	}
-
 
 	@Override
 	public void run() {
 		nogoHandler.updateNogo();
+		if (mainFrame != null) {
+//			System.out.println("Activated");
+			mainFrame.getTopPanel().activateNogoButton();
+		}
 		this.dispose();
 	}
-	
-	
-	
+
 }

@@ -36,115 +36,65 @@ import com.bbn.openmap.layer.OMGraphicHandlerLayer;
 import com.bbn.openmap.omGraphics.OMGraphicList;
 
 import dk.frv.enav.common.xml.nogo.types.NogoPolygon;
-import dk.frv.enav.ins.gui.ChartPanel;
-import dk.frv.enav.ins.gui.MainFrame;
 import dk.frv.enav.ins.nogo.NogoHandler;
 
-public class NogoLayer extends OMGraphicHandlerLayer  {	
+public class NogoLayer extends OMGraphicHandlerLayer {
 	private static final long serialVersionUID = 1L;
 
-	
 	private NogoHandler nogoHandler = null;
-	
+
 	private OMGraphicList graphics = new OMGraphicList();
-	private ChartPanel chartPanel = null;
-	
-//	private MapBean mapBean = null;
-//	private TopPanel topPanel = null;
-//	private MainFrame mainFrame = null;	
-//	private OMGraphic closest = null;
-//	private OMGraphic selectedGraphic;
-	
+
 	public NogoLayer() {
-		
+
 	}
-	
-	public void doUpdate() {
+
+	public void doUpdate(boolean completed) {
 		Date validFrom = nogoHandler.getValidFrom();
 		Date validTo = nogoHandler.getValidTo();
-		
+		double draught = nogoHandler.getDraught();
 		graphics.clear();
-//		Date now = GnssTime.getInstance().getDate();
-		
-		// Get polygons
-		List<NogoPolygon> polygons = nogoHandler.getPolygons();
+		if (completed) {
+			// Get polygons
+			List<NogoPolygon> polygons = nogoHandler.getPolygons();
 
-		System.out.println(polygons.size());
-		
-		for (NogoPolygon polygon : polygons) {
-			//System.out.println("We found a polygon");
-			
-			// Create Nogo graphic
-		NogoGraphic nogoGraphic = new NogoGraphic(polygon, validFrom, validTo);
-		
-		graphics.add(nogoGraphic);
-		
-		}
-		
-		
-		
-		doPrepare();
-		/**
-		// Get messages
-		List<MsiHandler.MsiMessageExtended> messages = msiHandler.getMessageList();
-		for (MsiHandler.MsiMessageExtended message : messages) {
-			
-			// Not able to show messages without location
-			if (message.msiMessage.getLocation() == null) {
-				continue;
-			}
-			
-			// Is it valid now
-			if (!message.isValidAt(now)) {
-				continue;
-			}
-			
-			// Filtering begins here
-			if(EeINS.getSettings().getEnavSettings().isMsiFilter()){
-				// It is set to be visible
-				if(!message.visible) {
-					if(mousePosition == null) {
-						continue;
-					}
-				}
-				
-				// Check proximity to current location (free navigation mode)
-				if(mousePosition != null && !message.visible) {
-					double distance = distanceToShip(message);
-					if(distance > EeINS.getSettings().getEnavSettings().getMsiVisibilityFromNewWaypoint()){
-						continue;
-					}
+			// We have selected an area outside of the available data - send
+			// appropiate message
+			if (polygons.size() == 0) {
+				NogoGraphic nogoGraphic = new NogoGraphic(null, null, null,
+						draught, "No data available for requested area");
+				graphics.add(nogoGraphic);
+			} else {
+				// Data available, go through each polygon and draw them
+				for (NogoPolygon polygon : polygons) {
+					NogoGraphic nogoGraphic = new NogoGraphic(polygon,
+							validFrom, validTo, draught, "");
+					graphics.add(nogoGraphic);
 				}
 			}
-			**/
-		/*
-			// Create MSI graphic
-			MsiGraphic msiGraphic = new MsiGraphic(message);
-			graphics.add(msiGraphic);
-			
-			if(mapBean != null && message.relevant){
-				MsiDirectionalIcon direction = new MsiDirectionalIcon(mapBean);
-				direction.setMarker(message);
-				graphics.add(direction);
-			}
+
+		} else {
+			// We have just sent a nogo request - display a message telling the
+			// user to standby
+			NogoGraphic nogoGraphic = new NogoGraphic(null, validFrom, validTo,
+					draught, "NoGo area requested - standby");
+			graphics.add(nogoGraphic);
 		}
+
 		doPrepare();
-		**/
 	}
-	
 
 	@Override
 	public synchronized OMGraphicList prepare() {
 		graphics.project(getProjection());
 		return graphics;
 	}
-	
+
 	@Override
 	public void findAndInit(Object obj) {
 		if (obj instanceof NogoHandler) {
-			nogoHandler = (NogoHandler)obj;
-		}		
+			nogoHandler = (NogoHandler) obj;
+		}
 	}
-	
 
 }
