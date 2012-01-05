@@ -55,6 +55,7 @@ import dk.frv.enav.ins.nmea.NmeaSerialSensor;
 import dk.frv.enav.ins.nmea.NmeaStdinSensor;
 import dk.frv.enav.ins.nmea.NmeaTcpSensor;
 import dk.frv.enav.ins.nmea.SensorType;
+import dk.frv.enav.ins.risk.RiskHandler;
 import dk.frv.enav.ins.route.RouteManager;
 import dk.frv.enav.ins.services.ais.AisServices;
 import dk.frv.enav.ins.services.shore.ShoreServices;
@@ -82,6 +83,7 @@ public class EeINS {
 	private static NmeaSensor gpsSensor;
 	private static GpsHandler gpsHandler;
 	private static AisHandler aisHandler;
+	private static RiskHandler riskHandler;
 	private static RouteManager routeManager;
 	private static ShoreServices shoreServices;
 	private static AisServices aisServices;
@@ -133,6 +135,9 @@ public class EeINS {
         // Start sensors
         startSensors();
         
+        //start riskHandler
+        startRiskHandler();
+        
         // Enable GPS timer by adding it to bean context
         GnssTime.init();
         mapHandler.add(GnssTime.getInstance());
@@ -144,7 +149,8 @@ public class EeINS {
         // Start AIS target monitoring
         aisHandler = new AisHandler();        
         mapHandler.add(aisHandler);
-        
+
+    
         // Load routeManager and register as GPS data listener
         routeManager = RouteManager.loadRouteManager();
         mapHandler.add(routeManager);
@@ -239,6 +245,10 @@ public class EeINS {
         	mapHandler.add(gpsSensor);
         }
         
+	}
+	
+	public static void startRiskHandler(){
+		riskHandler = new RiskHandler();
 	}
 	
 	private static void loadProperties() {
@@ -385,6 +395,10 @@ public class EeINS {
 	public static double elapsed(long start) {
 		double elapsed = System.nanoTime() - start;
 		return elapsed / 1000000.0;
+	}
+
+	public static RiskHandler getRiskHandler() {
+		return riskHandler;
 	}
 
 }

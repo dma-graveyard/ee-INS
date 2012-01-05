@@ -72,6 +72,8 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 
 	private static final Logger LOG = Logger.getLogger(AisHandler.class);
 	
+	
+	
 	public class AisMessageExtended {
 		public String name;
 		public long MMSI;
@@ -545,8 +547,11 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 		
 		deadTargets.clear();
 
+		
+		
 	}
-
+	
+	
 	/**
 	 * Update AIS target. Return true if the target is considered dead, not just gone
 	 * @param aisTarget
@@ -597,7 +602,6 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 			EeINS.sleep(10000);
 			// Update status on targets
 			updateStatus();
-
 		}
 	}
 

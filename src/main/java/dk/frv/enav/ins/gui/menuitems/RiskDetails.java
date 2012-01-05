@@ -27,48 +27,37 @@
  * either expressed or implied, of Danish Maritime Safety Administration.
  * 
  */
-package dk.frv.enav.ins.layers.ais;
+package dk.frv.enav.ins.gui.menuitems;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Paint;
-import java.awt.Stroke;
+import javax.swing.JMenuItem;
 
-import com.bbn.openmap.omGraphics.OMGraphicList;
+import dk.frv.enav.ins.gui.TopPanel;
+import dk.frv.enav.ins.gui.risk.RiskDialog;
 
-import dk.frv.enav.ins.common.graphics.RotationalPoly;
+public class RiskDetails extends JMenuItem implements IMapMenuAction {
 
-/**
- * Graphic for vessel target shown as triangle
- */
-public class VesselTargetTriangle extends OMGraphicList {
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = 1L;
+	private RiskDialog riskDialog;
+	private long MMSI;	
 
-	private RotationalPoly vessel;
-	private Paint paint = new Color(74, 97, 205, 255);
-	private Stroke stroke = new BasicStroke(2.0f);
-	private VesselTargetGraphic vesselTarget;
-
-	public VesselTargetTriangle() {
-		int[] vesselX = { 0, 5, -5, 0 };
-		int[] vesselY = { -10, 5, 5, -10 };
-		vessel = new RotationalPoly(vesselX, vesselY, stroke, paint);
-		add(vessel);
-		this.setVague(true);
-	}
-
-	public void update(double lat, double lon, int units, double heading, VesselTargetGraphic vesselTarget) {
-		this.vesselTarget = vesselTarget;
-		vessel.setLocation(lat, lon, units, heading);
-		
-	}
-
-	public VesselTargetGraphic getVesselTargetGraphic() {
-		return vesselTarget;
-	}
-
-	public void setLinePaint(Paint paint) {
-		vessel.setLinePaint(paint);
+	public RiskDetails(String text) {
+		super();
+		this.setText(text);
 	}
 	
+	@Override
+	public void doAction() {
+		if (riskDialog != null) {
+			riskDialog.setSelection(this.MMSI, true);
+			riskDialog.setVisible(true);
+		}		
+	}
+
+	public void setMSSI(long MSSI) {
+		this.MMSI = MSSI;
+	}	
+
 }

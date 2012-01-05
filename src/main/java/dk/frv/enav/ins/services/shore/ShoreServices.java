@@ -29,6 +29,8 @@
  */
 package dk.frv.enav.ins.services.shore;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 
 import com.bbn.openmap.MapHandlerChild;
@@ -41,6 +43,9 @@ import dk.frv.enav.common.xml.metoc.request.MetocForecastRequest;
 import dk.frv.enav.common.xml.metoc.response.MetocForecastResponse;
 import dk.frv.enav.common.xml.msi.request.MsiPollRequest;
 import dk.frv.enav.common.xml.msi.response.MsiResponse;
+import dk.frv.enav.common.xml.risk.request.RiskRequest;
+import dk.frv.enav.common.xml.risk.response.RiskIndexes;
+import dk.frv.enav.common.xml.risk.response.RiskResponse;
 import dk.frv.enav.ins.ais.AisHandler;
 import dk.frv.enav.ins.gps.GpsData;
 import dk.frv.enav.ins.gps.GpsHandler;
@@ -78,6 +83,22 @@ public class ShoreServices extends MapHandlerChild implements IStatusComponent {
 		MsiResponse msiResponse = (MsiResponse)makeRequest("/api/xml/msi", "dk.frv.enav.common.xml.msi.request", "dk.frv.enav.common.xml.msi.response", msiPollRequest); 
 		
 		return msiResponse;
+	}
+	
+	public List<RiskIndexes> getRiskIndexes(double southWestLat, double northEastLat, double southWestLon, double northEastLon) throws ShoreServiceException {
+		// Create request
+		RiskRequest req= new RiskRequest();
+		req.setLatMin(southWestLat);
+		req.setLonMin(southWestLon);
+		req.setLatMax(northEastLat);
+		req.setLonMax(northEastLon);
+		//req.setMmsiList(list);
+		// Add request parameters
+		addRequestParameters(req);
+		
+		RiskResponse resp = (RiskResponse) makeRequest("/api/xml/risk", "dk.frv.enav.common.xml.risk.request", "dk.frv.enav.common.xml.risk.response", req); 
+		
+		return resp.getIndexes();
 	}
 		
 	public MetocForecast routeMetoc(Route route) throws ShoreServiceException {

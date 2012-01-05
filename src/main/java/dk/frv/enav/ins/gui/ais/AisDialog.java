@@ -29,6 +29,7 @@
  */
 package dk.frv.enav.ins.gui.ais;
 
+
 import java.awt.Color;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -53,6 +54,9 @@ import javax.swing.event.ListSelectionListener;
 
 import dk.frv.ais.geo.GeoLocation;
 import dk.frv.ais.message.AisMessage;
+
+import dk.frv.enav.common.xml.risk.response.RiskIndexes;
+import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.ais.AisHandler;
 import dk.frv.enav.ins.ais.AisHandler.AisMessageExtended;
 import dk.frv.enav.ins.ais.AisTarget;
@@ -75,13 +79,13 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 	private JButton closeBtn;
 	private JButton gotoBtn;
 	
-	private JTable aisTable;
+	private JTable aisTable = new JTable();
 	private JTable aisTableDetails;
 	private JScrollPane aisScrollPane;
 	
 	private JScrollPane detailsScrollPane; 
 	
-	private AisTableModel aisTableModel;
+	private AisTableModel aisTableModel ;
 	private ListSelectionModel aisSelectionModel;
 	
 	private JPanel detailsPanel;
@@ -126,7 +130,10 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
         	    {" Heading", ""},
         	    {" COG", ""},
         	    {" SOG", ""},
-        	    {" ROT", ""}
+        	    {" ROT", ""},
+        	    {" CPA Dist", ""},
+        	    {" CPA time", ""},
+        	    {" CPA target mmsi", ""}
         	};
         
         
@@ -242,7 +249,10 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 			selectedMMSI = (Long) aisTable.getValueAt(selectedRow, 1);
 		}
 			
-		
+		if(aisTableModel==null){
+			//Aisdialog not initialised
+			return;
+		}
 		aisTableModel.updateShips();
 		// Update table
 		aisTableModel.fireTableDataChanged();
@@ -265,8 +275,26 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 			Object mmsi = aisTable.getValueAt(selected, 1);
 			if (aisHandler.getVesselTargets().get(mmsi) != null) {
 			setDetails(aisHandler.getVesselTargets().get(mmsi));
+			setRiskDetails(EeINS.getRiskHandler().getRiskIndex((Long)mmsi));
 			}
 		}
+	}
+	private void setRiskDetails(RiskIndexes risk) {
+		if(risk==null){
+			aisTableDetails.setValueAt("", 19, 1);
+			aisTableDetails.setValueAt("", 20, 1);
+			aisTableDetails.setValueAt("", 21, 1);
+			return;
+		}
+		if (!compare(aisTableDetails.getValueAt(19, 1), risk.getCpaDist())){
+			aisTableDetails.setValueAt(risk.getCpaDist(), 19, 1);
+			}
+		if (!compare(aisTableDetails.getValueAt(20, 1), risk.getCpaTime())){
+			aisTableDetails.setValueAt(risk.getCpaTime(), 20, 1);
+			}
+		if (!compare(aisTableDetails.getValueAt(21, 1), risk.getCpaTargetMmsi())){
+			aisTableDetails.setValueAt(risk.getCpaTargetMmsi(), 21, 1);
+			}
 	}
 
 	@SuppressWarnings("static-access")
