@@ -7,8 +7,8 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import dk.frv.ais.geo.GeoLocation;
-import dk.frv.enav.common.xml.risk.response.RiskIndexes;
+import dk.frv.enav.common.xml.risk.response.Risk;
+import dk.frv.enav.common.xml.risk.response.RiskList;
 import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.ais.VesselTarget;
 import dk.frv.enav.ins.services.shore.ShoreServiceException;
@@ -17,7 +17,7 @@ public class RiskHandler implements Runnable {
 
 	private static final Logger LOG = Logger.getLogger(RiskHandler.class);
 
-	private Map<Long, RiskIndexes> indexMap = new HashMap<Long, RiskIndexes>();
+	private Map<Long, RiskList> riskListMap = new HashMap<Long, RiskList>();
 	private static final Object mutex = new Object();
 
 	public RiskHandler() {
@@ -30,16 +30,16 @@ public class RiskHandler implements Runnable {
 
 		while (EeINS.getSettings().getAisSettings().isShowRisk()) {
 			VesselTarget ownShip = EeINS.getAisHandler().getOwnShip();
-			List<RiskIndexes> indexList = new ArrayList<RiskIndexes>();
+			List<RiskList> riskLists = new ArrayList<RiskList>();
 			try {
-				indexList = EeINS.getShoreServices().getRiskIndexes(54.75, 56.0, 10.65, 11.25);
+				riskLists = EeINS.getShoreServices().getRiskIndexes(54.75, 56.0, 10.65, 11.25);
 			} catch (ShoreServiceException e) {
 				LOG.warn("cannot get risk indexes", e);
 			}
 			synchronized (mutex) {
-				indexMap.clear();
-				for (RiskIndexes riskIndex : indexList) {
-					indexMap.put(riskIndex.getMmsi().longValue(), riskIndex);
+				riskListMap.clear();
+				for (RiskList list : riskLists) {
+					riskListMap.put(list.getMmsi().longValue(), list);
 				}
 			}
 			EeINS.sleep(10000);
@@ -56,13 +56,13 @@ public class RiskHandler implements Runnable {
 			EeINS.startRiskHandler();
 		}else{
 			//stopping, clear the index map as it wont be updated any longer.
-			indexMap.clear();
+			riskListMap.clear();
 		}
 		
 	}
 
-	public RiskIndexes getRiskIndex(Long mmsi) {
-		return indexMap.get(mmsi);
+	public RiskList getRiskList(Long mmsi) {
+		return riskListMap.get(mmsi);
 		
 	}
 

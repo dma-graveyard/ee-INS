@@ -29,6 +29,7 @@
  */
 package dk.frv.enav.ins.gui;
 
+
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -47,7 +48,7 @@ import com.bbn.openmap.MapHandler;
 import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.gui.ais.AisDialog;
 import dk.frv.enav.ins.gui.msi.MsiDialog;
-import dk.frv.enav.ins.gui.risk.RiskDialog;
+
 import dk.frv.enav.ins.gui.route.RouteSuggestionDialog;
 import dk.frv.enav.ins.settings.GuiSettings;
 
@@ -70,7 +71,6 @@ public class MainFrame extends JFrame implements WindowListener {
 	private JPanel glassPanel;
 	private MsiDialog msiDialog;
 	private AisDialog aisDialog;
-	private RiskDialog riskDialog;
 	private RouteSuggestionDialog routeSuggestionDialog;
 
 	private MapMenu mapMenu;
@@ -145,9 +145,7 @@ public class MainFrame extends JFrame implements WindowListener {
 		aisDialog = new AisDialog(this);
 		mapHandler.add(aisDialog);
 		
-		// Init Risk dialog
-		riskDialog = new RiskDialog(this);
-		mapHandler.add(riskDialog);
+		
 		
 		
 		// Init Route suggestion dialog

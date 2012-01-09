@@ -48,13 +48,12 @@ import com.bbn.openmap.gui.OMComponentPanel;
 
 import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.event.NavigationMouseMode;
+import dk.frv.enav.ins.gui.ais.AisDialog;
 import dk.frv.enav.ins.gui.msi.MsiDialog;
-import dk.frv.enav.ins.gui.risk.RiskDialog;
 import dk.frv.enav.ins.gui.route.RouteManagerDialog;
 import dk.frv.enav.ins.msi.IMsiUpdateListener;
 import dk.frv.enav.ins.msi.MsiHandler;
 import dk.frv.enav.ins.msi.MsiHandler.MsiMessageExtended;
-import dk.frv.enav.ins.gui.ais.*;
 
 /**
  * The top buttons panel
@@ -79,7 +78,7 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 	private MainFrame mainFrame;
 	private MsiDialog msiDialog = null;
 	private AisDialog aisDialog = null;
-	private RiskDialog riskDialog = null;
+	
 	private MouseDelegator mouseDelegator;
 	private final JToggleButton tglbtnMsiFilter = new JToggleButton("MSI filter");
 	private MsiHandler msiHandler;
@@ -318,12 +317,5 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 
 	}
 
-	public RiskDialog getRiskDialog() {
-		return riskDialog;
-	}
-
-	public void setRiskDialog(RiskDialog riskDialog) {
-		this.riskDialog = riskDialog;
-	}
 
 }

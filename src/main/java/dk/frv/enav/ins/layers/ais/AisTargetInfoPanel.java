@@ -29,8 +29,11 @@
  */
 package dk.frv.enav.ins.layers.ais;
 
+import java.util.Iterator;
+
 import dk.frv.ais.message.AisMessage;
-import dk.frv.enav.common.xml.risk.response.RiskIndexes;
+import dk.frv.enav.common.xml.risk.response.Risk;
+import dk.frv.enav.common.xml.risk.response.RiskList;
 import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.ais.VesselPositionData;
 import dk.frv.enav.ins.ais.VesselStaticData;
@@ -38,7 +41,6 @@ import dk.frv.enav.ins.ais.VesselTarget;
 import dk.frv.enav.ins.ais.VesselTarget.AisClass;
 import dk.frv.enav.ins.common.text.Formatter;
 import dk.frv.enav.ins.gui.InfoPanel;
-import dk.frv.enav.ins.risk.RiskHandler;
 
 /**
  * AIS target mouse over info
@@ -47,7 +49,7 @@ public class AisTargetInfoPanel extends InfoPanel implements Runnable {
 	private static final long serialVersionUID = 1L;
 
 	private VesselTarget vesselTarget;
-	
+
 	public AisTargetInfoPanel() {
 		super();
 		(new Thread(this)).start();
@@ -65,7 +67,11 @@ public class AisTargetInfoPanel extends InfoPanel implements Runnable {
 		VesselPositionData positionData = vesselTarget.getPositionData();
 		String cog = "N/A";
 		String sog = "N/A";
-		RiskIndexes risk = EeINS.getRiskHandler().getRiskIndex(vesselTarget.getMmsi());
+		/*
+		 * Get the risk object
+		 */
+		RiskList riskList = EeINS.getRiskHandler().getRiskList(vesselTarget.getMmsi());
+
 		if (positionData != null) {
 			cog = Formatter.formatDegrees((double) positionData.getCog(), 0);
 			sog = Formatter.formatSpeed((double) positionData.getSog());
@@ -87,18 +93,17 @@ public class AisTargetInfoPanel extends InfoPanel implements Runnable {
 			str.append(callsign + "<br/>");
 		}
 		str.append("COG " + cog + "  SOG " + sog + "<br/>");
-		if (risk != null) {
-			str.append("cpa mmsi " + risk.getCpaTargetMmsi() + "<br/>");
-			str.append("cpa time " + risk.getCpaTime() + "<br/>");
-			str.append("collision " + risk.getCollision() + "<br/>");
-			str.append("grounding machine " + risk.getStrandedByMachineFailure() + "<br/>");
-			str.append("grounding navigation " + risk.getStrandedByNavigationError() + "<br/>");
+		if (riskList != null) {
+			str.append("Risk Index : <br/>");
+			for (Risk risk : riskList.getRisks()) {
+				str.append(risk.getAccidentType() + " : " + risk.getRiskProba() * risk.getConsequenceIndex() + "<br/>");
+			}
 		}
 		str.append("</html>");
 
 		showText(str.toString());
 	}
-	
+
 	@Override
 	public void run() {
 		while (true) {

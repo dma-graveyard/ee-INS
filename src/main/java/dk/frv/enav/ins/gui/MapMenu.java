@@ -72,7 +72,6 @@ import dk.frv.enav.ins.gui.menuitems.IMapMenuAction;
 import dk.frv.enav.ins.gui.menuitems.MsiAcknowledge;
 import dk.frv.enav.ins.gui.menuitems.MsiDetails;
 import dk.frv.enav.ins.gui.menuitems.MsiZoomTo;
-import dk.frv.enav.ins.gui.menuitems.RiskDetails;
 import dk.frv.enav.ins.gui.menuitems.RouteActivateToggle;
 import dk.frv.enav.ins.gui.menuitems.RouteAppendWaypoint;
 import dk.frv.enav.ins.gui.menuitems.RouteCopy;
@@ -120,7 +119,7 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 	private JMenu scaleMenu;
 	private AisIntendedRouteToggle aisIntendedRouteToggle;
 	private AisTargetDetails aisTargetDetails;
-	private RiskDetails riskDetails;
+	
 	private SarTargetDetails sarTargetDetails;
 	private AisTargetLabelToggle aisTargetLabelToggle;
 	private MsiAcknowledge msiAcknowledge;
@@ -183,10 +182,7 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 		aisTargetLabelToggle = new AisTargetLabelToggle();
 		aisTargetLabelToggle.addActionListener(this);
 		
-		// Risk menu item
-		riskDetails = new RiskDetails("Show Risk factors");
-		riskDetails.addActionListener(this);
-		
+			
 		// SART menu items
 		sarTargetDetails = new SarTargetDetails("SART details");
 		sarTargetDetails.addActionListener(this);
@@ -317,9 +313,6 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 		aisTargetDetails.setMSSI(vesselTarget.getMmsi());
 		add(aisTargetDetails);
 		
-		
-		riskDetails.setMSSI(vesselTarget.getMmsi());
-		add(riskDetails);
 		
 		aisIntendedRouteToggle.setVesselTargetSettings(vesselTarget.getSettings());
 		aisIntendedRouteToggle.setAisLayer(aisLayer);
