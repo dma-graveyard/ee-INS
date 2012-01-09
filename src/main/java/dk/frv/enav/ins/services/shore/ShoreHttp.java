@@ -104,6 +104,7 @@ public class ShoreHttp {
 
 		try {
 			responseBody = method.getResponseBody();
+			int rawResSize = responseBody.length;
 
 			// Check for GZip content encoding
 			Header contentEncoding = method.getResponseHeader("Content-Encoding");
@@ -111,6 +112,8 @@ public class ShoreHttp {
 				responseBody = Compressor.decompress(responseBody);
 			}		
 			LOG.debug("Received XML: " + new String(responseBody));
+			LOG.debug("Received XML size    : " + responseBody.length);
+			LOG.debug("Received raw XML size: " + rawResSize);
 		} catch (IOException e) {
 			LOG.error("Failed to read response body: " + e.getMessage());
 			throw new ShoreServiceException(ShoreServiceErrorCode.INVALID_RESPONSE);
@@ -146,20 +149,23 @@ public class ShoreHttp {
 		m.setProperty(Marshaller.JAXB_ENCODING, ENCODING);
 		StringWriter sw = new StringWriter();		
 		m.marshal(obj, sw);
-		LOG.debug("XML request: " + sw.toString());
+		String req = sw.toString();
+		LOG.debug("XML request: " + req);
 		setRequestBody(sw.toString().getBytes(ENCODING), ENCODING);
 	}
 
 	public void setRequestBody(byte[] body, String contentType) {
 		// TODO if Gzip Compress request
-//		try {			
-//			byte[] compressed = Compressor.compress(body);						
-//			body = compressed;
-//			method.addRequestHeader("Content-Encoding", "gzip");
-//		} catch (IOException e) {
-//			LOG.error("Failed to GZip request: " + e.getMessage());
-//		}
-		
+		byte[] compressed = {};
+		try {			
+			compressed = Compressor.compress(body);						
+			//body = compressed;
+			//method.addRequestHeader("Content-Encoding", "gzip");
+		} catch (IOException e) {
+			LOG.error("Failed to GZip request: " + e.getMessage());
+		}		
+		LOG.debug("XML req size           : " + body.length);
+		LOG.debug("XML req compressed size: " + compressed.length);
 		ByteArrayRequestEntity requestEntity = new ByteArrayRequestEntity(body, contentType);
 		method.setRequestEntity(requestEntity);
 	}
