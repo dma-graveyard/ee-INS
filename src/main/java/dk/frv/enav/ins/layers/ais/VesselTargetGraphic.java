@@ -64,7 +64,7 @@ public class VesselTargetGraphic extends TargetGraphic {
 	private static final long serialVersionUID = 1L;
 
 	public static final float STROKE_WIDTH = 1.5f;
-	
+
 	private VesselTarget vesselTarget;
 
 	private OMLine speedVector;
@@ -113,10 +113,10 @@ public class VesselTargetGraphic extends TargetGraphic {
 		int[] headingX = { 0, 0 };
 		int[] headingY = { 0, -100 };
 		heading = new RotationalPoly(headingX, headingY, null, paint);
-		
+
 		font = new Font(Font.SANS_SERIF, Font.PLAIN, 11);
 		label = new OMText(0, 0, 0, 0, "", font, OMText.JUSTIFY_CENTER);
-		
+
 		add(label);
 		add(0, vessel);
 		add(speedVector);
@@ -132,6 +132,7 @@ public class VesselTargetGraphic extends TargetGraphic {
 		VesselStaticData staticData = vesselTarget.getStaticData();
 		VesselTargetSettings targetSettings = vesselTarget.getSettings();
 		AisIntendedRoute aisIntendedRoute = vesselTarget.getAisRouteData();
+
 		GeoLocation pos = posData.getPos();
 		double trueHeading = posData.getTrueHeading();
 		boolean noHeading = false;
@@ -146,6 +147,24 @@ public class VesselTargetGraphic extends TargetGraphic {
 		if (size() == 0) {
 			createGraphics();
 		}
+
+		// Set color based on risk index
+//		switch (EeINS.getRiskHandler().getTotalRiskLevel(vesselTarget.getMmsi())) {
+//		case UNKNOWN:
+//			vessel.setLinePaint(new Color(74, 97, 205, 255));
+//			break;
+//		case LOW:
+//			vessel.setLinePaint(Color.GREEN);
+//			break;
+//		case MIDDLE:
+//			vessel.setLinePaint(Color.YELLOW);
+//			break;
+//		case HIGH:
+//			vessel.setLinePaint(Color.RED);
+//			break;
+//		default:
+//			break;
+//		}
 
 		double sog = vesselTarget.getPositionData().getSog();
 		double cogR = Math.toRadians(vesselTarget.getPositionData().getCog());
@@ -162,7 +181,8 @@ public class VesselTargetGraphic extends TargetGraphic {
 		speedLL[1] = (float) pos.getLongitude();
 		this.startPos = new LatLonPoint.Double(lat, lon);
 
-		float length = (float) Length.NM.toRadians(EeINS.getSettings().getAisSettings().getCogVectorLength() * (sog / 60.0));
+		float length = (float) Length.NM.toRadians(EeINS.getSettings().getAisSettings().getCogVectorLength()
+				* (sog / 60.0));
 
 		this.endPos = startPos.getPoint(length, cogR);
 		speedLL[2] = endPos.getLatitude();
@@ -175,8 +195,8 @@ public class VesselTargetGraphic extends TargetGraphic {
 		// Add minute marks
 		marks.clear();
 		for (int i = 1; i < 6; i++) {
-			float newMarker = (float) Length.NM.toRadians(EeINS.getSettings().getNavSettings().getCogVectorLength() / 6 * i
-					* (sog / 60.0));
+			float newMarker = (float) Length.NM.toRadians(EeINS.getSettings().getNavSettings().getCogVectorLength() / 6
+					* i * (sog / 60.0));
 			LatLonPoint marker = startPos.getPoint(newMarker, (float) cogR);
 			RotationalPoly vtm = new RotationalPoly(markX, markY, stroke, paint);
 			vtm.setLocation(marker.getLatitude(), marker.getLongitude(), OMGraphic.DECIMAL_DEGREES, cogR);
@@ -190,11 +210,11 @@ public class VesselTargetGraphic extends TargetGraphic {
 		label.setLat(lat);
 		label.setLon(lon);
 		if (trueHeading > 90 && trueHeading < 270) {
-			label.setY(-10); 
+			label.setY(-10);
 		} else {
 			label.setY(20);
 		}
-		
+
 		// Determine name
 		String name;
 		if (staticData != null) {
@@ -204,13 +224,13 @@ public class VesselTargetGraphic extends TargetGraphic {
 			name = "ID:" + mmsi.toString();
 		}
 		label.setData(name);
-		
+
 		if (showNameLabel) {
 			label.setVisible(true);
 		} else {
 			label.setVisible(false);
 		}
-		// Intended route graphic		
+		// Intended route graphic
 		routeGraphic.update(vesselTarget, name, aisIntendedRoute, pos);
 		if (!targetSettings.isShowRoute()) {
 			routeGraphic.setVisible(false);
@@ -243,7 +263,7 @@ public class VesselTargetGraphic extends TargetGraphic {
 	public boolean getShowNameLabel() {
 		return showNameLabel;
 	}
-	
+
 	public IntendedRouteGraphic getRouteGraphic() {
 		return routeGraphic;
 	}

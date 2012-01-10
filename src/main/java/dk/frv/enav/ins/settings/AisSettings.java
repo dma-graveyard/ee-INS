@@ -54,6 +54,7 @@ public class AisSettings implements Serializable {
 	private int sartPrefix = 970;
 	private boolean showNameLabels = true;
 	private int showMinuteMarksAISTarget = 200;
+	private boolean showRisk = false;
 	
 	public AisSettings() {
 		
@@ -184,4 +185,14 @@ public class AisSettings implements Serializable {
 	public void setShowMinuteMarksAISTarget(int showMinuteMarksAISTarget) {
 		this.showMinuteMarksAISTarget = showMinuteMarksAISTarget;
 	}
+
+	public boolean isShowRisk() {
+		return showRisk;
+	}
+
+	public void setShowRisk(boolean showRisk) {
+		this.showRisk = showRisk;
+	}
+	
+	
 }

@@ -60,10 +60,15 @@ public class VesselTargetTriangle extends OMGraphicList {
 	public void update(double lat, double lon, int units, double heading, VesselTargetGraphic vesselTarget) {
 		this.vesselTarget = vesselTarget;
 		vessel.setLocation(lat, lon, units, heading);
+		
 	}
 
 	public VesselTargetGraphic getVesselTargetGraphic() {
 		return vesselTarget;
 	}
 
+	public void setLinePaint(Paint paint) {
+		vessel.setLinePaint(paint);
+	}
+	
 }

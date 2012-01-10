@@ -10,7 +10,7 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="extlib/commons-lang-2.5.jar"/>
 	<classpathentry kind="lib" path="extlib/commons-logging.jar"/>
-	<classpathentry kind="lib" path="extlib/enavshore-common.jar"/>
+	
 	<classpathentry kind="lib" path="extlib/log4j-1.2.15.jar"/>
 	<classpathentry kind="lib" path="extlib/milStd2525_png.jar"/>
 	<classpathentry kind="lib" path="extlib/omcorba.jar"/>
@@ -23,5 +23,7 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="extlib/aislib-1.3.jar"/>
+	<classpathentry combineaccessrules="true" kind="src" path="/enavshore">
+	</classpathentry>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

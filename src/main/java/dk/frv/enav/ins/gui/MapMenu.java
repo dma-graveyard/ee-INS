@@ -119,6 +119,7 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 	private JMenu scaleMenu;
 	private AisIntendedRouteToggle aisIntendedRouteToggle;
 	private AisTargetDetails aisTargetDetails;
+	
 	private SarTargetDetails sarTargetDetails;
 	private AisTargetLabelToggle aisTargetLabelToggle;
 	private MsiAcknowledge msiAcknowledge;
@@ -181,6 +182,7 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 		aisTargetLabelToggle = new AisTargetLabelToggle();
 		aisTargetLabelToggle.addActionListener(this);
 		
+			
 		// SART menu items
 		sarTargetDetails = new SarTargetDetails("SART details");
 		sarTargetDetails.addActionListener(this);
@@ -310,6 +312,7 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 		VesselTarget vesselTarget = targetGraphic.getVesselTarget();
 		aisTargetDetails.setMSSI(vesselTarget.getMmsi());
 		add(aisTargetDetails);
+		
 		
 		aisIntendedRouteToggle.setVesselTargetSettings(vesselTarget.getSettings());
 		aisIntendedRouteToggle.setAisLayer(aisLayer);

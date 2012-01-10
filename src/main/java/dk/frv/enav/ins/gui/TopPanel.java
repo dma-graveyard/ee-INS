@@ -48,15 +48,15 @@ import com.bbn.openmap.gui.OMComponentPanel;
 
 import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.event.NavigationMouseMode;
+import dk.frv.enav.ins.gui.ais.AisDialog;
 import dk.frv.enav.ins.gui.msi.MsiDialog;
 import dk.frv.enav.ins.gui.route.RouteManagerDialog;
 import dk.frv.enav.ins.msi.IMsiUpdateListener;
 import dk.frv.enav.ins.msi.MsiHandler;
 import dk.frv.enav.ins.msi.MsiHandler.MsiMessageExtended;
-import dk.frv.enav.ins.gui.ais.*;
 
 /**
- * The top buttons panel 
+ * The top buttons panel
  */
 public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUpdateListener, MouseListener {
 
@@ -68,25 +68,27 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 	private JToggleButton autoFollowBtn = new JToggleButton("Auto follow");
 	private JButton setupBtn = new JButton("Setup");
 	private JToggleButton routeBtn = new JToggleButton("R");
-	private JButton routeManagerBtn = new JButton("Routes");		
+	private JButton routeManagerBtn = new JButton("Routes");
 	private JButton msiButton = new JButton("MSI");
 	private JButton aisButton = new JButton("AIS Targets");
 	private JToggleButton aisBtn = new JToggleButton("AIS");
+	private JToggleButton riskBtn = new JToggleButton("Risk");
 	private JToggleButton encBtn = new JToggleButton("ENC");
 	private JToggleButton newRouteBtn = new JToggleButton("New route");
 	private MainFrame mainFrame;
 	private MsiDialog msiDialog = null;
 	private AisDialog aisDialog = null;
+	
 	private MouseDelegator mouseDelegator;
 	private final JToggleButton tglbtnMsiFilter = new JToggleButton("MSI filter");
 	private MsiHandler msiHandler;
 	private BlinkingLabel msiIcon;
 	private int notifyMsgId = -1;
-	
+
 	public TopPanel() {
-		super();		
+		super();
 		setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-		
+
 		zoomInBtn.setToolTipText("Zoom in");
 		zoomOutBtn.setToolTipText("Zoom out");
 		centreBtn.setToolTipText("Centre on ship");
@@ -95,10 +97,11 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 		routeBtn.setToolTipText("New route");
 		routeBtn.setVisible(false);
 		newRouteBtn.setToolTipText("Add a new route");
-		routeManagerBtn.setToolTipText("Routes Manager");		
+		routeManagerBtn.setToolTipText("Routes Manager");
 		msiButton.setToolTipText("Maritime Safety Information");
 		aisButton.setToolTipText("Show nearby vessels");
 		aisBtn.setToolTipText("Show/hide AIS targets");
+		riskBtn.setToolTipText("Show/hide risk info");
 		encBtn.setToolTipText("Show/hide ENC");
 		tglbtnMsiFilter.setToolTipText("Enable/disable MSI message filtering based on position and routes");
 
@@ -109,33 +112,30 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 		add(setupBtn);
 		add(routeBtn);
 		add(newRouteBtn);
-		add(routeManagerBtn);		
+		add(routeManagerBtn);
 		add(msiButton);
 		add(aisButton);
 		add(new JSeparator());
 		add(aisBtn);
+		add(riskBtn);
 		add(encBtn);
 		add(tglbtnMsiFilter);
-		
-		
+
 		Component horizontalStrut = Box.createHorizontalStrut(5);
 		JSeparator separator = new JSeparator();
 		separator.setOrientation(SwingConstants.VERTICAL);
 		horizontalStrut = Box.createHorizontalStrut(5);
-		
-		
+
 		ImageIcon[] msiAnim = new ImageIcon[2];
 		msiAnim[0] = new ImageIcon(EeINS.class.getResource("/images/msi/msi_symbol_64x20.png"));
 		msiAnim[1] = new ImageIcon(EeINS.class.getResource("/images/msi/blank64x20.png"));
 		msiIcon = new BlinkingLabel(400, msiAnim);
-		
-		
+
 		add(horizontalStrut);
-		//add(separator);
-		//add(horizontalStrut);
+		// add(separator);
+		// add(horizontalStrut);
 		add(msiIcon);
 		msiIcon.setVisible(false);
-	
 
 		msiIcon.addMouseListener(this);
 		zoomInBtn.addActionListener(this);
@@ -145,23 +145,24 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 		setupBtn.addActionListener(this);
 		routeBtn.addActionListener(this);
 		newRouteBtn.addActionListener(this);
-		routeManagerBtn.addActionListener(this);		
+		routeManagerBtn.addActionListener(this);
 		msiButton.addActionListener(this);
 		aisButton.addActionListener(this);
 		aisBtn.addActionListener(this);
+		riskBtn.addActionListener(this);
 		encBtn.addActionListener(this);
 		tglbtnMsiFilter.addActionListener(this);
-		
+
 		updateButtons();
 	}
-	
+
 	public void updateButtons() {
 		autoFollowBtn.setSelected(EeINS.getSettings().getNavSettings().isAutoFollow());
 		aisBtn.setSelected(EeINS.getSettings().getAisSettings().isVisible());
 		encBtn.setSelected(EeINS.getSettings().getMapSettings().isEncVisible());
 		tglbtnMsiFilter.setSelected(EeINS.getSettings().getEnavSettings().isMsiFilter());
 	}
-	
+
 	public void disableAutoFollow() {
 		EeINS.getSettings().getNavSettings().setAutoFollow(false);
 		if (autoFollowBtn.isSelected()) {
@@ -185,6 +186,8 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 		} else if (e.getSource() == aisBtn) {
 			EeINS.getSettings().getAisSettings().setVisible(aisBtn.isSelected());
 			mainFrame.getChartPanel().aisVisible(aisBtn.isSelected());
+		} else if (e.getSource() == riskBtn) {
+			EeINS.getRiskHandler().toggleRiskHandler(riskBtn.isSelected());
 		} else if (e.getSource() == encBtn) {
 			EeINS.getSettings().getMapSettings().setEncVisible(encBtn.isSelected());
 			mainFrame.getChartPanel().encVisible(encBtn.isSelected());
@@ -195,13 +198,13 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 			SetupDialog setupDialog = new SetupDialog(mainFrame);
 			setupDialog.loadSettings(EeINS.getSettings());
 			setupDialog.setVisible(true);
-		} else if (e.getSource() == msiButton) {			
+		} else if (e.getSource() == msiButton) {
 			msiDialog.setVisible(true);
-		} else if (e.getSource() == aisButton) {			
-			aisDialog.setVisible(true);		
+		} else if (e.getSource() == aisButton) {
+			aisDialog.setVisible(true);
 			aisDialog.setSelection(-1, true);
 		} else if (e.getSource() == newRouteBtn) {
-			if(mouseDelegator.getActiveMouseModeID() == NavigationMouseMode.modeID){
+			if (mouseDelegator.getActiveMouseModeID() == NavigationMouseMode.modeID) {
 				mainFrame.getChartPanel().editMode(true);
 			} else {
 				mainFrame.getChartPanel().editMode(false);
@@ -211,14 +214,14 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 			msiHandler.notifyUpdate();
 		}
 	}
-	
+
 	@Override
 	public void findAndInit(Object obj) {
 		if (obj instanceof MainFrame) {
-			mainFrame = (MainFrame)obj;
+			mainFrame = (MainFrame) obj;
 		}
 		if (obj instanceof MsiDialog) {
-			msiDialog = (MsiDialog)obj;
+			msiDialog = (MsiDialog) obj;
 		}
 		if (obj instanceof MouseDelegator) {
 			mouseDelegator = (MouseDelegator) obj;
@@ -227,23 +230,23 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 			msiHandler = (MsiHandler) obj;
 		}
 		if (obj instanceof AisDialog) {
-			aisDialog = (AisDialog)obj;
+			aisDialog = (AisDialog) obj;
 		}
 	}
-	
+
 	public MsiDialog getMsiDialog() {
 		return msiDialog;
 	}
-	
+
 	public AisDialog getAisDialog() {
 		return aisDialog;
-	}	
-	
+	}
+
 	public void setEncDisabled() {
 		encBtn.setEnabled(false);
 		encBtn.setSelected(false);
 	}
-	
+
 	public JToggleButton getNewRouteBtn() {
 		return newRouteBtn;
 	}
@@ -254,30 +257,28 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 			msiIcon.setVisible(true);
 			msiIcon.setBlink(true);
 			String encText = "";
-			
-			if (EeINS.getSettings().getEnavSettings().isMsiFilter())
-			{
+
+			if (EeINS.getSettings().getEnavSettings().isMsiFilter()) {
 				int firstUnAckFiltered = msiHandler.getFirstNonAcknowledgedFiltered();
-				//There are no MSI to acknowledge
-				if (firstUnAckFiltered != -1){
+				// There are no MSI to acknowledge
+				if (firstUnAckFiltered != -1) {
 					MsiMessageExtended msiMessageFiltered = msiHandler.getFilteredMessageList().get(firstUnAckFiltered);
 					notifyMsgId = msiMessageFiltered.msiMessage.getMessageId();
 					encText = msiMessageFiltered.msiMessage.getEncText();
 				}
-				
-			}else
-			{
+
+			} else {
 				int firstUnAck = msiHandler.getFirstNonAcknowledged();
 				MsiMessageExtended msiMessage = msiHandler.getMessageList().get(firstUnAck);
 				notifyMsgId = msiMessage.msiMessage.getMessageId();
 				encText = msiMessage.msiMessage.getEncText();
 			}
-			msiIcon.setToolTipText(encText);		
+			msiIcon.setToolTipText(encText);
 		} else {
 			notifyMsgId = -1;
 			msiIcon.setVisible(false);
-			//msiIcon.setBlink(false);
-			msiIcon.setToolTipText(null); 			
+			// msiIcon.setBlink(false);
+			msiIcon.setToolTipText(null);
 		}
 	}
 
@@ -295,25 +296,26 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseExited(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
+
 
 }
