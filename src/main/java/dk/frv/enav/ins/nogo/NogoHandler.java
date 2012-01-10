@@ -77,6 +77,14 @@ public class NogoHandler extends MapHandlerChild implements Runnable {
 	private Date validFrom;
 	private Date validTo;
 
+	public void setValidFrom(Date validFrom) {
+		this.validFrom = validFrom;
+	}
+
+	public void setValidTo(Date validTo) {
+		this.validTo = validTo;
+	}
+
 	private Boolean isVisible = true;
 
 	public NogoHandler(EnavSettings enavSettings) {
@@ -127,10 +135,10 @@ public class NogoHandler extends MapHandlerChild implements Runnable {
 			return false;
 		}
 
-		Date date = new Date();
+		//Date date = new Date();
 		//Send a rest to shoreServices for NoGo
 		NogoResponse nogoResponse = shoreServices.nogoPoll(draught,
-				northWestPoint, southEastPoint, date, date);
+				northWestPoint, southEastPoint, validFrom, validTo);
 
 		nogoPolygons = nogoResponse.getPolygons();
 		validFrom = nogoResponse.getValidFrom();

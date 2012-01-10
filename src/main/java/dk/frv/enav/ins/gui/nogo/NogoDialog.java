@@ -41,6 +41,7 @@ import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -50,6 +51,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.text.NumberFormatter;
 
 import dk.frv.ais.geo.GeoLocation;
 import dk.frv.enav.ins.ais.AisHandler;
@@ -59,7 +61,7 @@ import dk.frv.enav.ins.gui.MainFrame;
 import dk.frv.enav.ins.nogo.NogoHandler;
 
 /**
- * The setup dialog
+ * The nogo dialog
  */
 public class NogoDialog extends JDialog implements ActionListener, Runnable {
 	private static final long serialVersionUID = 1L;
@@ -67,7 +69,9 @@ public class NogoDialog extends JDialog implements ActionListener, Runnable {
 	private JButton cancelButton;
 	private JButton btnSelectArea;
 	JSpinner spinnerDraught;
-
+	JSpinner spinnerTimeStart;
+	JSpinner spinnerTimeEnd;
+	
 	JLabel nwPtlbl;
 	JLabel nePtlbl;
 	JLabel swPtlbl;
@@ -84,8 +88,9 @@ public class NogoDialog extends JDialog implements ActionListener, Runnable {
 			AisHandler aisHandler) {
 		super(parent, "Request Nogo", true);
 
-		MainFrame mainFrame = (MainFrame) parent;
+		mainFrame = (MainFrame) parent;
 
+		
 		this.chartPanel = mainFrame.getChartPanel();
 		this.nogoHandler = nogoHandler;
 
@@ -147,19 +152,19 @@ public class NogoDialog extends JDialog implements ActionListener, Runnable {
 		lblNogoBetween.setBounds(10, 24, 137, 14);
 		panel_1.add(lblNogoBetween);
 
-		JSpinner spinnerTimeStart = new JSpinner();
+		spinnerTimeStart = new JSpinner();
 		spinnerTimeStart.setModel(new SpinnerDateModel(
-				new Date(1323212400000L), null, null, Calendar.HOUR));
+				new Date(), null, null, Calendar.HOUR));
 		spinnerTimeStart.setBounds(10, 41, 98, 20);
 		panel_1.add(spinnerTimeStart);
-		spinnerTimeStart.setEnabled(false);
+		//spinnerTimeStart.setEnabled(false);
 
-		JSpinner spinnerTimeEnd = new JSpinner();
-		spinnerTimeEnd.setModel(new SpinnerDateModel(new Date(1323219600000L),
+		spinnerTimeEnd = new JSpinner();
+		spinnerTimeEnd.setModel(new SpinnerDateModel(new Date(),
 				null, null, Calendar.HOUR));
 		spinnerTimeEnd.setBounds(10, 64, 98, 20);
 		panel_1.add(spinnerTimeEnd);
-		spinnerTimeEnd.setEnabled(false);
+		//spinnerTimeEnd.setEnabled(false);
 
 		JPanel panel_2 = new JPanel();
 		panel_2.setBorder(new TitledBorder(UIManager
@@ -178,6 +183,11 @@ public class NogoDialog extends JDialog implements ActionListener, Runnable {
 		spinnerDraught.setModel(new SpinnerNumberModel(new Integer(10),
 				new Integer(0), null, new Integer(1)));
 		spinnerDraught.setBounds(107, 24, 38, 20);
+		
+		JFormattedTextField txt = ((JSpinner.NumberEditor) spinnerDraught.getEditor()).getTextField();
+		((NumberFormatter) txt.getFormatter()).setAllowsInvalid(false);
+
+		
 		panel_2.add(spinnerDraught);
 		{
 			JPanel buttonPane = new JPanel();
@@ -242,6 +252,13 @@ public class NogoDialog extends JDialog implements ActionListener, Runnable {
 				double draught = ((Integer) spinnerDraught.getValue())
 						.doubleValue();
 				nogoHandler.setDraught(draught);
+				nogoHandler.setValidFrom((Date) spinnerTimeStart.getValue());
+				nogoHandler.setValidTo((Date) spinnerTimeEnd.getValue());
+				
+				
+				if (mainFrame != null) {
+					mainFrame.getTopPanel().activateNogoButton();
+				}
 				(new Thread(this)).start();
 			} else {
 				nwPtlbl.setText("You must select an area");
@@ -263,10 +280,6 @@ public class NogoDialog extends JDialog implements ActionListener, Runnable {
 	@Override
 	public void run() {
 		nogoHandler.updateNogo();
-		if (mainFrame != null) {
-//			System.out.println("Activated");
-			mainFrame.getTopPanel().activateNogoButton();
-		}
 		this.dispose();
 	}
 

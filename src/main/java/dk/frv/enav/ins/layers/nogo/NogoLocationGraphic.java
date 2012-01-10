@@ -168,7 +168,7 @@ public class NogoLocationGraphic extends OMGraphicList {
 		image.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
 		super.render(image);
-		Font font = new Font("TimesRoman", Font.PLAIN, 16);
+		Font font = new Font(Font.MONOSPACED, Font.PLAIN, 16);
 
 		String message0 = "NoGo Active, only valid from " + validFrom + " to "
 				+ validTo;
@@ -177,6 +177,7 @@ public class NogoLocationGraphic extends OMGraphicList {
 
 		gr.setFont(font);
 		gr.setColor(Color.red);
+		
 
 		if (message.equals("")) {
 			gr.drawString(message0, 5, 20);
