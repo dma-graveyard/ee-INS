@@ -54,6 +54,7 @@ import dk.frv.enav.ins.gui.route.RouteManagerDialog;
 import dk.frv.enav.ins.msi.IMsiUpdateListener;
 import dk.frv.enav.ins.msi.MsiHandler;
 import dk.frv.enav.ins.msi.MsiHandler.MsiMessageExtended;
+import dk.frv.enav.ins.nogo.NogoHandler;
 
 /**
  * The top buttons panel
@@ -71,6 +72,7 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 	private JButton routeManagerBtn = new JButton("Routes");
 	private JButton msiButton = new JButton("MSI");
 	private JButton aisButton = new JButton("AIS Targets");
+	private JButton nogoButton = new JButton("Toggle NoGo");
 	private JToggleButton aisBtn = new JToggleButton("AIS");
 	private JToggleButton riskBtn = new JToggleButton("Risk");
 	private JToggleButton encBtn = new JToggleButton("ENC");
@@ -82,24 +84,28 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 	private MouseDelegator mouseDelegator;
 	private final JToggleButton tglbtnMsiFilter = new JToggleButton("MSI filter");
 	private MsiHandler msiHandler;
+	private NogoHandler nogoHandler;
 	private BlinkingLabel msiIcon;
+	private boolean noGoIsPressed = true;
 	private int notifyMsgId = -1;
 
 	public TopPanel() {
 		super();
 		setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+		
+		zoomInBtn.setToolTipText("Zoom in : Shortcut Numpad +");
+		zoomOutBtn.setToolTipText("Zoom out : Shortcut Numpad -");
+		centreBtn.setToolTipText("Centre on ship : Shortcut C");
 
-		zoomInBtn.setToolTipText("Zoom in");
-		zoomOutBtn.setToolTipText("Zoom out");
-		centreBtn.setToolTipText("Centre on ship");
 		autoFollowBtn.setToolTipText("Auto follow own ship");
 		setupBtn.setToolTipText("Setup");
 		routeBtn.setToolTipText("New route");
 		routeBtn.setVisible(false);
-		newRouteBtn.setToolTipText("Add a new route");
-		routeManagerBtn.setToolTipText("Routes Manager");
-		msiButton.setToolTipText("Maritime Safety Information");
-		aisButton.setToolTipText("Show nearby vessels");
+		newRouteBtn.setToolTipText("Add a new route : Shortcut Ctrl N");
+		routeManagerBtn.setToolTipText("Routes Manager : Shortcut Ctrl R");		
+		msiButton.setToolTipText("Maritime Safety Information : Shortcut Ctrl M");
+		aisButton.setToolTipText("Show nearby vessels : Shortcut Ctrl A");
+		nogoButton.setToolTipText("Show/hide NoGo area");
 		aisBtn.setToolTipText("Show/hide AIS targets");
 		riskBtn.setToolTipText("Show/hide risk info");
 		encBtn.setToolTipText("Show/hide ENC");
@@ -120,7 +126,9 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 		add(riskBtn);
 		add(encBtn);
 		add(tglbtnMsiFilter);
-
+		add(nogoButton);
+		
+		
 		Component horizontalStrut = Box.createHorizontalStrut(5);
 		JSeparator separator = new JSeparator();
 		separator.setOrientation(SwingConstants.VERTICAL);
@@ -148,11 +156,14 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 		routeManagerBtn.addActionListener(this);
 		msiButton.addActionListener(this);
 		aisButton.addActionListener(this);
+		nogoButton.addActionListener(this);
 		aisBtn.addActionListener(this);
 		riskBtn.addActionListener(this);
 		encBtn.addActionListener(this);
 		tglbtnMsiFilter.addActionListener(this);
-
+		
+		nogoButton.setSelected(true);
+		
 		updateButtons();
 	}
 
@@ -209,12 +220,42 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 			} else {
 				mainFrame.getChartPanel().editMode(false);
 			}
+		} else if (e.getSource() == nogoButton) {	
+			if (noGoIsPressed){
+				noGoIsPressed = false;
+			}else{
+				noGoIsPressed = true;
+			}
+			nogoButton.setSelected(nogoHandler.toggleLayer());
+		} else if (e.getSource() == newRouteBtn) {
+			newRoute();
 		} else if (e.getSource() == tglbtnMsiFilter) {
 			EeINS.getSettings().getEnavSettings().setMsiFilter(tglbtnMsiFilter.isSelected());
 			msiHandler.notifyUpdate();
 		}
 	}
+	
+	public void newRoute(){
+		if(mouseDelegator.getActiveMouseModeID() == NavigationMouseMode.modeID){
+			mainFrame.getChartPanel().editMode(true);
+		} else {
+			mainFrame.getChartPanel().editMode(false);
+		}
+	}
 
+	public void activateNewRouteButton(){
+		newRouteBtn.doClick();
+	}
+	
+	public void activateNogoButton(){
+		if (!noGoIsPressed)
+		{
+		nogoButton.doClick();
+		noGoIsPressed = true;
+		}
+	}
+	
+	
 	@Override
 	public void findAndInit(Object obj) {
 		if (obj instanceof MainFrame) {
@@ -232,6 +273,9 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 		if (obj instanceof AisDialog) {
 			aisDialog = (AisDialog) obj;
 		}
+		if (obj instanceof NogoHandler) {
+			nogoHandler = (NogoHandler)obj;
+		}		
 	}
 
 	public MsiDialog getMsiDialog() {

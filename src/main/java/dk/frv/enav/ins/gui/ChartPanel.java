@@ -31,6 +31,7 @@ package dk.frv.enav.ins.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.Point2D;
@@ -49,6 +50,8 @@ import com.bbn.openmap.MapHandler;
 import com.bbn.openmap.MouseDelegator;
 import com.bbn.openmap.gui.OMComponentPanel;
 import com.bbn.openmap.layer.shape.ShapeLayer;
+import com.bbn.openmap.proj.Proj;
+import com.bbn.openmap.proj.Projection;
 import com.bbn.openmap.proj.coords.LatLonPoint;
 
 import dk.frv.ais.geo.GeoLocation;
@@ -58,11 +61,13 @@ import dk.frv.enav.ins.event.NavigationMouseMode;
 import dk.frv.enav.ins.event.RouteEditMouseMode;
 import dk.frv.enav.ins.gps.GpsData;
 import dk.frv.enav.ins.gps.IGpsDataListener;
+import dk.frv.enav.ins.gui.nogo.NogoDialog;
 import dk.frv.enav.ins.layers.EncLayerFactory;
 import dk.frv.enav.ins.layers.GeneralLayer;
 import dk.frv.enav.ins.layers.ais.AisLayer;
 import dk.frv.enav.ins.layers.gps.GpsLayer;
 import dk.frv.enav.ins.layers.msi.MsiLayer;
+import dk.frv.enav.ins.layers.nogo.NogoLayer;
 import dk.frv.enav.ins.layers.route.RouteLayer;
 import dk.frv.enav.ins.layers.routeEdit.NewRouteContainerLayer;
 import dk.frv.enav.ins.layers.routeEdit.RouteEditLayer;
@@ -90,6 +95,7 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 	private SensorPanel sensorPanel;
 	private RouteLayer routeLayer;
 	private MsiLayer msiLayer;
+	private NogoLayer nogoLayer;	
 	private TopPanel topPanel;
 	private RouteEditMouseMode routeEditMouseMode;
 	private RouteEditLayer routeEditLayer;
@@ -97,6 +103,9 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 	public int maxScale = 5000;
 	private MSIFilterMouseMode msiFilterMouseMode;
 	private GpsData gpsData;
+	private boolean nogoMode = false;
+	
+	private NogoDialog nogoDialog;
 
 	public ChartPanel(SensorPanel sensorPanel) {
 		super();
@@ -177,6 +186,12 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 		msiLayer = new MsiLayer();
 		msiLayer.setVisible(true);
 		mapHandler.add(msiLayer);
+		
+		// Create Nogo layer
+		nogoLayer = new NogoLayer();
+		nogoLayer.setVisible(true);
+		mapHandler.add(nogoLayer);
+		
 
 		// Create AIS layer
 		aisLayer = new AisLayer();
@@ -229,6 +244,7 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 		// Force a route layer and sensor panel update
 		routeLayer.routesChanged(RoutesUpdateEvent.ROUTE_ADDED);
 		sensorPanel.routesChanged(RoutesUpdateEvent.ROUTE_ADDED);
+		
 		// Force a MSI layer update
 		msiLayer.doUpdate();
 
@@ -294,6 +310,9 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 		autoFollow();
 	}
 
+	
+	
+	
 	public void aisVisible(boolean visible) {
 		aisLayer.setVisible(visible);
 	}
@@ -306,6 +325,7 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 
 	public void editMode(boolean enable) {
 		if (enable) {
+			System.out.println("Enabled");
 			mouseDelegator.setActive(routeEditMouseMode);
 			routeEditLayer.setVisible(true);
 			routeEditLayer.setEnabled(true);
@@ -514,7 +534,24 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 	public int getMaxScale() {
 		return maxScale;
 	}
-
+	
+	public void setNogoMode(boolean value){
+		nogoMode = value;
+	}
+	
+	public boolean getNogoMode(){
+		return nogoMode;
+	}
+		
+	public void setNogoDialog(NogoDialog dialog){
+		this.nogoDialog = dialog;
+	}
+	
+	public NogoDialog getNogoDialog(){
+		return nogoDialog;
+	}
+	
+	
 	@Override
 	public void findAndInit(Object obj) {
 		if (obj instanceof TopPanel) {
@@ -533,4 +570,35 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		autoFollow();
 	}
+	
+	/**
+	 * 
+	 * @param direction
+	 * 1 == Up
+	 * 2 == Down
+	 * 3 == Left
+	 * 4 == Right
+	 * 
+	 * Moving by 100 units in each direction
+	 * Map center is [745, 445]
+	 */
+	  public void pan(int direction) {
+		Point point = null;
+	    switch (direction) {
+	    	case 1:  point = new Point(745,345);	break;
+        	case 2:  point = new Point(745,545);	break;
+            case 3:  point = new Point(645,445);	break;
+            case 4:  point = new Point(845,445);	break;
+	        }
+	    
+        Projection projection = map.getProjection();
+        Proj p = (Proj) projection;
+        LatLonPoint llp = projection.inverse(point);
+        p.setCenter(llp);
+        map.setProjection(p);
+        manualProjChange();
+	   }
+	  
+	  
+	    
 }

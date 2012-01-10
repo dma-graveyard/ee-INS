@@ -47,10 +47,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.ListSelectionModel;
+import javax.swing.RowSorter;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 import dk.frv.ais.geo.GeoLocation;
 import dk.frv.ais.message.AisMessage;
@@ -174,7 +177,14 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 		aisTable.setModel(aisTableModel);
 		aisSelectionModel = aisTable.getSelectionModel();
 		aisTable.setSelectionModel(aisSelectionModel);
-//		aisTable.setAutoCreateRowSorter(true);
+
+		//		aisTable.setAutoCreateRowSorter(true);
+		TableRowSorter<TableModel> sorter 
+	    = new TableRowSorter<TableModel>(aisTable.getModel());
+		aisTable.setRowSorter(sorter);		
+		
+		
+		
 		aisSelectionModel = aisTable.getSelectionModel();
 		aisSelectionModel.addListSelectionListener(this);
 		aisTable.setSelectionModel(aisSelectionModel);		
@@ -235,38 +245,38 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 	
 	private void updateTable() throws InterruptedException {
 		int selectedRow = -1;
-		if (aisTable.getSize().height > 0){
-			selectedRow = aisTable.getSelectedRow();
-		}else{
-			//System.out.println("Possible error occured");
-			Thread.sleep(1);
-		}
-//		@SuppressWarnings("rawtypes")
-//		RowSorter rs = aisTable.getRowSorter();
-
-		Long selectedMMSI = 0L;
-		if (selectedRow >=0){
-			selectedMMSI = (Long) aisTable.getValueAt(selectedRow, 1);
-		}
-			
-		if(aisTableModel==null){
-			//Aisdialog not initialised
-			return;
-		}
-		aisTableModel.updateShips();
-		// Update table
-		aisTableModel.fireTableDataChanged();
-		if (selectedRow >= 0 && selectedRow < aisTable.getRowCount()) {
-			setSelected(selectedRow, false);
-		} else {
-			if (selectedRow >= 0) {
-				selectedRow = aisTable.getRowCount() - 1;
+		if (aisTable != null) {
+			if (aisTable.getSize().height > 0){
+				selectedRow = aisTable.getSelectedRow();
+			}else{
+				//System.out.println("Possible error occured");
+				Thread.sleep(1);
+			}
+			@SuppressWarnings("rawtypes")
+			RowSorter rs = aisTable.getRowSorter();
+	
+			Long selectedMMSI = 0L;
+			if (selectedRow >=0){
+				selectedMMSI = (Long) aisTable.getValueAt(selectedRow, 1);
+			}
+				
+			if (aisTableModel != null) {
+			aisTableModel.updateShips();
+			// Update table
+			aisTableModel.fireTableDataChanged();
+			if (selectedRow >= 0 && selectedRow < aisTable.getRowCount()) {
 				setSelected(selectedRow, false);
+			} else {
+				if (selectedRow >= 0) {
+					selectedRow = aisTable.getRowCount() - 1;
+					setSelected(selectedRow, false);
+				}
+			}
+			updateDetails();
+			rs.allRowsChanged();
+			setSelection(selectedMMSI, false);
 			}
 		}
-		updateDetails();
-//		rs.allRowsChanged();
-		setSelection(selectedMMSI, false);
 	}
 	
 	private void updateDetails() {
@@ -355,84 +365,68 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 		if (!compare(aisTableDetails.getValueAt(0, 1), mmsi)){
 		aisTableDetails.setValueAt(mmsi, 0, 1);
 		}
-		
 		if (!compare(aisTableDetails.getValueAt(1, 1), "Class " + aisClass)){		
 		aisTableDetails.setValueAt("Class " + aisClass, 1, 1);
 		}
-		
 		if (!compare(aisTableDetails.getValueAt(2, 1), name)){
 		aisTableDetails.setValueAt(name, 2, 1);
 		}
-		
 		if (!compare(aisTableDetails.getValueAt(3, 1), callSign)){
 		aisTableDetails.setValueAt(callSign, 3, 1);
 		}
-		
 		if (!compare(aisTableDetails.getValueAt(4, 1), length)){
 		aisTableDetails.setValueAt(length, 4, 1);
 		}
-		
 		if (!compare(aisTableDetails.getValueAt(5, 1), width)){
 		aisTableDetails.setValueAt(width, 5, 1);
 		}
-		
 		if (!compare(aisTableDetails.getValueAt(6, 1), draught)){
 		aisTableDetails.setValueAt(draught, 6, 1);
 		}
-		
 		if (!compare(aisTableDetails.getValueAt(7, 1), navStatus)){
 		aisTableDetails.setValueAt(navStatus, 7, 1);
 		}
-		
 		if (!compare(aisTableDetails.getValueAt(8, 1), type)){
 		aisTableDetails.setValueAt(type, 8, 1);
 		}
-		
 		if (!compare(aisTableDetails.getValueAt(9, 1), cargo)){
 		aisTableDetails.setValueAt(cargo, 9, 1);
 		}
-		
 		if (!compare(aisTableDetails.getValueAt(10, 1), lat)){
 		aisTableDetails.setValueAt(lat, 10, 1);
 		}
-		
 		if (!compare(aisTableDetails.getValueAt(11, 1), callSign)){
 		aisTableDetails.setValueAt(callSign, 11, 1);
 		}
-		
 		if (!compare(aisTableDetails.getValueAt(12, 1), lastRecieved)){
 		aisTableDetails.setValueAt(lastRecieved, 12, 1);
 		}
-		
 		if (!compare(aisTableDetails.getValueAt(13, 1), destination)){
 		aisTableDetails.setValueAt(destination, 13, 1);
 		}
-		
 		if (!compare(aisTableDetails.getValueAt(14, 1), eta)){
 		aisTableDetails.setValueAt(eta, 14, 1);
 		}
-		
 		if (!compare(aisTableDetails.getValueAt(15, 1), trueHeading)){
 		aisTableDetails.setValueAt(trueHeading, 15, 1);
 		}
-		
 		if (!compare(aisTableDetails.getValueAt(16, 1), cog)){
 		aisTableDetails.setValueAt(cog, 16, 1);
 		}
-		
 		if (!compare(aisTableDetails.getValueAt(17, 1), sog)){
 		aisTableDetails.setValueAt(sog, 17, 1);
 		}
-		
 		if (!compare(aisTableDetails.getValueAt(18, 1), rot)){
 		aisTableDetails.setValueAt(rot, 18, 1);
 		}
-		
 	}
 	
 private boolean compare(Object value1, Object value2){
-	if (value1.toString().equals(value2.toString())){
-		return true;
+	if (value1 != null && value2 != null)
+	{
+		if (value1.toString().equals(value2.toString())){
+			return true;
+		}
 	}
 	return false;
 }

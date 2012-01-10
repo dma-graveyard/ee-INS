@@ -29,12 +29,19 @@
  */
 package dk.frv.enav.ins;
 
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.InputMap;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
@@ -48,6 +55,7 @@ import dk.frv.enav.ins.ais.AisHandler;
 import dk.frv.enav.ins.gps.GnssTime;
 import dk.frv.enav.ins.gps.GpsHandler;
 import dk.frv.enav.ins.gui.MainFrame;
+import dk.frv.enav.ins.gui.route.RouteManagerDialog;
 import dk.frv.enav.ins.msi.MsiHandler;
 import dk.frv.enav.ins.nmea.NmeaFileSensor;
 import dk.frv.enav.ins.nmea.NmeaSensor;
@@ -56,6 +64,7 @@ import dk.frv.enav.ins.nmea.NmeaStdinSensor;
 import dk.frv.enav.ins.nmea.NmeaTcpSensor;
 import dk.frv.enav.ins.nmea.SensorType;
 import dk.frv.enav.ins.risk.RiskHandler;
+import dk.frv.enav.ins.nogo.NogoHandler;
 import dk.frv.enav.ins.route.RouteManager;
 import dk.frv.enav.ins.services.ais.AisServices;
 import dk.frv.enav.ins.services.shore.ShoreServices;
@@ -88,6 +97,7 @@ public class EeINS {
 	private static ShoreServices shoreServices;
 	private static AisServices aisServices;
 	private static MsiHandler msiHandler;
+	private static NogoHandler nogoHandler;
 	private static UpdateCheckerThread updateThread;
 	private static ExceptionHandler exceptionHandler = new ExceptionHandler();
 	
@@ -167,6 +177,10 @@ public class EeINS {
         msiHandler = new MsiHandler(getSettings().getEnavSettings());
         mapHandler.add(msiHandler);
         
+        // Create NoGo handler
+        nogoHandler = new NogoHandler(getSettings().getEnavSettings());
+        mapHandler.add(nogoHandler);        
+        
         // Create plugin components
         createPluginComponents();
         
@@ -176,10 +190,14 @@ public class EeINS {
                 createAndShowGUI();
             }
         });
+        
+
 
         // Start thread to handle software updates
         updateThread = new UpdateCheckerThread();
         mapHandler.add(updateThread);
+        
+ 
         
 	}
 	
@@ -274,6 +292,122 @@ public class EeINS {
         // Create and set up the main window        
 		mainFrame = new MainFrame();
 		mainFrame.setVisible(true);
+		
+	    // Create keybinding shortcuts
+        makeKeyBindings();
+		
+
+	}
+	
+	private static void makeKeyBindings(){
+	      JPanel content = (JPanel) mainFrame.getContentPane();
+	      InputMap inputMap = content.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		
+	    @SuppressWarnings("serial")
+		Action zoomIn = new AbstractAction() {
+	        public void actionPerformed(ActionEvent actionEvent) {
+	        	mainFrame.getChartPanel().doZoom(0.5f);
+	        }
+	      };
+	      
+		@SuppressWarnings("serial")
+		Action zoomOut = new AbstractAction() {
+		    public void actionPerformed(ActionEvent actionEvent) {
+		    	mainFrame.getChartPanel().doZoom(2f);
+		        }
+		      };	      
+		    
+		@SuppressWarnings("serial")		      
+		Action centreOnShip = new AbstractAction() {
+			public void actionPerformed(ActionEvent actionEvent) {
+			      mainFrame.getChartPanel().centreOnShip();
+				  }
+			};	
+			
+		@SuppressWarnings("serial")			
+		Action newRoute = new AbstractAction() {
+			public void actionPerformed(ActionEvent actionEvent) {
+				 //newRouteBtn.requestFocusInWindow();
+				mainFrame.getTopPanel().activateNewRouteButton();
+				  }
+			};	
+			
+		@SuppressWarnings("serial")	
+		Action routes = new AbstractAction() {
+			public void actionPerformed(ActionEvent actionEvent) {
+				RouteManagerDialog routeManagerDialog = new RouteManagerDialog(mainFrame);
+				routeManagerDialog.setVisible(true);
+				 }
+			};	 
+			
+		@SuppressWarnings("serial")	
+		Action msi = new AbstractAction() {
+			public void actionPerformed(ActionEvent actionEvent) {
+				mainFrame.getTopPanel().getMsiDialog().setVisible(true);
+				 }
+			};	
+			
+		@SuppressWarnings("serial")
+		Action ais = new AbstractAction() {
+			public void actionPerformed(ActionEvent actionEvent) {
+				mainFrame.getTopPanel().getAisDialog().setVisible(true);
+				 }
+			};	  	
+			
+		@SuppressWarnings("serial")
+		Action panUp = new AbstractAction() {
+			public void actionPerformed(ActionEvent actionEvent) {
+				mainFrame.getChartPanel().pan(1);
+				}
+			};
+		@SuppressWarnings("serial")
+		Action panDown = new AbstractAction() {
+			public void actionPerformed(ActionEvent actionEvent) {
+				mainFrame.getChartPanel().pan(2);
+				}
+			};			
+			
+		@SuppressWarnings("serial")
+		Action panLeft = new AbstractAction() {
+			public void actionPerformed(ActionEvent actionEvent) {
+				mainFrame.getChartPanel().pan(3);
+				}
+			};
+		@SuppressWarnings("serial")
+		Action panRight = new AbstractAction() {
+			public void actionPerformed(ActionEvent actionEvent) {
+				mainFrame.getChartPanel().pan(4);
+				}
+			};			
+	   			
+	      inputMap.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ADD, 0), "ZoomIn");
+	      inputMap.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_SUBTRACT, 0), "ZoomOut");
+	      inputMap.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, 0), "centre");
+	      inputMap.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_UP, 0), "panUp");
+	      inputMap.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_DOWN, 0), "panDown");
+	      inputMap.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_LEFT, 0), "panLeft");
+	      inputMap.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_RIGHT, 0), "panRight");
+	      inputMap.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_KP_UP, 0), "panUp");
+	      inputMap.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_KP_DOWN, 0), "panDown");
+	      inputMap.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_KP_LEFT, 0), "panLeft");
+	      inputMap.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_KP_RIGHT, 0), "panRight");	      
+	      inputMap.put(KeyStroke.getKeyStroke("control N"), "newRoute");	      
+	      inputMap.put(KeyStroke.getKeyStroke("control R"), "routes");
+	      inputMap.put(KeyStroke.getKeyStroke("control M"), "msi");
+	      inputMap.put(KeyStroke.getKeyStroke("control A"), "ais");	      
+	      
+	      content.getActionMap().put("ZoomOut", zoomOut);
+	      content.getActionMap().put("ZoomIn", zoomIn);
+	      content.getActionMap().put("centre", centreOnShip);
+	      content.getActionMap().put("newRoute", newRoute);
+	      content.getActionMap().put("routes", routes);
+	      content.getActionMap().put("msi", msi);
+	      content.getActionMap().put("ais", ais);	   
+	      content.getActionMap().put("panUp", panUp);	
+	      content.getActionMap().put("panDown", panDown);	
+	      content.getActionMap().put("panLeft", panLeft);	
+	      content.getActionMap().put("panRight", panRight);	
+	      
 	}
 	
 	private static void initLookAndFeel() {
