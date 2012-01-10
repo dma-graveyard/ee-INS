@@ -46,11 +46,14 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
+import javax.swing.JSpinner.DateEditor;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.text.NumberFormatter;
 
 import dk.frv.ais.geo.GeoLocation;
@@ -71,7 +74,7 @@ public class NogoDialog extends JDialog implements ActionListener, Runnable {
 	JSpinner spinnerDraught;
 	JSpinner spinnerTimeStart;
 	JSpinner spinnerTimeEnd;
-	
+
 	JLabel nwPtlbl;
 	JLabel nePtlbl;
 	JLabel swPtlbl;
@@ -84,13 +87,12 @@ public class NogoDialog extends JDialog implements ActionListener, Runnable {
 	GeoLocation northWestPoint = null;
 	GeoLocation southEastPoint = null;
 
-	public NogoDialog(JFrame parent, NogoHandler nogoHandler,
-			AisHandler aisHandler) {
+	@SuppressWarnings("deprecation")
+	public NogoDialog(JFrame parent, NogoHandler nogoHandler, AisHandler aisHandler) {
 		super(parent, "Request Nogo", true);
 
 		mainFrame = (MainFrame) parent;
 
-		
 		this.chartPanel = mainFrame.getChartPanel();
 		this.nogoHandler = nogoHandler;
 
@@ -108,8 +110,7 @@ public class NogoDialog extends JDialog implements ActionListener, Runnable {
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 
 		JPanel panel = new JPanel();
-		panel.setBorder(new TitledBorder(null, "Area Selection",
-				TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel.setBorder(new TitledBorder(null, "Area Selection", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel.setBounds(15, 30, 327, 115);
 
 		JLabel lblNogoRequest = new JLabel("Nogo Request:");
@@ -142,8 +143,7 @@ public class NogoDialog extends JDialog implements ActionListener, Runnable {
 		contentPanel.add(lblNogoRequest);
 
 		JPanel panel_1 = new JPanel();
-		panel_1.setBorder(new TitledBorder(null, "Time Selected",
-				TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel_1.setBorder(new TitledBorder(null, "Time Selected", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel_1.setBounds(15, 156, 327, 94);
 		contentPanel.add(panel_1);
 		panel_1.setLayout(null);
@@ -152,25 +152,60 @@ public class NogoDialog extends JDialog implements ActionListener, Runnable {
 		lblNogoBetween.setBounds(10, 24, 137, 14);
 		panel_1.add(lblNogoBetween);
 
-		spinnerTimeStart = new JSpinner();
-		spinnerTimeStart.setModel(new SpinnerDateModel(
-				new Date(), null, null, Calendar.HOUR));
-		spinnerTimeStart.setBounds(10, 41, 98, 20);
-		panel_1.add(spinnerTimeStart);
-		//spinnerTimeStart.setEnabled(false);
+		Date date = new Date();
+		date.setMinutes(0);
+		date.setSeconds(0);
 
+		Date date48hour = date;
+
+		Calendar c = Calendar.getInstance();
+		c.setTime(date48hour);
+		c.add(Calendar.DATE, 2); // number of days to add
+		date48hour = c.getTime();
+
+		spinnerTimeStart = new JSpinner();
 		spinnerTimeEnd = new JSpinner();
-		spinnerTimeEnd.setModel(new SpinnerDateModel(new Date(),
-				null, null, Calendar.HOUR));
+
+		spinnerTimeStart.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+
+//				System.out.println("timeStart is :" + ((Date) spinnerTimeStart.getValue()));
+//				System.out.println("timeEnd is :" + ((Date) spinnerTimeEnd.getValue()));
+
+				if (((Date) spinnerTimeEnd.getValue()).getTime() < ((Date) spinnerTimeStart.getValue()).getTime()) {
+
+					// Update timespinnerend with timespinnerstart
+					spinnerTimeEnd.setValue(spinnerTimeStart.getValue());
+
+					//
+//					System.out.println("Update timeEnd");
+				}
+
+			}
+		});
+
+		spinnerTimeStart.setModel(new SpinnerDateModel(date, null, date48hour, Calendar.HOUR));
+		spinnerTimeStart.setBounds(10, 41, 98, 20);
+
+
+		spinnerTimeEnd.setModel(new SpinnerDateModel(date, null, date48hour, Calendar.HOUR));
 		spinnerTimeEnd.setBounds(10, 64, 98, 20);
+
+		// spinnerTimeStart.setEditor(new JSpinner.DateEditor(spinnerTimeStart,
+		// "HH-mm - dd:MM"));
+
+		panel_1.add(spinnerTimeStart);
 		panel_1.add(spinnerTimeEnd);
-		//spinnerTimeEnd.setEnabled(false);
+
+		
+		spinnerTimeStart.setEditor(new JSpinner.DateEditor(spinnerTimeStart, "HH:mm - dd-MM             :yyyy"));
+		spinnerTimeEnd.setEditor(new JSpinner.DateEditor(spinnerTimeEnd, "HH:mm - dd-MM             :yyyy"));
+		
+
 
 		JPanel panel_2 = new JPanel();
-		panel_2.setBorder(new TitledBorder(UIManager
-				.getBorder("TitledBorder.border"), "Draught",
-				TitledBorder.LEADING, TitledBorder.TOP, null,
-				new Color(0, 0, 0)));
+		panel_2.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Draught", TitledBorder.LEADING,
+				TitledBorder.TOP, null, new Color(0, 0, 0)));
 		panel_2.setBounds(15, 259, 327, 59);
 		contentPanel.add(panel_2);
 		panel_2.setLayout(null);
@@ -180,14 +215,12 @@ public class NogoDialog extends JDialog implements ActionListener, Runnable {
 		panel_2.add(lblNewLabel);
 
 		spinnerDraught = new JSpinner();
-		spinnerDraught.setModel(new SpinnerNumberModel(new Integer(10),
-				new Integer(0), null, new Integer(1)));
+		spinnerDraught.setModel(new SpinnerNumberModel(new Integer(5), new Integer(0), null, new Integer(1)));
 		spinnerDraught.setBounds(107, 24, 38, 20);
-		
+
 		JFormattedTextField txt = ((JSpinner.NumberEditor) spinnerDraught.getEditor()).getTextField();
 		((NumberFormatter) txt.getFormatter()).setAllowsInvalid(false);
 
-		
 		panel_2.add(spinnerDraught);
 		{
 			JPanel buttonPane = new JPanel();
@@ -207,18 +240,16 @@ public class NogoDialog extends JDialog implements ActionListener, Runnable {
 			}
 		}
 
-		if (aisHandler != null
-				&& aisHandler.getOwnShip().getStaticData() != null) {
-			Integer draught = (int) aisHandler.getOwnShip().getStaticData()
-					.getDraught();
+		if (aisHandler != null && aisHandler.getOwnShip().getStaticData() != null) {
+			Integer draught = ((int) aisHandler.getOwnShip().getStaticData().getDraught() / 10);
 			spinnerDraught.setValue(draught);
 		}
 
 	}
 
 	public void setSelectedArea(Point2D[] points) {
-		
-		//Find out what is the max of the selection made
+
+		// Find out what is the max of the selection made
 		if (points[0].getY() > points[1].getY()) {
 			// points 0 is the top left
 			northWestPoint = new GeoLocation(points[0].getY(), points[0].getX());
@@ -249,13 +280,11 @@ public class NogoDialog extends JDialog implements ActionListener, Runnable {
 				this.setVisible(false);
 				nogoHandler.setNorthWestPoint(northWestPoint);
 				nogoHandler.setSouthEastPoint(southEastPoint);
-				double draught = ((Integer) spinnerDraught.getValue())
-						.doubleValue();
+				double draught = ((Integer) spinnerDraught.getValue()).doubleValue();
 				nogoHandler.setDraught(draught);
 				nogoHandler.setValidFrom((Date) spinnerTimeStart.getValue());
 				nogoHandler.setValidTo((Date) spinnerTimeEnd.getValue());
-				
-				
+
 				if (mainFrame != null) {
 					mainFrame.getTopPanel().activateNogoButton();
 				}
@@ -270,7 +299,7 @@ public class NogoDialog extends JDialog implements ActionListener, Runnable {
 			this.dispose();
 		}
 		if (e.getSource() == btnSelectArea) {
-			//Make a selection on the chartmap
+			// Make a selection on the chartmap
 			this.setVisible(false);
 			chartPanel.setNogoDialog(this);
 			chartPanel.setNogoMode(true);

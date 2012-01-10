@@ -61,14 +61,13 @@ public class NogoLayer extends OMGraphicHandlerLayer {
 			// We have selected an area outside of the available data - send
 			// appropiate message
 			if (polygons.size() == 0) {
-				NogoGraphic nogoGraphic = new NogoGraphic(null, null, null,
-						draught, "No data available for requested area");
+				NogoGraphic nogoGraphic = new NogoGraphic(null, null, null, draught,
+						"No data available for requested area");
 				graphics.add(nogoGraphic);
 			} else {
 				// Data available, go through each polygon and draw them
 				for (NogoPolygon polygon : polygons) {
-					NogoGraphic nogoGraphic = new NogoGraphic(polygon,
-							validFrom, validTo, draught, "");
+					NogoGraphic nogoGraphic = new NogoGraphic(polygon, validFrom, validTo, draught, "");
 					graphics.add(nogoGraphic);
 				}
 			}
@@ -76,8 +75,8 @@ public class NogoLayer extends OMGraphicHandlerLayer {
 		} else {
 			// We have just sent a nogo request - display a message telling the
 			// user to standby
-			NogoGraphic nogoGraphic = new NogoGraphic(null, validFrom, validTo,
-					draught, "NoGo area requested - standby");
+			NogoGraphic nogoGraphic = new NogoGraphic(null, validFrom, validTo, draught,
+					"NoGo area requested - standby");
 			graphics.add(nogoGraphic);
 		}
 

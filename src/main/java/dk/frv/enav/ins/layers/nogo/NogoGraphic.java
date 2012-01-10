@@ -47,33 +47,10 @@ public class NogoGraphic extends OMGraphicList {
 		
 		this.polygon = polygon;
 		
-//		this.message = message; 
-//		this.msiMessage = message.msiMessage;
-		
-		// Create text box and hide it
-//		msiTextBox = new MsiTextBox(msiMessage, message.acknowledged);
-//		add(msiTextBox);
-//		msiTextBox.setVisible(false);
-		
-		// Create symbol graphic
-//		MsiSymbolGraphic msiSymbolGrahic = new MsiSymbolGraphic(message);
-//		add(msiSymbolGrahic);
-		
 		// Create location grahic
 		NogoLocationGraphic nogoLocationGraphic = new NogoLocationGraphic(this.polygon, validFrom, validTo, draught, message);
 		add(nogoLocationGraphic);
 	}
-	
-//	public void showTextBox(){
-//		msiTextBox.setVisible(true);
-//	}
-//	
-//	public void hideTextBox(){
-//		msiTextBox.setVisible(false);
-//	}
-//	
-//	public boolean getTextBoxVisible(){
-//		return msiTextBox.isVisible();
-//	}
+
 
 }
