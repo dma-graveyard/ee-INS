@@ -55,6 +55,7 @@ import dk.frv.enav.ins.ais.VesselTarget;
 import dk.frv.enav.ins.ais.VesselTargetSettings;
 import dk.frv.enav.ins.common.graphics.RotationalPoly;
 import dk.frv.enav.ins.common.math.Vector2D;
+import dk.frv.enav.ins.risk.RiskHandler;
 
 /**
  * Graphic for vessel target
@@ -109,7 +110,7 @@ public class VesselTargetGraphic extends TargetGraphic {
 		 * new RotationalPoly(vesselX, vesselY, stroke, paint);
 		 */
 		vessel = new VesselTargetTriangle();
-
+		
 		int[] headingX = { 0, 0 };
 		int[] headingY = { 0, -100 };
 		heading = new RotationalPoly(headingX, headingY, null, paint);
@@ -149,22 +150,22 @@ public class VesselTargetGraphic extends TargetGraphic {
 		}
 
 		// Set color based on risk index
-//		switch (EeINS.getRiskHandler().getTotalRiskLevel(vesselTarget.getMmsi())) {
-//		case UNKNOWN:
-//			vessel.setLinePaint(new Color(74, 97, 205, 255));
-//			break;
-//		case LOW:
-//			vessel.setLinePaint(Color.GREEN);
-//			break;
-//		case MIDDLE:
-//			vessel.setLinePaint(Color.YELLOW);
-//			break;
-//		case HIGH:
-//			vessel.setLinePaint(Color.RED);
-//			break;
-//		default:
-//			break;
-//		}
+		switch (EeINS.getRiskHandler().getRiskLevel(vesselTarget.getMmsi())) {
+		case UNKNOWN:
+			vessel.setLinePaint(new Color(74, 97, 205, 255));
+			break;
+		case LOW:
+			vessel.setLinePaint(Color.GREEN);
+			break;
+		case MEDIUM:
+			vessel.setLinePaint(Color.YELLOW);
+			break;
+		case HIGH:
+			vessel.setLinePaint(Color.RED);
+			break;
+		default:
+			break;
+		}
 
 		double sog = vesselTarget.getPositionData().getSog();
 		double cogR = Math.toRadians(vesselTarget.getPositionData().getCog());
