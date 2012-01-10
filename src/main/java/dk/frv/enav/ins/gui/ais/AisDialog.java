@@ -56,9 +56,7 @@ import dk.frv.ais.geo.GeoLocation;
 import dk.frv.ais.message.AisMessage;
 
 
-import dk.frv.enav.common.xml.risk.response.Risk;
 import dk.frv.enav.common.xml.risk.response.RiskList;
-import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.ais.AisHandler;
 import dk.frv.enav.ins.ais.AisHandler.AisMessageExtended;
 import dk.frv.enav.ins.ais.AisTarget;
