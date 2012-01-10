@@ -17,6 +17,10 @@ public class RiskHandler implements Runnable {
 
 	private static final Logger LOG = Logger.getLogger(RiskHandler.class);
 
+	public enum RiskLevel {
+		HIGH, MEDIUM, LOW, UNKNOWN
+	};
+
 	private Map<Long, RiskList> riskListMap = new HashMap<Long, RiskList>();
 	private static final Object mutex = new Object();
 
@@ -44,26 +48,53 @@ public class RiskHandler implements Runnable {
 			}
 			EeINS.sleep(10000);
 		}
-	
+
 	}
-	
-	public void toggleRiskHandler(boolean onOff){
-		
+
+	public void toggleRiskHandler(boolean onOff) {
+
 		EeINS.getSettings().getAisSettings().setShowRisk(onOff);
-		
-		if(onOff){
-			//start a new one
+
+		if (onOff) {
+			// start a new one
 			EeINS.startRiskHandler();
-		}else{
-			//stopping, clear the index map as it wont be updated any longer.
+		} else {
+			// stopping, clear the index map as it wont be updated any longer.
 			riskListMap.clear();
 		}
-		
+
 	}
 
 	public RiskList getRiskList(Long mmsi) {
 		return riskListMap.get(mmsi);
+
+	}
+
+	public RiskLevel getRiskLevel(Long mmsi) {
 		
+		RiskList list = riskListMap.get(mmsi);
+		
+		if (list == null || list.getRisks().isEmpty()) {
+			return RiskLevel.UNKNOWN;
+		}
+		/*
+		 * calculate totel risk
+		 */
+		double riskLevel = 1;
+		for (Risk risk : list.getRisks()) {
+			riskLevel *= risk.getConsequenceIndex() * risk.getRiskProba();
+		}
+
+		/*
+		 * Compare to normal values
+		 */
+		if (riskLevel > 0.8) {
+			return RiskLevel.HIGH;
+		} else if (riskLevel < 0.5) {
+			return RiskLevel.LOW;
+		}
+		return RiskLevel.MEDIUM;
+
 	}
 
 }
