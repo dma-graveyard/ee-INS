@@ -45,7 +45,7 @@ import dk.frv.ais.message.AisMessage;
 import dk.frv.ais.message.AisMessage8;
 import dk.frv.ais.message.AisPosition;
 import dk.frv.ais.message.binary.AisApplicationMessage;
-import dk.frv.ais.message.binary.BroadcastRouteInformation;
+import dk.frv.ais.message.binary.BroadcastIntendedRoute;
 import dk.frv.ais.proprietary.IProprietarySourceTag;
 import dk.frv.ais.sentence.Vdm;
 
@@ -128,18 +128,20 @@ public class AisRouteInject implements IAisHandler {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(start);
 		cal.setTimeZone(TimeZone.getTimeZone("GMT+0000"));
-				
+		
 		// Make application specific message
-		BroadcastRouteInformation intendedRoute = new BroadcastRouteInformation();
-		intendedRoute.setSenderClassification(0);
-		intendedRoute.setRouteType(5);
+		BroadcastIntendedRoute intendedRoute = new BroadcastIntendedRoute();
 		intendedRoute.setStartMonth(cal.get(Calendar.MONTH) + 1);
 		intendedRoute.setStartDay(cal.get(Calendar.DAY_OF_MONTH));
 		intendedRoute.setStartHour(cal.get(Calendar.HOUR_OF_DAY));
 		intendedRoute.setStartMin(cal.get(Calendar.MINUTE));
 		intendedRoute.setDuration((int)duration);
 		for (TimePoint point : aisRoute) {
-			AisPosition aisPosition = new AisPosition(new GeoLocation(point.getLatitude(), point.getLongitude()));
+			GeoLocation wp = new GeoLocation(point.getLatitude(), point.getLongitude());
+			if (wp.getLatitude() < 54 || wp.getLatitude() > 60 || wp.getLongitude() < 8 || wp.getLongitude() > 14) {
+				System.out.println("ERROR: Wrong wp in AIS broadcast: " + wp + " TimePoint: " + point);
+			}
+			AisPosition aisPosition = new AisPosition(wp);
 			intendedRoute.addWaypoint(aisPosition);
 		}
 		intendedRoute.setWaypointCount(intendedRoute.getWaypoints().size());
@@ -170,7 +172,7 @@ public class AisRouteInject implements IAisHandler {
 			msg8 = (AisMessage8) msg;
 			AisApplicationMessage appMessage = msg8.getApplicationMessage();
 			@SuppressWarnings("unused")
-			BroadcastRouteInformation routeInformation = (BroadcastRouteInformation) appMessage;
+			BroadcastIntendedRoute routeInformation = (BroadcastIntendedRoute) appMessage;
 //			System.out.println("encoded: " + encoded);
 //			System.out.println("BroadcastRouteInformation: " + routeInformation + "\n---");
 		} catch (Exception e) {

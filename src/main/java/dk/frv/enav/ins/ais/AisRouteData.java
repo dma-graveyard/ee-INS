@@ -80,11 +80,13 @@ public abstract class AisRouteData implements Serializable {
 			GeoLocation wp = routeMessage.getWaypoints().get(i).getGeoLocation();
 			
 			if (wp.getLatitude() < 54 || wp.getLatitude() > 60 || wp.getLongitude() < 8 || wp.getLongitude() > 14) {
-				System.out.println("ERROR: Wrong wp in AIS broadcast");				
+				System.out.println("ERROR: Wrong wp in AIS broadcast: " + wp);
+				System.out.println("i: " + i + " routeMessage.getWaypoints().size(): " + routeMessage.getWaypoints().size());
+				System.out.println("routeMessage.getWaypointCount(): " + routeMessage.getWaypointCount());
 			} else {
 				waypoints.add(wp);
 			}
-		}		
+		}
 		
 		if (routeMessage.getStartMonth() > 0 && routeMessage.getStartDay() > 0) {
 			Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT+0000"));
