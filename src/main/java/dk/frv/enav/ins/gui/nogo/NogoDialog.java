@@ -169,8 +169,10 @@ public class NogoDialog extends JDialog implements ActionListener, Runnable {
 		spinnerTimeStart.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 
-//				System.out.println("timeStart is :" + ((Date) spinnerTimeStart.getValue()));
-//				System.out.println("timeEnd is :" + ((Date) spinnerTimeEnd.getValue()));
+				// System.out.println("timeStart is :" + ((Date)
+				// spinnerTimeStart.getValue()));
+				// System.out.println("timeEnd is :" + ((Date)
+				// spinnerTimeEnd.getValue()));
 
 				if (((Date) spinnerTimeEnd.getValue()).getTime() < ((Date) spinnerTimeStart.getValue()).getTime()) {
 
@@ -178,7 +180,7 @@ public class NogoDialog extends JDialog implements ActionListener, Runnable {
 					spinnerTimeEnd.setValue(spinnerTimeStart.getValue());
 
 					//
-//					System.out.println("Update timeEnd");
+					// System.out.println("Update timeEnd");
 				}
 
 			}
@@ -186,7 +188,6 @@ public class NogoDialog extends JDialog implements ActionListener, Runnable {
 
 		spinnerTimeStart.setModel(new SpinnerDateModel(date, null, date48hour, Calendar.HOUR));
 		spinnerTimeStart.setBounds(10, 41, 98, 20);
-
 
 		spinnerTimeEnd.setModel(new SpinnerDateModel(date, null, date48hour, Calendar.HOUR));
 		spinnerTimeEnd.setBounds(10, 64, 98, 20);
@@ -197,11 +198,8 @@ public class NogoDialog extends JDialog implements ActionListener, Runnable {
 		panel_1.add(spinnerTimeStart);
 		panel_1.add(spinnerTimeEnd);
 
-		
-		spinnerTimeStart.setEditor(new JSpinner.DateEditor(spinnerTimeStart, "HH:mm - dd-MM             :yyyy"));
-		spinnerTimeEnd.setEditor(new JSpinner.DateEditor(spinnerTimeEnd, "HH:mm - dd-MM             :yyyy"));
-		
-
+		spinnerTimeStart.setEditor(new JSpinner.DateEditor(spinnerTimeStart, "HH:mm-dd-MM-yy"));
+		spinnerTimeEnd.setEditor(new JSpinner.DateEditor(spinnerTimeEnd, "HH:mm-dd-MM-yy"));
 
 		JPanel panel_2 = new JPanel();
 		panel_2.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Draught", TitledBorder.LEADING,
@@ -210,13 +208,13 @@ public class NogoDialog extends JDialog implements ActionListener, Runnable {
 		contentPanel.add(panel_2);
 		panel_2.setLayout(null);
 
-		JLabel lblNewLabel = new JLabel("Current Draught:");
-		lblNewLabel.setBounds(12, 26, 114, 16);
+		JLabel lblNewLabel = new JLabel("Current Draught in meters:");
+		lblNewLabel.setBounds(12, 26, 139, 16);
 		panel_2.add(lblNewLabel);
 
 		spinnerDraught = new JSpinner();
 		spinnerDraught.setModel(new SpinnerNumberModel(new Integer(5), new Integer(0), null, new Integer(1)));
-		spinnerDraught.setBounds(107, 24, 38, 20);
+		spinnerDraught.setBounds(151, 24, 38, 20);
 
 		JFormattedTextField txt = ((JSpinner.NumberEditor) spinnerDraught.getEditor()).getTextField();
 		((NumberFormatter) txt.getFormatter()).setAllowsInvalid(false);
@@ -270,6 +268,7 @@ public class NogoDialog extends JDialog implements ActionListener, Runnable {
 
 		sePtlbl.setText(Formatter.latToPrintable(southEastPoint.getLatitude())
 				+ Formatter.lonToPrintable(southEastPoint.getLongitude()));
+
 	}
 
 	@Override
@@ -277,18 +276,34 @@ public class NogoDialog extends JDialog implements ActionListener, Runnable {
 		if (e.getSource() == requestNogo) {
 			// Send off the request
 			if (northWestPoint != null & southEastPoint != null) {
-				this.setVisible(false);
-				nogoHandler.setNorthWestPoint(northWestPoint);
-				nogoHandler.setSouthEastPoint(southEastPoint);
-				double draught = ((Integer) spinnerDraught.getValue()).doubleValue();
-				nogoHandler.setDraught(draught);
-				nogoHandler.setValidFrom((Date) spinnerTimeStart.getValue());
-				nogoHandler.setValidTo((Date) spinnerTimeEnd.getValue());
 
-				if (mainFrame != null) {
-					mainFrame.getTopPanel().activateNogoButton();
+				double westEastDistance = northWestPoint.getRhumbLineDistance(new GeoLocation(northWestPoint
+						.getLatitude(), southEastPoint.getLongitude()));
+				double northSouthDistance = northWestPoint.getRhumbLineDistance(new GeoLocation(southEastPoint
+						.getLatitude(), northWestPoint.getLongitude()));
+
+				// 1300000000
+				// 1300000				
+				if ( (westEastDistance * northSouthDistance)/1000 < 1300000) {
+
+					this.setVisible(false);
+					nogoHandler.setNorthWestPoint(northWestPoint);
+					nogoHandler.setSouthEastPoint(southEastPoint);
+					double draught = ((Integer) spinnerDraught.getValue()).doubleValue();
+					nogoHandler.setDraught(draught);
+					nogoHandler.setValidFrom((Date) spinnerTimeStart.getValue());
+					nogoHandler.setValidTo((Date) spinnerTimeEnd.getValue());
+
+					if (mainFrame != null) {
+						mainFrame.getTopPanel().activateNogoButton();
+					}
+					(new Thread(this)).start();
+				} else {
+					nwPtlbl.setText("The area you have selected is too big");
+					nePtlbl.setText("");
+					swPtlbl.setText("");
+					sePtlbl.setText("");
 				}
-				(new Thread(this)).start();
 			} else {
 				nwPtlbl.setText("You must select an area");
 			}

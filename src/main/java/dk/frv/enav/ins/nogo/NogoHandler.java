@@ -55,6 +55,15 @@ public class NogoHandler extends MapHandlerChild implements Runnable {
 	GeoLocation northWestPoint;
 	GeoLocation southEastPoint;
 	Double draught;
+	boolean nogoFailed = false;
+
+	public boolean getNogoFailed() {
+		return nogoFailed;
+	}
+
+	public void setNogoFailed(boolean nogoFailed) {
+		this.nogoFailed = nogoFailed;
+	}
 
 	private ShoreServices shoreServices;
 
@@ -114,6 +123,9 @@ public class NogoHandler extends MapHandlerChild implements Runnable {
 				setLastUpdate(now);
 			} catch (ShoreServiceException e) {
 				LOG.error("Failed to get NoGo from shore: " + e.getMessage());
+				nogoFailed = true;
+				nogoUpdated = true;
+				setLastUpdate(now);
 			}
 		}
 		// Notify if update
@@ -121,6 +133,14 @@ public class NogoHandler extends MapHandlerChild implements Runnable {
 			notifyUpdate(true);
 		}
 
+	}
+
+	public GeoLocation getNorthWestPoint() {
+		return northWestPoint;
+	}
+
+	public GeoLocation getSouthEastPoint() {
+		return southEastPoint;
 	}
 
 	public void notifyUpdate(boolean completed) {

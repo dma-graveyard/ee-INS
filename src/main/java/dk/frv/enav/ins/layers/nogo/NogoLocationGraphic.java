@@ -46,6 +46,7 @@ import com.bbn.openmap.omGraphics.OMGraphicList;
 import com.bbn.openmap.omGraphics.OMPoint;
 import com.bbn.openmap.omGraphics.OMPoly;
 
+import dk.frv.ais.geo.GeoLocation;
 import dk.frv.enav.common.xml.nogo.types.NogoPolygon;
 
 /**
@@ -59,22 +60,27 @@ public class NogoLocationGraphic extends OMGraphicList {
 	private Date validTo;
 	private int draught;
 	private String message;
+	private GeoLocation northWest;
+	private GeoLocation southEast;
 
 	private Color nogoColor = Color.red;
 
 	private Rectangle hatchFillRectangle;
 	private BufferedImage hatchFill;
 
-	public NogoLocationGraphic(NogoPolygon polygon, Date validFrom,
-			Date validTo, Double draught, String message) {
+	public NogoLocationGraphic(NogoPolygon polygon, Date validFrom, Date validTo, Double draught, String message,
+			GeoLocation northWest, GeoLocation southEast) {
 		super();
 		this.polygon = polygon;
 		this.validFrom = validFrom;
 		this.validTo = validTo;
 		this.draught = Math.abs(draught.intValue());
 		this.message = message;
+		this.northWest = northWest;
+		this.southEast = southEast;
 
-		System.out.println(message);
+		// System.out.println(message);
+		// Draw the data
 		if (polygon != null && message.equals("")) {
 			hatchFill = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
 			Graphics2D big = hatchFill.createGraphics();
@@ -86,13 +92,21 @@ public class NogoLocationGraphic extends OMGraphicList {
 			hatchFillRectangle = new Rectangle(0, 0, 10, 10);
 			big.setComposite(originalComposite);
 
+			drawAreaBox();
 			// drawPolyline();
 			drawPolygon();
 			// drawPoints();
 
 		}
+		// Draw the message
 		if (!message.equals("")) {
 			OMPoint polyPoint = new OMPoint(0, 0);
+
+			if (message.equals("NoGo area requested - standby")) {
+				// Standby message
+				drawAreaBox();
+			}
+
 			// polyPoint.setVisible(false);
 			add(polyPoint);
 		}
@@ -113,8 +127,7 @@ public class NogoLocationGraphic extends OMGraphicList {
 			polyPoints[j + 1] = polygon.getPolygon().get(i).getLon();
 			j += 2;
 		}
-		OMPoly poly = new OMPoly(polyPoints, OMGraphic.DECIMAL_DEGREES,
-				OMGraphic.LINETYPE_RHUMB, 1);
+		OMPoly poly = new OMPoly(polyPoints, OMGraphic.DECIMAL_DEGREES, OMGraphic.LINETYPE_RHUMB, 1);
 
 		poly.setLinePaint(nogoColor);
 		poly.setTextureMask(new TexturePaint(hatchFill, hatchFillRectangle));
@@ -128,13 +141,11 @@ public class NogoLocationGraphic extends OMGraphicList {
 	@SuppressWarnings("unused")
 	private void drawPoints() {
 		for (int i = 0; i < polygon.getPolygon().size(); i++) {
-			OMPoint polyPoint = new OMPoint(polygon.getPolygon().get(i)
-					.getLat(), polygon.getPolygon().get(i).getLon());
+			OMPoint polyPoint = new OMPoint(polygon.getPolygon().get(i).getLat(), polygon.getPolygon().get(i).getLon());
 
 			polyPoint.setLinePaint(nogoColor);
 			polyPoint.setFillPaint(new Color(0, 0, 0, 10));
-			polyPoint.setTextureMask(new TexturePaint(hatchFill,
-					hatchFillRectangle));
+			polyPoint.setTextureMask(new TexturePaint(hatchFill, hatchFillRectangle));
 			add(polyPoint);
 		}
 
@@ -151,8 +162,7 @@ public class NogoLocationGraphic extends OMGraphicList {
 		}
 		polyPoints[j] = polyPoints[0];
 		polyPoints[j + 1] = polyPoints[1];
-		OMPoly poly = new OMPoly(polyPoints, OMGraphic.DECIMAL_DEGREES,
-				OMGraphic.LINETYPE_RHUMB, 1);
+		OMPoly poly = new OMPoly(polyPoints, OMGraphic.DECIMAL_DEGREES, OMGraphic.LINETYPE_RHUMB, 1);
 		poly.setLinePaint(clear);
 		poly.setFillPaint(new Color(0, 0, 0, 1));
 		poly.setTextureMask(new TexturePaint(hatchFill, hatchFillRectangle));
@@ -161,23 +171,64 @@ public class NogoLocationGraphic extends OMGraphicList {
 
 	}
 
+	private void drawAreaBox() {
+		// space for lat-lon points plus first lat-lon pair to close the polygon
+
+		// Four lines are needed
+
+		double[] westernLine = new double[4];
+		westernLine[0] = northWest.getLatitude();
+		westernLine[1] = northWest.getLongitude();
+		westernLine[2] = southEast.getLatitude();
+		westernLine[3] = northWest.getLongitude();
+
+		OMPoly poly = new OMPoly(westernLine, OMGraphic.DECIMAL_DEGREES, OMGraphic.LINETYPE_RHUMB, 1);
+
+		double[] easternLine = new double[4];
+		easternLine[0] = northWest.getLatitude();
+		easternLine[1] = southEast.getLongitude();
+		easternLine[2] = southEast.getLatitude();
+		easternLine[3] = southEast.getLongitude();
+
+		OMPoly poly1 = new OMPoly(easternLine, OMGraphic.DECIMAL_DEGREES, OMGraphic.LINETYPE_RHUMB, 1);
+
+		double[] northernLine = new double[4];
+		northernLine[0] = northWest.getLatitude();
+		northernLine[1] = northWest.getLongitude();
+		northernLine[2] = northWest.getLatitude();
+		northernLine[3] = southEast.getLongitude();
+
+		OMPoly poly2 = new OMPoly(northernLine, OMGraphic.DECIMAL_DEGREES, OMGraphic.LINETYPE_RHUMB, 1);
+
+		double[] southernLine = new double[4];
+		southernLine[0] = southEast.getLatitude();
+		southernLine[1] = northWest.getLongitude();
+		southernLine[2] = southEast.getLatitude();
+		southernLine[3] = southEast.getLongitude();
+
+		OMPoly poly3 = new OMPoly(southernLine, OMGraphic.DECIMAL_DEGREES, OMGraphic.LINETYPE_RHUMB, 1);
+
+		add(poly);
+		add(poly1);
+		add(poly2);
+		add(poly3);
+
+	}
+
 	@Override
 	public void render(Graphics gr) {
 
 		Graphics2D image = (Graphics2D) gr;
-		image.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-				RenderingHints.VALUE_ANTIALIAS_ON);
+		image.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		super.render(image);
 		Font font = new Font(Font.MONOSPACED, Font.PLAIN, 16);
 
-		String message0 = "NoGo Active, only valid from " + validFrom + " to "
-				+ validTo;
+		String message0 = "NoGo Active, only valid from " + validFrom + " to " + validTo;
 		String message1 = "Do not use this for navigational purposes!";
-		String message2 = "Only valid for draughts at " + draught + " and below";
+		String message2 = "Only valid for draughts at " + draught + " meters and below";
 
 		gr.setFont(font);
 		gr.setColor(Color.red);
-		
 
 		if (message.equals("")) {
 			gr.drawString(message0, 5, 20);

@@ -33,6 +33,7 @@ import java.util.Date;
 
 import com.bbn.openmap.omGraphics.OMGraphicList;
 
+import dk.frv.ais.geo.GeoLocation;
 import dk.frv.enav.common.xml.nogo.types.NogoPolygon;
 
 public class NogoGraphic extends OMGraphicList {
@@ -42,13 +43,13 @@ public class NogoGraphic extends OMGraphicList {
 	
 	//private MsiTextBox msiTextBox;
 	
-	public NogoGraphic(NogoPolygon polygon, Date validFrom, Date validTo, double draught, String message) {
+	public NogoGraphic(NogoPolygon polygon, Date validFrom, Date validTo, double draught, String message, GeoLocation northWest, GeoLocation southEast) {
 		super();
 		
 		this.polygon = polygon;
 		
 		// Create location grahic
-		NogoLocationGraphic nogoLocationGraphic = new NogoLocationGraphic(this.polygon, validFrom, validTo, draught, message);
+		NogoLocationGraphic nogoLocationGraphic = new NogoLocationGraphic(this.polygon, validFrom, validTo, draught, message, northWest, southEast);
 		add(nogoLocationGraphic);
 	}
 

@@ -58,25 +58,33 @@ public class NogoLayer extends OMGraphicHandlerLayer {
 			// Get polygons
 			List<NogoPolygon> polygons = nogoHandler.getPolygons();
 
-			// We have selected an area outside of the available data - send
-			// appropiate message
-			if (polygons.size() == 0) {
-				NogoGraphic nogoGraphic = new NogoGraphic(null, null, null, draught,
-						"No data available for requested area");
-				graphics.add(nogoGraphic);
+			if (nogoHandler.getNogoFailed()) {
+				nogoHandler.setNogoFailed(false);
+				NogoGraphic nogoGraphic = new NogoGraphic(null, validFrom, validTo, draught,
+				"Connection to shore timed out - NoGo request failed. Please try again", null, null);
+		graphics.add(nogoGraphic);
+				
 			} else {
-				// Data available, go through each polygon and draw them
-				for (NogoPolygon polygon : polygons) {
-					NogoGraphic nogoGraphic = new NogoGraphic(polygon, validFrom, validTo, draught, "");
+
+				// We have selected an area outside of the available data - send
+				// appropiate message
+				if (polygons.size() == 0) {
+					NogoGraphic nogoGraphic = new NogoGraphic(null, null, null, draught,
+							"No data available for requested area", null, null);
 					graphics.add(nogoGraphic);
+				} else {
+					// Data available, go through each polygon and draw them
+					for (NogoPolygon polygon : polygons) {
+						NogoGraphic nogoGraphic = new NogoGraphic(polygon, validFrom, validTo, draught, "", nogoHandler.getNorthWestPoint(), nogoHandler.getSouthEastPoint());
+						graphics.add(nogoGraphic);
+					}
 				}
 			}
-
 		} else {
 			// We have just sent a nogo request - display a message telling the
 			// user to standby
 			NogoGraphic nogoGraphic = new NogoGraphic(null, validFrom, validTo, draught,
-					"NoGo area requested - standby");
+					"NoGo area requested - standby", nogoHandler.getNorthWestPoint(), nogoHandler.getSouthEastPoint());
 			graphics.add(nogoGraphic);
 		}
 
