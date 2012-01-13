@@ -29,8 +29,6 @@
  */
 package dk.frv.enav.ins.layers.ais;
 
-import java.util.Iterator;
-
 import dk.frv.ais.message.AisMessage;
 import dk.frv.enav.common.xml.risk.response.Risk;
 import dk.frv.enav.common.xml.risk.response.RiskList;
