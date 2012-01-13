@@ -90,16 +90,16 @@ public class MetocInfoPanel extends InfoPanel {
 		buf.append("<b>METOC DATA for "+Formatter.formatLongDateTime(date)+"</b><br/>");
 		buf.append("<table cellpadding='0' cellspacing='2'>");		
 		if (settings.getDataTypes().contains(MetocDataTypes.CU) || currentSpeed != null || currentDirection != null) {
-			buf.append("<tr><td>Current:</td><td>"+Formatter.formatCurrentSpeed(currentSpeed)+ " - " +Formatter.formatDegrees(currentDirection, 0)+"</td></tr>");
+			buf.append("<tr><td>Current:</td><td>"+Formatter.formatCurrentSpeed(currentSpeed, 1)+ " - " +Formatter.formatDegrees(currentDirection, 0)+"</td></tr>");
 		}
 		if (settings.getDataTypes().contains(MetocDataTypes.WI) || windSpeed != null || windDirection != null) {
-			buf.append("<tr><td>Wind:</td><td>"+Formatter.formatWindSpeed(windSpeed)+" - "+Formatter.formatDegrees(windDirection, 0)+"</td></tr>");
+			buf.append("<tr><td>Wind:</td><td>"+Formatter.formatWindSpeed(windSpeed, 0)+" - "+Formatter.formatDegrees(windDirection, 0)+"</td></tr>");
 		}
 		if (settings.getDataTypes().contains(MetocDataTypes.WA) || meanWaveDirection != null) {
-			buf.append("<tr><td>Waves:</td><td>"+Formatter.formatMeters(meanWaveHeight, 2)+" - "+Formatter.formatDegrees(meanWaveDirection, 0)+ meanWaveStr + "</td></tr>");
+			buf.append("<tr><td>Waves:</td><td>"+Formatter.formatMeters(meanWaveHeight, 1)+" - "+Formatter.formatDegrees(meanWaveDirection, 0)+ meanWaveStr + "</td></tr>");
 		}
 		if (settings.getDataTypes().contains(MetocDataTypes.SE) || seaLevel != null) {
-			buf.append("<tr><td>Sea level:</td><td>"+Formatter.formatMeters(seaLevel, 2)+"</td></tr>");
+			buf.append("<tr><td>Sea level:</td><td>"+Formatter.formatMeters(seaLevel, 1)+"</td></tr>");
 		}
 		buf.append("</table></html>");
 		showText(buf.toString());

@@ -53,6 +53,7 @@ public class VesselTarget extends AisTarget {
 	private AisIntendedRoute aisIntendedRoute = null;
 	private AisClass aisClass; 
 	private VesselTargetSettings settings;
+	
 
 	/**
 	 * Copy constructor
@@ -126,6 +127,8 @@ public class VesselTarget extends AisTarget {
 	public void setSettings(VesselTargetSettings settings) {
 		this.settings = settings;
 	}
+
+	
 	
 	/**
 	 * Returns true if route information changes from valid to invalid
@@ -148,6 +151,7 @@ public class VesselTarget extends AisTarget {
 		return (aisIntendedRoute != null);
 	}
 
+	
 	/**
 	 * Determine if the target has gone.
 	 * @param now will be used as current time
@@ -198,6 +202,7 @@ public class VesselTarget extends AisTarget {
 		return (elapsed > tol);
 	}
 
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -210,6 +215,9 @@ public class VesselTarget extends AisTarget {
 		builder.append("]");
 		return builder.toString();
 	}
+
+	
+
 	
 	
 	

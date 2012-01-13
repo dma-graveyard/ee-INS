@@ -58,6 +58,7 @@ public class Settings implements Serializable {
 	private AisSettings aisSettings = new AisSettings();
 	private EnavSettings enavSettings = new EnavSettings();
 	
+	
 	public Settings() {
 		
 	}
@@ -133,5 +134,6 @@ public class Settings implements Serializable {
 	public String getSettingsFile() {
 		return settingsFile;
 	}
-	
+
+
 }

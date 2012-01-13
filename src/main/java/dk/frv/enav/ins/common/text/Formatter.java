@@ -142,9 +142,19 @@ public class Formatter {
 		return formatDouble(s, 2) + " m/s";
 	}
 	
+	public static String formatWindSpeed(Double s, int decimals) {
+		if (s == null) return "N/A";
+		return formatDouble(s, decimals) + " m/s";
+	}
+	
 	public static String formatCurrentSpeed(Double s) {
 		if (s == null) return "N/A";
 		return formatDouble(s, 2) + " kn";
+	}
+	
+	public static String formatCurrentSpeed(Double s, int decimals) {
+		if (s == null) return "N/A";
+		return formatDouble(s, decimals) + " kn";
 	}
 	
 	public static String formatMeters(Double dist) {

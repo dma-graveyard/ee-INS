@@ -184,11 +184,8 @@ public abstract class NmeaSensor extends MapHandlerChild implements Runnable {
 		Date timestamp = sourceTag.getTimestamp();
 		// TODO if timestamp before some starttime, then just return
 		
-		synchronized (replayTime) {
-			if (replayTime.getTime() == 0) {
-				replayTime = timestamp;
-			}
-		}
+		// Set replay time to current timestamp
+		setReplayTime(timestamp);
 		
 		if (dataStart == null && getReplayStartDate() != null) {
 			if (timestamp.before(getReplayStartDate())) {
@@ -210,8 +207,7 @@ public abstract class NmeaSensor extends MapHandlerChild implements Runnable {
 		long elapsedReal = (now.getTime() - replayStart.getTime()) * replaySpeedup;
 		long diff = elapsedData - elapsedReal;
 		if (diff > 500) {
-			EeINS.sleep(diff / replaySpeedup);
-			setReplayTime(timestamp);
+			EeINS.sleep(diff / replaySpeedup);			
 		}
 		
 		replayEnd = now;
