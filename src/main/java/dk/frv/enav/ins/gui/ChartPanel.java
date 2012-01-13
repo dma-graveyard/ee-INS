@@ -48,7 +48,6 @@ import com.bbn.openmap.LayerHandler;
 import com.bbn.openmap.MapBean;
 import com.bbn.openmap.MapHandler;
 import com.bbn.openmap.MouseDelegator;
-import com.bbn.openmap.event.PanEvent;
 import com.bbn.openmap.gui.OMComponentPanel;
 import com.bbn.openmap.layer.shape.ShapeLayer;
 import com.bbn.openmap.proj.Proj;
