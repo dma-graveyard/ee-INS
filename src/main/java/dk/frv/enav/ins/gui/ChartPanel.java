@@ -48,6 +48,7 @@ import com.bbn.openmap.LayerHandler;
 import com.bbn.openmap.MapBean;
 import com.bbn.openmap.MapHandler;
 import com.bbn.openmap.MouseDelegator;
+import com.bbn.openmap.event.PanEvent;
 import com.bbn.openmap.gui.OMComponentPanel;
 import com.bbn.openmap.layer.shape.ShapeLayer;
 import com.bbn.openmap.proj.Proj;
@@ -584,14 +585,21 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 	 */
 	  public void pan(int direction) {
 		Point point = null;
+		Projection projection = map.getProjection();
+
+		int width = projection.getWidth();
+		int height = projection.getHeight();
+		
 	    switch (direction) {
-	    	case 1:  point = new Point(745,345);	break;
-        	case 2:  point = new Point(745,545);	break;
-            case 3:  point = new Point(645,445);	break;
-            case 4:  point = new Point(845,445);	break;
+	    	case 1:  point = new Point(width/2,height/2-100);	break;
+        	case 2:  point = new Point(width/2,height/2+100);	break;
+            case 3:  point = new Point(width/2-100,height/2);	break;
+            case 4:  point = new Point(width/2+100,height/2);	break;
 	        }
 	    
-        Projection projection = map.getProjection();
+	    
+	    
+        
         Proj p = (Proj) projection;
         LatLonPoint llp = projection.inverse(point);
         p.setCenter(llp);
