@@ -617,7 +617,7 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 	@Override
 	public void run() {
 		// Publish loaded targets		
-		EeINS.sleep(1000);
+		EeINS.sleep(2000);
 		publishAll();
 		
 		while (true) {
