@@ -57,9 +57,8 @@ import javax.swing.table.TableRowSorter;
 
 import dk.frv.ais.geo.GeoLocation;
 import dk.frv.ais.message.AisMessage;
-
-
 import dk.frv.enav.common.xml.risk.response.RiskList;
+import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.ais.AisHandler;
 import dk.frv.enav.ins.ais.AisHandler.AisMessageExtended;
 import dk.frv.enav.ins.ais.AisTarget;
@@ -243,14 +242,14 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 		}
 	}
 	
-	private void updateTable() throws InterruptedException {
+	private void updateTable() {
 		int selectedRow = -1;
 		if (aisTable != null) {
 			if (aisTable.getSize().height > 0){
 				selectedRow = aisTable.getSelectedRow();
 			}else{
 				//System.out.println("Possible error occured");
-				Thread.sleep(1);
+				EeINS.sleep(1);
 			}
 			@SuppressWarnings("rawtypes")
 			RowSorter rs = aisTable.getRowSorter();
@@ -307,7 +306,6 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 //			}
 	}
 
-	@SuppressWarnings("static-access")
 	private void setDetails(VesselTarget vesselTarget) {
 
 		GeoLocation aisLocation = vesselTarget.getPositionData().getPos();
@@ -326,16 +324,14 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 		String eta = "N/A";
 		String cargo = "unknown";
 		Date currentDate = new Date();
-		AisMessage aisMessage = null;
-		
 
 		if (vesselTarget.getStaticData() != null ){
-			name = aisMessage.trimText(vesselTarget.getStaticData().getName());
-			callsign = aisMessage.trimText(vesselTarget.getStaticData().getCallsign());
+			name = AisMessage.trimText(vesselTarget.getStaticData().getName());
+			callsign = AisMessage.trimText(vesselTarget.getStaticData().getCallsign());
 //			imo = Long.toString(vesselTarget.getStaticData().getImo());
 			type = vesselTarget.getStaticData().getShipType().prettyType();
 			cargo = vesselTarget.getStaticData().getShipType().prettyCargo();
-			destination = aisMessage.trimText(vesselTarget.getStaticData().getDestination());
+			destination = AisMessage.trimText(vesselTarget.getStaticData().getDestination());
 			if (destination == null){
 				destination = "unknown";
 			}
@@ -476,12 +472,7 @@ private boolean compare(Object value1, Object value2){
 
 	@Override
 	public void targetUpdated(AisTarget aisTarget) {
-		try {
-			updateTable();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}	
+		updateTable();
 	}
 
 	@Override

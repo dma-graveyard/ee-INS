@@ -209,7 +209,6 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 				}
 			}			
 		}
-		getShipList();
 	}
 	
 	public synchronized void hideAllIntendedRoutes() {
@@ -468,12 +467,8 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 	 * @param aisTarget
 	 */
 	private synchronized void publishUpdate(AisTarget aisTarget) {
-		try{
 		for (IAisTargetListener listener : listeners) {
-			//listener.targetUpdated(copy);
 			listener.targetUpdated(aisTarget);
-		}}catch(Exception e){
-			System.out.println(e.getStackTrace());
 		}
 	}
 	
@@ -643,12 +638,11 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 		return vesselTargets;
 	}
 	
-	@SuppressWarnings("static-access")
 	public synchronized List<AisMessageExtended> getShipList() {
+		//LOG.debug("In AisHandler.getShipList()");
 		List<AisMessageExtended> list = new ArrayList<AisMessageExtended>();
 	
 		if (this.getVesselTargets() != null){
-			AisMessage aisMessage = null;
 			GeoLocation ownPosition;
 			double hdg = -1;
 			GeoLocation targetPosition = null;
@@ -660,9 +654,9 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 				VesselTarget currentTarget = this.getVesselTargets().get(key);
 				
 				if (currentTarget.getStaticData() != null ){
-					name = " " + aisMessage.trimText(this.getVesselTargets().get(key).getStaticData().getName());
+					name = " " + AisMessage.trimText(this.getVesselTargets().get(key).getStaticData().getName());
 				}
-				if (EeINS.getGpsHandler().getCurrentData().isBadPosition() == false){
+				if (!EeINS.getGpsHandler().getCurrentData().isBadPosition()){
 					ownPosition = EeINS.getGpsHandler().getCurrentData().getPosition();
 					
 					if (currentTarget.getPositionData().getPos() != null){
