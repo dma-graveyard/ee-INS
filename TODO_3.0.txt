@@ -1,0 +1,10 @@
+TODO before 3.0 release
+=======================
+
+
++ Application locks up. Identified scenarios:
+	1. After running for a long time, clicking status icons.
+	2. 
+
+
++ Remove this file

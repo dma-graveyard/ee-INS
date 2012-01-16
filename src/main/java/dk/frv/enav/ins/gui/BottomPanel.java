@@ -58,8 +58,8 @@ import dk.frv.enav.ins.status.IStatusComponent;
 public class BottomPanel extends OMComponentPanel implements MouseListener, Runnable {
 
 	private static final long serialVersionUID = 1L;
-	//private MsiHandler msiHandler;
-	//private MsiDialog msiDialog;
+	// private MsiHandler msiHandler;
+	// private MsiDialog msiDialog;
 	private ShoreServices shoreServices;
 	private AisHandler aisHandler;
 	private GpsHandler gpsHandler;
@@ -68,37 +68,38 @@ public class BottomPanel extends OMComponentPanel implements MouseListener, Runn
 	private StatusLabel shoreServiceStatus;
 	private JToolBar toolBar;
 	private List<IStatusComponent> statusComponents = new ArrayList<IStatusComponent>();
-	
+
 	public BottomPanel() {
 		super();
-		setBorder(new CompoundBorder(new MatteBorder(1, 0, 0, 0, new Color(255, 255, 255)), new MatteBorder(1, 0, 0, 0, new Color(192, 192, 192))));
+		setBorder(new CompoundBorder(new MatteBorder(1, 0, 0, 0, new Color(255, 255, 255)), new MatteBorder(1, 0, 0, 0,
+				new Color(192, 192, 192))));
 		FlowLayout flowLayout = (FlowLayout) getLayout();
 		flowLayout.setVgap(2);
 		flowLayout.setHgap(3);
 		flowLayout.setAlignment(FlowLayout.RIGHT);
-		
+
 		toolBar = new JToolBar();
 		toolBar.setFloatable(false);
 		add(toolBar);
-		
+
 		gpsStatus = new StatusLabel("GPS");
 		addToolbarComponent(gpsStatus);
-		
+
 		aisStatus = new StatusLabel("AIS");
 		addToolbarComponent(aisStatus);
-		
+
 		shoreServiceStatus = new StatusLabel("Shore services");
 		addToolbarComponent(shoreServiceStatus);
-		
+
 		new Thread(this).start();
 	}
-	
+
 	private void addToolbarComponent(Component component) {
 		Component horizontalStrut = Box.createHorizontalStrut(5);
 		toolBar.add(horizontalStrut);
 		JSeparator separator = new JSeparator();
 		separator.setOrientation(SwingConstants.VERTICAL);
-		toolBar.add(separator);		
+		toolBar.add(separator);
 		horizontalStrut = Box.createHorizontalStrut(5);
 		toolBar.add(horizontalStrut);
 		toolBar.add(component);
@@ -108,30 +109,26 @@ public class BottomPanel extends OMComponentPanel implements MouseListener, Runn
 	@Override
 	public void findAndInit(Object obj) {
 		if (obj instanceof AisHandler) {
-			aisHandler = (AisHandler)obj;
+			aisHandler = (AisHandler) obj;
 			statusComponents.add(aisHandler);
 		} else if (obj instanceof GpsHandler) {
-			gpsHandler = (GpsHandler)obj;
+			gpsHandler = (GpsHandler) obj;
 			statusComponents.add(gpsHandler);
 		} else if (obj instanceof ShoreServices) {
-			shoreServices = (ShoreServices)obj;
+			shoreServices = (ShoreServices) obj;
 			statusComponents.add(shoreServices);
 		}
-		
+
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		/**
-		if (e.getSource() == msiIcon) {
-			if (notifyMsgId > 0) {
-				msiDialog.showMessage(notifyMsgId);
-			} else {
-				msiDialog.setVisible(true);
-			}
-		} else
-		**/ 
-			if (e.getSource() instanceof StatusLabel) {
+		 * if (e.getSource() == msiIcon) { if (notifyMsgId > 0) {
+		 * msiDialog.showMessage(notifyMsgId); } else {
+		 * msiDialog.setVisible(true); } } else
+		 **/
+		if (e.getSource() instanceof StatusLabel) {
 			StatusDialog statusDialog = new StatusDialog();
 			statusDialog.showStatus(statusComponents);
 		}
@@ -152,7 +149,7 @@ public class BottomPanel extends OMComponentPanel implements MouseListener, Runn
 	@Override
 	public void mouseReleased(MouseEvent e) {
 	}
-	
+
 	@Override
 	public void run() {
 		while (true) {
@@ -160,7 +157,7 @@ public class BottomPanel extends OMComponentPanel implements MouseListener, Runn
 			EeINS.sleep(3000);
 		}
 	}
-	
+
 	private void updateStatus() {
 		if (gpsHandler != null) {
 			gpsStatus.updateStatus(gpsHandler);
