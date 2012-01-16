@@ -34,6 +34,8 @@ import java.awt.Color;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.Date;
 import java.util.List;
 
@@ -58,7 +60,6 @@ import javax.swing.table.TableRowSorter;
 import dk.frv.ais.geo.GeoLocation;
 import dk.frv.ais.message.AisMessage;
 import dk.frv.enav.common.xml.risk.response.RiskList;
-import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.ais.AisHandler;
 import dk.frv.enav.ins.ais.AisHandler.AisMessageExtended;
 import dk.frv.enav.ins.ais.AisTarget;
@@ -72,7 +73,7 @@ import dk.frv.enav.ins.layers.ais.AisLayer;
 /**
  * AIS targets dialog
  */
-public class AisDialog extends ComponentFrame implements ListSelectionListener, ActionListener, IAisTargetListener {
+public class AisDialog extends ComponentFrame implements ListSelectionListener, ActionListener, IAisTargetListener, WindowListener {
 	private static final long serialVersionUID = 1L;
 
 	private AisLayer aisLayer;
@@ -102,6 +103,8 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 	}
 
 	private void initGui() {
+		
+		this.addWindowListener(this);
 	
         closeBtn = new JButton("Close");
         closeBtn.addActionListener(this);
@@ -243,44 +246,37 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 	}
 	
 	private void updateTable() {
-		int selectedRow = -1;
 		if (aisTable != null) {
-			if (aisTable.getSize().height > 0){
-				selectedRow = aisTable.getSelectedRow();
-			}else{
-				//System.out.println("Possible error occured");
-				EeINS.sleep(1);
-			}
-			@SuppressWarnings("rawtypes")
-			RowSorter rs = aisTable.getRowSorter();
+			RowSorter<?> rs = aisTable.getRowSorter();
+			int selectedRow = aisTable.getSelectedRow();
 	
-			Long selectedMMSI = 0L;
-			if (selectedRow >=0){
+			long selectedMMSI = 0L;
+			if (selectedRow >=0 && selectedRow < aisTable.getRowCount()) {
 				selectedMMSI = (Long) aisTable.getValueAt(selectedRow, 1);
-			}
+			}			
 				
 			if (aisTableModel != null) {
-			aisTableModel.updateShips();
-			// Update table
-			aisTableModel.fireTableDataChanged();
-			if (selectedRow >= 0 && selectedRow < aisTable.getRowCount()) {
-				setSelected(selectedRow, false);
-			} else {
-				if (selectedRow >= 0) {
-					selectedRow = aisTable.getRowCount() - 1;
+				aisTableModel.updateShips();
+				// Update table
+				aisTableModel.fireTableDataChanged();
+				if (selectedRow >= 0 && selectedRow < aisTable.getRowCount()) {
 					setSelected(selectedRow, false);
+				} else {
+					if (selectedRow >= 0) {
+						selectedRow = aisTable.getRowCount() - 1;
+						setSelected(selectedRow, false);
+					}
 				}
-			}
-			updateDetails();
-			rs.allRowsChanged();
-			setSelection(selectedMMSI, false);
+				updateDetails();
+				rs.allRowsChanged();
+				setSelection(selectedMMSI, false);
 			}
 		}
 	}
 	
 	private void updateDetails() {
 		int selected = aisTable.getSelectedRow();
-		if (selected >= 0 && aisHandler.getVesselTargets() != null){
+		if (selected >= 0 && selected < aisTable.getRowCount() && aisHandler.getVesselTargets() != null){
 			Object mmsi = aisTable.getValueAt(selected, 1);
 			if (aisHandler.getVesselTargets().get(mmsi) != null) {
 			setDetails(aisHandler.getVesselTargets().get(mmsi));
@@ -288,6 +284,7 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 			}
 		}
 	}
+	
 	private void setRiskDetails(RiskList risk) {
 		if(risk==null){
 			aisTableDetails.setValueAt("", 19, 1);
@@ -472,13 +469,47 @@ private boolean compare(Object value1, Object value2){
 
 	@Override
 	public void targetUpdated(AisTarget aisTarget) {
-		updateTable();
+		// Only update table if dialog is visible
+		if (isVisible()) {
+			updateTable();
+		}
 	}
-
+	
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
 		updateDetails();
 	}
-	
+
+	/**
+	 * Update table when window is activated
+	 */
+	@Override
+	public void windowActivated(WindowEvent e) {
+		updateTable();
+	}
+
+	@Override
+	public void windowOpened(WindowEvent e) {
+	}
+
+	@Override
+	public void windowClosing(WindowEvent e) {
+	}
+
+	@Override
+	public void windowClosed(WindowEvent e) {
+	}
+
+	@Override
+	public void windowIconified(WindowEvent e) {
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+	}
+
 }
-	

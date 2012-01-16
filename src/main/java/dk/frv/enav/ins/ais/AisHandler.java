@@ -639,7 +639,6 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 	}
 	
 	public synchronized List<AisMessageExtended> getShipList() {
-		//LOG.debug("In AisHandler.getShipList()");
 		List<AisMessageExtended> list = new ArrayList<AisMessageExtended>();
 	
 		if (this.getVesselTargets() != null){
