@@ -29,6 +29,7 @@
  */
 package dk.frv.enav.ins.ais;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import dk.frv.enav.ins.gps.GnssTime;
@@ -36,7 +37,9 @@ import dk.frv.enav.ins.gps.GnssTime;
 /**
  * Class representing an AIS vessel target
  */
-public class VesselTarget extends AisTarget {
+public class VesselTarget extends AisTarget implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Time an intended route is considered valid without update

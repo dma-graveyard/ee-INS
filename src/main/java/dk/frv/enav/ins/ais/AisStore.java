@@ -30,100 +30,45 @@
 package dk.frv.enav.ins.ais;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.util.Map;
 
 /**
- * Abstract base class for AIS targets
+ * Container class for storing AIS view as serialized object
  */
-public abstract class AisTarget implements Serializable {
-	
+public class AisStore implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 	
-	/**
-	 * Status of target can either be OK og GONE
-	 */
-	public enum Status {OK, GONE};
+	private Map<Long, AtoNTarget> atonTargets;
+	private Map<Long, VesselTarget> vesselTargets;
+	private Map<Long, SarTarget> sarTargets;
 	
-	protected Date lastReceived;
-	protected long mmsi;
-	protected Status status;
-	
-	public AisTarget() {
-		status = Status.OK;
+	public AisStore() {
+		
 	}
 
-	/**
-	 * Copy constructor
-	 * @param aisTarget
-	 */
-	public AisTarget(AisTarget aisTarget) {
-		lastReceived = aisTarget.lastReceived;
-		mmsi = aisTarget.mmsi;
-		status = aisTarget.status;
-	}
-	
-	/**
-	 * Returns true if target has gone
-	 * @param now
-	 * @param strict
-	 * @return
-	 */
-	public abstract boolean hasGone(Date now, boolean strict);
-	
-	/**
-	 * Determine if target is dead given ttl (time-to-live)
-	 * @param ttl
-	 * @param now
-	 * @return
-	 */
-	public boolean isDeadTarget(long ttl, Date now) {
-		return (now.getTime() - lastReceived.getTime() > ttl);		
-	}
-	
-	public void setLastReceived(Date lastReceived) {
-		this.lastReceived = lastReceived;
-	}
-	
-	public Date getLastReceived() {
-		return lastReceived;
-	}
-	
-	public long getMmsi() {
-		return mmsi;
-	}
-	
-	public void setMmsi(long mmsi) {
-		this.mmsi = mmsi;
-	}
-	
-	public Status getStatus() {
-		return status;
-	}
-	
-	public void setStatus(Status status) {
-		this.status = status;
-	}
-	
-	public boolean isGone() {
-		return (status == Status.GONE);
-	}
-	
-	@Override
-	public int hashCode() {
-		return (int)mmsi;
+	public Map<Long, AtoNTarget> getAtonTargets() {
+		return atonTargets;
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("AisTarget [lastReceived=");
-		builder.append(lastReceived);
-		builder.append(", mmsi=");
-		builder.append(mmsi);
-		builder.append(", status=");
-		builder.append(status);
-		builder.append("]");
-		return builder.toString();
+	public void setAtonTargets(Map<Long, AtoNTarget> atonTargets) {
+		this.atonTargets = atonTargets;
+	}
+
+	public Map<Long, VesselTarget> getVesselTargets() {
+		return vesselTargets;
+	}
+
+	public void setVesselTargets(Map<Long, VesselTarget> vesselTargets) {
+		this.vesselTargets = vesselTargets;
+	}
+
+	public Map<Long, SarTarget> getSarTargets() {
+		return sarTargets;
+	}
+
+	public void setSarTargets(Map<Long, SarTarget> sarTargets) {
+		this.sarTargets = sarTargets;
 	}
 	
 }

@@ -29,8 +29,16 @@
  */
 package dk.frv.enav.ins.ais;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -72,7 +80,7 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 
 	private static final Logger LOG = Logger.getLogger(AisHandler.class);
 	
-	
+	private static final String aisViewFile = ".aisview";
 	
 	public class AisMessageExtended {
 		public String name;
@@ -87,7 +95,6 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 		}
 
 	}	
-	
 
 	// How long targets are saved without reports
 	private static final long TARGET_TTL = 60 * 60 * 1000; // One hour
@@ -472,6 +479,19 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 		}
 	}
 	
+	private synchronized void publishAll() {
+		LOG.debug("Published all targets");
+		publishAll(vesselTargets.values());
+		publishAll(atonTargets.values());
+		publishAll(sarTargets.values());
+	}
+	
+	private synchronized void publishAll(Collection<?> targets) {
+		for (Object aisTarget : targets) {
+			publishUpdate((AisTarget)aisTarget);
+		}
+	}
+	
 	public void addListener(IAisTargetListener targetListener) {
 		listeners.add(targetListener);
 	}
@@ -596,6 +616,10 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 	
 	@Override
 	public void run() {
+		// Publish loaded targets		
+		EeINS.sleep(1000);
+		publishAll();
+		
 		while (true) {
 			EeINS.sleep(10000);
 			// Update status on targets
@@ -677,6 +701,70 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 			}
 		}
 		return list;
+	}
+	
+	/**
+	 * Try to load AIS view from disk
+	 */
+	public synchronized void loadView() {
+		AisStore aisStore = null;		 
+		
+		try {
+			FileInputStream fileIn = new FileInputStream(aisViewFile);
+			ObjectInputStream objectIn = new ObjectInputStream(fileIn);
+			aisStore = (AisStore) objectIn.readObject();
+			objectIn.close();
+			fileIn.close();
+		} catch (FileNotFoundException e) {
+			// Not an error
+		} catch (Exception e) {
+			LOG.error("Failed to load AIS view file: " + e.getMessage());
+			// Delete possible corrupted or old file
+			(new File(aisViewFile)).delete();
+		}
+		
+		if (aisStore == null) {
+			return;
+		}
+		
+		// Retrieve targets
+		if (aisStore.getVesselTargets() != null) {
+			vesselTargets = aisStore.getVesselTargets();
+		}
+		if (aisStore.getAtonTargets() != null) {
+			atonTargets = aisStore.getAtonTargets();
+		}
+		if (aisStore.getSarTargets() != null) {
+			sarTargets = aisStore.getSarTargets();
+		}
+		
+		LOG.info("AIS handler loaded total targets: " + (vesselTargets.size() + atonTargets.size() + sarTargets.size()));
+				
+		// Update status to update old and gone (twice for old and gone)
+		updateStatus();
+		updateStatus();
+		
+	}
+	
+	/**
+	 * Save AIS view to file
+	 */
+	public synchronized void saveView() {
+		AisStore aisStore = new AisStore();
+		aisStore.setVesselTargets(vesselTargets);
+		aisStore.setAtonTargets(atonTargets);
+		aisStore.setSarTargets(sarTargets);
+		
+		try {
+			FileOutputStream fileOut = new FileOutputStream(aisViewFile);
+			ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
+			objectOut.writeObject(aisStore);
+			objectOut.close();
+			fileOut.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+			LOG.error("Failed to save Ais view file: " + e.getMessage());
+		}
 	}
 	
 }

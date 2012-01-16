@@ -29,6 +29,7 @@
  */
 package dk.frv.enav.ins.ais;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import dk.frv.ais.geo.GeoLocation;
@@ -37,7 +38,9 @@ import dk.frv.ais.message.AisMessage21;
 /**
  * Class representing a AtoN target
  */
-public class AtoNTarget extends AisTarget {
+public class AtoNTarget extends AisTarget implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 	
 	private GeoLocation pos;
 	private int atonType;

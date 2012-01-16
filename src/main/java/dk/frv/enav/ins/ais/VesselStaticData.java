@@ -29,6 +29,8 @@
  */
 package dk.frv.enav.ins.ais;
 
+import java.io.Serializable;
+
 import dk.frv.ais.message.AisMessage24;
 import dk.frv.ais.message.AisMessage5;
 import dk.frv.ais.message.ShipTypeCargo;
@@ -36,7 +38,9 @@ import dk.frv.ais.message.ShipTypeCargo;
 /**
  * Class representing the static data of an AIS vessel target
  */
-public class VesselStaticData {
+public class VesselStaticData implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 
 	private long imo;
 	private String callsign;
