@@ -291,6 +291,7 @@ public class MapTab extends JPanel {
 		mapSettings.setS52ShallowContour((Integer) spinnerShallowContour.getValue());
 		mapSettings.setS52SafetyDepth((Integer) spinnerSafetyDepth.getValue());
 		mapSettings.setS52SafetyContour((Integer) spinnerSafetyContour.getValue());
+		mapSettings.setS52DeepContour((Integer)spinnerDeepContour.getValue());
 		mapSettings.setS52ShowText(chckbxShowText.isSelected());
 		mapSettings.setS52ShallowPattern(chckbxShallowPattern.isSelected());
 		mapSettings.setUseSimplePointSymbols(chckbxSimplePointSymbols.isSelected());
