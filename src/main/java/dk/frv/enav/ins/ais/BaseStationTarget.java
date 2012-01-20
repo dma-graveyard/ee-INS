@@ -29,6 +29,7 @@
  */
 package dk.frv.enav.ins.ais;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import dk.frv.ais.message.AisMessage4;
@@ -36,7 +37,9 @@ import dk.frv.ais.message.AisMessage4;
 /**
  * Class representing a base station target
  */
-public class BaseStationTarget extends AisTarget {
+public class BaseStationTarget extends AisTarget implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 	
 	// TODO
 	

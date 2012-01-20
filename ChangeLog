@@ -1,5 +1,5 @@
 2012-01-xx Version 3.0
-
+  
 	* Fixed memory leak when no sensor connection and active route
 	* Changing default intended route waypoints to 8. Limits ASM to 3 slots.
 	* Using new intended route AIS application specific message DAC=219, FI=1
@@ -11,6 +11,7 @@
 	* Ctrl n creates a new route, Ctrl r opens route window, Ctrl m opens msi window, Ctrl a opens AIS Window
 	* TODO No-go
 	* TODO Risk
+	* Persistent AIS view across restarts
 
 2011-10-28 Version 2.5
 

@@ -157,7 +157,8 @@ public class EeINS {
         mapHandler.add(gpsHandler);        
         
         // Start AIS target monitoring
-        aisHandler = new AisHandler();        
+        aisHandler = new AisHandler();
+        aisHandler.loadView();
         mapHandler.add(aisHandler);
 
     
@@ -430,6 +431,7 @@ public class EeINS {
 		settings.saveToFile();
 		routeManager.saveToFile();
 		msiHandler.saveToFile();
+		aisHandler.saveView();
 		LOG.info("Closing ee-INS");
 		System.exit(restart ? 2 : 0);
 	}

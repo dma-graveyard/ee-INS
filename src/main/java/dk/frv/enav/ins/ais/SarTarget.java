@@ -29,12 +29,15 @@
  */
 package dk.frv.enav.ins.ais;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Class representing an AIS SART
  */
-public class SarTarget extends AisTarget {
+public class SarTarget extends AisTarget implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 	
 	private static final long OLD_TTL = 720; // 12 min
 	private static final long GONE_TTL = 1800; // 30 min

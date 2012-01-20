@@ -29,6 +29,8 @@
  */
 package dk.frv.enav.ins.ais;
 
+import java.io.Serializable;
+
 import dk.frv.ais.geo.GeoLocation;
 import dk.frv.ais.message.AisMessage18;
 import dk.frv.ais.message.AisPositionMessage;
@@ -37,7 +39,9 @@ import dk.frv.ais.message.NavigationalStatus;
 /**
  * Class representing position data for an AIS vessel target
  */
-public class VesselPositionData {
+public class VesselPositionData implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 	
 	private GeoLocation pos;
 	private NavigationalStatus navEnumStatus = new NavigationalStatus(-1);
