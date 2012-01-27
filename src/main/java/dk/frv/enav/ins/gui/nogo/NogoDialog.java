@@ -202,13 +202,13 @@ public class NogoDialog extends JDialog implements ActionListener, Runnable {
 		spinnerTimeEnd.setEditor(new JSpinner.DateEditor(spinnerTimeEnd, "HH:mm-dd-MM-yy"));
 
 		JPanel panel_2 = new JPanel();
-		panel_2.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Draught", TitledBorder.LEADING,
+		panel_2.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Depth", TitledBorder.LEADING,
 				TitledBorder.TOP, null, new Color(0, 0, 0)));
 		panel_2.setBounds(15, 259, 327, 59);
 		contentPanel.add(panel_2);
 		panel_2.setLayout(null);
 
-		JLabel lblNewLabel = new JLabel("Current Draught in meters:");
+		JLabel lblNewLabel = new JLabel("Current depth in meters: ");
 		lblNewLabel.setBounds(12, 26, 139, 16);
 		panel_2.add(lblNewLabel);
 
@@ -239,7 +239,7 @@ public class NogoDialog extends JDialog implements ActionListener, Runnable {
 		}
 
 		if (aisHandler != null && aisHandler.getOwnShip().getStaticData() != null) {
-			Integer draught = ((int) aisHandler.getOwnShip().getStaticData().getDraught() / 10);
+			Integer draught = ((int) aisHandler.getOwnShip().getStaticData().getDraught() / 10) + 2;
 			spinnerDraught.setValue(draught);
 		}
 

@@ -57,26 +57,10 @@ public class NogoHandler extends MapHandlerChild implements Runnable {
 	Double draught;
 	boolean nogoFailed = false;
 
-	public boolean getNogoFailed() {
-		return nogoFailed;
-	}
-
-	public void setNogoFailed(boolean nogoFailed) {
-		this.nogoFailed = nogoFailed;
-	}
-
 	private ShoreServices shoreServices;
 
 	// Create a seperate layer for the nogo information
 	private NogoLayer nogoLayer;
-
-	public void setNorthWestPoint(GeoLocation northWestPoint) {
-		this.northWestPoint = northWestPoint;
-	}
-
-	public void setSouthEastPoint(GeoLocation southEastPoint) {
-		this.southEastPoint = southEastPoint;
-	}
 
 	private Date lastUpdate;
 	private long pollInterval;
@@ -85,6 +69,34 @@ public class NogoHandler extends MapHandlerChild implements Runnable {
 	private List<NogoPolygon> nogoPolygons;
 	private Date validFrom;
 	private Date validTo;
+	private int noGoErrorCode;
+	private String noGoMessage;
+
+	
+	
+	public int getNoGoErrorCode() {
+		return noGoErrorCode;
+	}
+
+	public String getNoGoMessage() {
+		return noGoMessage;
+	}
+
+	public boolean getNogoFailed() {
+		return nogoFailed;
+	}
+
+	public void setNogoFailed(boolean nogoFailed) {
+		this.nogoFailed = nogoFailed;
+	}
+
+	public void setNorthWestPoint(GeoLocation northWestPoint) {
+		this.northWestPoint = northWestPoint;
+	}
+
+	public void setSouthEastPoint(GeoLocation southEastPoint) {
+		this.southEastPoint = southEastPoint;
+	}
 
 	public void setValidFrom(Date validFrom) {
 		this.validFrom = validFrom;
@@ -113,8 +125,7 @@ public class NogoHandler extends MapHandlerChild implements Runnable {
 		notifyUpdate(false);
 		boolean nogoUpdated = false;
 		Date now = new Date();
-		if (getLastUpdate() == null
-				|| (now.getTime() - getLastUpdate().getTime() > pollInterval * 1000)) {
+		if (getLastUpdate() == null || (now.getTime() - getLastUpdate().getTime() > pollInterval * 1000)) {
 			// Poll for data from shore
 			try {
 				if (poll()) {
@@ -123,6 +134,7 @@ public class NogoHandler extends MapHandlerChild implements Runnable {
 				setLastUpdate(now);
 			} catch (ShoreServiceException e) {
 				LOG.error("Failed to get NoGo from shore: " + e.getMessage());
+
 				nogoFailed = true;
 				nogoUpdated = true;
 				setLastUpdate(now);
@@ -155,14 +167,18 @@ public class NogoHandler extends MapHandlerChild implements Runnable {
 			return false;
 		}
 
-		//Date date = new Date();
-		//Send a rest to shoreServices for NoGo
-		NogoResponse nogoResponse = shoreServices.nogoPoll(draught,
-				northWestPoint, southEastPoint, validFrom, validTo);
+		// Date date = new Date();
+		// Send a rest to shoreServices for NoGo
+		NogoResponse nogoResponse = shoreServices.nogoPoll(draught, northWestPoint, southEastPoint, validFrom, validTo);
 
 		nogoPolygons = nogoResponse.getPolygons();
 		validFrom = nogoResponse.getValidFrom();
 		validTo = nogoResponse.getValidTo();
+		noGoErrorCode = nogoResponse.getNoGoErrorCode();
+		noGoMessage = nogoResponse.getNoGoMessage();
+
+		System.out.println(nogoResponse.getNoGoErrorCode());
+		System.out.println(nogoResponse.getNoGoMessage());
 
 		if (nogoResponse == null || nogoResponse.getPolygons() == null) {
 			return false;

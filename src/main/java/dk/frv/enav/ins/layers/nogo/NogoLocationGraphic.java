@@ -60,6 +60,7 @@ public class NogoLocationGraphic extends OMGraphicList {
 	private Date validTo;
 	private int draught;
 	private String message;
+	private int errorCode;
 	private GeoLocation northWest;
 	private GeoLocation southEast;
 
@@ -69,7 +70,7 @@ public class NogoLocationGraphic extends OMGraphicList {
 	private BufferedImage hatchFill;
 
 	public NogoLocationGraphic(NogoPolygon polygon, Date validFrom, Date validTo, Double draught, String message,
-			GeoLocation northWest, GeoLocation southEast) {
+			GeoLocation northWest, GeoLocation southEast, int errorCode) {
 		super();
 		this.polygon = polygon;
 		this.validFrom = validFrom;
@@ -78,10 +79,11 @@ public class NogoLocationGraphic extends OMGraphicList {
 		this.message = message;
 		this.northWest = northWest;
 		this.southEast = southEast;
+		this.errorCode = errorCode;
 
 		// System.out.println(message);
 		// Draw the data
-		if (polygon != null && message.equals("")) {
+		if (polygon != null && (errorCode == 18 || errorCode == 0)) {
 			hatchFill = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
 			Graphics2D big = hatchFill.createGraphics();
 			Composite originalComposite = big.getComposite();
@@ -99,10 +101,10 @@ public class NogoLocationGraphic extends OMGraphicList {
 
 		}
 		// Draw the message
-		if (!message.equals("")) {
+		if (errorCode == -1 || errorCode == 1 || errorCode == 17) {
 			OMPoint polyPoint = new OMPoint(0, 0);
 
-			if (message.equals("NoGo area requested - standby")) {
+			if (errorCode == 1) {
 				// Standby message
 				drawAreaBox();
 			}
@@ -227,14 +229,33 @@ public class NogoLocationGraphic extends OMGraphicList {
 		String message1 = "Do not use this for navigational purposes!";
 		String message2 = "Only valid for draughts at " + draught + " meters and below";
 
+		String messageTide = "NoGo Active, no Tide Data found showing only static depth";
+		
 		gr.setFont(font);
 		gr.setColor(Color.red);
 
-		if (message.equals("")) {
+		
+		//Errorcode -1 means server experinced a timeout
+		//Errorcode 0 means everything went ok
+		//Errorcode 1 is the standby message
+		//Errorcode 17 means no data
+		//Errorcode 18 means no tide data
+
+		
+		if (errorCode == 0){
 			gr.drawString(message0, 5, 20);
 			gr.drawString(message1, 5, 40);
 			gr.drawString(message2, 5, 60);
-		} else {
+		}
+		
+		if (errorCode == 18){
+			gr.drawString(messageTide, 5, 20);
+			gr.drawString(message1, 5, 40);
+			gr.drawString(message2, 5, 60);
+		}
+		
+		
+		if (errorCode == -1 || errorCode == 1 || errorCode == 17){
 			gr.drawString(message, 5, 20);
 
 		}
