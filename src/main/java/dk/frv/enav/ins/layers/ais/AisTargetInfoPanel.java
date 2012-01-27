@@ -29,6 +29,8 @@
  */
 package dk.frv.enav.ins.layers.ais;
 
+import java.text.DecimalFormat;
+
 import dk.frv.ais.message.AisMessage;
 import dk.frv.enav.common.xml.risk.response.Risk;
 import dk.frv.enav.common.xml.risk.response.RiskList;
@@ -65,10 +67,6 @@ public class AisTargetInfoPanel extends InfoPanel implements Runnable {
 		VesselPositionData positionData = vesselTarget.getPositionData();
 		String cog = "N/A";
 		String sog = "N/A";
-		/*
-		 * Get the risk object
-		 */
-		RiskList riskList = EeINS.getRiskHandler().getRiskList(vesselTarget.getMmsi());
 
 		if (positionData != null) {
 			cog = Formatter.formatDegrees((double) positionData.getCog(), 0);
@@ -87,14 +85,41 @@ public class AisTargetInfoPanel extends InfoPanel implements Runnable {
 		}
 		str.append("<br/>");
 
+		/*
+		 * Get the risk object
+		 */
+		RiskList riskList = EeINS.getRiskHandler().getRiskList(vesselTarget.getMmsi());
+//		if( riskList!=null && !riskList.getRisks().isEmpty()){
+//			Risk risk = riskList.getRisks().iterator().next();
+//			str.append("length : " + risk.getLength() + " m " );
+//			
+//		}
+		
+
 		if (callsign != null) {
 			str.append(callsign + "<br/>");
 		}
 		str.append("COG " + cog + "  SOG " + sog + "<br/>");
+
+		Risk riskIndex = EeINS.getRiskHandler().getRiskLevel(vesselTarget.getMmsi());
+		if (riskIndex != null) {
+			DecimalFormat fmt = new DecimalFormat("#.####");
+			str.append("risk index : " + fmt.format(riskIndex.getRiskNorm()) + " (" +fmt.format(riskIndex.getProbability()* riskIndex.getConsequence() * 1000000) + "$) <br/>");
+		}
+
 		if (riskList != null) {
-			str.append("Risk Index : <br/>");
+			double total = 0;
 			for (Risk risk : riskList.getRisks()) {
-				str.append(risk.getAccidentType() + " : " + risk.getRiskProba() * risk.getConsequenceIndex() + "<br/>");
+				if (risk.getAccidentType().equals("MACHINERYFAILURE")) {
+					continue;
+				}
+				total += risk.getRiskNorm();
+			}
+			for (Risk risk : riskList.getRisks()) {
+				if (risk.getAccidentType().equals("MACHINERYFAILURE")) {
+					continue;
+				}
+				str.append(risk.getAccidentType() + " : " + (int) (risk.getRiskNorm() / total * 100) + " % <br/>");
 			}
 		}
 		str.append("</html>");

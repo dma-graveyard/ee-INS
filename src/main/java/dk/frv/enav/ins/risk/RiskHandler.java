@@ -70,31 +70,27 @@ public class RiskHandler implements Runnable {
 
 	}
 
-	public RiskLevel getRiskLevel(Long mmsi) {
+	public Risk getRiskLevel(Long mmsi) {
 		
 		RiskList list = riskListMap.get(mmsi);
 		
 		if (list == null || list.getRisks().isEmpty()) {
-			return RiskLevel.UNKNOWN;
+			return null;
 		}
 		/*
-		 * calculate totel risk
+		 * get total risk
 		 */
-		double riskLevel = 1;
 		for (Risk risk : list.getRisks()) {
-			riskLevel *= risk.getConsequenceIndex() * risk.getRiskProba();
+			
+			if(risk.getAccidentType().equals("MACHINERYFAILURE")){
+				/*
+				 * MACHINERYFAILURE is total risk for all incident type 
+				 * 
+				 */
+				return risk;
+				
+			}
 		}
-
-		/*
-		 * Compare to normal values
-		 */
-		if (riskLevel > 0.8) {
-			return RiskLevel.HIGH;
-		} else if (riskLevel < 0.5) {
-			return RiskLevel.LOW;
-		}
-		return RiskLevel.MEDIUM;
-
+		return null;
 	}
-
 }

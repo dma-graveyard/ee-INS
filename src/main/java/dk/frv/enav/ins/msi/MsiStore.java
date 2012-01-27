@@ -264,7 +264,6 @@ public class MsiStore implements Serializable {
 			return msiStore;
 		} catch (FileNotFoundException e) {
 			// Not an error
-			System.out.println("Exception");
 		} catch (Exception e) {
 			LOG.error("Failed to load MSI file: " + e.getMessage());
 			// Delete possible corrupted or old file

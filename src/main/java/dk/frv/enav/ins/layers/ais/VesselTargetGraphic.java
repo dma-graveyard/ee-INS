@@ -46,6 +46,7 @@ import com.bbn.openmap.proj.coords.LatLonPoint;
 
 import dk.frv.ais.geo.GeoLocation;
 import dk.frv.ais.message.AisMessage;
+import dk.frv.enav.common.xml.risk.response.Risk;
 import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.ais.AisIntendedRoute;
 import dk.frv.enav.ins.ais.AisTarget;
@@ -56,6 +57,7 @@ import dk.frv.enav.ins.ais.VesselTargetSettings;
 import dk.frv.enav.ins.common.graphics.RotationalPoly;
 import dk.frv.enav.ins.common.math.Vector2D;
 import dk.frv.enav.ins.risk.RiskHandler;
+import dk.frv.enav.ins.risk.RiskHandler.RiskLevel;
 
 /**
  * Graphic for vessel target
@@ -110,7 +112,7 @@ public class VesselTargetGraphic extends TargetGraphic {
 		 * new RotationalPoly(vesselX, vesselY, stroke, paint);
 		 */
 		vessel = new VesselTargetTriangle();
-		
+
 		int[] headingX = { 0, 0 };
 		int[] headingY = { 0, -100 };
 		heading = new RotationalPoly(headingX, headingY, null, paint);
@@ -150,21 +152,21 @@ public class VesselTargetGraphic extends TargetGraphic {
 		}
 
 		// Set color based on risk index
-		switch (EeINS.getRiskHandler().getRiskLevel(vesselTarget.getMmsi())) {
-		case UNKNOWN:
+		
+		Risk risk = EeINS.getRiskHandler().getRiskLevel(vesselTarget.getMmsi());
+		
+		if(risk==null){
 			vessel.setLinePaint(new Color(74, 97, 205, 255));
-			break;
-		case LOW:
+		}
+		else if( risk.getRiskNorm()< 0.002){
 			vessel.setLinePaint(Color.GREEN);
-			break;
-		case MEDIUM:
-			vessel.setLinePaint(Color.YELLOW);
-			break;
-		case HIGH:
+		}else if( risk.getRiskNorm()> 0.01){
 			vessel.setLinePaint(Color.RED);
-			break;
-		default:
-			break;
+		}else{
+			System.out.println("risk :"+ risk);
+			int green = (int)((0.01-risk.getRiskNorm())/0.01*255);
+			System.out.println(green);
+			vessel.setLinePaint(new Color(255,green<0?255:green,51));
 		}
 
 		double sog = vesselTarget.getPositionData().getSog();

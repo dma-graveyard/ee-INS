@@ -1,0 +1,26 @@
+TODO before 3.0 release
+=======================
+
+
++ Application locks up. Identified scenarios:
+	1. After running for a long time, clicking status icons.
+	2. 
+	
+	Theory: AisHandler deadlock. Maybe because of new use from AisDialog.
+
+DONE + AisDialog/AisHandler re-factoring
+	* Expensive solution
+	* Why call getShipList() from AisHandler.receive()? Removed call
+	* Removed exception handling in AisHandler.publishUpdate(). Not proper way
+	  to handle errors down the line.
+	* Sleep 1 ms ?
+	* static-access?
+
++ Merge persistent ais_persist
+
+
++ Resolve all warnings	 
+
+
+
++ Remove this file!
