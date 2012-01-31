@@ -244,6 +244,13 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 	 */
 	@Override
 	public synchronized void receiveOwnMessage(AisMessage aisMessage) {
+		// Determine if our vessel has changed. Clear if so.
+		if (ownShip != null) {
+			if (aisMessage.getUserId() != ownShip.getMmsi()) {
+				ownShip = new VesselTarget();
+			}
+		}
+		
 		if (aisMessage instanceof AisPositionMessage) {
 			AisPositionMessage aisPositionMessage = (AisPositionMessage) aisMessage;
 			ownShip.setAisClass(VesselTarget.AisClass.A);
@@ -757,6 +764,7 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 		aisStore.setVesselTargets(vesselTargets);
 		aisStore.setAtonTargets(atonTargets);
 		aisStore.setSarTargets(sarTargets);
+		ownShip.setPositionData(null);
 		aisStore.setOwnShip(ownShip);
 		
 		try {
