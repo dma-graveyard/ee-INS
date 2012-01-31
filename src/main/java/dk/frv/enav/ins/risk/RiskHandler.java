@@ -10,7 +10,6 @@ import org.apache.log4j.Logger;
 import dk.frv.enav.common.xml.risk.response.Risk;
 import dk.frv.enav.common.xml.risk.response.RiskList;
 import dk.frv.enav.ins.EeINS;
-import dk.frv.enav.ins.ais.VesselTarget;
 import dk.frv.enav.ins.services.shore.ShoreServiceException;
 
 public class RiskHandler implements Runnable {
@@ -33,7 +32,7 @@ public class RiskHandler implements Runnable {
 	public void run() {
 
 		while (EeINS.getSettings().getAisSettings().isShowRisk()) {
-			VesselTarget ownShip = EeINS.getAisHandler().getOwnShip();
+			//VesselTarget ownShip = EeINS.getAisHandler().getOwnShip();
 			List<RiskList> riskLists = new ArrayList<RiskList>();
 			try {
 				riskLists = EeINS.getShoreServices().getRiskIndexes(54.75, 56.0, 10.65, 11.25);

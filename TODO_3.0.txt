@@ -5,9 +5,8 @@ TODO before 3.0 release
 + Application locks up. Identified scenarios:
 	1. After running for a long time, clicking status icons.
 	2. 
-  Verify this again after some changes.
+  Verify this again after latest changes.
 	
-
 
 DONE + AisDialog/AisHandler re-factoring
 	* Expensive solution
@@ -18,9 +17,8 @@ DONE + AisDialog/AisHandler re-factoring
 
 DONE + Merge persistent ais_persist
 
+DONE + Resolve all warnings	 
 
-+ Resolve all warnings	 
-
-
+DONE + Disable no-go and risk
 
 + Remove this file!

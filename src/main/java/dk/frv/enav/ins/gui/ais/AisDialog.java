@@ -59,7 +59,6 @@ import javax.swing.table.TableRowSorter;
 
 import dk.frv.ais.geo.GeoLocation;
 import dk.frv.ais.message.AisMessage;
-import dk.frv.enav.common.xml.risk.response.RiskList;
 import dk.frv.enav.ins.ais.AisHandler;
 import dk.frv.enav.ins.ais.AisHandler.AisMessageExtended;
 import dk.frv.enav.ins.ais.AisTarget;
@@ -285,23 +284,23 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 		}
 	}
 	
-	private void setRiskDetails(RiskList risk) {
-		if(risk==null){
-			aisTableDetails.setValueAt("", 19, 1);
-			aisTableDetails.setValueAt("", 20, 1);
-			aisTableDetails.setValueAt("", 21, 1);
-			return;
-		}
-//		if (!compare(aisTableDetails.getValueAt(19, 1), risk.getCpaDist())){
-//			aisTableDetails.setValueAt(risk.getCpaDist(), 19, 1);
-//			}
-//		if (!compare(aisTableDetails.getValueAt(20, 1), risk.getCpaTime())){
-//			aisTableDetails.setValueAt(risk.getCpaTime(), 20, 1);
-//			}
-//		if (!compare(aisTableDetails.getValueAt(21, 1), risk.getCpaTargetMmsi())){
-//			aisTableDetails.setValueAt(risk.getCpaTargetMmsi(), 21, 1);
-//			}
-	}
+//	private void setRiskDetails(RiskList risk) {
+//		if(risk==null){
+//			aisTableDetails.setValueAt("", 19, 1);
+//			aisTableDetails.setValueAt("", 20, 1);
+//			aisTableDetails.setValueAt("", 21, 1);
+//			return;
+//		}
+////		if (!compare(aisTableDetails.getValueAt(19, 1), risk.getCpaDist())){
+////			aisTableDetails.setValueAt(risk.getCpaDist(), 19, 1);
+////			}
+////		if (!compare(aisTableDetails.getValueAt(20, 1), risk.getCpaTime())){
+////			aisTableDetails.setValueAt(risk.getCpaTime(), 20, 1);
+////			}
+////		if (!compare(aisTableDetails.getValueAt(21, 1), risk.getCpaTargetMmsi())){
+////			aisTableDetails.setValueAt(risk.getCpaTargetMmsi(), 21, 1);
+////			}
+//	}
 
 	private void setDetails(VesselTarget vesselTarget) {
 
