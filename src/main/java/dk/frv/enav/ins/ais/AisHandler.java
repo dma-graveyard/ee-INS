@@ -738,6 +738,9 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 			sarTargets = aisStore.getSarTargets();
 		}
 		
+		// Retrieve own ship
+		ownShip = aisStore.getOwnShip();
+		
 		LOG.info("AIS handler loaded total targets: " + (vesselTargets.size() + atonTargets.size() + sarTargets.size()));
 				
 		// Update status to update old and gone (twice for old and gone)
@@ -754,6 +757,7 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 		aisStore.setVesselTargets(vesselTargets);
 		aisStore.setAtonTargets(atonTargets);
 		aisStore.setSarTargets(sarTargets);
+		aisStore.setOwnShip(ownShip);
 		
 		try {
 			FileOutputStream fileOut = new FileOutputStream(aisViewFile);

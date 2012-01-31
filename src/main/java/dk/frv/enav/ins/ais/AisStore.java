@@ -37,11 +37,12 @@ import java.util.Map;
  */
 public class AisStore implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 	
 	private Map<Long, AtoNTarget> atonTargets;
 	private Map<Long, VesselTarget> vesselTargets;
 	private Map<Long, SarTarget> sarTargets;
+	private VesselTarget ownShip; 
 	
 	public AisStore() {
 		
@@ -69,6 +70,14 @@ public class AisStore implements Serializable {
 
 	public void setSarTargets(Map<Long, SarTarget> sarTargets) {
 		this.sarTargets = sarTargets;
+	}
+	
+	public VesselTarget getOwnShip() {
+		return ownShip;
+	}
+	
+	public void setOwnShip(VesselTarget ownShip) {
+		this.ownShip = ownShip;
 	}
 	
 }
