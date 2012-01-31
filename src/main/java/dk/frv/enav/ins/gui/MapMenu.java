@@ -56,6 +56,7 @@ import com.bbn.openmap.LightMapHandlerChild;
 import com.bbn.openmap.MapBean;
 import com.bbn.openmap.MouseDelegator;
 
+import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.ais.AisAdressedRouteSuggestion;
 import dk.frv.enav.ins.ais.AisHandler;
 import dk.frv.enav.ins.ais.SarTarget;
@@ -308,7 +309,8 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 			add(hideIntendedRoutes);
 			add(showIntendedRoutes);
 			add(newRoute);
-			add(nogoRequest);
+			if (!EeINS.getSettings().getGuiSettings().isRiskNogoDisabled())
+				add(nogoRequest);
 			add(scaleMenu);
 			return;
 		}
