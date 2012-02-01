@@ -83,7 +83,7 @@ public class NogoLocationGraphic extends OMGraphicList {
 
 		// System.out.println(message);
 		// Draw the data
-		if (polygon != null && (errorCode == 18 || errorCode == 0)) {
+		if (polygon != null && (errorCode == 18 || errorCode == 0) ) {
 			hatchFill = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
 			Graphics2D big = hatchFill.createGraphics();
 			Composite originalComposite = big.getComposite();
@@ -112,6 +112,8 @@ public class NogoLocationGraphic extends OMGraphicList {
 			// polyPoint.setVisible(false);
 			add(polyPoint);
 		}
+		
+
 	}
 
 	private AlphaComposite makeComposite(float alpha) {

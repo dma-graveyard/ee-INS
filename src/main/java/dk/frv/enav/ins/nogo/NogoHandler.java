@@ -177,8 +177,9 @@ public class NogoHandler extends MapHandlerChild implements Runnable {
 		noGoErrorCode = nogoResponse.getNoGoErrorCode();
 		noGoMessage = nogoResponse.getNoGoMessage();
 
-		System.out.println(nogoResponse.getNoGoErrorCode());
-		System.out.println(nogoResponse.getNoGoMessage());
+//		System.out.println(nogoResponse.getNoGoErrorCode());
+//		System.out.println(nogoResponse.getNoGoMessage());
+//		System.out.println(nogoResponse.getPolygons().size());
 
 		if (nogoResponse == null || nogoResponse.getPolygons() == null) {
 			return false;
