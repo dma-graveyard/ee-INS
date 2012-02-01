@@ -1,4 +1,4 @@
-2012-01-xx Version 3.0
+2012-02-xx Version 3.0
   
 	* Fixed memory leak when no sensor connection and active route
 	* Changing default intended route waypoints to 8. Limits ASM to 3 slots.
@@ -9,8 +9,6 @@
 	* Numpad Down pans down, Numpad Left pans left, Numpad Right pans right, 
 	* Arrow Up pans up, Arrow Down pans down, Arrow Right pans right, Arrow Left pans left, 
 	* Ctrl n creates a new route, Ctrl r opens route window, Ctrl m opens msi window, Ctrl a opens AIS Window
-	* TODO No-go
-	* TODO Risk
 	* Persistent AIS view across restarts
 
 2011-10-28 Version 2.5

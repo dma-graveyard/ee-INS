@@ -110,6 +110,9 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 		riskBtn.setToolTipText("Show/hide risk info");
 		encBtn.setToolTipText("Show/hide ENC");
 		tglbtnMsiFilter.setToolTipText("Enable/disable MSI message filtering based on position and routes");
+		
+		// Temporary
+		boolean showRiskAndNogo = !EeINS.getSettings().getGuiSettings().isRiskNogoDisabled();
 
 		add(zoomInBtn);
 		add(zoomOutBtn);
@@ -122,12 +125,13 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 		add(msiButton);
 		add(aisButton);
 		add(new JSeparator());
-		add(aisBtn);
-		add(riskBtn);
-		add(encBtn);
+		add(aisBtn);		
+		add(encBtn);		
 		add(tglbtnMsiFilter);
-		add(nogoButton);
-		
+		if (showRiskAndNogo) 
+			add(riskBtn);
+		if (showRiskAndNogo)
+			add(nogoButton);		
 		
 		Component horizontalStrut = Box.createHorizontalStrut(5);
 		JSeparator separator = new JSeparator();

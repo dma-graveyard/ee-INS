@@ -56,8 +56,6 @@ import dk.frv.enav.ins.ais.VesselTarget;
 import dk.frv.enav.ins.ais.VesselTargetSettings;
 import dk.frv.enav.ins.common.graphics.RotationalPoly;
 import dk.frv.enav.ins.common.math.Vector2D;
-import dk.frv.enav.ins.risk.RiskHandler;
-import dk.frv.enav.ins.risk.RiskHandler.RiskLevel;
 
 /**
  * Graphic for vessel target
