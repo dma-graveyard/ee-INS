@@ -67,7 +67,7 @@ public class EnavSettings implements Serializable {
 	 */
 	private int metocTimeDiffTolerance = 15; // 15 min
 	
-	private String serverName = "enav.frv.dk";
+	private String serverName = "service.e-navigation.net";
 	private int httpPort = 80;
 	private int connectTimeout = 30000;
 	private int msiPollInterval = 600; // sek
@@ -77,7 +77,7 @@ public class EnavSettings implements Serializable {
 	private double msiRelevanceFromOwnShipRange = 40.0d;
 	private double msiVisibilityFromNewWaypoint = 30.0d;
 	private boolean msiFilter = true;
-	private String updateServer = "http://enav.frv.dk/";
+	private String updateServer = "http://service.e-navigation.net/";
 	
 	public EnavSettings() {
 		
@@ -105,6 +105,14 @@ public class EnavSettings implements Serializable {
 		msiRelevanceFromOwnShipRange = PropUtils.doubleFromProperties(props, PREFIX + "msiRelevanceFromOwnShipRange", msiRelevanceFromOwnShipRange);
 		msiVisibilityFromNewWaypoint = PropUtils.doubleFromProperties(props, PREFIX + "msiVisibilityFromNewWaypoint", msiVisibilityFromNewWaypoint);
 		msiFilter = PropUtils.booleanFromProperties(props, PREFIX + "msiFilter", msiFilter);
+		
+		// Temporary hack to move away from enav.frv.dk to service.e-navigation.net
+		if (serverName.contains("enav.frv.dk")) {
+			serverName = "service.e-navigation.net";
+		}
+		if (updateServer.contains("enav.frv.dk")) {
+			updateServer = "http://service.e-navigation.net/";
+		}
 		
 	}
 	
