@@ -1,4 +1,4 @@
-2012-02-xx Version 3.0
+2012-02-06 Version 3.0
   
 	* Fixed memory leak when no sensor connection and active route
 	* Changing default intended route waypoints to 8. Limits ASM to 3 slots.
