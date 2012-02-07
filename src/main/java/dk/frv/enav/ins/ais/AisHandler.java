@@ -499,11 +499,11 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 		}
 	}
 	
-	public void addListener(IAisTargetListener targetListener) {
+	public synchronized void addListener(IAisTargetListener targetListener) {
 		listeners.add(targetListener);
 	}
 	
-	public void removeListener(IAisTargetListener targetListener) {
+	public synchronized void removeListener(IAisTargetListener targetListener) {
 		listeners.remove(targetListener);
 	}
 	
