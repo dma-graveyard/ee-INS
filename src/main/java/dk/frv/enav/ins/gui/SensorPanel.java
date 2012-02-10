@@ -47,7 +47,7 @@ import com.bbn.openmap.proj.coords.LatLonPoint;
 import dk.frv.ais.geo.GeoLocation;
 import dk.frv.ais.message.AisMessage;
 import dk.frv.enav.ins.EeINS;
-import dk.frv.enav.ins.ais.AisHandler;
+import dk.frv.enav.ins.ais.VesselAisHandler;
 import dk.frv.enav.ins.ais.VesselPositionData;
 import dk.frv.enav.ins.ais.VesselStaticData;
 import dk.frv.enav.ins.ais.VesselTarget;
@@ -75,7 +75,7 @@ public class SensorPanel extends OMComponentPanel implements IGpsDataListener, R
 	private static final long serialVersionUID = 1L;
 	
 	private GpsHandler gpsHandler = null;
-	private AisHandler aisHandler = null;
+	private VesselAisHandler vesselAisHandler = null;
 	private MsiHandler msiHandler = null;
 	
 	private GpsData gpsData = null;
@@ -173,8 +173,8 @@ public class SensorPanel extends OMComponentPanel implements IGpsDataListener, R
 		Long ownMmsi = null;
 		VesselTarget ownShip = null;
 		
-		if (aisHandler != null) {
-			ownShip = aisHandler.getOwnShip();
+		if (vesselAisHandler != null) {
+			ownShip = vesselAisHandler.getOwnShip();
 		}
 		
 		if (ownShip != null) {
@@ -302,8 +302,8 @@ public class SensorPanel extends OMComponentPanel implements IGpsDataListener, R
 			gpsHandler = (GpsHandler)obj;
 			gpsHandler.addListener(this);
 		}
-		if (aisHandler == null && obj instanceof AisHandler) {
-			aisHandler = (AisHandler)obj;
+		if (vesselAisHandler == null && obj instanceof VesselAisHandler) {
+			vesselAisHandler = (VesselAisHandler)obj;
 		}
 		if (msiHandler == null && obj instanceof MsiHandler) {
 			msiHandler = (MsiHandler)obj;
@@ -317,8 +317,8 @@ public class SensorPanel extends OMComponentPanel implements IGpsDataListener, R
 			gnssTime = null;
 			return;
 		}
-		if (aisHandler == obj) {
-			aisHandler = null;
+		if (vesselAisHandler == obj) {
+			vesselAisHandler = null;
 		}
 	}
 }

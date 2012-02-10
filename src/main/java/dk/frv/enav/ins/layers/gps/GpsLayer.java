@@ -45,7 +45,7 @@ import com.bbn.openmap.proj.coords.LatLonPoint;
 
 import dk.frv.ais.geo.GeoLocation;
 import dk.frv.enav.ins.EeINS;
-import dk.frv.enav.ins.ais.AisHandler;
+import dk.frv.enav.ins.ais.VesselAisHandler;
 import dk.frv.enav.ins.ais.VesselPositionData;
 import dk.frv.enav.ins.ais.VesselTarget;
 import dk.frv.enav.ins.common.graphics.RotationalPoly;
@@ -61,7 +61,7 @@ public class GpsLayer extends OMGraphicHandlerLayer implements IGpsDataListener 
 	private static final float STROKE_WIDTH = 1.5f;
 	
 	private GpsHandler gpsHandler = null;
-	private AisHandler aisHandler = null;
+	private VesselAisHandler vesselAisHandler = null;
 	
 	private long minRedrawInterval = 5 * 1000; // 5 sec
 	
@@ -163,8 +163,8 @@ public class GpsLayer extends OMGraphicHandlerLayer implements IGpsDataListener 
 		
 		VesselTarget ownShip = null;
 		VesselPositionData ownShipData = null;
-		if (aisHandler != null) {
-			ownShip = aisHandler.getOwnShip();
+		if (vesselAisHandler != null) {
+			ownShip = vesselAisHandler.getOwnShip();
 		}
 		
 		if (ownShip != null) {
@@ -259,8 +259,8 @@ public class GpsLayer extends OMGraphicHandlerLayer implements IGpsDataListener 
 			gpsHandler = (GpsHandler)obj;
 			gpsHandler.addListener(this);
 		}
-		if (aisHandler == null && obj instanceof AisHandler) {
-			aisHandler = (AisHandler)obj;
+		if (vesselAisHandler == null && obj instanceof VesselAisHandler) {
+			vesselAisHandler = (VesselAisHandler)obj;
 		}
 	}
 	
@@ -270,8 +270,8 @@ public class GpsLayer extends OMGraphicHandlerLayer implements IGpsDataListener 
 			gpsHandler.removeListener(this);
 			gpsHandler = null;
 		}
-		if (aisHandler == obj) {
-			aisHandler = null;
+		if (vesselAisHandler == obj) {
+			vesselAisHandler = null;
 		}
 	}
 	

@@ -31,7 +31,7 @@ package dk.frv.enav.ins.gui.menuitems;
 
 import javax.swing.JMenuItem;
 
-import dk.frv.enav.ins.ais.AisHandler;
+import dk.frv.enav.ins.ais.VesselAisHandler;
 
 public class GeneralHideIntendedRoutes extends JMenuItem implements IMapMenuAction {
 	
@@ -39,7 +39,7 @@ public class GeneralHideIntendedRoutes extends JMenuItem implements IMapMenuActi
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private AisHandler aisHandler;
+	private VesselAisHandler vesselAisHandler;
 
 	public GeneralHideIntendedRoutes(String text) {
 		super();
@@ -48,11 +48,11 @@ public class GeneralHideIntendedRoutes extends JMenuItem implements IMapMenuActi
 	
 	@Override
 	public void doAction() {
-		aisHandler.hideAllIntendedRoutes();
+		vesselAisHandler.hideAllIntendedRoutes();
 	}
 	
-	public void setAisHandler(AisHandler aisHandler) {
-		this.aisHandler = aisHandler;
+	public void setAisHandler(VesselAisHandler vesselAisHandler) {
+		this.vesselAisHandler = vesselAisHandler;
 	}
 
 }

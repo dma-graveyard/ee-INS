@@ -65,20 +65,22 @@ import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.common.util.Converter;
 import dk.frv.enav.ins.gps.GnssTime;
 import dk.frv.enav.ins.gps.GpsData;
-import dk.frv.enav.ins.nmea.IAisListener;
+import dk.frv.enav.ins.gps.GpsHandler;
+import dk.frv.enav.ins.nmea.IVesselAisListener;
 import dk.frv.enav.ins.nmea.NmeaSensor;
 import dk.frv.enav.ins.nmea.SensorType;
 import dk.frv.enav.ins.services.ais.AisServices;
+import dk.frv.enav.ins.settings.Settings;
 import dk.frv.enav.ins.status.AisStatus;
 import dk.frv.enav.ins.status.ComponentStatus;
 import dk.frv.enav.ins.status.IStatusComponent;
 
 /**
- * Class for handling incoming AIS messages and maintainer of AIS target tables 
+ * Class for handling incoming AIS messages on a vessel and maintainer of AIS target tables 
  */
-public class AisHandler extends MapHandlerChild implements IAisListener, IStatusComponent, Runnable {
+public class VesselAisHandler extends MapHandlerChild implements IVesselAisListener, IStatusComponent, Runnable {
 
-	private static final Logger LOG = Logger.getLogger(AisHandler.class);
+	private static final Logger LOG = Logger.getLogger(VesselAisHandler.class);
 	
 	private static final String aisViewFile = ".aisview";
 	
@@ -109,18 +111,21 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 	private double aisRange = 0;
 	private NmeaSensor nmeaSensor = null;
 	private AisServices aisServices = null;
+	private GpsHandler gpsHandler = null;
 	private AisStatus aisStatus = new AisStatus();
 	private String sartMmsiPrefix = "970";
+	private Settings settings;
 	
-	public AisHandler() {
-		if (EeINS.getSettings().getSensorSettings().isSimulateGps() && EeINS.getSettings().getSensorSettings().getAisSensorRange() == 0) {
+	public VesselAisHandler(Settings settings) {
+		this.settings = settings;
+		if (settings.getSensorSettings().isSimulateGps() && settings.getSensorSettings().getAisSensorRange() == 0) {
 			aisRange = SIMULATED_AIS_RANGE;
-			ownShip.setMmsi(EeINS.getSettings().getSensorSettings().getSimulatedOwnShip());
+			ownShip.setMmsi(settings.getSensorSettings().getSimulatedOwnShip());
 		} else {
-			aisRange = EeINS.getSettings().getSensorSettings().getAisSensorRange();
+			aisRange = settings.getSensorSettings().getAisSensorRange();
 		}
-		sartMmsiPrefix = EeINS.getSettings().getAisSettings().getSartPrefix();
-		EeINS.startThread(this, "AisHandler");
+		sartMmsiPrefix = settings.getAisSettings().getSartPrefix();
+		EeINS.startThread(this, "VesselAisHandler");
 	}
 
 	/**
@@ -407,7 +412,7 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 		// If not exists, create and insert
 		if (vesselTarget == null) {
 			vesselTarget = new VesselTarget();
-			vesselTarget.getSettings().setShowRoute(EeINS.getSettings().getAisSettings().isShowIntendedRouteByDefault());
+			vesselTarget.getSettings().setShowRoute(settings.getAisSettings().isShowIntendedRouteByDefault());
 			vesselTarget.setMmsi(mmsi);
 			vesselTargets.put(mmsi, vesselTarget);
 		}
@@ -461,13 +466,16 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 		if (getAisRange() <= 0) {
 			return true;
 		}
-		GpsData gpsData = EeINS.getGpsHandler().getCurrentData();
+		if (gpsHandler == null) {
+			return false;
+		}
+		GpsData gpsData = gpsHandler.getCurrentData();
 		if (gpsData == null) {
 			return false;
 		}
 		if (gpsData.isBadPosition()) {
 			// If simulation we will not accept targets before own pos is known once
-			if (EeINS.getSettings().getSensorSettings().isSimulateGps() && vesselTargets.size() == 0) {
+			if (settings.getSensorSettings().isSimulateGps() && vesselTargets.size() == 0) {
 				return false;
 			}
 		}
@@ -591,7 +599,7 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 			}
 			return false;
 		}
-		if (aisTarget.hasGone(now, EeINS.getSettings().getAisSettings().isStrict())) {
+		if (aisTarget.hasGone(now, settings.getAisSettings().isStrict())) {
 			aisTarget.setStatus(AisTarget.Status.GONE);
 			publishUpdate(aisTarget);
 			return false;
@@ -647,6 +655,9 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 		else if (obj instanceof AisServices) {
 			aisServices = (AisServices)obj;
 		}
+		else if (obj instanceof GpsHandler) {
+			gpsHandler = (GpsHandler)obj;
+		}
 	}
 	
 	@Override
@@ -686,8 +697,8 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 				if (currentTarget.getStaticData() != null ){
 					name = " " + AisMessage.trimText(this.getVesselTargets().get(key).getStaticData().getName());
 				}
-				if (!EeINS.getGpsHandler().getCurrentData().isBadPosition()){
-					ownPosition = EeINS.getGpsHandler().getCurrentData().getPosition();
+				if (!gpsHandler.getCurrentData().isBadPosition()){
+					ownPosition = gpsHandler.getCurrentData().getPosition();
 					
 					if (currentTarget.getPositionData().getPos() != null){
 						targetPosition = this.getVesselTargets().get(key).getPositionData().getPos();

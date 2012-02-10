@@ -31,7 +31,7 @@ package dk.frv.enav.ins.gui.menuitems;
 
 import javax.swing.JMenuItem;
 
-import dk.frv.enav.ins.ais.AisHandler;
+import dk.frv.enav.ins.ais.VesselAisHandler;
 import dk.frv.enav.ins.gui.MainFrame;
 import dk.frv.enav.ins.gui.nogo.NogoDialog;
 import dk.frv.enav.ins.nogo.NogoHandler;
@@ -40,10 +40,10 @@ public class NogoRequest extends JMenuItem implements IMapMenuAction {
 	private static final long serialVersionUID = 1L;
 	private NogoHandler nogoHandler = null;
 	private MainFrame mainFrame = null;
-	private AisHandler aisHandler = null;
+	private VesselAisHandler vesselAisHandler = null;
 	
-	public void setAisHandler(AisHandler aisHandler){
-		this.aisHandler = aisHandler;
+	public void setAisHandler(VesselAisHandler vesselAisHandler){
+		this.vesselAisHandler = vesselAisHandler;
 	}
 
 	public void setMainFrame(MainFrame mainFrame) {
@@ -61,7 +61,7 @@ public class NogoRequest extends JMenuItem implements IMapMenuAction {
 	
 	@Override
 	public void doAction() {
-		NogoDialog nogoDialog = new NogoDialog(mainFrame, nogoHandler, aisHandler);
+		NogoDialog nogoDialog = new NogoDialog(mainFrame, nogoHandler, vesselAisHandler);
 		nogoDialog.setVisible(true);
 	}
 	

@@ -34,8 +34,8 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import dk.frv.enav.ins.ais.AisHandler;
-import dk.frv.enav.ins.ais.AisHandler.AisMessageExtended;
+import dk.frv.enav.ins.ais.VesselAisHandler;
+import dk.frv.enav.ins.ais.VesselAisHandler.AisMessageExtended;
 
 /**
  * Table model for MSI dialog
@@ -45,18 +45,18 @@ public class AisTableModel extends AbstractTableModel {
 	
 	private static final String[] COLUMN_NAMES = {"Name", "MMSI", "HDG", "DST"};
 	
-	private AisHandler aisHandler;
-	private List<AisHandler.AisMessageExtended> ships;
+	private VesselAisHandler vesselAisHandler;
+	private List<VesselAisHandler.AisMessageExtended> ships;
 	
 	
-	public AisTableModel(AisHandler aisHandler) {
+	public AisTableModel(VesselAisHandler vesselAisHandler) {
 		super();
-		this.aisHandler = aisHandler;
+		this.vesselAisHandler = vesselAisHandler;
 	}
 	
 	public void updateShips() {
 		//Get new list from store/handler
-		ships = aisHandler.getShipList();
+		ships = vesselAisHandler.getShipList();
 	}
 	
 	public List<AisMessageExtended> getShips() {

@@ -51,7 +51,7 @@ import org.apache.log4j.xml.DOMConfigurator;
 import com.bbn.openmap.MapHandler;
 import com.bbn.openmap.PropertyConsumer;
 
-import dk.frv.enav.ins.ais.AisHandler;
+import dk.frv.enav.ins.ais.VesselAisHandler;
 import dk.frv.enav.ins.gps.GnssTime;
 import dk.frv.enav.ins.gps.GpsHandler;
 import dk.frv.enav.ins.gui.MainFrame;
@@ -91,7 +91,7 @@ public class EeINS {
 	private static NmeaSensor aisSensor;
 	private static NmeaSensor gpsSensor;
 	private static GpsHandler gpsHandler;
-	private static AisHandler aisHandler;
+	private static VesselAisHandler aisHandler;
 	private static RiskHandler riskHandler;
 	private static RouteManager routeManager;
 	private static ShoreServices shoreServices;
@@ -157,7 +157,7 @@ public class EeINS {
         mapHandler.add(gpsHandler);        
         
         // Start AIS target monitoring
-        aisHandler = new AisHandler();
+        aisHandler = new VesselAisHandler(settings);
         aisHandler.loadView();
         mapHandler.add(aisHandler);
 
@@ -193,14 +193,11 @@ public class EeINS {
         });
         
 
-
         // Start thread to handle software updates
         updateThread = new UpdateCheckerThread();
         mapHandler.add(updateThread);
         
- 
-        
-	}
+ 	}
 	
 	private static void startSensors() {
 		SensorSettings sensorSettings = settings.getSensorSettings();
@@ -498,7 +495,7 @@ public class EeINS {
 		return mainFrame;
 	}
 	
-	public static AisHandler getAisHandler() {
+	public static VesselAisHandler getAisHandler() {
 		return aisHandler;
 	}
 	

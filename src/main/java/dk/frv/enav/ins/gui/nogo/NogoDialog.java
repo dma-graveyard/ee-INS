@@ -56,7 +56,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.text.NumberFormatter;
 
 import dk.frv.ais.geo.GeoLocation;
-import dk.frv.enav.ins.ais.AisHandler;
+import dk.frv.enav.ins.ais.VesselAisHandler;
 import dk.frv.enav.ins.common.text.Formatter;
 import dk.frv.enav.ins.gui.ChartPanel;
 import dk.frv.enav.ins.gui.MainFrame;
@@ -87,7 +87,7 @@ public class NogoDialog extends JDialog implements ActionListener, Runnable {
 	GeoLocation southEastPoint = null;
 
 	@SuppressWarnings("deprecation")
-	public NogoDialog(JFrame parent, NogoHandler nogoHandler, AisHandler aisHandler) {
+	public NogoDialog(JFrame parent, NogoHandler nogoHandler, VesselAisHandler vesselAisHandler) {
 		super(parent, "Request Nogo", true);
 
 		mainFrame = (MainFrame) parent;
@@ -237,8 +237,8 @@ public class NogoDialog extends JDialog implements ActionListener, Runnable {
 			}
 		}
 
-		if (aisHandler != null && aisHandler.getOwnShip().getStaticData() != null) {
-			Integer draught = ((int) aisHandler.getOwnShip().getStaticData().getDraught() / 10) + 2;
+		if (vesselAisHandler != null && vesselAisHandler.getOwnShip().getStaticData() != null) {
+			Integer draught = ((int) vesselAisHandler.getOwnShip().getStaticData().getDraught() / 10) + 2;
 			spinnerDraught.setValue(draught);
 		}
 

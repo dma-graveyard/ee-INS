@@ -47,7 +47,7 @@ import javax.swing.border.MatteBorder;
 import com.bbn.openmap.gui.OMComponentPanel;
 
 import dk.frv.enav.ins.EeINS;
-import dk.frv.enav.ins.ais.AisHandler;
+import dk.frv.enav.ins.ais.VesselAisHandler;
 import dk.frv.enav.ins.gps.GpsHandler;
 import dk.frv.enav.ins.services.shore.ShoreServices;
 import dk.frv.enav.ins.status.IStatusComponent;
@@ -61,7 +61,7 @@ public class BottomPanel extends OMComponentPanel implements MouseListener, Runn
 	// private MsiHandler msiHandler;
 	// private MsiDialog msiDialog;
 	private ShoreServices shoreServices;
-	private AisHandler aisHandler;
+	private VesselAisHandler vesselAisHandler;
 	private GpsHandler gpsHandler;
 	private StatusLabel gpsStatus;
 	private StatusLabel aisStatus;
@@ -108,9 +108,9 @@ public class BottomPanel extends OMComponentPanel implements MouseListener, Runn
 
 	@Override
 	public void findAndInit(Object obj) {
-		if (obj instanceof AisHandler) {
-			aisHandler = (AisHandler) obj;
-			statusComponents.add(aisHandler);
+		if (obj instanceof VesselAisHandler) {
+			vesselAisHandler = (VesselAisHandler) obj;
+			statusComponents.add(vesselAisHandler);
 		} else if (obj instanceof GpsHandler) {
 			gpsHandler = (GpsHandler) obj;
 			statusComponents.add(gpsHandler);
@@ -162,8 +162,8 @@ public class BottomPanel extends OMComponentPanel implements MouseListener, Runn
 		if (gpsHandler != null) {
 			gpsStatus.updateStatus(gpsHandler);
 		}
-		if (aisHandler != null) {
-			aisStatus.updateStatus(aisHandler);
+		if (vesselAisHandler != null) {
+			aisStatus.updateStatus(vesselAisHandler);
 		}
 		if (shoreServices != null) {
 			shoreServiceStatus.updateStatus(shoreServices);

@@ -89,7 +89,7 @@ public abstract class NmeaSensor extends MapHandlerChild implements Runnable {
 	private boolean simulateGps = false;
 	private long simulatedOwnShip;
 	private Set<IGpsListener> gpsListeners = new HashSet<IGpsListener>();
-	private Set<IAisListener> aisListeners = new HashSet<IAisListener>();
+	private Set<IVesselAisListener> vesselAisListeners = new HashSet<IVesselAisListener>();
 	private Set<IGnssTimeListener> gnssTimeListeners = new HashSet<IGnssTimeListener>(); 
 	private Vdm vdm = new Vdm();
 	
@@ -224,7 +224,7 @@ public abstract class NmeaSensor extends MapHandlerChild implements Runnable {
 	protected void handleSentence(String msg) {
 		if (!isSimulateGps() && gpsListeners.size() > 0 && msg.indexOf("$GPRMC") >= 0) {
 			handleGpRmc(msg);
-		} else if (aisListeners.size() > 0 && isVdm(msg)) {
+		} else if (vesselAisListeners.size() > 0 && isVdm(msg)) {
 			handleAis(msg);
 		} else if (Abk.isAbk(msg)) {
 			handleAbk(msg);
@@ -262,12 +262,12 @@ public abstract class NmeaSensor extends MapHandlerChild implements Runnable {
 				}
 				
 				// Distribute message
-				synchronized (aisListeners) {
-					for (IAisListener aisListener : aisListeners) {
+				synchronized (vesselAisListeners) {
+					for (IVesselAisListener vesselAisListener : vesselAisListeners) {
 						if (ownMessage) {							
-							aisListener.receiveOwnMessage(aisMessage);
+							vesselAisListener.receiveOwnMessage(aisMessage);
 						} else {
-							aisListener.receive(aisMessage);
+							vesselAisListener.receive(aisMessage);
 						}
 					}
 				}				
@@ -378,15 +378,15 @@ public abstract class NmeaSensor extends MapHandlerChild implements Runnable {
 		}
 	}
 
-	public void addAisListener(IAisListener aisListener) {
-		synchronized (aisListeners) {
-			aisListeners.add(aisListener);
+	public void addAisListener(IVesselAisListener vesselAisListener) {
+		synchronized (vesselAisListeners) {
+			vesselAisListeners.add(vesselAisListener);
 		}
 	}
 	
-	public void removeAisListener(IAisListener aisListener) {
-		synchronized (aisListeners) {
-			aisListeners.remove(aisListener);
+	public void removeAisListener(IVesselAisListener vesselAisListener) {
+		synchronized (vesselAisListeners) {
+			vesselAisListeners.remove(vesselAisListener);
 		}
 	}
 	
