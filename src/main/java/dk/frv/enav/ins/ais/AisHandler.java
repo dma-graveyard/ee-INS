@@ -79,13 +79,12 @@ public class AisHandler extends MapHandlerChild implements IAisHandler, IStatusC
 		public long MMSI;
 		public double hdg;
 		public String dst;
-		public AisMessageExtended(String name, Long key, double hdg, String dst2) {
+		public AisMessageExtended(String name, Long key, double hdg, String dst) {
 			this.name = name;
 			this.MMSI = key;
 			this.hdg = hdg;
-			this.dst = dst2;
+			this.dst = dst;
 		}
-
 	}	
 
 	// How long targets are saved without reports
