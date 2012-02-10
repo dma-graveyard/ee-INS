@@ -95,8 +95,10 @@ public class MsiHandler extends MapHandlerChild implements Runnable, IRoutesUpda
 	private Set<IMsiUpdateListener> listeners = new HashSet<IMsiUpdateListener>();
 	private GpsHandler gpsHandler;
 	private boolean gpsUpdate = false;
+	private EnavSettings enavSettings;
 	
 	public MsiHandler(EnavSettings enavSettings) {
+		this.enavSettings = enavSettings;
 		pollInterval = enavSettings.getMsiPollInterval();
 		msiStore = MsiStore.loadFromFile();
 		EeINS.startThread(this, "MsiHandler");
@@ -328,7 +330,7 @@ public class MsiHandler extends MapHandlerChild implements Runnable, IRoutesUpda
 			return;
 		}
 		Double range = Calculator.range(currentPosition, calculationPosition, Heading.GC);
-		if(range > EeINS.getSettings().getEnavSettings().getMsiRelevanceGpsUpdateRange()) {
+		if(range > enavSettings.getMsiRelevanceGpsUpdateRange()) {
 			gpsUpdate = true;
 			calculationPosition = currentPosition;
 		}
