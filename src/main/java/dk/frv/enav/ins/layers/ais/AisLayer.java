@@ -52,7 +52,7 @@ import com.bbn.openmap.omGraphics.OMList;
 
 import dk.frv.ais.geo.GeoLocation;
 import dk.frv.enav.ins.EeINS;
-import dk.frv.enav.ins.ais.VesselAisHandler;
+import dk.frv.enav.ins.ais.AisHandler;
 import dk.frv.enav.ins.ais.AisTarget;
 import dk.frv.enav.ins.ais.AtoNTarget;
 import dk.frv.enav.ins.ais.IAisTargetListener;
@@ -75,7 +75,7 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 
 	private long minRedrawInterval = 5 * 1000; // 5 sec
 
-	private VesselAisHandler vesselAisHandler = null;
+	private AisHandler aisHandler = null;
 	private MapBean mapBean = null;
 	private MainFrame mainFrame = null;
 	private IntendedRouteInfoPanel intendedRouteInfoPanel = new IntendedRouteInfoPanel();
@@ -250,9 +250,9 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 
 	@Override
 	public void findAndInit(Object obj) {
-		if (obj instanceof VesselAisHandler) {
-			vesselAisHandler = (VesselAisHandler) obj;
-			vesselAisHandler.addListener(this);
+		if (obj instanceof AisHandler) {
+			aisHandler = (AisHandler) obj;
+			aisHandler.addListener(this);
 		}
 		if (obj instanceof MapBean) {
 			mapBean = (MapBean) obj;
@@ -279,8 +279,8 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 
 	@Override
 	public void findAndUndo(Object obj) {
-		if (obj == vesselAisHandler) {
-			vesselAisHandler.removeListener(this);
+		if (obj == aisHandler) {
+			aisHandler.removeListener(this);
 		}
 	}
 

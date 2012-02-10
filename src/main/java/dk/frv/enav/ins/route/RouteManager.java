@@ -53,9 +53,10 @@ import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.ais.AisAdressedRouteSuggestion;
 import dk.frv.enav.ins.ais.AisAdressedRouteSuggestion.Status;
 import dk.frv.enav.ins.ais.AisBroadcastRouteSuggestion;
-import dk.frv.enav.ins.ais.VesselAisHandler;
+import dk.frv.enav.ins.ais.AisHandler;
 import dk.frv.enav.ins.ais.AisRouteData;
 import dk.frv.enav.ins.ais.IAisRouteSuggestionListener;
+import dk.frv.enav.ins.ais.VesselAisHandler;
 import dk.frv.enav.ins.gps.GnssTime;
 import dk.frv.enav.ins.gps.GpsData;
 import dk.frv.enav.ins.gps.GpsHandler;
@@ -83,7 +84,7 @@ public class RouteManager extends MapHandlerChild implements Runnable, Serializa
 	private GpsHandler gpsHandler = null;
 	private AisServices aisServices = null;
 	private ShoreServices shoreServices = null;
-	private VesselAisHandler vesselAisHandler = null;
+	private VesselAisHandler aisHandler = null;
 	private RouteSuggestionDialog routeSuggestionDialog = null;
 
 	private Set<IRoutesUpdateListener> listeners = new HashSet<IRoutesUpdateListener>();
@@ -552,9 +553,9 @@ public class RouteManager extends MapHandlerChild implements Runnable, Serializa
 			gpsHandler = (GpsHandler) obj;
 			gpsHandler.addListener(this);
 		}
-		if (vesselAisHandler == null && obj instanceof VesselAisHandler) {
-			vesselAisHandler = (VesselAisHandler)obj;
-			vesselAisHandler.addRouteSuggestionListener(this);
+		if (aisHandler == null && obj instanceof AisHandler) {
+			aisHandler = (VesselAisHandler)obj;
+			aisHandler.addRouteSuggestionListener(this);
 		}
 		if (obj instanceof RouteSuggestionDialog) {
 			routeSuggestionDialog = (RouteSuggestionDialog)obj;

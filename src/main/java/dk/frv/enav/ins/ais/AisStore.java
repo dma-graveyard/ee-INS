@@ -41,8 +41,7 @@ public class AisStore implements Serializable {
 	
 	private Map<Long, AtoNTarget> atonTargets;
 	private Map<Long, VesselTarget> vesselTargets;
-	private Map<Long, SarTarget> sarTargets;
-	private VesselTarget ownShip; 
+	private Map<Long, SarTarget> sarTargets;	
 	
 	public AisStore() {
 		
@@ -71,13 +70,5 @@ public class AisStore implements Serializable {
 	public void setSarTargets(Map<Long, SarTarget> sarTargets) {
 		this.sarTargets = sarTargets;
 	}
-	
-	public VesselTarget getOwnShip() {
-		return ownShip;
-	}
-	
-	public void setOwnShip(VesselTarget ownShip) {
-		this.ownShip = ownShip;
-	}
-	
+		
 }

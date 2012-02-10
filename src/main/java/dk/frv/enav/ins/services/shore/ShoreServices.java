@@ -53,6 +53,7 @@ import dk.frv.enav.common.xml.nogo.response.NogoResponse;
 import dk.frv.enav.common.xml.risk.request.RiskRequest;
 import dk.frv.enav.common.xml.risk.response.RiskList;
 import dk.frv.enav.common.xml.risk.response.RiskResponse;
+import dk.frv.enav.ins.ais.AisHandler;
 import dk.frv.enav.ins.ais.VesselAisHandler;
 import dk.frv.enav.ins.ais.VesselPositionData;
 import dk.frv.enav.ins.gps.GpsData;
@@ -72,7 +73,7 @@ public class ShoreServices extends MapHandlerChild implements IStatusComponent {
 	
 	private static final Logger LOG = Logger.getLogger(ShoreServices.class);
 
-	private VesselAisHandler vesselAisHandler;
+	private VesselAisHandler aisHandler;
 	private GpsHandler gpsHandler;
 	private EnavSettings enavSettings;
 	private ShoreServiceStatus status = new ShoreServiceStatus();
@@ -226,10 +227,10 @@ public class ShoreServices extends MapHandlerChild implements IStatusComponent {
 	}
 	
 	private void addRequestParameters(ShoreServiceRequest request) throws ShoreServiceException {		
-		if (vesselAisHandler != null && vesselAisHandler.getOwnShip() != null) {
-		    request.setMmsi(vesselAisHandler.getOwnShip().getMmsi());
-		    if (vesselAisHandler.getOwnShip().getPositionData() != null)
-		    request.setPositionReport(convertPositionReport(vesselAisHandler.getOwnShip().getPositionData()));
+		if (aisHandler != null && aisHandler.getOwnShip() != null) {
+		    request.setMmsi(aisHandler.getOwnShip().getMmsi());
+		    if (aisHandler.getOwnShip().getPositionData() != null)
+		    request.setPositionReport(convertPositionReport(aisHandler.getOwnShip().getPositionData()));
 		}
 	
 	}
@@ -279,8 +280,8 @@ public class ShoreServices extends MapHandlerChild implements IStatusComponent {
 		
 	@Override
 	public void findAndInit(Object obj) {
-		if (vesselAisHandler == null && obj instanceof VesselAisHandler) {
-			vesselAisHandler = (VesselAisHandler)obj;
+		if (aisHandler == null && obj instanceof AisHandler) {
+			aisHandler = (VesselAisHandler)obj;
 		}
 		if (gpsHandler == null && obj instanceof GpsHandler) {
 			gpsHandler = (GpsHandler)obj;
@@ -289,8 +290,8 @@ public class ShoreServices extends MapHandlerChild implements IStatusComponent {
 	
 	@Override
 	public void findAndUndo(Object obj) {
-		if (obj == vesselAisHandler) {
-			vesselAisHandler = null;
+		if (obj == aisHandler) {
+			aisHandler = null;
 		} else if (obj == gpsHandler) {
 			gpsHandler = null;
 		}		

@@ -59,10 +59,11 @@ import javax.swing.table.TableRowSorter;
 
 import dk.frv.ais.geo.GeoLocation;
 import dk.frv.ais.message.AisMessage;
-import dk.frv.enav.ins.ais.VesselAisHandler;
-import dk.frv.enav.ins.ais.VesselAisHandler.AisMessageExtended;
+import dk.frv.enav.ins.ais.AisHandler;
+import dk.frv.enav.ins.ais.AisHandler.AisMessageExtended;
 import dk.frv.enav.ins.ais.AisTarget;
 import dk.frv.enav.ins.ais.IAisTargetListener;
+import dk.frv.enav.ins.ais.VesselAisHandler;
 import dk.frv.enav.ins.ais.VesselTarget;
 import dk.frv.enav.ins.ais.VesselTarget.AisClass;
 import dk.frv.enav.ins.common.text.Formatter;
@@ -76,7 +77,7 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 	private static final long serialVersionUID = 1L;
 
 	private AisLayer aisLayer;
-	private VesselAisHandler vesselAisHandler;
+	private VesselAisHandler aisHandler;
 	
 	private JButton closeBtn;
 	private JButton gotoBtn;
@@ -173,7 +174,7 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 		
 		
 	
-		aisTableModel = new AisTableModel(vesselAisHandler);		
+		aisTableModel = new AisTableModel(aisHandler);		
 
 		aisTable.setModel(aisTableModel);
 		aisSelectionModel = aisTable.getSelectionModel();
@@ -275,10 +276,10 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 	
 	private void updateDetails() {
 		int selected = aisTable.getSelectedRow();
-		if (selected >= 0 && selected < aisTable.getRowCount() && vesselAisHandler.getVesselTargets() != null){
+		if (selected >= 0 && selected < aisTable.getRowCount() && aisHandler.getVesselTargets() != null){
 			Object mmsi = aisTable.getValueAt(selected, 1);
-			if (vesselAisHandler.getVesselTargets().get(mmsi) != null) {
-			setDetails(vesselAisHandler.getVesselTargets().get(mmsi));
+			if (aisHandler.getVesselTargets().get(mmsi) != null) {
+			setDetails(aisHandler.getVesselTargets().get(mmsi));
 			//setRiskDetails(EeINS.getRiskHandler().getRiskList((Long)mmsi));
 			}
 		}
@@ -434,7 +435,7 @@ private boolean compare(Object value1, Object value2){
 		int selectedRow = aisTable.getSelectedRow();
 		long selectedMMSI = (Long) aisTable.getValueAt(selectedRow, 1);
 		
-		aisLayer.zoomTo(vesselAisHandler.getVesselTargets().get(selectedMMSI).getPositionData().getPos());
+		aisLayer.zoomTo(aisHandler.getVesselTargets().get(selectedMMSI).getPositionData().getPos());
 		} else if (e.getSource() == closeBtn) {
 			setVisible(false);
 		}		
@@ -445,9 +446,9 @@ private boolean compare(Object value1, Object value2){
 		if (obj instanceof AisLayer) {
 			aisLayer = (AisLayer)obj;
 		}
-		if (obj instanceof VesselAisHandler) {
-			vesselAisHandler = (VesselAisHandler)obj;
-			vesselAisHandler.addListener(this);
+		if (obj instanceof AisHandler) {
+			aisHandler = (VesselAisHandler)obj;
+			aisHandler.addListener(this);
 			initGui();
 		}		
 	}

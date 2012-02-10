@@ -40,10 +40,10 @@ public class NogoRequest extends JMenuItem implements IMapMenuAction {
 	private static final long serialVersionUID = 1L;
 	private NogoHandler nogoHandler = null;
 	private MainFrame mainFrame = null;
-	private VesselAisHandler vesselAisHandler = null;
+	private VesselAisHandler aisHandler = null;
 	
-	public void setAisHandler(VesselAisHandler vesselAisHandler){
-		this.vesselAisHandler = vesselAisHandler;
+	public void setAisHandler(VesselAisHandler aisHandler){
+		this.aisHandler = aisHandler;
 	}
 
 	public void setMainFrame(MainFrame mainFrame) {
@@ -61,7 +61,7 @@ public class NogoRequest extends JMenuItem implements IMapMenuAction {
 	
 	@Override
 	public void doAction() {
-		NogoDialog nogoDialog = new NogoDialog(mainFrame, nogoHandler, vesselAisHandler);
+		NogoDialog nogoDialog = new NogoDialog(mainFrame, nogoHandler, aisHandler);
 		nogoDialog.setVisible(true);
 	}
 	

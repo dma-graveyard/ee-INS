@@ -58,8 +58,9 @@ import com.bbn.openmap.MouseDelegator;
 
 import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.ais.AisAdressedRouteSuggestion;
-import dk.frv.enav.ins.ais.VesselAisHandler;
+import dk.frv.enav.ins.ais.AisHandler;
 import dk.frv.enav.ins.ais.SarTarget;
+import dk.frv.enav.ins.ais.VesselAisHandler;
 import dk.frv.enav.ins.ais.VesselTarget;
 import dk.frv.enav.ins.gps.GpsHandler;
 import dk.frv.enav.ins.gui.menuitems.AisIntendedRouteToggle;
@@ -158,7 +159,7 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 	private Map<Integer, String> map;
 	private NewRouteContainerLayer newRouteLayer;
 	private AisLayer aisLayer;
-	private VesselAisHandler vesselAisHandler;
+	private VesselAisHandler aisHandler;
 	private NogoHandler nogoHandler;
 	private MouseDelegator mouseDelegator;
 
@@ -292,15 +293,15 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 			scaleMenu.add(menuItem);
 		}
 		
-		hideIntendedRoutes.setAisHandler(vesselAisHandler);
-		showIntendedRoutes.setAisHandler(vesselAisHandler);
+		hideIntendedRoutes.setAisHandler(aisHandler);
+		showIntendedRoutes.setAisHandler(aisHandler);
 		
 		newRoute.setMouseDelegator(mouseDelegator);
 		newRoute.setMainFrame(mainFrame);
 		
 		nogoRequest.setNogoHandler(nogoHandler);
 		nogoRequest.setMainFrame(mainFrame);
-		nogoRequest.setAisHandler(vesselAisHandler);
+		nogoRequest.setAisHandler(aisHandler);
 		
 		
 		if(alone){
@@ -608,8 +609,8 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 		if(obj instanceof AisLayer){
 			aisLayer = (AisLayer) obj;
 		}
-		if(obj instanceof VesselAisHandler){
-			vesselAisHandler = (VesselAisHandler) obj;
+		if(obj instanceof AisHandler){
+			aisHandler = (VesselAisHandler) obj;
 		}
 		if (obj instanceof GpsHandler) {
 			gpsHandler = (GpsHandler)obj;

@@ -51,6 +51,7 @@ import org.apache.log4j.xml.DOMConfigurator;
 import com.bbn.openmap.MapHandler;
 import com.bbn.openmap.PropertyConsumer;
 
+import dk.frv.enav.ins.ais.AisHandler;
 import dk.frv.enav.ins.ais.VesselAisHandler;
 import dk.frv.enav.ins.gps.GnssTime;
 import dk.frv.enav.ins.gps.GpsHandler;
@@ -63,8 +64,8 @@ import dk.frv.enav.ins.nmea.NmeaSerialSensor;
 import dk.frv.enav.ins.nmea.NmeaStdinSensor;
 import dk.frv.enav.ins.nmea.NmeaTcpSensor;
 import dk.frv.enav.ins.nmea.SensorType;
-import dk.frv.enav.ins.risk.RiskHandler;
 import dk.frv.enav.ins.nogo.NogoHandler;
+import dk.frv.enav.ins.risk.RiskHandler;
 import dk.frv.enav.ins.route.RouteManager;
 import dk.frv.enav.ins.services.ais.AisServices;
 import dk.frv.enav.ins.services.shore.ShoreServices;
@@ -495,7 +496,7 @@ public class EeINS {
 		return mainFrame;
 	}
 	
-	public static VesselAisHandler getAisHandler() {
+	public static AisHandler getAisHandler() {
 		return aisHandler;
 	}
 	

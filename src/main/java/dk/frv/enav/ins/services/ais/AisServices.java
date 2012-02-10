@@ -46,7 +46,7 @@ import dk.frv.ais.message.binary.BroadcastIntendedRoute;
 import dk.frv.ais.message.binary.RouteSuggestionReply;
 import dk.frv.ais.reader.SendRequest;
 import dk.frv.enav.ins.ais.AisAdressedRouteSuggestion;
-import dk.frv.enav.ins.ais.VesselAisHandler;
+import dk.frv.enav.ins.ais.AisHandler;
 import dk.frv.enav.ins.gps.GnssTime;
 import dk.frv.enav.ins.nmea.NmeaSensor;
 import dk.frv.enav.ins.route.ActiveRoute;
@@ -65,7 +65,7 @@ public class AisServices extends MapHandlerChild {
 	private Integer sequence = 0;
 	private NmeaSensor nmeaSensor;
 	private Settings settings;
-	private VesselAisHandler vesselAisHandler;
+	private AisHandler aisHandler;
 	
 	private Date lastIntendedRouteBroadcast = new Date(0);
 	
@@ -290,11 +290,11 @@ public class AisServices extends MapHandlerChild {
 	}
 	
 	public void sendResult(boolean sendOk) {
-		if (vesselAisHandler == null) return;
+		if (aisHandler == null) return;
 		if (sendOk) {
-			vesselAisHandler.getAisStatus().markSuccesfullSend();
+			aisHandler.getAisStatus().markSuccesfullSend();
 		} else {
-			vesselAisHandler.getAisStatus().markFailedSend();
+			aisHandler.getAisStatus().markFailedSend();
 		}
 	}
 	
@@ -306,8 +306,8 @@ public class AisServices extends MapHandlerChild {
 		else if (settings == null && obj instanceof Settings) {
 			settings = (Settings)obj;
 		}
-		else if (vesselAisHandler == null && obj instanceof VesselAisHandler) {
-			vesselAisHandler = (VesselAisHandler)obj;
+		else if (aisHandler == null && obj instanceof AisHandler) {
+			aisHandler = (AisHandler)obj;
 		}
 	}
 

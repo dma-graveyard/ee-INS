@@ -33,9 +33,9 @@ import java.util.Date;
 import java.util.Locale;
 
 import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EtchedBorder;
 
@@ -47,6 +47,7 @@ import com.bbn.openmap.proj.coords.LatLonPoint;
 import dk.frv.ais.geo.GeoLocation;
 import dk.frv.ais.message.AisMessage;
 import dk.frv.enav.ins.EeINS;
+import dk.frv.enav.ins.ais.AisHandler;
 import dk.frv.enav.ins.ais.VesselAisHandler;
 import dk.frv.enav.ins.ais.VesselPositionData;
 import dk.frv.enav.ins.ais.VesselStaticData;
@@ -75,7 +76,7 @@ public class SensorPanel extends OMComponentPanel implements IGpsDataListener, R
 	private static final long serialVersionUID = 1L;
 	
 	private GpsHandler gpsHandler = null;
-	private VesselAisHandler vesselAisHandler = null;
+	private VesselAisHandler aisHandler = null;
 	private MsiHandler msiHandler = null;
 	
 	private GpsData gpsData = null;
@@ -173,8 +174,8 @@ public class SensorPanel extends OMComponentPanel implements IGpsDataListener, R
 		Long ownMmsi = null;
 		VesselTarget ownShip = null;
 		
-		if (vesselAisHandler != null) {
-			ownShip = vesselAisHandler.getOwnShip();
+		if (aisHandler != null) {
+			ownShip = aisHandler.getOwnShip();
 		}
 		
 		if (ownShip != null) {
@@ -302,8 +303,8 @@ public class SensorPanel extends OMComponentPanel implements IGpsDataListener, R
 			gpsHandler = (GpsHandler)obj;
 			gpsHandler.addListener(this);
 		}
-		if (vesselAisHandler == null && obj instanceof VesselAisHandler) {
-			vesselAisHandler = (VesselAisHandler)obj;
+		if (aisHandler == null && obj instanceof AisHandler) {
+			aisHandler = (VesselAisHandler)obj;
 		}
 		if (msiHandler == null && obj instanceof MsiHandler) {
 			msiHandler = (MsiHandler)obj;
@@ -317,8 +318,8 @@ public class SensorPanel extends OMComponentPanel implements IGpsDataListener, R
 			gnssTime = null;
 			return;
 		}
-		if (vesselAisHandler == obj) {
-			vesselAisHandler = null;
+		if (aisHandler == obj) {
+			aisHandler = null;
 		}
 	}
 }

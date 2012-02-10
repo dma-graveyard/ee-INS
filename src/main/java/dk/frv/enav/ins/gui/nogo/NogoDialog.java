@@ -87,7 +87,7 @@ public class NogoDialog extends JDialog implements ActionListener, Runnable {
 	GeoLocation southEastPoint = null;
 
 	@SuppressWarnings("deprecation")
-	public NogoDialog(JFrame parent, NogoHandler nogoHandler, VesselAisHandler vesselAisHandler) {
+	public NogoDialog(JFrame parent, NogoHandler nogoHandler, VesselAisHandler aisHandler) {
 		super(parent, "Request Nogo", true);
 
 		mainFrame = (MainFrame) parent;
@@ -237,8 +237,8 @@ public class NogoDialog extends JDialog implements ActionListener, Runnable {
 			}
 		}
 
-		if (vesselAisHandler != null && vesselAisHandler.getOwnShip().getStaticData() != null) {
-			Integer draught = ((int) vesselAisHandler.getOwnShip().getStaticData().getDraught() / 10) + 2;
+		if (aisHandler != null && aisHandler.getOwnShip().getStaticData() != null) {
+			Integer draught = ((int) aisHandler.getOwnShip().getStaticData().getDraught() / 10) + 2;
 			spinnerDraught.setValue(draught);
 		}
 
