@@ -90,7 +90,7 @@ public class MsiLayer extends OMGraphicHandlerLayer implements MapMouseListener 
 		for (MsiHandler.MsiMessageExtended message : messages) {
 			
 			// Not able to show messages without location
-			if (message.msiMessage.getLocation() == null) {
+			if (!message.msiMessage.hasLocation()) {
 				continue;
 			}
 			

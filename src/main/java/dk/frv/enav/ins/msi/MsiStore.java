@@ -144,7 +144,7 @@ public class MsiStore implements Serializable {
 			MsiMessage msiMessage = entry.getValue();
 			
 			// TODO Handle general area. For now they are show in list
-			if (msiMessage.getLocation() == null || msiMessage.getLocation().getPoints() == null) {
+			if (!msiMessage.hasLocation()) {
 				visibleGPS.add(msiMessage.getMessageId());
 				continue;
 			}			
