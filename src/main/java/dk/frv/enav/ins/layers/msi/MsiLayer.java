@@ -169,11 +169,12 @@ public class MsiLayer extends OMGraphicHandlerLayer implements MapMouseListener 
 		return graphics;
 	}
 	
-	public void zoomTo(MsiMessage msiMessage) {
-		MsiLocation msiLocation = msiMessage.getLocation();
-		if (msiLocation == null) {
+	public void zoomTo(MsiMessage msiMessage) {		
+		if (!msiMessage.hasLocation()) {
 			return;
 		}
+		
+		MsiLocation msiLocation = msiMessage.getLocation();
 		GeoLocation center = msiLocation.getCenter();
 		mapBean.setCenter(center.getLatitude(), center.getLongitude());
 		mapBean.setScale(EeINS.getSettings().getEnavSettings().getMsiTextboxesVisibleAtScale());		
