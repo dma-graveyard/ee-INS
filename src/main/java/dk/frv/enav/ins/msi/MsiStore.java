@@ -142,6 +142,13 @@ public class MsiStore implements Serializable {
 		while (it.hasNext()) {
 			Map.Entry<Integer, MsiMessage> entry = it.next();
 			MsiMessage msiMessage = entry.getValue();
+			
+			// TODO Handle general area. For now they are show in list
+			if (msiMessage.getLocation() == null || msiMessage.getLocation().getPoints() == null) {
+				visibleGPS.add(msiMessage.getMessageId());
+				continue;
+			}			
+			
 			List<MsiPoint> msiPoints = msiMessage.getLocation().getPoints();
 			Double distance = Double.MAX_VALUE;
 			for (MsiPoint msiPoint : msiPoints) {
@@ -149,8 +156,9 @@ public class MsiStore implements Serializable {
 				double currentDistance = Calculator.range(calculationPosition, msiLocation, Heading.GC);
 				distance = Math.min(currentDistance, distance);
 			}
-			if(distance <= EeINS.getSettings().getEnavSettings().getMsiRelevanceFromOwnShipRange())
+			if(distance <= EeINS.getSettings().getEnavSettings().getMsiRelevanceFromOwnShipRange()) {
 				visibleGPS.add(msiMessage.getMessageId());
+			}
 		}
 		LOG.debug("Relevance calculation performed at:" + calculationPosition.getLatitude() + ", "
 				+ calculationPosition.getLongitude() + " yielded " + visibleGPS.size() + " visible warnings");
