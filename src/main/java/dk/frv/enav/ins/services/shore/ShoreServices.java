@@ -144,6 +144,10 @@ public class ShoreServices extends MapHandlerChild implements IStatusComponent {
 	public static PositionReport convertPositionReport(VesselPositionData position){
 		PositionReport enavshorePos = new PositionReport();
 		
+		if (position == null || position.getPos() == null) {
+			return null;
+		}
+		
 		enavshorePos.setCog(floatToDouble(position.getCog()));
 		enavshorePos.setHeading(floatToDouble(position.getTrueHeading()));
 		enavshorePos.setLatitude(position.getPos().getLatitude());
@@ -228,8 +232,12 @@ public class ShoreServices extends MapHandlerChild implements IStatusComponent {
 	private void addRequestParameters(ShoreServiceRequest request) throws ShoreServiceException {		
 		if (aisHandler != null && aisHandler.getOwnShip() != null) {
 		    request.setMmsi(aisHandler.getOwnShip().getMmsi());
-		    if (aisHandler.getOwnShip().getPositionData() != null)
-		    request.setPositionReport(convertPositionReport(aisHandler.getOwnShip().getPositionData()));
+		    if (aisHandler.getOwnShip().getPositionData() != null) {
+		    	PositionReport posReport = convertPositionReport(aisHandler.getOwnShip().getPositionData());
+		    	if (posReport != null) {
+		    		request.setPositionReport(posReport);
+		    	}
+		    }		    
 		}
 	
 	}

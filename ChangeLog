@@ -1,5 +1,7 @@
 2012-xx-xx Version 3.1
 	* Changed to OpenMap version 5 (stable)
+	* Fixed error trying to send position in shore requests when no
+	  position is known.
 
 2012-02-06 Version 3.0
   
