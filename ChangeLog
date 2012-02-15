@@ -1,8 +1,9 @@
-2012-xx-xx Version 3.1
+2012-02-15 Version 3.1
 	* Changed to OpenMap version 5 (stable)
 	* Fixed error trying to send position in shore requests when no
 	  position is known.
 	* Fixed error when MSI messages have no location
+	* Changed ownership to Danish Maritime Authority
 
 2012-02-06 Version 3.0
   

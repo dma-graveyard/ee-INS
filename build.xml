@@ -58,11 +58,11 @@
 				<section name="dk/frv/enav/ins/">
 					<attribute name="Specification-Title" value="E-navigation Enhanced INS" />
 					<attribute name="Specification-Version" value="${version}" />
-					<attribute name="Specification-Vendor" value="Danish Maratime Safety Administration" />
+					<attribute name="Specification-Vendor" value="Danish Maratime Authority" />
 					<attribute name="Package-Title" value="dk.frv.enav.ins" />
 					<attribute name="Package-Version" value="${version}" />
 					<attribute name="Package-Vendor" value="dk.frv.enav.ins" />
-					<attribute name="Package-Vendor-Id" value="DaMSA" />
+					<attribute name="Package-Vendor-Id" value="DMA" />
 					<attribute name="Implementation-Version" value="${version}"/>
 				</section>
 			</manifest>
@@ -130,9 +130,9 @@
                 destdir="${javadoc.dir}"
                             classpathref="compile.class.path">
 			<doctitle>
-				<![CDATA[<h1>DaMSA ee-INS</h1>]]></doctitle>
+				<![CDATA[<h1>DMA ee-INS</h1>]]></doctitle>
 		<bottom>
-			<![CDATA[<i>Copyright &copy; 2011 Danish Maritime Safety Administration</i>]]></bottom>
+			<![CDATA[<i>Copyright &copy; 2011 Danish Maritime Authority</i>]]></bottom>
 </javadoc>
 </target>
 

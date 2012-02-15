@@ -112,7 +112,7 @@ To use Navicon ENC layer with ee-INS please follow the steps below
 
 1. Contact [Navicon sales](mailto:sales@navicon.dk) regarding a purchase of their 
    [ENC/S52 rendering engine](http://navicon.dk/site/products.html). Mention the following:
-   * To be used with DaMSA ee-INS
+   * To be used with DMA ee-INS
    * Version for use with OpenMap 5
    * If you are using a 64-bit machine, ask for 64-bit dongle drivers
    

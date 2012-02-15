@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Danish Maritime Safety Administration. All rights reserved.
+ * Copyright 2011 Danish Maritime Authority. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -11,7 +11,7 @@
  * this list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  * 
- * THIS SOFTWARE IS PROVIDED BY Danish Maritime Safety Administration ``AS IS'' 
+ * THIS SOFTWARE IS PROVIDED BY Danish Maritime Authority ``AS IS'' 
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
  * DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> OR CONTRIBUTORS BE LIABLE FOR
@@ -24,7 +24,7 @@
 
  * The views and conclusions contained in the software and documentation are those
  * of the authors and should not be interpreted as representing official policies,
- * either expressed or implied, of Danish Maritime Safety Administration.
+ * either expressed or implied, of Danish Maritime Authority.
  * 
  */
 package dk.frv.enav.ins;
@@ -113,7 +113,7 @@ public class EeINS {
         Package p = EeINS.class.getPackage();
         MINORVERSION = p.getImplementationVersion();
         LOG.info("Starting ee-INS version " + MINORVERSION);
-        LOG.info("Copyright (C) 2011 Danish Maritime Safety Administration");
+        LOG.info("Copyright (C) 2011 Danish Maritime Authority");
         LOG.info("This program comes with ABSOLUTELY NO WARRANTY.");
         LOG.info("This is free software, and you are welcome to redistribute it under certain conditions.");
         LOG.info("For details see LICENSE file.");
