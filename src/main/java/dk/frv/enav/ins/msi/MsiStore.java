@@ -178,6 +178,12 @@ public class MsiStore implements Serializable {
 			Map.Entry<Integer, MsiMessage> entry = it.next();
 			MsiMessage msiMessage = entry.getValue();
 			
+			// TODO Handle general area. For now they are show in list
+			if (!msiMessage.hasLocation()) {
+				visibleRoute.add(msiMessage.getMessageId());
+				continue;
+			}
+			
 			boolean contained = false;
 			List<MsiPoint> msiPoints = msiMessage.getLocation().getPoints();
 			for (MsiPoint msiPoint : msiPoints) {
@@ -206,6 +212,12 @@ public class MsiStore implements Serializable {
 		while (it.hasNext()) {
 			Map.Entry<Integer, MsiMessage> entry = it.next();
 			MsiMessage msiMessage = entry.getValue();
+			
+			// TODO Handle general area. For now they are show in list
+			if (!msiMessage.hasLocation()) {
+				relevant.add(msiMessage.getMessageId());
+				continue;
+			}
 			
 			boolean contained = false;
 			List<MsiPoint> msiPoints = msiMessage.getLocation().getPoints();

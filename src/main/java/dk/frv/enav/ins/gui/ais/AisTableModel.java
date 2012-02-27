@@ -99,6 +99,10 @@ public class AisTableModel extends AbstractTableModel {
 	
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
+		if (rowIndex >= ships.size()) {
+			return null;
+		}			
+		
 		AisMessageExtended ship = ships.get(rowIndex);
 
 		switch (columnIndex) {
