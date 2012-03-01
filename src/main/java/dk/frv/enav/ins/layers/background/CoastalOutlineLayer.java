@@ -29,72 +29,43 @@
  */
 package dk.frv.enav.ins.layers.background;
 
-import java.awt.event.MouseEvent;
+import java.awt.Graphics;
 
-import com.bbn.openmap.event.MapMouseListener;
 import com.bbn.openmap.layer.shape.ShapeLayer;
-
-import dk.frv.enav.ins.event.NavigationMouseMode;
+import com.bbn.openmap.omGraphics.OMGraphicList;
 
 /**
  * Layer for simple coastal outline background
  */
-public class BackgroundLayer extends ShapeLayer implements MapMouseListener {
+public class CoastalOutlineLayer extends ShapeLayer {
 	
 	private static final long serialVersionUID = 1L;
 	
-	public BackgroundLayer() {
+	public CoastalOutlineLayer() {
 		super();
 	}
-
-	@Override
-	public String[] getMouseModeServiceList() {
-	    String[] ret = new String[1];
-        ret[0] = NavigationMouseMode.modeID; // "Gestures"
-        return ret;
+	
+	public void forceRedraw() {
+		doPrepare();
 	}
 	
 	@Override
-	public MapMouseListener getMapMouseListener() {
-        return this;
-    }
-
+	public synchronized OMGraphicList prepare() {
+		if (!isVisible()) {
+			return null;
+		}
+		//long start = System.nanoTime();
+		OMGraphicList list = super.prepare();
+		//System.out.println("Finished CoastalOutlineLayer.prepare() in " + EeINS.elapsed(start) + " ms\n---");
+		return list;
+	}
+	
 	@Override
-	public boolean mouseClicked(MouseEvent arg0) {
-		System.out.println("Background mouse clicked");
-		return false;
+	public void paint(Graphics g) {
+		//long start = System.nanoTime();
+		super.paint(g);
+		//System.out.println("Finished CoastalOutlineLayer.paint() in " + EeINS.elapsed(start) + " ms\n---");
 	}
 
-	@Override
-	public boolean mouseDragged(MouseEvent arg0) {
-		return false;
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent arg0) {
-	}
-
-	@Override
-	public void mouseExited(MouseEvent arg0) {
-	}
-
-	@Override
-	public void mouseMoved() {
-	}
-
-	@Override
-	public boolean mouseMoved(MouseEvent arg0) {
-		return false;
-	}
-
-	@Override
-	public boolean mousePressed(MouseEvent arg0) {
-		return false;
-	}
-
-	@Override
-	public boolean mouseReleased(MouseEvent arg0) {
-		return false;
-	}
 	
 }

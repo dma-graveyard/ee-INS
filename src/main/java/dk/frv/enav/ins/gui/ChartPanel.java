@@ -49,7 +49,6 @@ import com.bbn.openmap.MapBean;
 import com.bbn.openmap.MapHandler;
 import com.bbn.openmap.MouseDelegator;
 import com.bbn.openmap.gui.OMComponentPanel;
-import com.bbn.openmap.layer.shape.ShapeLayer;
 import com.bbn.openmap.proj.Proj;
 import com.bbn.openmap.proj.Projection;
 import com.bbn.openmap.proj.coords.LatLonPoint;
@@ -65,6 +64,7 @@ import dk.frv.enav.ins.gui.nogo.NogoDialog;
 import dk.frv.enav.ins.layers.EncLayerFactory;
 import dk.frv.enav.ins.layers.GeneralLayer;
 import dk.frv.enav.ins.layers.ais.AisLayer;
+import dk.frv.enav.ins.layers.background.CoastalOutlineLayer;
 import dk.frv.enav.ins.layers.gps.GpsLayer;
 import dk.frv.enav.ins.layers.msi.MsiLayer;
 import dk.frv.enav.ins.layers.nogo.NogoLayer;
@@ -89,7 +89,7 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 	private Layer encLayer;
 	private AisLayer aisLayer;
 	private GeneralLayer generalLayer;
-	private Layer bgLayer;
+	private CoastalOutlineLayer coastalOutlineLayer;
 	private NavigationMouseMode mapNavMouseMode;
 	private MouseDelegator mouseDelegator;
 	private SensorPanel sensorPanel;
@@ -218,11 +218,11 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 
 		// Create background layer
 		String layerName = "background";
-		bgLayer = new ShapeLayer();
-		bgLayer.setProperties(layerName, props);
-		bgLayer.setAddAsBackground(true);
-		bgLayer.setVisible(true);
-		mapHandler.add(bgLayer);
+		coastalOutlineLayer = new CoastalOutlineLayer();
+		coastalOutlineLayer.setProperties(layerName, props);
+		coastalOutlineLayer.setAddAsBackground(true);
+		coastalOutlineLayer.setVisible(true);
+		mapHandler.add(coastalOutlineLayer);
 
 		if (encLayer != null) {
 			mapHandler.add(encLayer);
@@ -260,7 +260,8 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 		encVisible(EeINS.getSettings().getMapSettings().isEncVisible());
 		// Maybe disable ENC
 		if (encLayer == null && topPanel != null) {
-			topPanel.setEncDisabled();			
+			topPanel.setEncDisabled();
+			coastalOutlineLayer.setVisible(true);
 		}
 		
 		getMap().addMouseWheelListener(this);
@@ -320,6 +321,13 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 	public void encVisible(boolean visible) {
 		if (encLayer != null) {
 			encLayer.setVisible(visible);
+			coastalOutlineLayer.setVisible(!visible);
+			if (!visible) {
+				// Force update of background layer
+				coastalOutlineLayer.forceRedraw();
+			}
+		} else {
+			coastalOutlineLayer.setVisible(true);
 		}
 	}
 
