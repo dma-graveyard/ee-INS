@@ -16,6 +16,6 @@
 <booleanAttribute key="org.eclipse.jdt.launching.DEFAULT_CLASSPATH" value="false"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="dk.frv.enav.ins.EeINS"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="eeins"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xmn256M -Xms512M -Xmx1024M -Dfile.encoding=ISO-8859-1 -Djava.library.path=./navicon/native/"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dfile.encoding=ISO-8859-1 -Djava.library.path=./navicon/native/"/>
 <stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${project_loc}/dist"/>
 </launchConfiguration>
