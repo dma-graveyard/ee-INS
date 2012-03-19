@@ -387,8 +387,8 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 		if (!compare(aisTableDetails.getValueAt(10, 1), lat)){
 		aisTableDetails.setValueAt(lat, 10, 1);
 		}
-		if (!compare(aisTableDetails.getValueAt(11, 1), callSign)){
-		aisTableDetails.setValueAt(callSign, 11, 1);
+		if (!compare(aisTableDetails.getValueAt(11, 1), longi)){
+		aisTableDetails.setValueAt(longi, 11, 1);
 		}
 		if (!compare(aisTableDetails.getValueAt(12, 1), lastRecieved)){
 		aisTableDetails.setValueAt(lastRecieved, 12, 1);
