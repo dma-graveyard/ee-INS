@@ -389,18 +389,6 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 		
 		OMGraphic newClosest = null;
 		OMList<OMGraphic> allClosest = graphics.findAll(e.getX(), e.getY(), 3.0f);
-		
-		
-		for (OMGraphic omGraphic : allClosest) {
-
-//			System.out.println("omGraphic: " + omGraphic.getClass());
-
-			if (omGraphic instanceof VesselTargetTriangle){
-				System.out.println(((VesselTargetTriangle) omGraphic).getVesselTargetGraphic().getVesselTarget().getMmsi());
-			}
-			
-
-		}
 
 		for (OMGraphic omGraphic : allClosest) {
 			
