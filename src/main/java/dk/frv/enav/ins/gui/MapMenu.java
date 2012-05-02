@@ -587,7 +587,6 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 	}
 	
 	// Allows MapMenu to be added to the MapHandler (eg. use the find and init)
-	
 	@Override
 	public void findAndInit(Object obj) {
 		if(obj instanceof MsiHandler){

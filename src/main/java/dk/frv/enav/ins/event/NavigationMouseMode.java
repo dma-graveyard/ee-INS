@@ -350,7 +350,6 @@ public class NavigationMouseMode extends AbstractCoordMouseMode {
 	            }
 	            else{
 	            	point2 = e.getPoint();
-	            	
 	            }
 	            paintRectangle((MapBean) e.getSource(), point1, point2);
 			}

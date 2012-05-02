@@ -74,6 +74,7 @@ public class NogoHandler extends MapHandlerChild implements Runnable {
 
 	
 	
+	
 	public int getNoGoErrorCode() {
 		return noGoErrorCode;
 	}
