@@ -590,6 +590,9 @@ public class Route implements Serializable {
 		return wp;
 	}
 	
+	
+	
+	
 	public void appendWaypoint() {
 		RouteWaypoint lastWaypoint = waypoints.get(waypoints.size()-1);
 		RouteWaypoint nextLastWaypoint = waypoints.get(waypoints.size()-2);
