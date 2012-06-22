@@ -37,32 +37,30 @@ import com.bbn.openmap.omGraphics.OMGraphicList;
 
 import dk.frv.enav.common.xml.nogo.types.NogoPolygon;
 import dk.frv.enav.ins.nogo.DynamicNogoHandler;
-import dk.frv.enav.ins.nogo.NogoHandler;
 
-public class NogoLayer extends OMGraphicHandlerLayer {
+public class DynamicNogoLayer extends OMGraphicHandlerLayer {
 	private static final long serialVersionUID = 1L;
 
-	private NogoHandler nogoHandler = null;
-	private DynamicNogoHandler dynamicNogoHandler = null;
-	
-	
+	private DynamicNogoHandler nogoHandler = null;
+
 	private OMGraphicList graphics = new OMGraphicList();
 
-	public NogoLayer() {
+	public DynamicNogoLayer() {
 
 	}
 
 	public void doUpdate(boolean completed) {
+		
+		
 		Date validFrom = nogoHandler.getValidFrom();
 		Date validTo = nogoHandler.getValidTo();
-		double draught = nogoHandler.getDraught();
+		double draught = nogoHandler.getDraughtOwn();
 
 		graphics.clear();
 		if (completed) {
 			// Get polygons
 			List<NogoPolygon> polygons = nogoHandler.getPolygons();
-			List<NogoPolygon> polygons2 = dynamicNogoHandler.getPolygons();
-			
+
 			if (nogoHandler.getNogoFailed()) {
 				nogoHandler.setNogoFailed(false);
 				NogoGraphic nogoGraphic = new NogoGraphic(null, validFrom, validTo, draught,
@@ -81,29 +79,33 @@ public class NogoLayer extends OMGraphicHandlerLayer {
 				if (nogoHandler.getNoGoErrorCode() == 18) {
 					for (NogoPolygon polygon : polygons) {
 						NogoGraphic nogoGraphic = new NogoGraphic(polygon, validFrom, validTo, draught, "",
-								nogoHandler.getNorthWestPoint(), nogoHandler.getSouthEastPoint(),
+								nogoHandler.getNorthWestPointOwn(), nogoHandler.getSouthEastPointOwn(),
 								nogoHandler.getNoGoErrorCode(), false);
 						graphics.add(nogoGraphic);
 					}
+					
 					addFrame("", validFrom, validTo, draught, nogoHandler.getNoGoErrorCode());
 				}
 
 				if (nogoHandler.getNoGoErrorCode() == 0) {
+					
 					for (NogoPolygon polygon : polygons) {
 						NogoGraphic nogoGraphic = new NogoGraphic(polygon, validFrom, validTo, draught, "",
-								nogoHandler.getNorthWestPoint(), nogoHandler.getSouthEastPoint(),
+								nogoHandler.getNorthWestPointOwn(), nogoHandler.getSouthEastPointOwn(),
 								nogoHandler.getNoGoErrorCode(), false);
 						graphics.add(nogoGraphic);
 					}
 
 					if (polygons.size() == 0) {
 						NogoGraphic nogoGraphic = new NogoGraphic(null, validFrom, validTo, draught,
-								"The selected area is Go", nogoHandler.getNorthWestPoint(),
-								nogoHandler.getSouthEastPoint(), 1, true);
+								"The selected area is Go", nogoHandler.getNorthWestPointOwn(),
+								nogoHandler.getSouthEastPointOwn(), 1, true);
 						graphics.add(nogoGraphic);
 					}else{
 						addFrame("", validFrom, validTo, draught, nogoHandler.getNoGoErrorCode());
 					}
+					
+					
 
 				}
 
@@ -124,15 +126,22 @@ public class NogoLayer extends OMGraphicHandlerLayer {
 		} else {
 			// We have just sent a nogo request - display a message telling the
 			// user to standby
+			
 			addFrame("NoGo area requested - standby", validFrom, validTo, draught, 1);
 			
 //			NogoGraphic nogoGraphic = new NogoGraphic(null, validFrom, validTo, draught,
-//					"NoGo area requested - standby", nogoHandler.getNorthWestPoint(), nogoHandler.getSouthEastPoint(),
-//					1);
+//					"NoGo area requested - standby", nogoHandler.getNorthWestPointOwn(), nogoHandler.getSouthEastPointOwn(),
+//					1, true);
 //			graphics.add(nogoGraphic);
 		}
 
 		doPrepare();
+	}
+	
+	public void addFrame(String message, Date validFrom, Date validTo, Double draught, int errorCode){
+		NogoGraphic nogoGraphic = new NogoGraphic(null, validFrom, validTo, draught, message, nogoHandler.getNorthWestPointOwn(), nogoHandler.getSouthEastPointOwn(),
+				errorCode, true);
+		graphics.add(nogoGraphic);
 	}
 
 	@Override
@@ -143,18 +152,9 @@ public class NogoLayer extends OMGraphicHandlerLayer {
 
 	@Override
 	public void findAndInit(Object obj) {
-		if (obj instanceof NogoHandler) {
-			nogoHandler = (NogoHandler) obj;
-		}
 		if (obj instanceof DynamicNogoHandler) {
-			dynamicNogoHandler = (DynamicNogoHandler) obj;
+			nogoHandler = (DynamicNogoHandler) obj;
 		}
 	}
 
-	public void addFrame(String message, Date validFrom, Date validTo, Double draught, int errorCode){
-		NogoGraphic nogoGraphic = new NogoGraphic(null, validFrom, validTo, draught, message, nogoHandler.getNorthWestPoint(), nogoHandler.getSouthEastPoint(),
-				errorCode, true);
-		graphics.add(nogoGraphic);
-	}
-	
 }

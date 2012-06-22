@@ -43,13 +43,13 @@ public class NogoGraphic extends OMGraphicList {
 	
 	//private MsiTextBox msiTextBox;
 	
-	public NogoGraphic(NogoPolygon polygon, Date validFrom, Date validTo, double draught, String message, GeoLocation northWest, GeoLocation southEast, int errorCode) {
+	public NogoGraphic(NogoPolygon polygon, Date validFrom, Date validTo, double draught, String message, GeoLocation northWest, GeoLocation southEast, int errorCode, boolean frame) {
 		super();
 		
 		this.polygon = polygon;
 		
 		// Create location grahic
-		NogoLocationGraphic nogoLocationGraphic = new NogoLocationGraphic(this.polygon, validFrom, validTo, draught, message, northWest, southEast, errorCode);
+		NogoLocationGraphic nogoLocationGraphic = new NogoLocationGraphic(this.polygon, validFrom, validTo, draught, message, northWest, southEast, errorCode, frame);
 		add(nogoLocationGraphic);
 	}
 
