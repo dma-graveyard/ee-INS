@@ -74,7 +74,7 @@ public class NogoLocationGraphic extends OMGraphicList {
 	public NogoLocationGraphic(NogoPolygon polygon, Date validFrom,
 			Date validTo, Double draught, String message,
 			GeoLocation northWest, GeoLocation southEast, int errorCode,
-			boolean frame) {
+			boolean frame, Color color) {
 		super();
 		this.polygon = polygon;
 		this.validFrom = validFrom;
@@ -85,6 +85,7 @@ public class NogoLocationGraphic extends OMGraphicList {
 		this.southEast = southEast;
 		this.errorCode = errorCode;
 		this.frame = frame;
+		this.nogoColor = color;
 
 		// System.out.println(message);
 		// Draw the data
@@ -186,7 +187,10 @@ public class NogoLocationGraphic extends OMGraphicList {
 
 	private void drawAreaBox() {
 		// space for lat-lon points plus first lat-lon pair to close the polygon
+		
 
+		
+		
 		// Four lines are needed
 
 		double[] westernLine = new double[4];
@@ -198,6 +202,8 @@ public class NogoLocationGraphic extends OMGraphicList {
 		OMPoly poly = new OMPoly(westernLine, OMGraphic.DECIMAL_DEGREES,
 				OMGraphic.LINETYPE_RHUMB, 1);
 
+		
+		
 		double[] easternLine = new double[4];
 		easternLine[0] = northWest.getLatitude();
 		easternLine[1] = southEast.getLongitude();
@@ -225,6 +231,13 @@ public class NogoLocationGraphic extends OMGraphicList {
 		OMPoly poly3 = new OMPoly(southernLine, OMGraphic.DECIMAL_DEGREES,
 				OMGraphic.LINETYPE_RHUMB, 1);
 
+		if (nogoColor == Color.ORANGE){
+			poly.setLineColor(Color.GRAY);
+			poly1.setLineColor(Color.GRAY);
+			poly2.setLineColor(Color.GRAY);
+			poly3.setLineColor(Color.GRAY);
+		}
+		
 		add(poly);
 		add(poly1);
 		add(poly2);

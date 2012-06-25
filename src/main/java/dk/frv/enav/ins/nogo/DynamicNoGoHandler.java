@@ -59,7 +59,7 @@ public class DynamicNogoHandler extends MapHandlerChild implements Runnable {
 	GeoLocation southEastPointOwn;
 	float draughtOwn;
 
-	private long mmsiTarget = -1;
+	private long mmsiTarget = 240435000;
 	GeoLocation northWestPointTarget;
 	GeoLocation southEastPointTarget;
 	float draughtTarget;
@@ -76,22 +76,21 @@ public class DynamicNogoHandler extends MapHandlerChild implements Runnable {
 	private Date lastUpdate;
 	private long pollInterval;
 
-	// Data from the nogo response
-	private List<NogoPolygon> nogoPolygons;
-	private Date validFrom;
-	private Date validTo;
-	private int noGoErrorCode;
-	private String noGoMessage;
+	// Data from the nogo response for own ship
+	private List<NogoPolygon> nogoPolygonsOwn;
+	private Date validFromOwn;
+	private Date validToOwn;
+	private int noGoErrorCodeOwn;
+	private String noGoMessageOwn;
 
+	
+	private List<NogoPolygon> nogoPolygonsTarget;
+	private Date validFromTarget;
+	private Date validToTarget;
+	private int noGoErrorCodeTarget;
+	private String noGoMessageTarget;
+	
 	private boolean dynamicNoGoActive = true;
-
-	public int getNoGoErrorCode() {
-		return noGoErrorCode;
-	}
-
-	public String getNoGoMessage() {
-		return noGoMessage;
-	}
 
 	public boolean getNogoFailed() {
 		return nogoFailed;
@@ -116,8 +115,8 @@ public class DynamicNogoHandler extends MapHandlerChild implements Runnable {
 		
 		
 		while (dynamicNoGoActive) {
-			 EeINS.sleep(300000);
-//			 EeINS.sleep(150000);
+//			 EeINS.sleep(300000);
+			 EeINS.sleep(60000);
 			 updateNogo();	 
 		}
 	}
@@ -126,42 +125,53 @@ public class DynamicNogoHandler extends MapHandlerChild implements Runnable {
 		System.out.println("Dynamic nogo");
 		
 
-		// Is dynamic nogo activated?
-		if (dynamicNoGoActive) {
+		// Is dynamic nogo activated and target not null?
+		if (dynamicNoGoActive && aisHandler.getVesselTargets().get(mmsiTarget) != null) {
 
-			// Get current ship location and add box around it, + / - something
-			if (aisHandler.getOwnShip().getPositionData() != null) {
-
+			// Get own ship location and add box around it, + / - something
+			if (aisHandler.getOwnShip().getPositionData() != null && aisHandler.getVesselTargets().get(mmsiTarget).getPositionData() != null) {
+				
 				GeoLocation shipLocation = aisHandler.getOwnShip()
 						.getPositionData().getPos();
-
 				southEastPointOwn = new GeoLocation(
 						shipLocation.getLatitude() - 0.04,
 						shipLocation.getLongitude() + 0.08);
 				northWestPointOwn = new GeoLocation(
 						shipLocation.getLatitude() + 0.04,
 						shipLocation.getLongitude() - 0.08);
-				
-				// gpsHandler.getCurrentData().getPosition().getLatitude();
-				// gpsHandler.getCurrentData().getPosition().getLongitude();
-				
+
+				shipLocation = aisHandler.getVesselTargets().get(mmsiTarget)
+						.getPositionData().getPos();
+				southEastPointTarget = new GeoLocation(
+						shipLocation.getLatitude() - 0.04,
+						shipLocation.getLongitude() + 0.08);
+				northWestPointTarget = new GeoLocation(
+						shipLocation.getLatitude() + 0.04,
+						shipLocation.getLongitude() - 0.08);
 				
 				notifyUpdate(false);
-				
-			}
 
+				
+				//Set depth for own ship
 			if (aisHandler.getOwnShip().getStaticData() != null) {
-				System.out.println("Getting draught from static");
+				System.out.println("Getting draught from static - own");
 				draughtOwn = aisHandler.getOwnShip().getStaticData()
 						.getDraught() / 10;
-				
-				System.out.println(aisHandler.getOwnShip().getStaticData()
-						.getDraught());
 			} else {
 				System.out.println("Setting draught to 5");
 				draughtOwn = 5;
 			}
 			
+			
+			if (aisHandler.getVesselTargets().get(mmsiTarget).getStaticData() != null) {
+				System.out.println("Getting draught from static - target");
+				draughtTarget = aisHandler.getVesselTargets().get(mmsiTarget).getStaticData()
+						.getDraught() / 10;
+
+			} else {
+				System.out.println("Setting draught to 5");
+				draughtTarget = 5;
+			}
 			// NorthWest pos
 			// SouthEast pos
 
@@ -204,7 +214,7 @@ public class DynamicNogoHandler extends MapHandlerChild implements Runnable {
 			if (nogoUpdated) {
 				notifyUpdate(true);
 			}
-
+			}
 		}
 	}
 
@@ -221,28 +231,42 @@ public class DynamicNogoHandler extends MapHandlerChild implements Runnable {
 		}
 
 		Date date = new Date();
-		validFrom = date;
-		validTo = date;
+		validFromOwn = date;
+		validToOwn = date;
+		
+		validFromTarget = date;
+		validToTarget = date;
 
-		if (aisHandler.getOwnShip().getPositionData() != null) {
+		if (aisHandler.getOwnShip().getPositionData() != null && aisHandler.getVesselTargets().get(mmsiTarget).getPositionData() != null) {
 
 			System.out.println("Making a request to the server");
 			
 			// Send a rest to shoreServices for NoGo
 			NogoResponse nogoResponseOwn = shoreServices.nogoPoll(-draughtOwn,
-					northWestPointOwn, southEastPointOwn, validFrom, validTo);
-			//
+					northWestPointOwn, southEastPointOwn, validFromOwn, validToOwn);
+
+			NogoResponse nogoResponseTarget = shoreServices.nogoPoll(-draughtTarget,
+					northWestPointTarget, southEastPointTarget, validFromTarget, validToTarget);
+			
+			
+			
 			// NogoResponse nogoResponseTarget =
 			// shoreServices.nogoPoll(draughtTarget,
 			// northWestPointTarget, southEastPointTarget, validFrom, validTo);
 			
 
-			nogoPolygons = nogoResponseOwn.getPolygons();
-			validFrom = nogoResponseOwn.getValidFrom();
-			validTo = nogoResponseOwn.getValidTo();
-			noGoErrorCode = nogoResponseOwn.getNoGoErrorCode();
-			noGoMessage = nogoResponseOwn.getNoGoMessage();
+			nogoPolygonsOwn = nogoResponseOwn.getPolygons();
+			validFromOwn = nogoResponseOwn.getValidFrom();
+			validToOwn = nogoResponseOwn.getValidTo();
+			noGoErrorCodeOwn = nogoResponseOwn.getNoGoErrorCode();
+			noGoMessageOwn = nogoResponseOwn.getNoGoMessage();
 
+			
+			nogoPolygonsTarget = nogoResponseTarget.getPolygons();
+			validFromTarget = nogoResponseTarget.getValidFrom();
+			validToTarget = nogoResponseTarget.getValidTo();
+			noGoErrorCodeTarget = nogoResponseTarget.getNoGoErrorCode();
+			noGoMessageTarget = nogoResponseTarget.getNoGoMessage();
 			// System.out.println(nogoResponse.getNoGoErrorCode());
 			// System.out.println(nogoResponse.getNoGoMessage());
 			// System.out.println(nogoResponse.getPolygons().size());
@@ -251,7 +275,7 @@ public class DynamicNogoHandler extends MapHandlerChild implements Runnable {
 			
 			
 			if (nogoResponseOwn == null
-					|| nogoResponseOwn.getPolygons() == null) {
+					|| nogoResponseOwn.getPolygons() == null || nogoResponseTarget == null || nogoResponseTarget.getPolygons() == null) {
 				return false;
 			}
 		}
@@ -260,17 +284,7 @@ public class DynamicNogoHandler extends MapHandlerChild implements Runnable {
 
 	}
 
-	public Date getValidFrom() {
-		return validFrom;
-	}
 
-	public Date getValidTo() {
-		return validTo;
-	}
-
-	public synchronized List<NogoPolygon> getPolygons() {
-		return nogoPolygons;
-	}
 
 	public synchronized Date getLastUpdate() {
 		return lastUpdate;
@@ -320,6 +334,55 @@ public class DynamicNogoHandler extends MapHandlerChild implements Runnable {
 		return southEastPointOwn;
 	}
 
+	public List<NogoPolygon> getNogoPolygonsOwn() {
+		return nogoPolygonsOwn;
+	}
+
+	public Date getValidFromOwn() {
+		return validFromOwn;
+	}
+
+	public Date getValidToOwn() {
+		return validToOwn;
+	}
+
+	public int getNoGoErrorCodeOwn() {
+		return noGoErrorCodeOwn;
+	}
+
+	public String getNoGoMessageOwn() {
+		return noGoMessageOwn;
+	}
+
+	public List<NogoPolygon> getNogoPolygonsTarget() {
+		return nogoPolygonsTarget;
+	}
+
+	public Date getValidFromTarget() {
+		return validFromTarget;
+	}
+
+	public Date getValidToTarget() {
+		return validToTarget;
+	}
+
+	public int getNoGoErrorCodeTarget() {
+		return noGoErrorCodeTarget;
+	}
+
+	public String getNoGoMessageTarget() {
+		return noGoMessageTarget;
+	}
+
+	public GeoLocation getNorthWestPointTarget() {
+		return northWestPointTarget;
+	}
+
+	public GeoLocation getSouthEastPointTarget() {
+		return southEastPointTarget;
+	}
+
+	
 	
 	
 	
