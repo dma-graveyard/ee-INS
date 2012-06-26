@@ -44,6 +44,7 @@ import javax.swing.JPanel;
 
 import org.apache.log4j.Logger;
 
+import bibliothek.extension.gui.dock.theme.SmoothTheme;
 import bibliothek.gui.DockController;
 import bibliothek.gui.DockFrontend;
 import bibliothek.gui.DockStation;
@@ -56,6 +57,7 @@ import bibliothek.gui.dock.common.DefaultSingleCDockable;
 import bibliothek.gui.dock.common.SingleCDockable;
 import bibliothek.gui.dock.station.split.SplitDockGrid;
 import bibliothek.gui.dock.station.split.SplitDockProperty;
+import bibliothek.gui.dock.themes.NoStackTheme;
 import bibliothek.gui.dock.title.AbstractDockTitle;
 
 import com.bbn.openmap.MapHandler;
@@ -125,28 +127,48 @@ public class MainFrame extends JFrame implements WindowListener {
 		
 		
 		//Docks
-        DockController controller = new DockController();
-        controller.setRootWindow( this );
+		DockFrontend frontend = new DockFrontend( this );
+		frontend.getController().setTheme( new NoStackTheme( new SmoothTheme() ) );
+
+		SplitDockStation station = new SplitDockStation();
+		this.add( station );
+		frontend.addRoot( "split", station );
 		
-		
-        SplitDockStation splitDockStation = new SplitDockStation(false);
-        controller.add( splitDockStation );
-        
-        
-        ScreenDockStation screenDockStation = new ScreenDockStation( controller.getRootWindowProvider() );
-        controller.add( screenDockStation );
-        screenDockStation.setShowing( true );
-        this.add( splitDockStation );
-        
         DefaultDockable chartDock = new DefaultDockable(chartPanel );
         DefaultDockable sensorDock = new DefaultDockable(sensorPanel);
         DefaultDockable topDock = new DefaultDockable(topPanel);
+		
+        frontend.addDockable("Chartpanel", chartDock);
+        frontend.addDockable("Sensor Panel", sensorDock);
+        frontend.addDockable("Top Panel", topDock);
+		
         
+        SplitDockGrid grid = new SplitDockGrid();
         
+        grid.addDockable(0, 0, 100, 20, topDock);
+        grid.addDockable(0, 0, 0, 0, chartDock);
+        grid.addDockable(0, 0, 0, 0, sensorDock);
         
-        splitDockStation.drop( chartDock);
-        splitDockStation.drop( sensorDock);
-        splitDockStation.drop( topDock);
+//        DockController controller = new DockController();
+//        controller.setRootWindow( this );
+		
+//		
+//        SplitDockStation splitDockStation = new SplitDockStation(false);
+//        controller.add( splitDockStation );
+//        
+//        
+//        ScreenDockStation screenDockStation = new ScreenDockStation( controller.getRootWindowProvider() );
+//        controller.add( screenDockStation );
+//        screenDockStation.setShowing( true );
+//        this.add( splitDockStation );
+//        
+//
+//        
+//        
+//        
+//        splitDockStation.drop( chartDock);
+//        splitDockStation.drop( sensorDock);
+//        splitDockStation.drop( topDock);
        
         
         //How to lock
