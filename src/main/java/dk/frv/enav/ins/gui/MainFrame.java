@@ -29,7 +29,6 @@
  */
 package dk.frv.enav.ins.gui;
 
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -38,12 +37,15 @@ import java.awt.Image;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
 
 import org.apache.log4j.Logger;
 
+import bibliothek.extension.gui.dock.theme.EclipseTheme;
 import bibliothek.extension.gui.dock.theme.SmoothTheme;
 import bibliothek.gui.DockController;
 import bibliothek.gui.DockFrontend;
@@ -51,14 +53,23 @@ import bibliothek.gui.DockStation;
 import bibliothek.gui.dock.DefaultDockable;
 import bibliothek.gui.dock.ScreenDockStation;
 import bibliothek.gui.dock.SplitDockStation;
+import bibliothek.gui.dock.common.CContentArea;
 import bibliothek.gui.dock.common.CControl;
 import bibliothek.gui.dock.common.CGrid;
+import bibliothek.gui.dock.common.CStation;
 import bibliothek.gui.dock.common.DefaultSingleCDockable;
 import bibliothek.gui.dock.common.SingleCDockable;
+import bibliothek.gui.dock.common.group.CGroupBehavior;
+import bibliothek.gui.dock.common.mode.ExtendedMode;
+import bibliothek.gui.dock.displayer.DisplayerDockBorder;
 import bibliothek.gui.dock.station.split.SplitDockGrid;
 import bibliothek.gui.dock.station.split.SplitDockProperty;
 import bibliothek.gui.dock.themes.NoStackTheme;
+import bibliothek.gui.dock.themes.ThemeManager;
+import bibliothek.gui.dock.themes.basic.action.buttons.MiniButton;
+import bibliothek.gui.dock.themes.border.BorderModifier;
 import bibliothek.gui.dock.title.AbstractDockTitle;
+import bibliothek.gui.dock.util.Priority;
 
 import com.bbn.openmap.MapHandler;
 
@@ -70,17 +81,18 @@ import dk.frv.enav.ins.gui.route.RouteSuggestionDialog;
 import dk.frv.enav.ins.settings.GuiSettings;
 
 /**
- * The main frame containing map and panels 
+ * The main frame containing map and panels
  */
 public class MainFrame extends JFrame implements WindowListener {
-	
-	private static final String TITLE = "e-Navigation enhanced INS " + EeINS.getMinorVersion();
-	
-	private static final long serialVersionUID = 1L;	
+
+	private static final String TITLE = "e-Navigation enhanced INS "
+			+ EeINS.getMinorVersion();
+
+	private static final long serialVersionUID = 1L;
 	private static final Logger LOG = Logger.getLogger(MainFrame.class);
-	
+
 	protected static final int SENSOR_PANEL_WIDTH = 190;
-	
+
 	private TopPanel topPanel;
 	private ChartPanel chartPanel;
 	private SensorPanel sensorPanel;
@@ -91,164 +103,172 @@ public class MainFrame extends JFrame implements WindowListener {
 	private RouteSuggestionDialog routeSuggestionDialog;
 
 	private MapMenu mapMenu;
+
+	private DefaultSingleCDockable chartDock;
+	private DefaultSingleCDockable sensorDock;
+	private DefaultSingleCDockable topDock;
+	CControl control;
+	
 	
 	public MainFrame() {
-        super();
-        initGUI();
-    }
-	
+		super();
+		initGUI();
+	}
+
 	private void initGUI() {
 		MapHandler mapHandler = EeINS.getMapHandler();
 		// Get settings
 		GuiSettings guiSettings = EeINS.getSettings().getGuiSettings();
-		
-		setTitle(TITLE);		
+
+		setTitle(TITLE);
 		// Set location and size
 		if (guiSettings.isMaximized()) {
 			setExtendedState(getExtendedState() | MAXIMIZED_BOTH);
 		} else {
 			setLocation(guiSettings.getAppLocation());
 			setSize(guiSettings.getAppDimensions());
-		}		
+		}
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setIconImage(getAppIcon());
 		addWindowListener(this);
-		
-		//Create top menubar
-		MenuBar menuBar = new MenuBar();
-		this.setJMenuBar(menuBar);
-		
+
+		// Create top menubar
+//		MenuBar menuBar = new MenuBar();
+//		this.setJMenuBar(menuBar);
+
 		// Create panels
 		Container pane = getContentPane();
 		topPanel = new TopPanel();
 		sensorPanel = new SensorPanel();
 		chartPanel = new ChartPanel(sensorPanel);
 		bottomPanel = new BottomPanel();
-		
-		
-		//Docks
-		DockFrontend frontend = new DockFrontend( this );
-		frontend.getController().setTheme( new NoStackTheme( new SmoothTheme() ) );
 
-		SplitDockStation station = new SplitDockStation();
-		this.add( station );
-		frontend.addRoot( "split", station );
+		// Docks
+		control = new CControl( this );
+		CContentArea contentArea = control.getContentArea();
+		this.add( contentArea );
 		
-        DefaultDockable chartDock = new DefaultDockable(chartPanel );
-        DefaultDockable sensorDock = new DefaultDockable(sensorPanel);
-        DefaultDockable topDock = new DefaultDockable(topPanel);
+		BorderMod bridge = new BorderMod();
 		
-        frontend.addDockable("Chartpanel", chartDock);
-        frontend.addDockable("Sensor Panel", sensorDock);
-        frontend.addDockable("Top Panel", topDock);
+		control.getController().getThemeManager().publish(Priority.CLIENT,
+				DisplayerDockBorder.KIND, ThemeManager.BORDER_MODIFIER_TYPE,
+				bridge);
+
+		// Dockables
+		chartDock = new DefaultSingleCDockable("Chart", chartPanel);
+		sensorDock = new DefaultSingleCDockable("Sensor", sensorPanel);
+		topDock = new DefaultSingleCDockable("Top", topPanel);
 		
-        
-        SplitDockGrid grid = new SplitDockGrid();
-        
-        grid.addDockable(0, 0, 100, 20, topDock);
-        grid.addDockable(0, 0, 0, 0, chartDock);
-        grid.addDockable(0, 0, 0, 0, sensorDock);
-        
-//        DockController controller = new DockController();
-//        controller.setRootWindow( this );
+		chartDock.setStackable(false);
+		sensorDock.setStackable(false);
+		topDock.setStackable(false);
 		
-//		
-//        SplitDockStation splitDockStation = new SplitDockStation(false);
-//        controller.add( splitDockStation );
-//        
-//        
-//        ScreenDockStation screenDockStation = new ScreenDockStation( controller.getRootWindowProvider() );
-//        controller.add( screenDockStation );
-//        screenDockStation.setShowing( true );
-//        this.add( splitDockStation );
-//        
-//
-//        
-//        
-//        
-//        splitDockStation.drop( chartDock);
-//        splitDockStation.drop( sensorDock);
-//        splitDockStation.drop( topDock);
-       
-        
-        //How to lock
-//        DockStation parent = chartDock.getDockParent();
-//        DockController controller2 = parent.getController();
-//        parent.setController( null );
-//        parent.setController( controller2 );
+		chartDock.setMinimizable(false);
+		sensorDock.setMinimizable(false);
+		topDock.setMinimizable(false);
 		
-		// Add panels
-//		topPanel.setPreferredSize(new Dimension(0, 30));
-//		pane.add(topPanel, BorderLayout.PAGE_START);
+
+		CGrid grid = new CGrid(control);
+		grid.add(0, 0, 100, 3, topDock);
+		grid.add(0, 3, 90, 97, chartDock);
+		grid.add(90, 3, 10, 97, sensorDock);
 		
-//		pane.add(chartPanel, BorderLayout.CENTER);
+		contentArea.setMinimumAreaSize(new Dimension(0, 0));
 		
+		//Deploy the grid content
+		contentArea.deploy( grid );
+		
+		control.intern().getController().getRelocator().setDragOnlyTitel( true );
+		
+		toggleFrameLock();
+		
+		
+
 		bottomPanel.setPreferredSize(new Dimension(0, 25));
 		pane.add(bottomPanel, BorderLayout.PAGE_END);
-		
-//		sensorPanel.setPreferredSize(new Dimension(SENSOR_PANEL_WIDTH, 0));
+
+		// sensorPanel.setPreferredSize(new Dimension(SENSOR_PANEL_WIDTH, 0));
 		sensorPanel.setSize(100, 100);
-//		pane.add(sensorPanel, BorderLayout.LINE_END);
+		// pane.add(sensorPanel, BorderLayout.LINE_END);
 
 		// Set up the chart panel with layers etc
 		chartPanel.initChart();
-		
+
 		// Add top panel to map handler
 		mapHandler.add(topPanel);
-		
+
 		// Add bottom panel to map handler
 		mapHandler.add(bottomPanel);
-		
+
 		// Add chart panel to map handler
 		mapHandler.add(chartPanel);
-		
+
 		// Add sensor panel to bean context
 		mapHandler.add(sensorPanel);
-		
+
 		// Init glass pane
 		initGlassPane();
-		
+
 		// Add self to map map handler
 		mapHandler.add(this);
-		
+
 		// Init MSI dialog
 		msiDialog = new MsiDialog(this);
 		mapHandler.add(msiDialog);
-		
+
 		// Init MSI dialog
 		aisDialog = new AisDialog(this);
 		mapHandler.add(aisDialog);
-		
-		
-		
-		
+
 		// Init Route suggestion dialog
 		routeSuggestionDialog = new RouteSuggestionDialog(this);
-		mapHandler.add(routeSuggestionDialog);				
-		
+		mapHandler.add(routeSuggestionDialog);
+
 		// Init the map right click menu
 		mapMenu = new MapMenu();
-        mapHandler.add(mapMenu);
+		mapHandler.add(mapMenu);
+	}
+
+	
+	public void toggleFrameLock(){
+		
+		if (chartDock.isTitleShown()){
+			//Lock
+			sensorDock.setTitleShown(false);
+			chartDock.setTitleShown(false);
+			topDock.setTitleShown(false);
+			
+			control.getContentArea().getCenter().setResizingEnabled( false );
+
+			control.getContentArea().getCenter().setDividerSize(0);
+		}else{
+			sensorDock.setTitleShown(true);
+			chartDock.setTitleShown(true);
+			topDock.setTitleShown(true);
+		
+			
+
+			
+			control.getContentArea().getCenter().setResizingEnabled( true );
+
+			control.getContentArea().getCenter().setDividerSize(2);
+		}
+		
+
 	}
 	
-	public static SingleCDockable createDockable( String title, JPanel panel ) {
-        panel.setOpaque( true );
-        DefaultSingleCDockable dockable = new DefaultSingleCDockable( title, title, panel );
-        dockable.setCloseable( true );
-        return dockable;
-}
-	
-	
+
+
 	private void initGlassPane() {
-		glassPanel = (JPanel)getGlassPane();
+		glassPanel = (JPanel) getGlassPane();
 		glassPanel.setLayout(null);
 		glassPanel.setVisible(false);
 	}
-	
+
 	private static Image getAppIcon() {
 		java.net.URL imgURL = EeINS.class.getResource("/images/appicon.png");
 		if (imgURL != null) {
-            return new ImageIcon(imgURL).getImage();
+			return new ImageIcon(imgURL).getImage();
 		}
 		LOG.error("Could not find app icon");
 		return null;
@@ -267,7 +287,7 @@ public class MainFrame extends JFrame implements WindowListener {
 		// Close routine
 		EeINS.closeApp();
 	}
-	
+
 	public void saveSettings() {
 		// Save gui settings
 		GuiSettings guiSettings = EeINS.getSettings().getGuiSettings();
@@ -297,17 +317,17 @@ public class MainFrame extends JFrame implements WindowListener {
 	public ChartPanel getChartPanel() {
 		return chartPanel;
 	}
-	
+
 	public SensorPanel getSensorPanel() {
 		return sensorPanel;
 	}
-	
+
 	public JPanel getGlassPanel() {
 		return glassPanel;
 	}
-	
+
 	public TopPanel getTopPanel() {
 		return topPanel;
 	}
-	
+
 }

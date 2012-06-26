@@ -77,6 +77,9 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 	private JToggleButton riskBtn = new JToggleButton("Risk");
 	private JToggleButton encBtn = new JToggleButton("ENC");
 	private JToggleButton newRouteBtn = new JToggleButton("New route");
+	
+	private JToggleButton lockFrames = new JToggleButton("Lock/Unlock UI");
+	
 	private MainFrame mainFrame;
 	private MsiDialog msiDialog = null;
 	private AisDialog aisDialog = null;
@@ -91,6 +94,7 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 
 	public TopPanel() {
 		super();
+		
 		setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		
 		zoomInBtn.setToolTipText("Zoom in : Shortcut Numpad +");
@@ -131,7 +135,9 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 		if (showRiskAndNogo) 
 			add(riskBtn);
 		if (showRiskAndNogo)
-			add(nogoButton);		
+			add(nogoButton);	
+		
+		add(lockFrames);
 		
 		Component horizontalStrut = Box.createHorizontalStrut(5);
 		JSeparator separator = new JSeparator();
@@ -165,8 +171,13 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 		riskBtn.addActionListener(this);
 		encBtn.addActionListener(this);
 		tglbtnMsiFilter.addActionListener(this);
+		lockFrames.addActionListener(this);
+		
+		lockFrames.setSelected(true);
 		
 		nogoButton.setSelected(true);
+		
+		
 		
 		updateButtons();
 	}
@@ -236,6 +247,8 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 		} else if (e.getSource() == tglbtnMsiFilter) {
 			EeINS.getSettings().getEnavSettings().setMsiFilter(tglbtnMsiFilter.isSelected());
 			msiHandler.notifyUpdate();
+		}else if (e.getSource() == lockFrames) {
+			mainFrame.toggleFrameLock();
 		}
 	}
 	
