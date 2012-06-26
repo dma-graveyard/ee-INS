@@ -163,8 +163,13 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 
 		if (aisTarget instanceof VesselTarget) {
 			// Maybe we would like to force redraw
-			VesselTarget vesselTarget = (VesselTarget) aisTarget; 
-			VesselTargetGraphic vesselTargetGraphic = (VesselTargetGraphic) targetGraphic;
+			VesselTarget vesselTarget = (VesselTarget) aisTarget;
+			
+			if (targetGraphic instanceof VesselTargetGraphic){
+				VesselTargetGraphic vesselTargetGraphic = (VesselTargetGraphic) targetGraphic;	
+			
+			
+			
 			if (vesselTarget.getSettings().isShowRoute() && vesselTarget.hasIntendedRoute()
 					&& !vesselTargetGraphic.getRouteGraphic().isVisible()) {
 				forceRedraw = true;
@@ -173,6 +178,9 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 			}
 
 			targetGraphic.update(vesselTarget);
+			
+			}
+			
 		} else if (aisTarget instanceof SarTarget) {
 			targetGraphic.update((SarTarget) aisTarget);
 		} else if (aisTarget instanceof AtoNTarget) {

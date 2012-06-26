@@ -50,6 +50,7 @@ import dk.frv.enav.common.xml.risk.response.Risk;
 import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.ais.AisIntendedRoute;
 import dk.frv.enav.ins.ais.AisTarget;
+import dk.frv.enav.ins.ais.AtoNTarget;
 import dk.frv.enav.ins.ais.VesselPositionData;
 import dk.frv.enav.ins.ais.VesselStaticData;
 import dk.frv.enav.ins.ais.VesselTarget;
@@ -128,6 +129,12 @@ public class VesselTargetGraphic extends TargetGraphic {
 
 	@Override
 	public void update(AisTarget aisTarget) {
+		
+		if (aisTarget instanceof VesselTarget){
+			
+		
+		
+		
 		vesselTarget = (VesselTarget) aisTarget;
 		VesselPositionData posData = vesselTarget.getPositionData();
 		VesselStaticData staticData = vesselTarget.getStaticData();
@@ -235,6 +242,8 @@ public class VesselTargetGraphic extends TargetGraphic {
 		routeGraphic.update(vesselTarget, name, aisIntendedRoute, pos);
 		if (!targetSettings.isShowRoute()) {
 			routeGraphic.setVisible(false);
+		}
+		
 		}
 	}
 

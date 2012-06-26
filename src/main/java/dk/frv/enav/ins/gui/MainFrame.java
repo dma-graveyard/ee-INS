@@ -31,6 +31,7 @@ package dk.frv.enav.ins.gui;
 
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -42,6 +43,20 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import org.apache.log4j.Logger;
+
+import bibliothek.gui.DockController;
+import bibliothek.gui.DockFrontend;
+import bibliothek.gui.DockStation;
+import bibliothek.gui.dock.DefaultDockable;
+import bibliothek.gui.dock.ScreenDockStation;
+import bibliothek.gui.dock.SplitDockStation;
+import bibliothek.gui.dock.common.CControl;
+import bibliothek.gui.dock.common.CGrid;
+import bibliothek.gui.dock.common.DefaultSingleCDockable;
+import bibliothek.gui.dock.common.SingleCDockable;
+import bibliothek.gui.dock.station.split.SplitDockGrid;
+import bibliothek.gui.dock.station.split.SplitDockProperty;
+import bibliothek.gui.dock.title.AbstractDockTitle;
 
 import com.bbn.openmap.MapHandler;
 
@@ -97,6 +112,10 @@ public class MainFrame extends JFrame implements WindowListener {
 		setIconImage(getAppIcon());
 		addWindowListener(this);
 		
+		//Create top menubar
+		MenuBar menuBar = new MenuBar();
+		this.setJMenuBar(menuBar);
+		
 		// Create panels
 		Container pane = getContentPane();
 		topPanel = new TopPanel();
@@ -104,17 +123,50 @@ public class MainFrame extends JFrame implements WindowListener {
 		chartPanel = new ChartPanel(sensorPanel);
 		bottomPanel = new BottomPanel();
 		
-		// Add panels
-		topPanel.setPreferredSize(new Dimension(0, 30));
-		pane.add(topPanel, BorderLayout.PAGE_START);
 		
-		pane.add(chartPanel, BorderLayout.CENTER);
+		//Docks
+        DockController controller = new DockController();
+        controller.setRootWindow( this );
+		
+		
+        SplitDockStation splitDockStation = new SplitDockStation(false);
+        controller.add( splitDockStation );
+        
+        
+        ScreenDockStation screenDockStation = new ScreenDockStation( controller.getRootWindowProvider() );
+        controller.add( screenDockStation );
+        screenDockStation.setShowing( true );
+        this.add( splitDockStation );
+        
+        DefaultDockable chartDock = new DefaultDockable(chartPanel );
+        DefaultDockable sensorDock = new DefaultDockable(sensorPanel);
+        DefaultDockable topDock = new DefaultDockable(topPanel);
+        
+        
+        
+        splitDockStation.drop( chartDock);
+        splitDockStation.drop( sensorDock);
+        splitDockStation.drop( topDock);
+       
+        
+        //How to lock
+//        DockStation parent = chartDock.getDockParent();
+//        DockController controller2 = parent.getController();
+//        parent.setController( null );
+//        parent.setController( controller2 );
+		
+		// Add panels
+//		topPanel.setPreferredSize(new Dimension(0, 30));
+//		pane.add(topPanel, BorderLayout.PAGE_START);
+		
+//		pane.add(chartPanel, BorderLayout.CENTER);
 		
 		bottomPanel.setPreferredSize(new Dimension(0, 25));
 		pane.add(bottomPanel, BorderLayout.PAGE_END);
 		
-		sensorPanel.setPreferredSize(new Dimension(SENSOR_PANEL_WIDTH, 0));
-		pane.add(sensorPanel, BorderLayout.LINE_END);
+//		sensorPanel.setPreferredSize(new Dimension(SENSOR_PANEL_WIDTH, 0));
+		sensorPanel.setSize(100, 100);
+//		pane.add(sensorPanel, BorderLayout.LINE_END);
 
 		// Set up the chart panel with layers etc
 		chartPanel.initChart();
@@ -156,6 +208,14 @@ public class MainFrame extends JFrame implements WindowListener {
 		mapMenu = new MapMenu();
         mapHandler.add(mapMenu);
 	}
+	
+	public static SingleCDockable createDockable( String title, JPanel panel ) {
+        panel.setOpaque( true );
+        DefaultSingleCDockable dockable = new DefaultSingleCDockable( title, title, panel );
+        dockable.setCloseable( true );
+        return dockable;
+}
+	
 	
 	private void initGlassPane() {
 		glassPanel = (JPanel)getGlassPane();
