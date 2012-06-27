@@ -30,12 +30,12 @@
 package dk.frv.enav.ins.gui.sensors;
 
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
 
 import dk.frv.enav.ins.common.text.Formatter;
@@ -66,121 +66,148 @@ public class ActiveWaypointPanel extends JPanel {
 	private RouteManager routeManager;
 
 	public ActiveWaypointPanel() {
+		GridBagLayout gridBagLayout = new GridBagLayout();
+		gridBagLayout.columnWidths = new int[]{53, 125, 0};
+		gridBagLayout.rowHeights = new int[]{20, 16, 16, 16, 16, 16, 16, 16, 10};
+		gridBagLayout.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
+		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
+		setLayout(gridBagLayout);
 		JLabel lblActiveWaypoint = new JLabel("Active Waypoint");
 		lblActiveWaypoint.setHorizontalAlignment(SwingConstants.CENTER);
 		lblActiveWaypoint.setFont(new Font("Segoe UI", Font.BOLD, 14));
+		GridBagConstraints gbc_lblActiveWaypoint = new GridBagConstraints();
+		gbc_lblActiveWaypoint.anchor = GridBagConstraints.NORTH;
+		gbc_lblActiveWaypoint.fill = GridBagConstraints.HORIZONTAL;
+		gbc_lblActiveWaypoint.insets = new Insets(0, 0, 5, 0);
+		gbc_lblActiveWaypoint.gridwidth = 2;
+		gbc_lblActiveWaypoint.gridx = 0;
+		gbc_lblActiveWaypoint.gridy = 0;
+		add(lblActiveWaypoint, gbc_lblActiveWaypoint);
 		
 		wptTitleLabel = new JLabel("WPT");
 		wptTitleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		
-		brgTitleLabel = new JLabel("BRG");
-		brgTitleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		
-		rngTitleLabel = new JLabel("RNG");
-		rngTitleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		
-		ttgLegTitleLabel = new JLabel("TTG leg");
-		ttgLegTitleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		
-		ttgRouteTitleLabel = new JLabel("TTG route");
-		ttgRouteTitleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		
-		etaNextTitleLabel = new JLabel("ETA next");
-		etaNextTitleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		
-		etaRouteTitleLabel = new JLabel("ETA route");
-		etaRouteTitleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		
-		etaRouteLabel = new JLabel("N/A");
-		etaRouteLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		
-		etaNextLabel = new JLabel("N/A");
-		etaNextLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		
-		ttgRouteLabel = new JLabel("N/A");
-		ttgRouteLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		
-		ttgLegLabel = new JLabel("N/A");
-		ttgLegLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		
-		rngLabel = new JLabel("N/A");
-		rngLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		
-		brgLabel = new JLabel("N/A");
-		brgLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+		GridBagConstraints gbc_wptTitleLabel = new GridBagConstraints();
+		gbc_wptTitleLabel.anchor = GridBagConstraints.NORTHWEST;
+		gbc_wptTitleLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_wptTitleLabel.gridx = 0;
+		gbc_wptTitleLabel.gridy = 1;
+		add(wptTitleLabel, gbc_wptTitleLabel);
 		
 		wptLabel = new JLabel("N/A");
 		wptLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+		GridBagConstraints gbc_wptLabel = new GridBagConstraints();
+		gbc_wptLabel.anchor = GridBagConstraints.NORTHWEST;
+		gbc_wptLabel.insets = new Insets(0, 0, 5, 0);
+		gbc_wptLabel.gridx = 1;
+		gbc_wptLabel.gridy = 1;
+		add(wptLabel, gbc_wptLabel);
 		
-		GroupLayout groupLayout = new GroupLayout(this);
-		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(wptTitleLabel)
-						.addComponent(brgTitleLabel))
-					.addGap(38)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(wptLabel)
-						.addComponent(brgLabel))
-					.addContainerGap())
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(10)
-					.addComponent(lblActiveWaypoint, GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE)
-					.addGap(10))
-				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(etaNextTitleLabel)
-						.addComponent(etaRouteTitleLabel)
-						.addComponent(ttgRouteTitleLabel)
-						.addComponent(ttgLegTitleLabel)
-						.addComponent(rngTitleLabel))
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(etaNextLabel)
-						.addComponent(etaRouteLabel)
-						.addComponent(rngLabel)
-						.addComponent(ttgLegLabel)
-						.addComponent(ttgRouteLabel))
-					.addContainerGap(355, Short.MAX_VALUE))
-		);
-		groupLayout.setVerticalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addComponent(lblActiveWaypoint)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
-						.addComponent(wptLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addComponent(wptTitleLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(brgLabel)
-						.addComponent(brgTitleLabel))
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(rngTitleLabel)
-						.addComponent(rngLabel))
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(ttgLegTitleLabel)
-						.addComponent(ttgLegLabel))
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(ttgRouteTitleLabel)
-						.addComponent(ttgRouteLabel))
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(etaNextTitleLabel)
-						.addComponent(etaNextLabel))
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(etaRouteTitleLabel)
-						.addComponent(etaRouteLabel))
-					.addContainerGap(124, Short.MAX_VALUE))
-		);
-		setLayout(groupLayout);
+		brgTitleLabel = new JLabel("BRG");
+		brgTitleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+		GridBagConstraints gbc_brgTitleLabel = new GridBagConstraints();
+		gbc_brgTitleLabel.anchor = GridBagConstraints.NORTHWEST;
+		gbc_brgTitleLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_brgTitleLabel.gridx = 0;
+		gbc_brgTitleLabel.gridy = 2;
+		add(brgTitleLabel, gbc_brgTitleLabel);
+		
+		brgLabel = new JLabel("N/A");
+		brgLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+		GridBagConstraints gbc_brgLabel = new GridBagConstraints();
+		gbc_brgLabel.anchor = GridBagConstraints.NORTHWEST;
+		gbc_brgLabel.insets = new Insets(0, 0, 5, 0);
+		gbc_brgLabel.gridx = 1;
+		gbc_brgLabel.gridy = 2;
+		add(brgLabel, gbc_brgLabel);
+		
+		rngTitleLabel = new JLabel("RNG");
+		rngTitleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+		GridBagConstraints gbc_rngTitleLabel = new GridBagConstraints();
+		gbc_rngTitleLabel.anchor = GridBagConstraints.NORTHWEST;
+		gbc_rngTitleLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_rngTitleLabel.gridx = 0;
+		gbc_rngTitleLabel.gridy = 3;
+		add(rngTitleLabel, gbc_rngTitleLabel);
+		
+		rngLabel = new JLabel("N/A");
+		rngLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+		GridBagConstraints gbc_rngLabel = new GridBagConstraints();
+		gbc_rngLabel.anchor = GridBagConstraints.NORTHWEST;
+		gbc_rngLabel.insets = new Insets(0, 0, 5, 0);
+		gbc_rngLabel.gridx = 1;
+		gbc_rngLabel.gridy = 3;
+		add(rngLabel, gbc_rngLabel);
+		
+		ttgLegTitleLabel = new JLabel("TTG leg");
+		ttgLegTitleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+		GridBagConstraints gbc_ttgLegTitleLabel = new GridBagConstraints();
+		gbc_ttgLegTitleLabel.anchor = GridBagConstraints.NORTHWEST;
+		gbc_ttgLegTitleLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_ttgLegTitleLabel.gridx = 0;
+		gbc_ttgLegTitleLabel.gridy = 4;
+		add(ttgLegTitleLabel, gbc_ttgLegTitleLabel);
+		
+		ttgLegLabel = new JLabel("N/A");
+		ttgLegLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+		GridBagConstraints gbc_ttgLegLabel = new GridBagConstraints();
+		gbc_ttgLegLabel.anchor = GridBagConstraints.NORTHWEST;
+		gbc_ttgLegLabel.insets = new Insets(0, 0, 5, 0);
+		gbc_ttgLegLabel.gridx = 1;
+		gbc_ttgLegLabel.gridy = 4;
+		add(ttgLegLabel, gbc_ttgLegLabel);
+		
+		ttgRouteTitleLabel = new JLabel("TTG route");
+		ttgRouteTitleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+		GridBagConstraints gbc_ttgRouteTitleLabel = new GridBagConstraints();
+		gbc_ttgRouteTitleLabel.anchor = GridBagConstraints.NORTHWEST;
+		gbc_ttgRouteTitleLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_ttgRouteTitleLabel.gridx = 0;
+		gbc_ttgRouteTitleLabel.gridy = 5;
+		add(ttgRouteTitleLabel, gbc_ttgRouteTitleLabel);
+		
+		ttgRouteLabel = new JLabel("N/A");
+		ttgRouteLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+		GridBagConstraints gbc_ttgRouteLabel = new GridBagConstraints();
+		gbc_ttgRouteLabel.anchor = GridBagConstraints.NORTHWEST;
+		gbc_ttgRouteLabel.insets = new Insets(0, 0, 5, 0);
+		gbc_ttgRouteLabel.gridx = 1;
+		gbc_ttgRouteLabel.gridy = 5;
+		add(ttgRouteLabel, gbc_ttgRouteLabel);
+		
+		etaNextTitleLabel = new JLabel("ETA next");
+		etaNextTitleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+		GridBagConstraints gbc_etaNextTitleLabel = new GridBagConstraints();
+		gbc_etaNextTitleLabel.anchor = GridBagConstraints.NORTHWEST;
+		gbc_etaNextTitleLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_etaNextTitleLabel.gridx = 0;
+		gbc_etaNextTitleLabel.gridy = 6;
+		add(etaNextTitleLabel, gbc_etaNextTitleLabel);
+		
+		etaNextLabel = new JLabel("N/A");
+		etaNextLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+		GridBagConstraints gbc_etaNextLabel = new GridBagConstraints();
+		gbc_etaNextLabel.anchor = GridBagConstraints.NORTHWEST;
+		gbc_etaNextLabel.insets = new Insets(0, 0, 5, 0);
+		gbc_etaNextLabel.gridx = 1;
+		gbc_etaNextLabel.gridy = 6;
+		add(etaNextLabel, gbc_etaNextLabel);
+		
+		etaRouteTitleLabel = new JLabel("ETA route");
+		etaRouteTitleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+		GridBagConstraints gbc_etaRouteTitleLabel = new GridBagConstraints();
+		gbc_etaRouteTitleLabel.anchor = GridBagConstraints.NORTHWEST;
+		gbc_etaRouteTitleLabel.insets = new Insets(0, 0, 0, 5);
+		gbc_etaRouteTitleLabel.gridx = 0;
+		gbc_etaRouteTitleLabel.gridy = 7;
+		add(etaRouteTitleLabel, gbc_etaRouteTitleLabel);
+		
+		etaRouteLabel = new JLabel("N/A");
+		etaRouteLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+		GridBagConstraints gbc_etaRouteLabel = new GridBagConstraints();
+		gbc_etaRouteLabel.anchor = GridBagConstraints.NORTHWEST;
+		gbc_etaRouteLabel.gridx = 1;
+		gbc_etaRouteLabel.gridy = 7;
+		add(etaRouteLabel, gbc_etaRouteLabel);
 	}
 	
 	public void updateActiveNavData(){

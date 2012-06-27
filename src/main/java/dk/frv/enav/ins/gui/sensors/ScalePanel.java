@@ -31,12 +31,12 @@ package dk.frv.enav.ins.gui.sensors;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
@@ -52,35 +52,28 @@ public class ScalePanel extends JPanel {
 	
 	public ScalePanel(){
 		super();
-		
 		setBorder(new LineBorder(Color.GRAY));
+		GridBagLayout gridBagLayout = new GridBagLayout();
+		gridBagLayout.columnWidths = new int[]{178, 0};
+		gridBagLayout.rowHeights = new int[]{20, 20, 10};
+		gridBagLayout.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+		gridBagLayout.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+		setLayout(gridBagLayout);
 		timeLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		timeLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		GridBagConstraints gbc_timeLabel = new GridBagConstraints();
+		gbc_timeLabel.anchor = GridBagConstraints.NORTH;
+		gbc_timeLabel.insets = new Insets(0, 0, 5, 0);
+		gbc_timeLabel.gridx = 0;
+		gbc_timeLabel.gridy = 0;
+		add(timeLabel, gbc_timeLabel);
 		scaleLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		scaleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		GroupLayout groupLayout = new GroupLayout(this);
-		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.TRAILING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(10)
-							.addComponent(timeLabel, GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addContainerGap()
-							.addComponent(scaleLabel, GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)))
-					.addContainerGap())
-		);
-		groupLayout.setVerticalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(6)
-					.addComponent(timeLabel)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(scaleLabel)
-					.addContainerGap(246, Short.MAX_VALUE))
-		);
-		setLayout(groupLayout);
+		GridBagConstraints gbc_scaleLabel = new GridBagConstraints();
+		gbc_scaleLabel.anchor = GridBagConstraints.NORTH;
+		gbc_scaleLabel.gridx = 0;
+		gbc_scaleLabel.gridy = 1;
+		add(scaleLabel, gbc_scaleLabel);
 	}
 	
 	public JLabel getTimeLabel() {

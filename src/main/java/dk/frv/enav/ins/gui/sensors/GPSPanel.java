@@ -30,12 +30,12 @@
 package dk.frv.enav.ins.gui.sensors;
 
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
 
 /**
@@ -59,91 +59,112 @@ public class GPSPanel extends JPanel {
 	
 	public GPSPanel() {
 		
+		GridBagLayout gridBagLayout = new GridBagLayout();
+		gridBagLayout.columnWidths = new int[] { 25, 153, 0 };
+		gridBagLayout.rowHeights = new int[] { 20, 16, 16, 16, 16, 16, 10 };
+		gridBagLayout.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
+		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 1.0,
+				Double.MIN_VALUE };
+		setLayout(gridBagLayout);
 		gpsTitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		gpsTitleLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
+		GridBagConstraints gbc_gpsTitleLabel = new GridBagConstraints();
+		gbc_gpsTitleLabel.anchor = GridBagConstraints.NORTH;
+		gbc_gpsTitleLabel.fill = GridBagConstraints.HORIZONTAL;
+		gbc_gpsTitleLabel.insets = new Insets(0, 0, 5, 0);
+		gbc_gpsTitleLabel.gridwidth = 2;
+		gbc_gpsTitleLabel.gridx = 0;
+		gbc_gpsTitleLabel.gridy = 0;
+		add(gpsTitleLabel, gbc_gpsTitleLabel);
 
 		latTitleLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		latTitleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		
+		GridBagConstraints gbc_latTitleLabel = new GridBagConstraints();
+		gbc_latTitleLabel.anchor = GridBagConstraints.NORTHWEST;
+		gbc_latTitleLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_latTitleLabel.gridx = 0;
+		gbc_latTitleLabel.gridy = 1;
+		add(latTitleLabel, gbc_latTitleLabel);
+
 		latLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		latLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		
+		GridBagConstraints gbc_latLabel = new GridBagConstraints();
+		gbc_latLabel.anchor = GridBagConstraints.NORTHWEST;
+		gbc_latLabel.insets = new Insets(0, 0, 5, 0);
+		gbc_latLabel.gridx = 1;
+		gbc_latLabel.gridy = 1;
+		add(latLabel, gbc_latLabel);
+
 		lonTitleLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		lonTitleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-				
+		GridBagConstraints gbc_lonTitleLabel = new GridBagConstraints();
+		gbc_lonTitleLabel.anchor = GridBagConstraints.NORTHWEST;
+		gbc_lonTitleLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_lonTitleLabel.gridx = 0;
+		gbc_lonTitleLabel.gridy = 2;
+		add(lonTitleLabel, gbc_lonTitleLabel);
+
 		lonLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lonLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-				
+		GridBagConstraints gbc_lonLabel = new GridBagConstraints();
+		gbc_lonLabel.anchor = GridBagConstraints.NORTHWEST;
+		gbc_lonLabel.insets = new Insets(0, 0, 5, 0);
+		gbc_lonLabel.gridx = 1;
+		gbc_lonLabel.gridy = 2;
+		add(lonLabel, gbc_lonLabel);
+
 		sogTitleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		sogTitleLabel.setHorizontalAlignment(SwingConstants.LEFT);
+		GridBagConstraints gbc_sogTitleLabel = new GridBagConstraints();
+		gbc_sogTitleLabel.anchor = GridBagConstraints.NORTHWEST;
+		gbc_sogTitleLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_sogTitleLabel.gridx = 0;
+		gbc_sogTitleLabel.gridy = 3;
+		add(sogTitleLabel, gbc_sogTitleLabel);
 
 		sogLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		sogLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-				
+		GridBagConstraints gbc_sogLabel = new GridBagConstraints();
+		gbc_sogLabel.anchor = GridBagConstraints.NORTHWEST;
+		gbc_sogLabel.insets = new Insets(0, 0, 5, 0);
+		gbc_sogLabel.gridx = 1;
+		gbc_sogLabel.gridy = 3;
+		add(sogLabel, gbc_sogLabel);
+
 		cogTitleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		cogTitleLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		
+		GridBagConstraints gbc_cogTitleLabel = new GridBagConstraints();
+		gbc_cogTitleLabel.anchor = GridBagConstraints.NORTHWEST;
+		gbc_cogTitleLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_cogTitleLabel.gridx = 0;
+		gbc_cogTitleLabel.gridy = 4;
+		add(cogTitleLabel, gbc_cogTitleLabel);
+
 		cogLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		cogLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-		
+		GridBagConstraints gbc_cogLabel = new GridBagConstraints();
+		gbc_cogLabel.anchor = GridBagConstraints.NORTHWEST;
+		gbc_cogLabel.insets = new Insets(0, 0, 5, 0);
+		gbc_cogLabel.gridx = 1;
+		gbc_cogLabel.gridy = 4;
+		add(cogLabel, gbc_cogLabel);
+
 		hdgTitleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		hdgTitleLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		
+		GridBagConstraints gbc_hdgTitleLabel = new GridBagConstraints();
+		gbc_hdgTitleLabel.anchor = GridBagConstraints.NORTHWEST;
+		gbc_hdgTitleLabel.insets = new Insets(0, 0, 0, 5);
+		gbc_hdgTitleLabel.gridx = 0;
+		gbc_hdgTitleLabel.gridy = 5;
+		add(hdgTitleLabel, gbc_hdgTitleLabel);
+
 		hdgLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		hdgLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-		
-		GroupLayout groupLayout = new GroupLayout(this);
-		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(gpsTitleLabel, GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(hdgTitleLabel)
-								.addComponent(cogTitleLabel)
-								.addComponent(sogTitleLabel)
-								.addComponent(lonTitleLabel)
-								.addComponent(latTitleLabel))
-							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(hdgLabel)
-								.addComponent(cogLabel)
-								.addComponent(latLabel)
-								.addComponent(lonLabel)
-								.addComponent(sogLabel))))
-					.addContainerGap())
-		);
-		groupLayout.setVerticalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addComponent(gpsTitleLabel)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(latTitleLabel)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(lonTitleLabel)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(sogTitleLabel)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(cogTitleLabel)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(hdgTitleLabel))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(latLabel)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(lonLabel)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(sogLabel)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(cogLabel)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(hdgLabel)))
-					.addContainerGap(190, Short.MAX_VALUE))
-		);
-		setLayout(groupLayout);
+		GridBagConstraints gbc_hdgLabel = new GridBagConstraints();
+		gbc_hdgLabel.anchor = GridBagConstraints.NORTHWEST;
+		gbc_hdgLabel.gridx = 1;
+		gbc_hdgLabel.gridy = 5;
+		add(hdgLabel, gbc_hdgLabel);
 	}
 	
 	public JLabel getLatLabel() {

@@ -30,53 +30,39 @@
 package dk.frv.enav.ins.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
 
 import org.apache.log4j.Logger;
 
-import bibliothek.extension.gui.dock.theme.EclipseTheme;
-import bibliothek.extension.gui.dock.theme.SmoothTheme;
-import bibliothek.gui.DockController;
-import bibliothek.gui.DockFrontend;
-import bibliothek.gui.DockStation;
-import bibliothek.gui.dock.DefaultDockable;
-import bibliothek.gui.dock.ScreenDockStation;
-import bibliothek.gui.dock.SplitDockStation;
 import bibliothek.gui.dock.common.CContentArea;
 import bibliothek.gui.dock.common.CControl;
 import bibliothek.gui.dock.common.CGrid;
-import bibliothek.gui.dock.common.CStation;
 import bibliothek.gui.dock.common.DefaultSingleCDockable;
-import bibliothek.gui.dock.common.SingleCDockable;
-import bibliothek.gui.dock.common.group.CGroupBehavior;
-import bibliothek.gui.dock.common.mode.ExtendedMode;
 import bibliothek.gui.dock.displayer.DisplayerDockBorder;
-import bibliothek.gui.dock.station.split.SplitDockGrid;
-import bibliothek.gui.dock.station.split.SplitDockProperty;
-import bibliothek.gui.dock.themes.NoStackTheme;
 import bibliothek.gui.dock.themes.ThemeManager;
-import bibliothek.gui.dock.themes.basic.action.buttons.MiniButton;
-import bibliothek.gui.dock.themes.border.BorderModifier;
-import bibliothek.gui.dock.title.AbstractDockTitle;
 import bibliothek.gui.dock.util.Priority;
 
 import com.bbn.openmap.MapHandler;
 
 import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.gui.ais.AisDialog;
+import dk.frv.enav.ins.gui.mainFramePanels.ActiveWaypointComponentPanel;
+import dk.frv.enav.ins.gui.mainFramePanels.CursorComponentPanel;
+import dk.frv.enav.ins.gui.mainFramePanels.GpsComponentPanel;
+import dk.frv.enav.ins.gui.mainFramePanels.LogoPanel;
+import dk.frv.enav.ins.gui.mainFramePanels.OwnShipComponentPanel;
+import dk.frv.enav.ins.gui.mainFramePanels.ScaleComponentPanel;
 import dk.frv.enav.ins.gui.msi.MsiDialog;
-
 import dk.frv.enav.ins.gui.route.RouteSuggestionDialog;
 import dk.frv.enav.ins.settings.GuiSettings;
 
@@ -95,8 +81,18 @@ public class MainFrame extends JFrame implements WindowListener {
 
 	private TopPanel topPanel;
 	private ChartPanel chartPanel;
-	private SensorPanel sensorPanel;
+	
+//	private SensorPanel sensorPanel;
+	
 	private BottomPanel bottomPanel;
+	
+	private ScaleComponentPanel scalePanel;
+	private OwnShipComponentPanel ownShipPanel;
+	private GpsComponentPanel gpsPanel;
+	private CursorComponentPanel cursorPanel;
+	private ActiveWaypointComponentPanel activeWaypointPanel;
+	private LogoPanel logoPanel;
+	
 	private JPanel glassPanel;
 	private MsiDialog msiDialog;
 	private AisDialog aisDialog;
@@ -104,9 +100,11 @@ public class MainFrame extends JFrame implements WindowListener {
 
 	private MapMenu mapMenu;
 
-	private DefaultSingleCDockable chartDock;
-	private DefaultSingleCDockable sensorDock;
-	private DefaultSingleCDockable topDock;
+	//Docks
+	private List<DefaultSingleCDockable> dockables = new ArrayList<DefaultSingleCDockable>();
+	
+
+	
 	CControl control;
 	
 	
@@ -138,46 +136,89 @@ public class MainFrame extends JFrame implements WindowListener {
 
 		// Create panels
 		Container pane = getContentPane();
+		
 		topPanel = new TopPanel();
-		sensorPanel = new SensorPanel();
-		chartPanel = new ChartPanel(sensorPanel);
+		
+//		sensorPanel = new SensorPanel();
+		
+		
+		//Movable service panels
+		scalePanel = new ScaleComponentPanel();
+		ownShipPanel = new OwnShipComponentPanel();
+		gpsPanel = new GpsComponentPanel();
+		cursorPanel = new CursorComponentPanel();
+		activeWaypointPanel = new ActiveWaypointComponentPanel();
+		logoPanel = new  LogoPanel();
+		
+		//Add route panel instead!
+		/**TO DO
+		 * 
+		 */
+		chartPanel = new ChartPanel(activeWaypointPanel);
+		
 		bottomPanel = new BottomPanel();
 
 		// Docks
 		control = new CControl( this );
 		CContentArea contentArea = control.getContentArea();
-		this.add( contentArea );
+		pane.add( contentArea );
 		
+
+		//Frames
 		BorderMod bridge = new BorderMod();
-		
 		control.getController().getThemeManager().publish(Priority.CLIENT,
 				DisplayerDockBorder.KIND, ThemeManager.BORDER_MODIFIER_TYPE,
 				bridge);
+		
 
 		// Dockables
-		chartDock = new DefaultSingleCDockable("Chart", chartPanel);
-		sensorDock = new DefaultSingleCDockable("Sensor", sensorPanel);
-		topDock = new DefaultSingleCDockable("Top", topPanel);
+		DefaultSingleCDockable chartDock = new DefaultSingleCDockable("Chart", chartPanel);
 		
-		chartDock.setStackable(false);
-		sensorDock.setStackable(false);
-		topDock.setStackable(false);
+		DefaultSingleCDockable topDock = new DefaultSingleCDockable("Top", topPanel);
+//		DefaultSingleCDockable sensorDock = new DefaultSingleCDockable("Sensor", sensorPanel);
+		DefaultSingleCDockable scaleDock = new DefaultSingleCDockable("Scale", scalePanel);
+		DefaultSingleCDockable ownShipDock = new DefaultSingleCDockable("Own Ship", ownShipPanel);
+		DefaultSingleCDockable gpsDock = new DefaultSingleCDockable("GPS", gpsPanel);
+		DefaultSingleCDockable cursorDock = new DefaultSingleCDockable("Cursor", cursorPanel);
+		DefaultSingleCDockable activeWaypointDock = new DefaultSingleCDockable("Active Waypoint", activeWaypointPanel);
+		DefaultSingleCDockable logoDock =  new DefaultSingleCDockable("Logos", logoPanel);
 		
-		chartDock.setMinimizable(false);
-		sensorDock.setMinimizable(false);
-		topDock.setMinimizable(false);
+		
+		dockables.add(chartDock);
+		dockables.add(topDock);
+//		dockables.add(sensorDock);
+		dockables.add(scaleDock);
+		dockables.add(ownShipDock);
+		dockables.add(gpsDock);
+		dockables.add(cursorDock);
+		dockables.add(activeWaypointDock);
+		dockables.add(logoDock);
+		
+		chartDock.setTitleText("Chart Panel");
+		
+		for (int i = 0; i < dockables.size(); i++) {
+			dockables.get(i).setStackable(false);
+			dockables.get(i).setMinimizable(false);
+			dockables.get(i).setMaximizable(false);
+		}
 		
 
 		CGrid grid = new CGrid(control);
 		grid.add(0, 0, 100, 3, topDock);
 		grid.add(0, 3, 90, 97, chartDock);
-		grid.add(90, 3, 10, 97, sensorDock);
+		grid.add(90, 3, 10, 10, scaleDock);
+		grid.add(90, 13, 10, 10, ownShipDock);
+		grid.add(90, 23, 10, 10, gpsDock);
+		grid.add(90, 33, 10, 10, cursorDock);
+		grid.add(90, 43, 10, 10, activeWaypointDock);
+		grid.add(90, 53, 10, 47, logoDock);
+		
+//		grid.add(80, 53, 10, 47, sensorDock);
 		
 		contentArea.setMinimumAreaSize(new Dimension(0, 0));
 		
 		//Deploy the grid content
 		contentArea.deploy( grid );
-		
 		control.intern().getController().getRelocator().setDragOnlyTitel( true );
 		
 		toggleFrameLock();
@@ -188,7 +229,7 @@ public class MainFrame extends JFrame implements WindowListener {
 		pane.add(bottomPanel, BorderLayout.PAGE_END);
 
 		// sensorPanel.setPreferredSize(new Dimension(SENSOR_PANEL_WIDTH, 0));
-		sensorPanel.setSize(100, 100);
+//		sensorPanel.setSize(100, 100);
 		// pane.add(sensorPanel, BorderLayout.LINE_END);
 
 		// Set up the chart panel with layers etc
@@ -204,8 +245,16 @@ public class MainFrame extends JFrame implements WindowListener {
 		mapHandler.add(chartPanel);
 
 		// Add sensor panel to bean context
-		mapHandler.add(sensorPanel);
-
+//		mapHandler.add(sensorPanel);
+		
+		
+		// Add scale panel to bean context		
+		mapHandler.add(scalePanel);
+		mapHandler.add(ownShipPanel);
+		mapHandler.add(gpsPanel);
+		mapHandler.add(cursorPanel);
+		mapHandler.add(activeWaypointPanel);
+		
 		// Init glass pane
 		initGlassPane();
 
@@ -232,32 +281,27 @@ public class MainFrame extends JFrame implements WindowListener {
 	
 	public void toggleFrameLock(){
 		
-		if (chartDock.isTitleShown()){
-			//Lock
-			sensorDock.setTitleShown(false);
-			chartDock.setTitleShown(false);
-			topDock.setTitleShown(false);
-			
-			control.getContentArea().getCenter().setResizingEnabled( false );
-
-			control.getContentArea().getCenter().setDividerSize(0);
-		}else{
-			sensorDock.setTitleShown(true);
-			chartDock.setTitleShown(true);
-			topDock.setTitleShown(true);
+	
 		
+		if (dockables.get(0).isTitleShown()){
+			//Lock
+			for (int i = 0; i < dockables.size(); i++) {
+				dockables.get(i).setTitleShown(false);
+			}
+	
+			control.getContentArea().getCenter().setResizingEnabled( false );
+			control.getContentArea().getCenter().setDividerSize(0);
 			
-
 			
+		}else{
+			for (int i = 0; i < dockables.size(); i++) {
+				dockables.get(i).setTitleShown(true);
+			}
+	
 			control.getContentArea().getCenter().setResizingEnabled( true );
-
 			control.getContentArea().getCenter().setDividerSize(2);
 		}
-		
-
 	}
-	
-
 
 	private void initGlassPane() {
 		glassPanel = (JPanel) getGlassPane();
@@ -316,10 +360,6 @@ public class MainFrame extends JFrame implements WindowListener {
 
 	public ChartPanel getChartPanel() {
 		return chartPanel;
-	}
-
-	public SensorPanel getSensorPanel() {
-		return sensorPanel;
 	}
 
 	public JPanel getGlassPanel() {

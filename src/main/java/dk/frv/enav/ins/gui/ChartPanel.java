@@ -60,6 +60,7 @@ import dk.frv.enav.ins.event.NavigationMouseMode;
 import dk.frv.enav.ins.event.RouteEditMouseMode;
 import dk.frv.enav.ins.gps.GpsData;
 import dk.frv.enav.ins.gps.IGpsDataListener;
+import dk.frv.enav.ins.gui.mainFramePanels.ActiveWaypointComponentPanel;
 import dk.frv.enav.ins.gui.nogo.NogoDialog;
 import dk.frv.enav.ins.layers.EncLayerFactory;
 import dk.frv.enav.ins.layers.GeneralLayer;
@@ -92,7 +93,6 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 	private CoastalOutlineLayer coastalOutlineLayer;
 	private NavigationMouseMode mapNavMouseMode;
 	private MouseDelegator mouseDelegator;
-	private SensorPanel sensorPanel;
 	private RouteLayer routeLayer;
 	private MsiLayer msiLayer;
 	private NogoLayer nogoLayer;	
@@ -105,9 +105,11 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 	private GpsData gpsData;
 	private boolean nogoMode = false;
 	
+	private ActiveWaypointComponentPanel activeWaypointPanel;
+	
 	private NogoDialog nogoDialog;
 
-	public ChartPanel(SensorPanel sensorPanel) {
+	public ChartPanel(ActiveWaypointComponentPanel activeWaypointPanel) {
 		super();
 		// Set map handler
 		mapHandler = EeINS.getMapHandler();
@@ -115,7 +117,7 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 		setLayout(new BorderLayout());
 		// Set border
 		setBorder(BorderFactory.createLineBorder(Color.GRAY));
-		this.sensorPanel = sensorPanel;
+		this.activeWaypointPanel = activeWaypointPanel;
 		// Max scale
 		this.maxScale = EeINS.getSettings().getMapSettings().getMaxScale(); 
 	}
@@ -152,7 +154,7 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 		mapHandler.add(routeEditMouseMode);
 		mapHandler.add(msiFilterMouseMode);
 
-		mapHandler.add(sensorPanel);
+		mapHandler.add(activeWaypointPanel);
 
 		// Use the LayerHandler to manage all layers, whether they are
 		// on the map or not. You can add a layer to the map by
@@ -243,7 +245,7 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 
 		// Force a route layer and sensor panel update
 		routeLayer.routesChanged(RoutesUpdateEvent.ROUTE_ADDED);
-		sensorPanel.routesChanged(RoutesUpdateEvent.ROUTE_ADDED);
+		activeWaypointPanel.routesChanged(RoutesUpdateEvent.ROUTE_ADDED);
 		
 		// Force a MSI layer update
 		msiLayer.doUpdate();

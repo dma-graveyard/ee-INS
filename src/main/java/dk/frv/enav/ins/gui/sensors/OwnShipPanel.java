@@ -30,6 +30,9 @@
 package dk.frv.enav.ins.gui.sensors;
 
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -57,69 +60,76 @@ public class OwnShipPanel extends JPanel {
 	
 	public OwnShipPanel() {
 		
+		GridBagLayout gridBagLayout = new GridBagLayout();
+		gridBagLayout.columnWidths = new int[] { 42, 134, 0 };
+		gridBagLayout.rowHeights = new int[] { 20, 16, 16, 16, 10 };
+		gridBagLayout.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
+		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 1.0,
+				Double.MIN_VALUE };
+		setLayout(gridBagLayout);
 		ownShipTitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		ownShipTitleLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
+		GridBagConstraints gbc_ownShipTitleLabel = new GridBagConstraints();
+		gbc_ownShipTitleLabel.anchor = GridBagConstraints.NORTH;
+		gbc_ownShipTitleLabel.fill = GridBagConstraints.HORIZONTAL;
+		gbc_ownShipTitleLabel.insets = new Insets(0, 0, 5, 0);
+		gbc_ownShipTitleLabel.gridwidth = 2;
+		gbc_ownShipTitleLabel.gridx = 0;
+		gbc_ownShipTitleLabel.gridy = 0;
+		add(ownShipTitleLabel, gbc_ownShipTitleLabel);
 
 		nameTitleLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		nameTitleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		
+		GridBagConstraints gbc_nameTitleLabel = new GridBagConstraints();
+		gbc_nameTitleLabel.anchor = GridBagConstraints.NORTHWEST;
+		gbc_nameTitleLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_nameTitleLabel.gridx = 0;
+		gbc_nameTitleLabel.gridy = 1;
+		add(nameTitleLabel, gbc_nameTitleLabel);
+
 		nameLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		nameLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		
+		GridBagConstraints gbc_nameLabel = new GridBagConstraints();
+		gbc_nameLabel.anchor = GridBagConstraints.NORTHWEST;
+		gbc_nameLabel.insets = new Insets(0, 0, 5, 0);
+		gbc_nameLabel.gridx = 1;
+		gbc_nameLabel.gridy = 1;
+		add(nameLabel, gbc_nameLabel);
+
 		CallsignTitleLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		CallsignTitleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-				
+		GridBagConstraints gbc_CallsignTitleLabel = new GridBagConstraints();
+		gbc_CallsignTitleLabel.anchor = GridBagConstraints.NORTHWEST;
+		gbc_CallsignTitleLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_CallsignTitleLabel.gridx = 0;
+		gbc_CallsignTitleLabel.gridy = 2;
+		add(CallsignTitleLabel, gbc_CallsignTitleLabel);
+
 		callsignLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		callsignLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-				
+		GridBagConstraints gbc_callsignLabel = new GridBagConstraints();
+		gbc_callsignLabel.anchor = GridBagConstraints.NORTHWEST;
+		gbc_callsignLabel.insets = new Insets(0, 0, 5, 0);
+		gbc_callsignLabel.gridx = 1;
+		gbc_callsignLabel.gridy = 2;
+		add(callsignLabel, gbc_callsignLabel);
+
 		mmsiTitleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		mmsiTitleLabel.setHorizontalAlignment(SwingConstants.LEFT);
+		GridBagConstraints gbc_mmsiTitleLabel = new GridBagConstraints();
+		gbc_mmsiTitleLabel.anchor = GridBagConstraints.NORTHWEST;
+		gbc_mmsiTitleLabel.insets = new Insets(0, 0, 0, 5);
+		gbc_mmsiTitleLabel.gridx = 0;
+		gbc_mmsiTitleLabel.gridy = 3;
+		add(mmsiTitleLabel, gbc_mmsiTitleLabel);
 
 		mmsiLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		mmsiLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		
-		GroupLayout groupLayout = new GroupLayout(this);
-		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(ownShipTitleLabel, GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(mmsiTitleLabel)
-								.addComponent(CallsignTitleLabel)
-								.addComponent(nameTitleLabel))
-							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(nameLabel)
-								.addComponent(callsignLabel)
-								.addComponent(mmsiLabel))))
-					.addContainerGap())
-		);
-		groupLayout.setVerticalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addComponent(ownShipTitleLabel)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(nameTitleLabel)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(CallsignTitleLabel)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(mmsiTitleLabel)
-							.addGap(44))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(nameLabel)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(callsignLabel)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(mmsiLabel)
-							.addGap(44)))
-					.addContainerGap(170, Short.MAX_VALUE))
-		);
-		setLayout(groupLayout);
+		GridBagConstraints gbc_mmsiLabel = new GridBagConstraints();
+		gbc_mmsiLabel.anchor = GridBagConstraints.NORTHWEST;
+		gbc_mmsiLabel.gridx = 1;
+		gbc_mmsiLabel.gridy = 3;
+		add(mmsiLabel, gbc_mmsiLabel);
 	}
 	
 	public JLabel getNameLabel() {
