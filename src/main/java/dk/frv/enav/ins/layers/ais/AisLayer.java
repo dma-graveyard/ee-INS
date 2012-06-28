@@ -177,10 +177,6 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 				forceRedraw = true;
 			}
 
-			if (vesselTargetGraphic.isSelected()){
-				vesselTargetGraphic.setSelected(false);
-			}
-			
 			if (mmsi == selectedMMSI){
 				vesselTargetGraphic.setSelected(true);
 			}
