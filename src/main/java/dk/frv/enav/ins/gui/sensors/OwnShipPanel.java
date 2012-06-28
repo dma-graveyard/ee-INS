@@ -61,7 +61,7 @@ public class OwnShipPanel extends JPanel {
 	public OwnShipPanel() {
 		
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[] { 42, 134, 0 };
+		gridBagLayout.columnWidths = new int[] { 10, 10, 0 };
 		gridBagLayout.rowHeights = new int[] { 20, 16, 16, 16, 10 };
 		gridBagLayout.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
 		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 1.0,

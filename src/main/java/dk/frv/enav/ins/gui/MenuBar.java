@@ -38,23 +38,59 @@ LightMapHandlerChild {
 	public MenuBar(){
 		super();
 		
-		JMenu menu = new JMenu("Menu Label");
-		this.add(menu);
-
-		
-		JMenu menu2 = new JMenu("Menu Label");
-		this.add(menu2);
-
-		JMenu menu3 = new JMenu("Menu Label");
-		this.add(menu3);
-
-		JMenu menu4 = new JMenu("Menu Label");
-		this.add(menu4);
-
+		JMenu file = new JMenu("File");
+		this.add(file);
 		
 		// Create a menu item
-		JMenuItem item = new JMenuItem("Item Label");
-		menu.add(item);
+		JMenuItem setup = new JMenuItem("Setup");
+		file.add(setup);
+		
+		JMenuItem lock = new JMenuItem("Lock/Unlock");
+		file.add(lock);
+		
+		JMenuItem exit = new JMenuItem("Exit");
+		file.add(exit);
+		
+		//Setup
+		//Lock/Unlock
+		//Exit
+
+		
+		JMenu menu2 = new JMenu("Edit");
+		this.add(menu2);
+
+		
+		JMenu menu3 = new JMenu("Windows");
+		this.add(menu3);
+		
+		//Routes
+		//MSI
+		//AIS Targets
+		//Seperator
+		
+		//Layers
+		
+		//AIS Layer
+		//ENC Layer
+		//MSI Layer
+		//NoGo Layer
+		//Risk Layer
+
+		JMenu menu4 = new JMenu("Tools");
+		this.add(menu4);
+
+		//New Route
+		//Dynamic NoGo
+		
+
+		//Panels
+		
+		JMenu menu5 = new JMenu("Help");
+		this.add(menu5);
+		//Help?
+		//DaMSA?
+		
+
 	}
 
 	protected WindowSupport windowSupport;

@@ -265,7 +265,7 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 			topPanel.setEncDisabled();
 			coastalOutlineLayer.setVisible(true);
 		}
-		
+
 		getMap().addMouseWheelListener(this);
 	}
 

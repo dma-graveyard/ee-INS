@@ -24,26 +24,45 @@ public class LogoPanel extends JPanel {
 		
 		efficienseaLogo.setIcon(new ImageIcon(EeINS.class.getResource("/images/sensorPanel/efficiensea.png")));
 		euBalticLogo.setIcon(new ImageIcon(EeINS.class.getResource("/images/sensorPanel/euBaltic.png")));
+//		GroupLayout groupLayout = new GroupLayout(this);
+//		groupLayout.setHorizontalGroup(
+//			groupLayout.createParallelGroup(Alignment.LEADING)
+//				.addGroup(groupLayout.createSequentialGroup()
+//					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+//						.addComponent(euBalticLogo, Alignment.TRAILING)
+//						.addComponent(efficienseaLogo, Alignment.TRAILING))
+//					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+//		);
+//		groupLayout.setVerticalGroup(
+//			groupLayout.createParallelGroup(Alignment.TRAILING)
+//				.addGroup(groupLayout.createSequentialGroup()
+//					.addContainerGap(730, Short.MAX_VALUE)
+//					.addComponent(efficienseaLogo)
+//					.addPreferredGap(ComponentPlacement.RELATED)
+//					.addComponent(euBalticLogo))
+//		);
+//		setLayout(groupLayout);
+//		
+		
+		
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap()
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(euBalticLogo, Alignment.TRAILING)
-						.addComponent(efficienseaLogo, Alignment.TRAILING))
-					.addContainerGap())
+						.addComponent(euBalticLogo)
+						.addComponent(efficienseaLogo))
+					.addContainerGap(183, Short.MAX_VALUE))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addPreferredGap(ComponentPlacement.RELATED, 172, Short.MAX_VALUE)
+				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+					.addContainerGap(153, Short.MAX_VALUE)
 					.addComponent(efficienseaLogo)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(euBalticLogo)
-					.addContainerGap())
+					.addComponent(euBalticLogo))
 		);
-		setLayout(groupLayout);
+		this.setLayout(groupLayout);
 		
 	}
 }

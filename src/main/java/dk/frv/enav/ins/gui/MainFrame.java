@@ -49,6 +49,7 @@ import bibliothek.gui.dock.common.CControl;
 import bibliothek.gui.dock.common.CGrid;
 import bibliothek.gui.dock.common.DefaultSingleCDockable;
 import bibliothek.gui.dock.displayer.DisplayerDockBorder;
+import bibliothek.gui.dock.station.support.PlaceholderStrategy;
 import bibliothek.gui.dock.themes.ThemeManager;
 import bibliothek.gui.dock.util.Priority;
 
@@ -81,8 +82,6 @@ public class MainFrame extends JFrame implements WindowListener {
 
 	private TopPanel topPanel;
 	private ChartPanel chartPanel;
-	
-//	private SensorPanel sensorPanel;
 	
 	private BottomPanel bottomPanel;
 	
@@ -170,6 +169,8 @@ public class MainFrame extends JFrame implements WindowListener {
 				DisplayerDockBorder.KIND, ThemeManager.BORDER_MODIFIER_TYPE,
 				bridge);
 		
+		//Placeholder prop
+//		control.getController().getProperties().set(PlaceholderStrategy.PLACEHOLDER_STRATEGY, new CustomPlaceholderStrategy());
 
 		// Dockables
 		DefaultSingleCDockable chartDock = new DefaultSingleCDockable("Chart", chartPanel);
