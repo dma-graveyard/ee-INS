@@ -31,6 +31,9 @@ package dk.frv.enav.ins.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
@@ -107,6 +110,8 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 	
 	private NogoDialog nogoDialog;
 
+	private RotationalChart rotationalChart;
+	
 	public ChartPanel(SensorPanel sensorPanel) {
 		super();
 		// Set map handler
@@ -118,6 +123,8 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 		this.sensorPanel = sensorPanel;
 		// Max scale
 		this.maxScale = EeINS.getSettings().getMapSettings().getMaxScale(); 
+		
+		
 	}
 
 	public void initChart() {
@@ -237,8 +244,9 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 		// Get from settings
 		map.setScale(mapSettings.getScale());
 
-		add(map);
-	
+		rotationalChart = new RotationalChart();
+		add(rotationalChart);
+		rotationalChart.add(map);
 		
 
 		// Force a route layer and sensor panel update
@@ -265,6 +273,9 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 		}
 		
 		getMap().addMouseWheelListener(this);
+		
+		map.setSize(1000, 1000);
+		map.setPreferredSize(new Dimension(2000, 2000));
 	}
 
 	public void saveSettings() {
@@ -615,5 +626,11 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 	   }
 	  
 	  
-	    
+//	  @Override
+//	  public void paintComponent(Graphics g){
+//	         Graphics2D g2d=(Graphics2D)g; // Create a Java2D version of g.
+//	         g2d.translate(1000, 0); // Translate the center of our coordinates.
+//	         g2d.rotate(1.3);  // Rotate the image by 1 radian.
+//	    }
+//	    
 }
