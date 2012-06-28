@@ -32,6 +32,8 @@ package dk.frv.enav.ins.gui.menuitems;
 import javax.swing.JMenuItem;
 
 import dk.frv.enav.ins.gui.TopPanel;
+import dk.frv.enav.ins.layers.ais.AisLayer;
+import dk.frv.enav.ins.layers.ais.VesselTargetGraphic;
 
 public class AisTargetDetails extends JMenuItem implements IMapMenuAction {
 
@@ -40,8 +42,10 @@ public class AisTargetDetails extends JMenuItem implements IMapMenuAction {
 	 */
 	private static final long serialVersionUID = 1L;
 	private TopPanel topPanel;
+	private AisLayer aisLayer;
 	private long MMSI;	
-
+	private VesselTargetGraphic vesselTargetGraphic;
+	
 	public AisTargetDetails(String text) {
 		super();
 		this.setText(text);
@@ -49,10 +53,19 @@ public class AisTargetDetails extends JMenuItem implements IMapMenuAction {
 	
 	@Override
 	public void doAction() {
-		if (topPanel != null && topPanel.getAisDialog() != null) {
-			topPanel.getAisDialog().setSelection(this.MMSI, true);
-			topPanel.getAisDialog().setVisible(true);
-		}		
+		System.out.println("Select it!");
+		System.out.println("Selected :" + MMSI);
+		
+		aisLayer.setSelectedMMSI(MMSI);
+		aisLayer.targetUpdated(vesselTargetGraphic.getVesselTarget());
+		
+		
+//		if (topPanel != null && topPanel.getAisDialog() != null) {
+//			topPanel.getAisDialog().setSelection(this.MMSI, true);
+//			topPanel.getAisDialog().setVisible(true);
+//		}
+//		
+		
 	}
 
 	public void setTopPanel(TopPanel topPanel) {
@@ -63,4 +76,13 @@ public class AisTargetDetails extends JMenuItem implements IMapMenuAction {
 		this.MMSI = MSSI;
 	}	
 
+	public void setAisLayer(AisLayer aisLayer){
+		this.aisLayer = aisLayer;
+	}
+	
+	public void setVesselTargetGraphic(VesselTargetGraphic vesselTargetGraphic) {
+		this.vesselTargetGraphic = vesselTargetGraphic;
+	}
+
+	
 }

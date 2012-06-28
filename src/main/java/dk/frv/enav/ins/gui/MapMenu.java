@@ -327,6 +327,8 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 	public void aisMenu(VesselTargetGraphic targetGraphic, TopPanel toppanel){
 		removeAll();
 		aisTargetDetails.setTopPanel(toppanel);
+		aisTargetDetails.setVesselTargetGraphic(targetGraphic);
+		aisTargetDetails.setAisLayer(aisLayer);
 		
 		VesselTarget vesselTarget = targetGraphic.getVesselTarget();
 		aisTargetDetails.setMSSI(vesselTarget.getMmsi());

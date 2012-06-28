@@ -45,7 +45,7 @@ public class VesselTargetTriangle extends OMGraphicList {
 	private static final long serialVersionUID = 1L;
 
 	private RotationalPoly vessel;
-	private Paint paint = new Color(74, 97, 205, 255);
+    private Paint paint = new Color(74, 97, 205, 255);
 	private Stroke stroke = new BasicStroke(2.0f);
 	private VesselTargetGraphic vesselTarget;
 
@@ -68,7 +68,7 @@ public class VesselTargetTriangle extends OMGraphicList {
 	}
 
 	public void setLinePaint(Paint paint) {
-		vessel.setLinePaint(paint);
+		vessel.setLinePaint(paint); 
 	}
 	
 }

@@ -29,6 +29,7 @@
  */
 package dk.frv.enav.ins.layers.ais;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
@@ -93,6 +94,7 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 	private OMGraphic selectedGraphic;
 	private ChartPanel chartPanel;
 	private OMCircle dummyCircle = new OMCircle();
+	private long selectedMMSI = -1;
 	
 	private TopPanel topPanel;
 
@@ -127,6 +129,7 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 
 	@Override
 	public synchronized void targetUpdated(AisTarget aisTarget) {
+		
 		long mmsi = aisTarget.getMmsi();
 		TargetGraphic targetGraphic = targets.get(mmsi);
 
@@ -162,6 +165,8 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 		boolean forceRedraw = false;		
 
 		if (aisTarget instanceof VesselTarget) {
+			
+
 			// Maybe we would like to force redraw
 			VesselTarget vesselTarget = (VesselTarget) aisTarget; 
 			VesselTargetGraphic vesselTargetGraphic = (VesselTargetGraphic) targetGraphic;
@@ -172,6 +177,15 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 				forceRedraw = true;
 			}
 
+			if (vesselTargetGraphic.isSelected()){
+				vesselTargetGraphic.setSelected(false);
+			}
+			
+			if (mmsi == selectedMMSI){
+				vesselTargetGraphic.setSelected(true);
+			}
+			
+			
 			targetGraphic.update(vesselTarget);
 		} else if (aisTarget instanceof SarTarget) {
 			targetGraphic.update((SarTarget) aisTarget);
@@ -207,6 +221,16 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 		synchronized (redrawPending) {
 			return lastRedraw;
 		}
+	}
+	
+	
+
+	public long getSelectedMMSI() {
+		return selectedMMSI;
+	}
+
+	public void setSelectedMMSI(long selectedMMSI) {
+		this.selectedMMSI = selectedMMSI;
 	}
 
 	@Override

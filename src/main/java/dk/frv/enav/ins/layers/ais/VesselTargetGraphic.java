@@ -86,10 +86,12 @@ public class VesselTargetGraphic extends TargetGraphic {
 	private Stroke stroke;
 	private IntendedRouteGraphic routeGraphic = new IntendedRouteGraphic();
 	private boolean showNameLabel = true;
+	private boolean selected = false;
 
 	public VesselTargetGraphic() {
 		super();
-		this.showNameLabel = EeINS.getSettings().getAisSettings().isShowNameLabels();
+		this.showNameLabel = EeINS.getSettings().getAisSettings()
+				.isShowNameLabels();
 	}
 
 	private void createGraphics() {
@@ -150,23 +152,29 @@ public class VesselTargetGraphic extends TargetGraphic {
 		}
 
 		// Set color based on risk index
-		
-		Risk risk = EeINS.getRiskHandler().getRiskLevel(vesselTarget.getMmsi());
-		
-		if(risk==null){
-			vessel.setLinePaint(new Color(74, 97, 205, 255));
-		}
-		else if( risk.getRiskNorm()< 0.002){
-			vessel.setLinePaint(Color.GREEN);
-		}else if( risk.getRiskNorm()> 0.01){
-			vessel.setLinePaint(Color.RED);
-		}else{
-			System.out.println("risk :"+ risk);
-			int green = (int)((0.01-risk.getRiskNorm())/0.01*255);
-			System.out.println(green);
-			vessel.setLinePaint(new Color(255,green<0?255:green,51));
-		}
 
+		Risk risk = EeINS.getRiskHandler().getRiskLevel(vesselTarget.getMmsi());
+
+		if (risk != null) {
+
+			if (risk.getRiskNorm() < 0.002) {
+				vessel.setLinePaint(Color.GREEN);
+			} else if (risk.getRiskNorm() > 0.01) {
+				vessel.setLinePaint(Color.RED);
+			} else {
+				System.out.println("risk :" + risk);
+				int green = (int) ((0.01 - risk.getRiskNorm()) / 0.01 * 255);
+				System.out.println(green);
+				vessel.setLinePaint(new Color(255, green < 0 ? 255 : green, 51));
+			}
+		}
+		
+
+		if (selected){
+			System.out.println("Selected target?");
+			vessel.setLinePaint(Color.red);
+		}
+		
 		double sog = vesselTarget.getPositionData().getSog();
 		double cogR = Math.toRadians(vesselTarget.getPositionData().getCog());
 		double hdgR = Math.toRadians(trueHeading);
@@ -182,7 +190,8 @@ public class VesselTargetGraphic extends TargetGraphic {
 		speedLL[1] = (float) pos.getLongitude();
 		this.startPos = new LatLonPoint.Double(lat, lon);
 
-		float length = (float) Length.NM.toRadians(EeINS.getSettings().getAisSettings().getCogVectorLength()
+		float length = (float) Length.NM.toRadians(EeINS.getSettings()
+				.getAisSettings().getCogVectorLength()
 				* (sog / 60.0));
 
 		this.endPos = startPos.getPoint(length, cogR);
@@ -196,11 +205,13 @@ public class VesselTargetGraphic extends TargetGraphic {
 		// Add minute marks
 		marks.clear();
 		for (int i = 1; i < 6; i++) {
-			float newMarker = (float) Length.NM.toRadians(EeINS.getSettings().getNavSettings().getCogVectorLength() / 6
-					* i * (sog / 60.0));
+			float newMarker = (float) Length.NM.toRadians(EeINS.getSettings()
+					.getNavSettings().getCogVectorLength()
+					/ 6 * i * (sog / 60.0));
 			LatLonPoint marker = startPos.getPoint(newMarker, (float) cogR);
 			RotationalPoly vtm = new RotationalPoly(markX, markY, stroke, paint);
-			vtm.setLocation(marker.getLatitude(), marker.getLongitude(), OMGraphic.DECIMAL_DEGREES, cogR);
+			vtm.setLocation(marker.getLatitude(), marker.getLongitude(),
+					OMGraphic.DECIMAL_DEGREES, cogR);
 			marks.add(vtm);
 		}
 
@@ -242,8 +253,10 @@ public class VesselTargetGraphic extends TargetGraphic {
 		if (startPos != null && endPos != null) {
 			Point2D start = projection.forward(startPos);
 			Point2D end = projection.forward(endPos);
-			pixelDist.setValues(start.getX(), start.getY(), end.getX(), end.getY());
-			if (pixelDist.norm() < EeINS.getSettings().getAisSettings().getShowMinuteMarksAISTarget()) {
+			pixelDist.setValues(start.getX(), start.getY(), end.getX(),
+					end.getY());
+			if (pixelDist.norm() < EeINS.getSettings().getAisSettings()
+					.getShowMinuteMarksAISTarget()) {
 				marksVisible = false;
 				marks.setVisible(false);
 			} else {
@@ -269,4 +282,9 @@ public class VesselTargetGraphic extends TargetGraphic {
 		return routeGraphic;
 	}
 
+	public void setSelected(boolean selected) {
+		this.selected = selected;
+	}
+	
+	
 }
