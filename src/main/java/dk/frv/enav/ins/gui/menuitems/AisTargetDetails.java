@@ -29,6 +29,8 @@
  */
 package dk.frv.enav.ins.gui.menuitems;
 
+import java.awt.Color;
+
 import javax.swing.JMenuItem;
 
 import dk.frv.enav.ins.gui.TopPanel;
@@ -56,7 +58,8 @@ public class AisTargetDetails extends JMenuItem implements IMapMenuAction {
 		System.out.println("Select it!");
 		System.out.println("Selected :" + MMSI);
 		
-		aisLayer.setSelectedMMSI(MMSI);
+//		aisLayer.setSelectedMMSI(MMSI);
+		vesselTargetGraphic.setLinePaint(Color.red);
 		aisLayer.targetUpdated(vesselTargetGraphic.getVesselTarget());
 		
 		
@@ -81,7 +84,16 @@ public class AisTargetDetails extends JMenuItem implements IMapMenuAction {
 	}
 	
 	public void setVesselTargetGraphic(VesselTargetGraphic vesselTargetGraphic) {
+		setColor(this.vesselTargetGraphic);
 		this.vesselTargetGraphic = vesselTargetGraphic;
+	}
+	
+	public void setColor(VesselTargetGraphic vesselTargetGraphic){
+		if (vesselTargetGraphic != null){
+			vesselTargetGraphic.setLinePaint(new Color(74, 97, 205, 255));
+			aisLayer.targetUpdated(vesselTargetGraphic.getVesselTarget());			
+		}
+
 	}
 
 	

@@ -94,7 +94,8 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 	private OMGraphic selectedGraphic;
 	private ChartPanel chartPanel;
 	private OMCircle dummyCircle = new OMCircle();
-	private long selectedMMSI = -1;
+	
+	private AisTarget targetShip = null;
 	
 	private TopPanel topPanel;
 
@@ -176,8 +177,8 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 			} else if (!vesselTarget.getSettings().isShowRoute() && vesselTargetGraphic.getRouteGraphic().isVisible()) {
 				forceRedraw = true;
 			}
-
-			if (mmsi == selectedMMSI){
+			
+			if (aisTarget == targetShip){
 				vesselTargetGraphic.setSelected(true);
 			}
 			
@@ -221,13 +222,16 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 	
 	
 
-	public long getSelectedMMSI() {
-		return selectedMMSI;
-	}
-
-	public void setSelectedMMSI(long selectedMMSI) {
-		this.selectedMMSI = selectedMMSI;
-	}
+//	public long getSelectedMMSI() {
+//		return selectedMMSI;
+//	}
+//
+//	public void setTarget(AisTarget targetShip) {
+//		if (this.targetShip != null){
+//			
+//		}
+//		this.targetShip = targetShip;
+//	}
 
 	@Override
 	public synchronized OMGraphicList prepare() {
