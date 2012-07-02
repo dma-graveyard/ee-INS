@@ -10,6 +10,7 @@ import java.beans.beancontext.BeanContextMembershipListener;
 import java.util.Iterator;
 import java.util.Properties;
 
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -45,7 +46,7 @@ LightMapHandlerChild {
 		JMenuItem setup = new JMenuItem("Setup");
 		file.add(setup);
 		
-		JMenuItem lock = new JMenuItem("Lock/Unlock");
+		JCheckBoxMenuItem lock = new JCheckBoxMenuItem("Lock/Unlock");
 		file.add(lock);
 		
 		JMenuItem exit = new JMenuItem("Exit");
@@ -56,37 +57,48 @@ LightMapHandlerChild {
 		//Exit
 
 		
-		JMenu menu2 = new JMenu("Edit");
-		this.add(menu2);
+		JMenu edit = new JMenu("Edit");
+		this.add(edit);
+		
+		JMenuItem zoomIn = new JCheckBoxMenuItem("Zoom In | +");
+		edit.add(zoomIn);
+		
+		JMenuItem zoomOut = new JCheckBoxMenuItem("Zoom Out | -");
+		edit.add(zoomOut);
+		
+		JCheckBoxMenuItem centerOnShip = new JCheckBoxMenuItem("Center on Ship | c");
+		edit.add(centerOnShip);
+		
+		JCheckBoxMenuItem autoFollow = new JCheckBoxMenuItem("Auto Follow");
+		edit.add(autoFollow);
+		//Zoom
+		//Center on ship
+		//Auto follow
 
 		
-		JMenu menu3 = new JMenu("Windows");
-		this.add(menu3);
-		
+		//Panels?
+		JMenu views = new JMenu("Views");
+		this.add(views);
 		//Routes
 		//MSI
 		//AIS Targets
-		//Seperator
 		
-		//Layers
 		
+		JMenu layers = new JMenu("Layers");
+		this.add(layers);
 		//AIS Layer
 		//ENC Layer
 		//MSI Layer
 		//NoGo Layer
 		//Risk Layer
 
-		JMenu menu4 = new JMenu("Tools");
-		this.add(menu4);
-
+		JMenu tools = new JMenu("Tools");
+		this.add(tools);
 		//New Route
 		//Dynamic NoGo
 		
-
-		//Panels
-		
-		JMenu menu5 = new JMenu("Help");
-		this.add(menu5);
+		JMenu help = new JMenu("Help");
+		this.add(help);
 		//Help?
 		//DaMSA?
 		
