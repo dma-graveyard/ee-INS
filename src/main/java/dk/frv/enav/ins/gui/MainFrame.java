@@ -112,10 +112,6 @@ public class MainFrame extends JFrame implements WindowListener {
 		setIconImage(getAppIcon());
 		addWindowListener(this);
 
-		// Create top menubar
-		MenuBar menuBar = new MenuBar();
-		this.setJMenuBar(menuBar);
-
 		// Create panels
 		Container pane = getContentPane();
 		topPanel = new TopPanel();
@@ -129,14 +125,11 @@ public class MainFrame extends JFrame implements WindowListener {
 		logoPanel = new LogoPanel();
 		chartPanel = new ChartPanel(activeWaypointPanel);
 
-		// Umovable panels
+		// Unmovable panels
 		bottomPanel = new BottomPanel();
 
 		// Create the dockable layouts
 		dockableComponents = new DockableComponents(this);
-
-		// Get the dockable createmenu function
-		menuBar.add(dockableComponents.createDockableMenu());
 
 		dockableComponents.toggleFrameLock();
 
@@ -162,11 +155,18 @@ public class MainFrame extends JFrame implements WindowListener {
 		mapHandler.add(cursorPanel);
 		mapHandler.add(activeWaypointPanel);
 
+		// Create top menubar
+		MenuBar menuBar = new MenuBar();
+		this.setJMenuBar(menuBar);
+		
 		// Init glass pane
 		initGlassPane();
 
 		// Add self to map map handler
 		mapHandler.add(this);
+		
+		//Add menubar to map handler
+		mapHandler.add(menuBar);
 
 		// Init MSI dialog
 		msiDialog = new MsiDialog(this);

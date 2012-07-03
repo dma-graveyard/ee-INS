@@ -1,6 +1,5 @@
 package dk.frv.enav.ins.gui;
 
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,7 +28,6 @@ import bibliothek.gui.dock.themes.ThemeManager;
 import bibliothek.gui.dock.util.Priority;
 import bibliothek.util.filter.PresetFilter;
 import bibliothek.util.xml.XElement;
-
 import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.gui.mainFramePanels.ActiveWaypointComponentPanel;
 import dk.frv.enav.ins.gui.mainFramePanels.CursorComponentPanel;
@@ -39,13 +37,13 @@ import dk.frv.enav.ins.gui.mainFramePanels.OwnShipComponentPanel;
 import dk.frv.enav.ins.gui.mainFramePanels.ScaleComponentPanel;
 
 public class DockableComponents {
-	
+
 	private static final String[] PANEL_NAMES = { "Chart", "Top", "Scale",
-		"Own Ship", "GPS", "Cursor", "Active Waypoint", "Logos" };
+			"Own Ship", "GPS", "Cursor", "Active Waypoint", "Logos" };
 	private Map<String, PanelDockable> dmap;
 	private CControl control;
-    private DockableFactory factory;
-	
+	private DockableFactory factory;
+
 	private TopPanel topPanel;
 	private ChartPanel chartPanel;
 
@@ -55,15 +53,14 @@ public class DockableComponents {
 	private CursorComponentPanel cursorPanel;
 	private ActiveWaypointComponentPanel activeWaypointPanel;
 	private LogoPanel logoPanel;
-	
+
 	private boolean locked = false;
-    
-    
-	public DockableComponents(MainFrame mainFrame){
+
+	public DockableComponents(MainFrame mainFrame) {
 		// Docks
 		control = new CControl(mainFrame);
-		control.setMissingStrategy( MissingCDockableStrategy.STORE );
-		
+		control.setMissingStrategy(MissingCDockableStrategy.STORE);
+
 		chartPanel = mainFrame.getChartPanel();
 		topPanel = mainFrame.getTopPanel();
 		scalePanel = mainFrame.getScalePanel();
@@ -72,22 +69,21 @@ public class DockableComponents {
 		cursorPanel = mainFrame.getCursorPanel();
 		activeWaypointPanel = mainFrame.getActiveWaypointPanel();
 		logoPanel = mainFrame.getLogoPanel();
-		
+
 		factory = new DockableFactory(chartPanel, topPanel, scalePanel,
-				ownShipPanel, gpsPanel, cursorPanel,
-				activeWaypointPanel, logoPanel);
-		
+				ownShipPanel, gpsPanel, cursorPanel, activeWaypointPanel,
+				logoPanel);
+
 		CContentArea contentArea = control.getContentArea();
 		mainFrame.getContentPane().add(contentArea);
-		
+
 		control.addSingleDockableFactory(new PresetFilter<String>(PANEL_NAMES),
 				factory);
 
 		mainFrame.add(control.getContentArea());
 
-		//Load a layout
+		// Load a layout
 		File layoutFile = new File(EeINS.class.getSimpleName() + ".xml");
-		System.out.println(layoutFile);
 		if (layoutFile.exists()) {
 			try {
 				control.readXML(layoutFile);
@@ -95,12 +91,11 @@ public class DockableComponents {
 				ex.printStackTrace(System.err);
 			}
 		} else {
-			System.out.println("No layout file found - creating standard");
 			control.readXML(createLayout());
 		}
-		
+
 		control.intern().getController().getRelocator().setDragOnlyTitel(true);
-		
+
 		List<SingleCDockable> mdlist = control.getRegister()
 				.getSingleDockables();
 
@@ -110,17 +105,14 @@ public class DockableComponents {
 			dockable.setMinimizable(false);
 			dockable.setMaximizable(false);
 		}
-		
+
 		// Frames
 		BorderMod bridge = new BorderMod();
 		control.getController()
 				.getThemeManager()
 				.publish(Priority.CLIENT, DisplayerDockBorder.KIND,
 						ThemeManager.BORDER_MODIFIER_TYPE, bridge);
-		
-		
 	}
-	
 
 	public JMenu createDockableMenu() {
 		JMenu menu = new JMenu("Dockables");
@@ -139,7 +131,7 @@ public class DockableComponents {
 
 		return menu;
 	}
-	
+
 	public void toggleFrameLock() {
 
 		List<SingleCDockable> mdlist = control.getRegister()
@@ -155,7 +147,7 @@ public class DockableComponents {
 			control.getContentArea().getCenter().setDividerSize(0);
 
 			locked = true;
-			
+
 		} else {
 			for (int i = 0; i < mdlist.size(); i++) {
 				PanelDockable dockable = (PanelDockable) mdlist.get(i);
@@ -164,22 +156,21 @@ public class DockableComponents {
 
 			control.getContentArea().getCenter().setResizingEnabled(true);
 			control.getContentArea().getCenter().setDividerSize(2);
-			
+
 			locked = false;
 		}
 
 	}
-	
-	public void saveLayout(){
+
+	public void saveLayout() {
 		try {
-            File f = new File(EeINS.class.getSimpleName() + ".xml");
-            control.writeXML(f);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        control.destroy();
+			File f = new File(EeINS.class.getSimpleName() + ".xml");
+			control.writeXML(f);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+		control.destroy();
 	}
-	
 
 	private JMenuItem createDockableMenuItem(final String name,
 			PanelDockable dockable) {
@@ -190,20 +181,17 @@ public class DockableComponents {
 			public void actionPerformed(ActionEvent e) {
 				JCheckBoxMenuItem m = (JCheckBoxMenuItem) e.getSource();
 				if (m.isSelected()) {
-					System.out.println("Select again? " + m.getText());
 					PanelDockable dockable = dmap.get(name);
 					System.out.println(dockable);
-					if (dockable!=null){
-						System.out.println("not null!");
-						doOpen(dockable);	
-					}
-					else{
-						System.out.println("it is null");
-						PanelDockable newDockable = (PanelDockable) factory.createBackup(name);
+					if (dockable != null) {
+						doOpen(dockable);
+					} else {
+						PanelDockable newDockable = (PanelDockable) factory
+								.createBackup(name);
 						dmap.put(newDockable.getName(), newDockable);
 						doOpen(newDockable);
 					}
-					
+
 				} else {
 					PanelDockable dockable = getMyDockableByName(name);
 					if (dockable != null)
@@ -219,15 +207,13 @@ public class DockableComponents {
 	}
 
 	private void doOpen(PanelDockable dockable) {
-		
-		if (locked){
-			System.out.println("it's locked");
+
+		if (locked) {
 			dockable.setTitleShown(false);
-		}else{
-			System.out.println("it's not locked");
+		} else {
 			dockable.setTitleShown(true);
 		}
-		
+
 		control.addDockable(dockable);
 
 		dockable.setDefaultLocation(ExtendedMode.NORMALIZED, CLocation.base()
@@ -241,7 +227,6 @@ public class DockableComponents {
 		control.removeDockable(dockable);
 	}
 
-	
 	// If no layout file is present, create the basic layout!
 	private XElement createLayout() {
 		System.out.println("Create layout?");
@@ -277,24 +262,7 @@ public class DockableComponents {
 		aControl.destroy();
 		return root;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	// Create the dockables from a xml file
 	private static class DockableFactory implements SingleCDockableFactory {
 
@@ -315,9 +283,7 @@ public class DockableComponents {
 				LogoPanel logoPanel) {
 
 			super();
-			
-			System.out.println("xml file?");
-			
+
 			this.chartPanel = chartPanel;
 			this.topPanel = topPanel;
 			this.scalePanel = scalePanel;
@@ -330,7 +296,6 @@ public class DockableComponents {
 
 		@Override
 		public SingleCDockable createBackup(String id) {
-			System.out.println(id);
 			if (id.equals("Chart")) {
 				return new PanelDockable(id, chartPanel);
 			}
@@ -360,7 +325,6 @@ public class DockableComponents {
 				return new PanelDockable(id, logoPanel);
 			}
 
-			System.out.println("Crap");
 			return new PanelDockable(id, new JPanel());
 
 		}
@@ -383,5 +347,5 @@ public class DockableComponents {
 			return name;
 		}
 	}
-	
+
 }

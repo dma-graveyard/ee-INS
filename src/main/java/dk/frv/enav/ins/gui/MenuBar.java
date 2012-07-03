@@ -22,6 +22,8 @@ import com.bbn.openmap.LightMapHandlerChild;
 import com.bbn.openmap.PropertyConsumer;
 import com.bbn.openmap.gui.WindowSupport;
 
+import dk.frv.enav.ins.EeINS;
+
 public class MenuBar extends JMenuBar implements PropertyConsumer, BeanContextChild, BeanContextMembershipListener,
 LightMapHandlerChild {
 
@@ -36,9 +38,13 @@ LightMapHandlerChild {
 
 	protected BeanContextChildSupport beanContextChildSupport = new BeanContextChildSupport(this);
 	
+	private MainFrame mainFrame;
+	
 	public MenuBar(){
 		super();
-		
+	}
+
+	private void initMenuBar(){
 		JMenu file = new JMenu("File");
 		this.add(file);
 		
@@ -57,28 +63,28 @@ LightMapHandlerChild {
 		//Exit
 
 		
-		JMenu edit = new JMenu("Edit");
-		this.add(edit);
+		JMenu interact = new JMenu("Interact");
+		this.add(interact);
 		
-		JMenuItem zoomIn = new JCheckBoxMenuItem("Zoom In | +");
-		edit.add(zoomIn);
+		JMenuItem zoomIn = new JMenuItem("Zoom In | +");
+		interact.add(zoomIn);
 		
-		JMenuItem zoomOut = new JCheckBoxMenuItem("Zoom Out | -");
-		edit.add(zoomOut);
+		JMenuItem zoomOut = new JMenuItem("Zoom Out | -");
+		interact.add(zoomOut);
 		
 		JCheckBoxMenuItem centerOnShip = new JCheckBoxMenuItem("Center on Ship | c");
-		edit.add(centerOnShip);
+		interact.add(centerOnShip);
 		
 		JCheckBoxMenuItem autoFollow = new JCheckBoxMenuItem("Auto Follow");
-		edit.add(autoFollow);
+		interact.add(autoFollow);
 		//Zoom
 		//Center on ship
 		//Auto follow
 
 		
 		//Panels?
-		JMenu views = new JMenu("Views");
-		this.add(views);
+//		JMenu views = new JMenu("Views");
+//		this.add(views);
 		//Routes
 		//MSI
 		//AIS Targets
@@ -86,25 +92,45 @@ LightMapHandlerChild {
 		
 		JMenu layers = new JMenu("Layers");
 		this.add(layers);
-		//AIS Layer
-		//ENC Layer
-		//MSI Layer
-		//NoGo Layer
-		//Risk Layer
+		
+		JCheckBoxMenuItem aisLayer = new JCheckBoxMenuItem("AIS Layer");
+		layers.add(aisLayer);
+		
+		JCheckBoxMenuItem encLayer = new JCheckBoxMenuItem("ENC Layer");
+		layers.add(encLayer);
+		
+		JCheckBoxMenuItem msiLayer = new JCheckBoxMenuItem("MSI Layer");
+		layers.add(msiLayer);
+		
+		JCheckBoxMenuItem nogoLayer = new JCheckBoxMenuItem("NoGo Layer");
+		layers.add(nogoLayer);
+		
+		JCheckBoxMenuItem riskLayer = new JCheckBoxMenuItem("Risk Layer");
+		layers.add(riskLayer);
+
 
 		JMenu tools = new JMenu("Tools");
 		this.add(tools);
-		//New Route
-		//Dynamic NoGo
+		
+		JMenuItem newRoute = new JMenuItem("New Route | Ctrl n");
+		tools.add(newRoute);
+
+		JMenuItem dynamicNoGo = new JMenuItem("Dynamic NoGo");
+		tools.add(dynamicNoGo);
+
+		this.add(mainFrame.getDockableComponents().createDockableMenu());
 		
 		JMenu help = new JMenu("Help");
 		this.add(help);
-		//Help?
-		//DaMSA?
+
 		
+		
+		JMenuItem aboutEeINS = new JMenuItem("About the EeINS");
+		help.add(aboutEeINS);
 
+		
 	}
-
+	
 	protected WindowSupport windowSupport;
 
 	public void setWindowSupport(WindowSupport ws) {
@@ -151,7 +177,12 @@ LightMapHandlerChild {
 	}
 
 	public void findAndInit(Object obj) {
+		if (obj instanceof MainFrame) {
+			mainFrame = (MainFrame) obj;
+			initMenuBar();
+		}
 	}
+
 
 	public void findAndUndo(Object obj) {
 	}

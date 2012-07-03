@@ -2,13 +2,8 @@ package dk.frv.enav.ins.gui;
 
 
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.swing.BorderFactory;
-import javax.swing.Timer;
 import javax.swing.border.Border;
 
 import bibliothek.gui.dock.SplitDockStation;
