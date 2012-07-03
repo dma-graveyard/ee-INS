@@ -248,7 +248,7 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 			EeINS.getSettings().getEnavSettings().setMsiFilter(tglbtnMsiFilter.isSelected());
 			msiHandler.notifyUpdate();
 		}else if (e.getSource() == lockFrames) {
-			mainFrame.toggleFrameLock();
+			mainFrame.getDockableComponents().toggleFrameLock();
 		}
 	}
 	
