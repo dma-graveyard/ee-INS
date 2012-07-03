@@ -58,6 +58,7 @@ public class NogoLayer extends OMGraphicHandlerLayer {
 		if (completed) {
 			// Get polygons
 			List<NogoPolygon> polygons = nogoHandler.getPolygons();
+			
 
 			if (nogoHandler.getNogoFailed()) {
 				nogoHandler.setNogoFailed(false);

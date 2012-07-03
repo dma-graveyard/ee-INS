@@ -30,7 +30,6 @@
 package dk.frv.enav.ins.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -40,7 +39,6 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -120,7 +118,7 @@ public class MainFrame extends JFrame implements WindowListener {
 	// ArrayList<DefaultSingleCDockable>();
 
 	private static final String[] PANEL_NAMES = { "Chart", "Top", "Scale",
-			"Own Ship", "GPS", "Cursor", "Active Waypoints", "Logos" };
+			"Own Ship", "GPS", "Cursor", "Active Waypoint", "Logos" };
 	private Map<String, PanelDockable> dmap;
 
 	private CControl control;
@@ -179,13 +177,17 @@ public class MainFrame extends JFrame implements WindowListener {
 		
 		CContentArea contentArea = control.getContentArea();
 		pane.add(contentArea);
+		
 		control.addSingleDockableFactory(new PresetFilter<String>(PANEL_NAMES),
 				factory);
 
 		add(control.getContentArea());
 
+//		control.readXML(createLayout());
+		
 		//Load a layout
 		File layoutFile = new File(EeINS.class.getSimpleName() + ".xml");
+		System.out.println(layoutFile);
 		if (layoutFile.exists()) {
 			try {
 				control.readXML(layoutFile);
@@ -207,8 +209,6 @@ public class MainFrame extends JFrame implements WindowListener {
 						ThemeManager.BORDER_MODIFIER_TYPE, bridge);
 
 		toggleFrameLock();
-
-		
 		
 		bottomPanel.setPreferredSize(new Dimension(0, 25));
 		pane.add(bottomPanel, BorderLayout.PAGE_END);
@@ -391,7 +391,18 @@ public class MainFrame extends JFrame implements WindowListener {
 				if (m.isSelected()) {
 					System.out.println("Select again? " + m.getText());
 					PanelDockable dockable = dmap.get(name);
-					doOpen(dockable);
+					System.out.println(dockable);
+					if (dockable!=null){
+						System.out.println("not null!");
+						doOpen(dockable);	
+					}
+					else{
+						System.out.println("it is null");
+						PanelDockable newDockable = (PanelDockable) factory.createBackup(name);
+						dmap.put(newDockable.getName(), newDockable);
+	                    doOpen(newDockable);
+					}
+					
 				} else {
 					PanelDockable dockable = getMyDockableByName(name);
 					if (dockable != null)
@@ -418,7 +429,8 @@ public class MainFrame extends JFrame implements WindowListener {
 	private void doClose(PanelDockable dockable) {
 		// saveDockableLocation(dockable);
 		dockable.setVisible(false);
-		control.remove(dockable);
+		control.removeDockable(dockable);
+//		control.remove(dockable);
 	}
 
 	// If no layout file is present, create the basic layout!
@@ -488,6 +500,9 @@ public class MainFrame extends JFrame implements WindowListener {
 				LogoPanel logoPanel) {
 
 			super();
+			
+			System.out.println("xml file?");
+			
 			this.chartPanel = chartPanel;
 			this.topPanel = topPanel;
 			this.scalePanel = scalePanel;
@@ -500,37 +515,37 @@ public class MainFrame extends JFrame implements WindowListener {
 
 		@Override
 		public SingleCDockable createBackup(String id) {
-
-			if (id == "Chart") {
+			System.out.println(id);
+			if (id.equals("Chart")) {
 				return new PanelDockable(id, chartPanel);
 			}
 
-			if (id == "Top") {
+			if (id.equals("Top")) {
 				return new PanelDockable(id, topPanel);
 			}
-			if (id == "Scale") {
+			if (id.equals("Scale")) {
 				return new PanelDockable(id, scalePanel);
 			}
 
-			if (id == "Own Ship") {
+			if (id.equals("Own Ship")) {
 				return new PanelDockable(id, ownShipPanel);
 			}
 
-			if (id == "GPS") {
+			if (id.equals("GPS")) {
 				return new PanelDockable(id, gpsPanel);
 			}
 
-			if (id == "Cursor") {
+			if (id.equals("Cursor")) {
 				return new PanelDockable(id, cursorPanel);
 			}
-
-			if (id == "Active Waypoint") {
+			if (id.equals("Active Waypoint")) {
 				return new PanelDockable(id, activeWaypointPanel);
 			}
-			if (id == "Logos") {
+			if (id.equals("Logos")) {
 				return new PanelDockable(id, logoPanel);
 			}
 
+			System.out.println("Crap");
 			return new PanelDockable(id, new JPanel());
 
 		}
@@ -548,11 +563,6 @@ public class MainFrame extends JFrame implements WindowListener {
 			add(panel);
 
 		}
-
-		// @Override
-		// protected DefaultCommonDockable createCommonDockable() {
-		// return new MyCommonDockable(this, getClose());
-		// }
 
 		public String getName() {
 			return name;
