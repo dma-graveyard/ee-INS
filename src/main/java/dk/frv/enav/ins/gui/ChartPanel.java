@@ -60,7 +60,7 @@ import dk.frv.enav.ins.event.NavigationMouseMode;
 import dk.frv.enav.ins.event.RouteEditMouseMode;
 import dk.frv.enav.ins.gps.GpsData;
 import dk.frv.enav.ins.gps.IGpsDataListener;
-import dk.frv.enav.ins.gui.mainFramePanels.ActiveWaypointComponentPanel;
+import dk.frv.enav.ins.gui.ComponentPanels.ActiveWaypointComponentPanel;
 import dk.frv.enav.ins.gui.nogo.NogoDialog;
 import dk.frv.enav.ins.layers.EncLayerFactory;
 import dk.frv.enav.ins.layers.GeneralLayer;

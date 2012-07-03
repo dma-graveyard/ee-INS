@@ -1,5 +1,7 @@
 package dk.frv.enav.ins.gui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyVetoException;
 import java.beans.VetoableChangeListener;
 import java.beans.beancontext.BeanContext;
@@ -24,9 +26,8 @@ import com.bbn.openmap.gui.WindowSupport;
 
 import dk.frv.enav.ins.EeINS;
 
-public class MenuBar extends JMenuBar implements PropertyConsumer, BeanContextChild, BeanContextMembershipListener,
-LightMapHandlerChild {
-
+public class MenuBar extends JMenuBar implements PropertyConsumer,
+		BeanContextChild, BeanContextMembershipListener, LightMapHandlerChild {
 
 	private static final long serialVersionUID = 1L;
 
@@ -36,101 +37,153 @@ LightMapHandlerChild {
 
 	protected boolean isolated = false;
 
-	protected BeanContextChildSupport beanContextChildSupport = new BeanContextChildSupport(this);
-	
+	protected BeanContextChildSupport beanContextChildSupport = new BeanContextChildSupport(
+			this);
+
 	private MainFrame mainFrame;
-	
-	public MenuBar(){
+	private TopPanel topPanel;
+
+	public MenuBar() {
 		super();
 	}
 
-	private void initMenuBar(){
+	private void initMenuBar() {
 		JMenu file = new JMenu("File");
 		this.add(file);
-		
+
 		// Create a menu item
 		JMenuItem setup = new JMenuItem("Setup");
 		file.add(setup);
-		
-		JCheckBoxMenuItem lock = new JCheckBoxMenuItem("Lock/Unlock");
+
+		setup.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				SetupDialog setupDialog = new SetupDialog(mainFrame);
+				setupDialog.loadSettings(EeINS.getSettings());
+				setupDialog.setVisible(true);
+			}
+		});
+
+		JCheckBoxMenuItem lock = new JCheckBoxMenuItem("Unlock");
 		file.add(lock);
-		
+		lock.setSelected(true);
+
+		lock.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JCheckBoxMenuItem m = (JCheckBoxMenuItem) e.getSource();
+				mainFrame.getDockableComponents().toggleFrameLock();
+				if (m.isSelected()) {
+					m.setText("Unlock");
+					topPanel.getLockFrames().setSelected(true);
+				} else {
+					m.setText("Lock");
+					topPanel.getLockFrames().setSelected(false);
+				}
+			}
+		});
+
 		JMenuItem exit = new JMenuItem("Exit");
 		file.add(exit);
-		
-		//Setup
-		//Lock/Unlock
-		//Exit
 
-		
+		exit.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				mainFrame.windowClosing(null);
+			}
+		});
+
 		JMenu interact = new JMenu("Interact");
 		this.add(interact);
-		
-		JMenuItem zoomIn = new JMenuItem("Zoom In | +");
-		interact.add(zoomIn);
-		
-		JMenuItem zoomOut = new JMenuItem("Zoom Out | -");
-		interact.add(zoomOut);
-		
-		JCheckBoxMenuItem centerOnShip = new JCheckBoxMenuItem("Center on Ship | c");
-		interact.add(centerOnShip);
-		
-		JCheckBoxMenuItem autoFollow = new JCheckBoxMenuItem("Auto Follow");
-		interact.add(autoFollow);
-		//Zoom
-		//Center on ship
-		//Auto follow
 
-		
-		//Panels?
-//		JMenu views = new JMenu("Views");
-//		this.add(views);
-		//Routes
-		//MSI
-		//AIS Targets
-		
-		
+		JMenuItem zoomIn = new JMenuItem("Zoom in : Shortcut Numpad +");
+		interact.add(zoomIn);
+
+		zoomIn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				mainFrame.getChartPanel().doZoom(0.5f);
+			}
+		});
+
+		JMenuItem zoomOut = new JMenuItem("Zoom out : Shortcut Numpad -");
+		interact.add(zoomOut);
+
+		zoomOut.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				mainFrame.getChartPanel().doZoom(2f);
+			}
+		});
+
+		JCheckBoxMenuItem centerOnShip = new JCheckBoxMenuItem(
+				"Centre on ship : Shortcut C");
+		interact.add(centerOnShip);
+
+		centerOnShip.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				mainFrame.getChartPanel().centreOnShip();
+			}
+		});
+
+		JCheckBoxMenuItem autoFollow = new JCheckBoxMenuItem(
+				"Auto follow own ship");
+		interact.add(autoFollow);
+
+		autoFollow.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				topPanel.getAutoFollowBtn().setSelected(
+						!topPanel.getAutoFollowBtn().isSelected());
+				EeINS.getSettings()
+						.getNavSettings()
+						.setAutoFollow(topPanel.getAutoFollowBtn().isSelected());
+				if (topPanel.getAutoFollowBtn().isSelected()) {
+					mainFrame.getChartPanel().autoFollow();
+				}
+			}
+		});
+
 		JMenu layers = new JMenu("Layers");
 		this.add(layers);
-		
+
 		JCheckBoxMenuItem aisLayer = new JCheckBoxMenuItem("AIS Layer");
 		layers.add(aisLayer);
-		
+
 		JCheckBoxMenuItem encLayer = new JCheckBoxMenuItem("ENC Layer");
 		layers.add(encLayer);
-		
+
 		JCheckBoxMenuItem msiLayer = new JCheckBoxMenuItem("MSI Layer");
 		layers.add(msiLayer);
-		
+
 		JCheckBoxMenuItem nogoLayer = new JCheckBoxMenuItem("NoGo Layer");
 		layers.add(nogoLayer);
-		
+
 		JCheckBoxMenuItem riskLayer = new JCheckBoxMenuItem("Risk Layer");
 		layers.add(riskLayer);
 
-
 		JMenu tools = new JMenu("Tools");
 		this.add(tools);
-		
+
 		JMenuItem newRoute = new JMenuItem("New Route | Ctrl n");
 		tools.add(newRoute);
 
 		JMenuItem dynamicNoGo = new JMenuItem("Dynamic NoGo");
 		tools.add(dynamicNoGo);
 
+		JMenuItem msiFilter = new JMenuItem("MSI Filtering");
+		tools.add(msiFilter);
+
 		this.add(mainFrame.getDockableComponents().createDockableMenu());
-		
+
 		JMenu help = new JMenu("Help");
 		this.add(help);
 
-		
-		
 		JMenuItem aboutEeINS = new JMenuItem("About the EeINS");
 		help.add(aboutEeINS);
-
-		
 	}
-	
+
 	protected WindowSupport windowSupport;
 
 	public void setWindowSupport(WindowSupport ws) {
@@ -177,12 +230,15 @@ LightMapHandlerChild {
 	}
 
 	public void findAndInit(Object obj) {
+		if (obj instanceof TopPanel) {
+			topPanel = (TopPanel) obj;
+		}
+
 		if (obj instanceof MainFrame) {
 			mainFrame = (MainFrame) obj;
 			initMenuBar();
 		}
 	}
-
 
 	public void findAndUndo(Object obj) {
 	}
@@ -221,15 +277,19 @@ LightMapHandlerChild {
 		}
 	}
 
-	public void addVetoableChangeListener(String propertyName, VetoableChangeListener in_vcl) {
+	public void addVetoableChangeListener(String propertyName,
+			VetoableChangeListener in_vcl) {
 		beanContextChildSupport.addVetoableChangeListener(propertyName, in_vcl);
 	}
 
-	public void removeVetoableChangeListener(String propertyName, VetoableChangeListener in_vcl) {
-		beanContextChildSupport.removeVetoableChangeListener(propertyName, in_vcl);
+	public void removeVetoableChangeListener(String propertyName,
+			VetoableChangeListener in_vcl) {
+		beanContextChildSupport.removeVetoableChangeListener(propertyName,
+				in_vcl);
 	}
 
-	public void fireVetoableChange(String name, Object oldValue, Object newValue) throws PropertyVetoException {
+	public void fireVetoableChange(String name, Object oldValue, Object newValue)
+			throws PropertyVetoException {
 		beanContextChildSupport.fireVetoableChange(name, oldValue, newValue);
 	}
 

@@ -29,17 +29,18 @@ import bibliothek.gui.dock.util.Priority;
 import bibliothek.util.filter.PresetFilter;
 import bibliothek.util.xml.XElement;
 import dk.frv.enav.ins.EeINS;
-import dk.frv.enav.ins.gui.mainFramePanels.ActiveWaypointComponentPanel;
-import dk.frv.enav.ins.gui.mainFramePanels.CursorComponentPanel;
-import dk.frv.enav.ins.gui.mainFramePanels.GpsComponentPanel;
-import dk.frv.enav.ins.gui.mainFramePanels.LogoPanel;
-import dk.frv.enav.ins.gui.mainFramePanels.OwnShipComponentPanel;
-import dk.frv.enav.ins.gui.mainFramePanels.ScaleComponentPanel;
+import dk.frv.enav.ins.gui.ComponentPanels.ActiveWaypointComponentPanel;
+import dk.frv.enav.ins.gui.ComponentPanels.CursorComponentPanel;
+import dk.frv.enav.ins.gui.ComponentPanels.GpsComponentPanel;
+import dk.frv.enav.ins.gui.ComponentPanels.MSIComponentPanel;
+import dk.frv.enav.ins.gui.ComponentPanels.OwnShipComponentPanel;
+import dk.frv.enav.ins.gui.ComponentPanels.ScaleComponentPanel;
+import dk.frv.enav.ins.gui.Panels.LogoPanel;
 
 public class DockableComponents {
 
 	private static final String[] PANEL_NAMES = { "Chart", "Top", "Scale",
-			"Own Ship", "GPS", "Cursor", "Active Waypoint", "Logos" };
+			"Own Ship", "GPS", "Cursor", "Active Waypoint", "Logos", "MSI" };
 	private Map<String, PanelDockable> dmap;
 	private CControl control;
 	private DockableFactory factory;
@@ -53,6 +54,7 @@ public class DockableComponents {
 	private CursorComponentPanel cursorPanel;
 	private ActiveWaypointComponentPanel activeWaypointPanel;
 	private LogoPanel logoPanel;
+	private MSIComponentPanel msiPanel;
 
 	private boolean locked = false;
 
@@ -69,10 +71,11 @@ public class DockableComponents {
 		cursorPanel = mainFrame.getCursorPanel();
 		activeWaypointPanel = mainFrame.getActiveWaypointPanel();
 		logoPanel = mainFrame.getLogoPanel();
+		msiPanel = mainFrame.getMsiComponentPanel();
 
 		factory = new DockableFactory(chartPanel, topPanel, scalePanel,
 				ownShipPanel, gpsPanel, cursorPanel, activeWaypointPanel,
-				logoPanel);
+				logoPanel, msiPanel);
 
 		CContentArea contentArea = control.getContentArea();
 		mainFrame.getContentPane().add(contentArea);
@@ -241,6 +244,7 @@ public class DockableComponents {
 		PanelDockable activeWaypointDock = new PanelDockable("Active Waypoint",
 				activeWaypointPanel);
 		PanelDockable logoDock = new PanelDockable("Logos", logoPanel);
+		PanelDockable msiDock = new PanelDockable("MSI", msiPanel);
 
 		CGrid grid = new CGrid(aControl);
 		grid.add(0, 0, 100, 3, topDock);
@@ -250,7 +254,8 @@ public class DockableComponents {
 		grid.add(90, 23, 10, 10, gpsDock);
 		grid.add(90, 33, 10, 10, cursorDock);
 		grid.add(90, 43, 10, 10, activeWaypointDock);
-		grid.add(90, 53, 10, 47, logoDock);
+		grid.add(90, 53, 10, 10, msiDock);
+		grid.add(90, 63, 10, 37, logoDock);
 
 		aControl.getContentArea().setMinimumAreaSize(new Dimension(0, 0));
 
@@ -274,13 +279,14 @@ public class DockableComponents {
 		CursorComponentPanel cursorPanel;
 		ActiveWaypointComponentPanel activeWaypointPanel;
 		LogoPanel logoPanel;
+		MSIComponentPanel msiPanel;
 
 		public DockableFactory(ChartPanel chartPanel, TopPanel topPanel,
 				ScaleComponentPanel scalePanel,
 				OwnShipComponentPanel ownShipPanel, GpsComponentPanel gpsPanel,
 				CursorComponentPanel cursorPanel,
 				ActiveWaypointComponentPanel activeWaypointPanel,
-				LogoPanel logoPanel) {
+				LogoPanel logoPanel, MSIComponentPanel msiPanel) {
 
 			super();
 
@@ -292,6 +298,7 @@ public class DockableComponents {
 			this.cursorPanel = cursorPanel;
 			this.activeWaypointPanel = activeWaypointPanel;
 			this.logoPanel = logoPanel;
+			this.msiPanel = msiPanel;
 		}
 
 		@Override
@@ -323,6 +330,9 @@ public class DockableComponents {
 			}
 			if (id.equals("Logos")) {
 				return new PanelDockable(id, logoPanel);
+			}
+			if (id.equals("MSI")) {
+				return new PanelDockable(id, msiPanel);
 			}
 
 			return new PanelDockable(id, new JPanel());

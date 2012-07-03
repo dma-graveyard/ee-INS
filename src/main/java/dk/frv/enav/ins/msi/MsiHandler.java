@@ -110,6 +110,42 @@ public class MsiHandler extends MapHandlerChild implements Runnable, IRoutesUpda
 		return msiStore.getMessages().values();
 	}
 	
+	/**
+	 * Get the amount of unacknowledged msi messages
+	 * 
+	 * @return
+	 */
+	public int getUnAcknowledgedMSI() {
+		List<MsiMessageExtended> messageList = getMessageList();
+		int counter = 0;
+
+		for (int i = 0; i < messageList.size(); i++) {
+			if (messageList.get(i).acknowledged == false) {
+				counter++;
+			}
+		}
+
+		return counter;
+	}
+	
+	/**
+	 * Get the amount of unacknowledged filtered msi messages
+	 * 
+	 * @return
+	 */
+	public int getUnAcknowledgedFilteredMSI() {
+		List<MsiMessageExtended> messageList = getFilteredMessageList();
+		int counter = 0;
+
+		for (int i = 0; i < messageList.size(); i++) {
+			if (messageList.get(i).acknowledged == false) {
+				counter++;
+			}
+		}
+
+		return counter;
+	}
+	
 	public synchronized List<MsiMessageExtended> getFilteredMessageList() {
 		List<MsiMessageExtended> list = new ArrayList<MsiMessageExtended>();
 		for(Integer msgId : msiStore.getMessages().keySet()) {

@@ -45,13 +45,14 @@ import org.apache.log4j.Logger;
 import com.bbn.openmap.MapHandler;
 
 import dk.frv.enav.ins.EeINS;
+import dk.frv.enav.ins.gui.ComponentPanels.ActiveWaypointComponentPanel;
+import dk.frv.enav.ins.gui.ComponentPanels.CursorComponentPanel;
+import dk.frv.enav.ins.gui.ComponentPanels.GpsComponentPanel;
+import dk.frv.enav.ins.gui.ComponentPanels.MSIComponentPanel;
+import dk.frv.enav.ins.gui.ComponentPanels.OwnShipComponentPanel;
+import dk.frv.enav.ins.gui.ComponentPanels.ScaleComponentPanel;
+import dk.frv.enav.ins.gui.Panels.LogoPanel;
 import dk.frv.enav.ins.gui.ais.AisDialog;
-import dk.frv.enav.ins.gui.mainFramePanels.ActiveWaypointComponentPanel;
-import dk.frv.enav.ins.gui.mainFramePanels.CursorComponentPanel;
-import dk.frv.enav.ins.gui.mainFramePanels.GpsComponentPanel;
-import dk.frv.enav.ins.gui.mainFramePanels.LogoPanel;
-import dk.frv.enav.ins.gui.mainFramePanels.OwnShipComponentPanel;
-import dk.frv.enav.ins.gui.mainFramePanels.ScaleComponentPanel;
 import dk.frv.enav.ins.gui.msi.MsiDialog;
 import dk.frv.enav.ins.gui.route.RouteSuggestionDialog;
 import dk.frv.enav.ins.settings.GuiSettings;
@@ -80,7 +81,9 @@ public class MainFrame extends JFrame implements WindowListener {
 	private CursorComponentPanel cursorPanel;
 	private ActiveWaypointComponentPanel activeWaypointPanel;
 	private LogoPanel logoPanel;
-
+	private MSIComponentPanel msiComponentPanel;
+	
+	
 	private JPanel glassPanel;
 	private MsiDialog msiDialog;
 	private AisDialog aisDialog;
@@ -124,6 +127,7 @@ public class MainFrame extends JFrame implements WindowListener {
 		activeWaypointPanel = new ActiveWaypointComponentPanel();
 		logoPanel = new LogoPanel();
 		chartPanel = new ChartPanel(activeWaypointPanel);
+		msiComponentPanel = new MSIComponentPanel();
 
 		// Unmovable panels
 		bottomPanel = new BottomPanel();
@@ -154,6 +158,7 @@ public class MainFrame extends JFrame implements WindowListener {
 		mapHandler.add(gpsPanel);
 		mapHandler.add(cursorPanel);
 		mapHandler.add(activeWaypointPanel);
+		mapHandler.add(msiComponentPanel);
 
 		// Create top menubar
 		MenuBar menuBar = new MenuBar();
@@ -280,6 +285,10 @@ public class MainFrame extends JFrame implements WindowListener {
 
 	public DockableComponents getDockableComponents() {
 		return dockableComponents;
+	}
+
+	public MSIComponentPanel getMsiComponentPanel() {
+		return msiComponentPanel;
 	}
 
 	
