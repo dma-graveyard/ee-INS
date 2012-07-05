@@ -34,19 +34,23 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JSeparator;
-import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 
 import com.bbn.openmap.MouseDelegator;
 import com.bbn.openmap.gui.OMComponentPanel;
@@ -64,14 +68,16 @@ import dk.frv.enav.ins.nogo.NogoHandler;
 /**
  * The top buttons panel
  */
-public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUpdateListener, MouseListener {
+public class TopPanel extends OMComponentPanel implements ActionListener,
+		IMsiUpdateListener, MouseListener {
 
 	private static final long serialVersionUID = 1L;
 
 	private ButtonLabel zoomInBtn = new ButtonLabel("Zoom In");
 	private ButtonLabel zoomOutBtn = new ButtonLabel("Zoom Out");
 	private ButtonLabel centreBtn = new ButtonLabel("Centre");
-	private ToggleButtonLabel autoFollowBtn = new ToggleButtonLabel("Auto follow");
+	private ToggleButtonLabel autoFollowBtn = new ToggleButtonLabel(
+			"Auto follow");
 	private ButtonLabel setupBtn = new ButtonLabel("Setup");
 	private ToggleButtonLabel routeBtn = new ToggleButtonLabel("R");
 	private ButtonLabel routeManagerBtn = new ButtonLabel("Routes");
@@ -82,31 +88,30 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 	private ToggleButtonLabel riskBtn = new ToggleButtonLabel("Risk");
 	private ToggleButtonLabel encBtn = new ToggleButtonLabel("ENC");
 	private ToggleButtonLabel newRouteBtn = new ToggleButtonLabel("New route");
-	
-	private ToggleButtonLabel lockFrames = new ToggleButtonLabel("Lock/Unlock UI");
-	
+
+	private ToggleButtonLabel lockFrames = new ToggleButtonLabel(
+			"Lock/Unlock UI");
+
 	private MainFrame mainFrame;
 	private MsiDialog msiDialog = null;
 	private AisDialog aisDialog = null;
-	
+
 	private MouseDelegator mouseDelegator;
-	private final ToggleButtonLabel tglbtnMsiFilter = new ToggleButtonLabel("MSI filter");
+	private final ToggleButtonLabel tglbtnMsiFilter = new ToggleButtonLabel(
+			"MSI filter");
 	private MsiHandler msiHandler;
 	private NogoHandler nogoHandler;
 	private BlinkingLabel msiIcon;
 	private int notifyMsgId = -1;
 	
+	private static int iconWidth = 16;
+	private static int iconHeight = 16;
 	
-	
-	public static Font defaultFont = new Font("Arial", Font.PLAIN, 11);
-	public static Color textColor = new Color(237, 237, 237);
-
-
 	public TopPanel() {
 		super();
-		
+
 		setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-		
+
 		zoomInBtn.setToolTipText("Zoom in : Shortcut Numpad +");
 		zoomOutBtn.setToolTipText("Zoom out : Shortcut Numpad -");
 		centreBtn.setToolTipText("Centre on ship : Shortcut C");
@@ -116,17 +121,20 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 		routeBtn.setToolTipText("New route");
 		routeBtn.setVisible(false);
 		newRouteBtn.setToolTipText("Add a new route : Shortcut Ctrl N");
-		routeManagerBtn.setToolTipText("Routes Manager : Shortcut Ctrl R");		
-		msiButton.setToolTipText("Maritime Safety Information : Shortcut Ctrl M");
+		routeManagerBtn.setToolTipText("Routes Manager : Shortcut Ctrl R");
+		msiButton
+				.setToolTipText("Maritime Safety Information : Shortcut Ctrl M");
 		aisButton.setToolTipText("Show nearby vessels : Shortcut Ctrl A");
 		nogoButton.setToolTipText("Show/hide NoGo area");
 		aisBtn.setToolTipText("Show/hide AIS targets");
 		riskBtn.setToolTipText("Show/hide risk info");
 		encBtn.setToolTipText("Show/hide ENC");
-		tglbtnMsiFilter.setToolTipText("Enable/disable MSI message filtering based on position and routes");
-		
+		tglbtnMsiFilter
+				.setToolTipText("Enable/disable MSI message filtering based on position and routes");
+
 		// Temporary
-		boolean showRiskAndNogo = !EeINS.getSettings().getGuiSettings().isRiskNogoDisabled();
+		boolean showRiskAndNogo = !EeINS.getSettings().getGuiSettings()
+				.isRiskNogoDisabled();
 
 		add(zoomInBtn);
 		add(zoomOutBtn);
@@ -139,24 +147,26 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 		add(msiButton);
 		add(aisButton);
 		add(new JSeparator());
-		add(aisBtn);		
-		add(encBtn);		
+		add(aisBtn);
+		add(encBtn);
 		add(tglbtnMsiFilter);
-		if (showRiskAndNogo) 
+		if (showRiskAndNogo)
 			add(riskBtn);
 		if (showRiskAndNogo)
-			add(nogoButton);	
-		
+			add(nogoButton);
+
 		add(lockFrames);
-		
+
 		Component horizontalStrut = Box.createHorizontalStrut(5);
 		JSeparator separator = new JSeparator();
 		separator.setOrientation(SwingConstants.VERTICAL);
 		horizontalStrut = Box.createHorizontalStrut(5);
 
 		ImageIcon[] msiAnim = new ImageIcon[2];
-		msiAnim[0] = new ImageIcon(EeINS.class.getResource("/images/msi/msi_symbol_64x20.png"));
-		msiAnim[1] = new ImageIcon(EeINS.class.getResource("/images/msi/blank64x20.png"));
+		msiAnim[0] = new ImageIcon(
+				EeINS.class.getResource("/images/msi/msi_symbol_64x20.png"));
+		msiAnim[1] = new ImageIcon(
+				EeINS.class.getResource("/images/msi/blank64x20.png"));
 		msiIcon = new BlinkingLabel(400, msiAnim);
 
 		add(horizontalStrut);
@@ -167,7 +177,7 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 
 		msiIcon.addMouseListener(this);
 		zoomInBtn.addMouseListener(this);
-		
+
 		zoomOutBtn.addMouseListener(this);
 		centreBtn.addMouseListener(this);
 		autoFollowBtn.addMouseListener(this);
@@ -183,20 +193,21 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 		encBtn.addMouseListener(this);
 		tglbtnMsiFilter.addMouseListener(this);
 		lockFrames.addMouseListener(this);
+
 		
 		lockFrames.setSelected(true);
 		nogoButton.setSelected(true);
-		
-		
-		
+
 		updateButtons();
 	}
 
 	public void updateButtons() {
-		autoFollowBtn.setSelected(EeINS.getSettings().getNavSettings().isAutoFollow());
+		autoFollowBtn.setSelected(EeINS.getSettings().getNavSettings()
+				.isAutoFollow());
 		aisBtn.setSelected(EeINS.getSettings().getAisSettings().isVisible());
 		encBtn.setSelected(EeINS.getSettings().getMapSettings().isEncVisible());
-		tglbtnMsiFilter.setSelected(EeINS.getSettings().getEnavSettings().isMsiFilter());
+		tglbtnMsiFilter.setSelected(EeINS.getSettings().getEnavSettings()
+				.isMsiFilter());
 	}
 
 	public void disableAutoFollow() {
@@ -208,22 +219,21 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
+
 	}
-	
-	public void newRoute(){
-		if(mouseDelegator.getActiveMouseModeID() == NavigationMouseMode.modeID){
+
+	public void newRoute() {
+		if (mouseDelegator.getActiveMouseModeID() == NavigationMouseMode.modeID) {
 			mainFrame.getChartPanel().editMode(true);
 		} else {
 			mainFrame.getChartPanel().editMode(false);
 		}
 	}
 
-	public void activateNewRouteButton(){
-		newRouteBtn.doClick();
+	public void activateNewRouteButton() {
+		newRoute();
 	}
-	
-	
+
 	@Override
 	public void findAndInit(Object obj) {
 		if (obj instanceof MainFrame) {
@@ -242,8 +252,8 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 			aisDialog = (AisDialog) obj;
 		}
 		if (obj instanceof NogoHandler) {
-			nogoHandler = (NogoHandler)obj;
-		}		
+			nogoHandler = (NogoHandler) obj;
+		}
 	}
 
 	public MsiDialog getMsiDialog() {
@@ -271,17 +281,20 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 			String encText = "";
 
 			if (EeINS.getSettings().getEnavSettings().isMsiFilter()) {
-				int firstUnAckFiltered = msiHandler.getFirstNonAcknowledgedFiltered();
+				int firstUnAckFiltered = msiHandler
+						.getFirstNonAcknowledgedFiltered();
 				// There are no MSI to acknowledge
 				if (firstUnAckFiltered != -1) {
-					MsiMessageExtended msiMessageFiltered = msiHandler.getFilteredMessageList().get(firstUnAckFiltered);
+					MsiMessageExtended msiMessageFiltered = msiHandler
+							.getFilteredMessageList().get(firstUnAckFiltered);
 					notifyMsgId = msiMessageFiltered.msiMessage.getMessageId();
 					encText = msiMessageFiltered.msiMessage.getEncText();
 				}
 
 			} else {
 				int firstUnAck = msiHandler.getFirstNonAcknowledged();
-				MsiMessageExtended msiMessage = msiHandler.getMessageList().get(firstUnAck);
+				MsiMessageExtended msiMessage = msiHandler.getMessageList()
+						.get(firstUnAck);
 				notifyMsgId = msiMessage.msiMessage.getMessageId();
 				encText = msiMessage.msiMessage.getEncText();
 			}
@@ -296,66 +309,7 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		
-		System.out.println("mouseEvent");
-		
-		if (e.getSource() == msiIcon) {
-			if (notifyMsgId > 0) {
-				msiDialog.showMessage(notifyMsgId);
-			} else {
-				msiDialog.setVisible(true);
-			}
-		} else if (e.getSource() == autoFollowBtn) {
-			EeINS.getSettings().getNavSettings().setAutoFollow(autoFollowBtn.isSelected());
-			if (autoFollowBtn.isSelected()) {
-				mainFrame.getChartPanel().autoFollow();
-			}
-		} else if (e.getSource() == centreBtn) {
-			mainFrame.getChartPanel().centreOnShip();
-		} else if (e.getSource() == zoomInBtn) {
-			mainFrame.getChartPanel().doZoom(0.5f);
-		} else if (e.getSource() == zoomOutBtn) {
-			mainFrame.getChartPanel().doZoom(2f);
-		} else if (e.getSource() == aisBtn) {
-			EeINS.getSettings().getAisSettings().setVisible(aisBtn.isSelected());
-			mainFrame.getChartPanel().aisVisible(aisBtn.isSelected());
-		} else if (e.getSource() == riskBtn) {
-			EeINS.getRiskHandler().toggleRiskHandler(riskBtn.isSelected());
-		} else if (e.getSource() == encBtn) {
-			EeINS.getSettings().getMapSettings().setEncVisible(encBtn.isSelected());
-			mainFrame.getChartPanel().encVisible(encBtn.isSelected());
-		} else if (e.getSource() == routeManagerBtn) {
-			RouteManagerDialog routeManagerDialog = new RouteManagerDialog(mainFrame);
-			routeManagerDialog.setVisible(true);
-		} else if (e.getSource() == setupBtn) {
-			SetupDialog setupDialog = new SetupDialog(mainFrame);
-			setupDialog.loadSettings(EeINS.getSettings());
-			setupDialog.setVisible(true);
-		} else if (e.getSource() == msiButton) {
-			msiDialog.setVisible(true);
-		} else if (e.getSource() == aisButton) {
-			aisDialog.setVisible(true);
-			aisDialog.setSelection(-1, true);
-		} else if (e.getSource() == newRouteBtn) {
-			if (mouseDelegator.getActiveMouseModeID() == NavigationMouseMode.modeID) {
-				mainFrame.getChartPanel().editMode(true);
-			} else {
-				mainFrame.getChartPanel().editMode(false);
-			}
-		} else if (e.getSource() == nogoButton) {	
-			System.out.println("ello");
-			nogoHandler.toggleLayer();
-		} else if (e.getSource() == newRouteBtn) {
-			newRoute();
-		} else if (e.getSource() == tglbtnMsiFilter) {
-			EeINS.getSettings().getEnavSettings().setMsiFilter(tglbtnMsiFilter.isSelected());
-			msiHandler.notifyUpdate();
-		}else if (e.getSource() == lockFrames) {
-			mainFrame.getDockableComponents().toggleFrameLock();
-		}
-		
-		
-		
+		// TODO Auto-generated method stub
 	}
 
 	@Override
@@ -377,8 +331,65 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 	}
 
 	@Override
-	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
+	public void mouseReleased(MouseEvent e) {
+		if (e.getSource() == msiIcon) {
+			if (notifyMsgId > 0) {
+				msiDialog.showMessage(notifyMsgId);
+			} else {
+				msiDialog.setVisible(true);
+			}
+		} else if (e.getSource() == autoFollowBtn) {
+			EeINS.getSettings().getNavSettings()
+					.setAutoFollow(autoFollowBtn.isSelected());
+			if (autoFollowBtn.isSelected()) {
+				mainFrame.getChartPanel().autoFollow();
+			}
+		} else if (e.getSource() == centreBtn) {
+			mainFrame.getChartPanel().centreOnShip();
+		} else if (e.getSource() == zoomInBtn) {
+			mainFrame.getChartPanel().doZoom(0.5f);
+		} else if (e.getSource() == zoomOutBtn) {
+			mainFrame.getChartPanel().doZoom(2f);
+		} else if (e.getSource() == aisBtn) {
+			EeINS.getSettings().getAisSettings()
+					.setVisible(aisBtn.isSelected());
+			mainFrame.getChartPanel().aisVisible(aisBtn.isSelected());
+		} else if (e.getSource() == riskBtn) {
+			EeINS.getRiskHandler().toggleRiskHandler(riskBtn.isSelected());
+		} else if (e.getSource() == encBtn) {
+			EeINS.getSettings().getMapSettings()
+					.setEncVisible(encBtn.isSelected());
+			mainFrame.getChartPanel().encVisible(encBtn.isSelected());
+		} else if (e.getSource() == routeManagerBtn) {
+			RouteManagerDialog routeManagerDialog = new RouteManagerDialog(
+					mainFrame);
+			routeManagerDialog.setVisible(true);
+		} else if (e.getSource() == setupBtn) {
+			SetupDialog setupDialog = new SetupDialog(mainFrame);
+			setupDialog.loadSettings(EeINS.getSettings());
+			setupDialog.setVisible(true);
+		} else if (e.getSource() == msiButton) {
+			msiDialog.setVisible(true);
+		} else if (e.getSource() == aisButton) {
+			aisDialog.setVisible(true);
+			aisDialog.setSelection(-1, true);
+		} else if (e.getSource() == newRouteBtn) {
+			if (mouseDelegator.getActiveMouseModeID() == NavigationMouseMode.modeID) {
+				mainFrame.getChartPanel().editMode(true);
+			} else {
+				mainFrame.getChartPanel().editMode(false);
+			}
+		} else if (e.getSource() == nogoButton) {
+			nogoHandler.toggleLayer();
+		} else if (e.getSource() == newRouteBtn) {
+			newRoute();
+		} else if (e.getSource() == tglbtnMsiFilter) {
+			EeINS.getSettings().getEnavSettings()
+					.setMsiFilter(tglbtnMsiFilter.isSelected());
+			msiHandler.notifyUpdate();
+		} else if (e.getSource() == lockFrames) {
+			mainFrame.getDockableComponents().toggleFrameLock();
+		}
 
 	}
 
@@ -414,31 +425,23 @@ public class TopPanel extends OMComponentPanel implements ActionListener, IMsiUp
 		return autoFollowBtn;
 	}
 
-	
-
-	
-	public static void styleButton(final JLabel label){
-
-		label.setPreferredSize(new Dimension(80, 25));
-//		generalSettings.setSize(new Dimension(76, 30));
-		label.setFont(defaultFont);
-		label.setForeground(textColor);
-		//label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
-		label.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, new Color(45, 45, 45)));
-		label.setBackground(new Color(128, 128, 128));
-		label.setOpaque(true);
-		
-		label.setHorizontalAlignment(JLabel.CENTER);
-
-		label.addMouseListener(new MouseAdapter() {  
-		    public void mousePressed(MouseEvent e) {
-		    	label.setBackground(new Color(168, 168, 168));
-		    }
-			
-		    public void mouseReleased(MouseEvent e) {
-		    	label.setBackground(new Color(128, 128, 128));
-		    }
-		});
+	public void zoomIn() {
+		mainFrame.getChartPanel().doZoom(0.5f);
 	}
 	
+	/**
+	 * Function for resizing the icons for the toolbar
+	 * 
+	 * @param imgpath
+	 *            path of the image
+	 * @return newimage the newly created and resized image
+	 */
+	public ImageIcon toolbarIcon(String imgpath) {
+		ImageIcon icon = new ImageIcon(imgpath);
+		Image img = icon.getImage();
+		Image newimg = img.getScaledInstance(iconWidth, iconHeight, java.awt.Image.SCALE_DEFAULT);
+		ImageIcon newImage = new ImageIcon(newimg);
+		return newImage;
+	}
+
 }
