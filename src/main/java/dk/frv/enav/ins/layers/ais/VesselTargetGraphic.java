@@ -50,7 +50,6 @@ import dk.frv.enav.common.xml.risk.response.Risk;
 import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.ais.AisIntendedRoute;
 import dk.frv.enav.ins.ais.AisTarget;
-import dk.frv.enav.ins.ais.AtoNTarget;
 import dk.frv.enav.ins.ais.VesselPositionData;
 import dk.frv.enav.ins.ais.VesselStaticData;
 import dk.frv.enav.ins.ais.VesselTarget;

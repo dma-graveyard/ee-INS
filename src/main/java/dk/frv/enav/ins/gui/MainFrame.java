@@ -46,6 +46,7 @@ import com.bbn.openmap.MapHandler;
 
 import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.gui.ComponentPanels.ActiveWaypointComponentPanel;
+import dk.frv.enav.ins.gui.ComponentPanels.AisComponentPanel;
 import dk.frv.enav.ins.gui.ComponentPanels.CursorComponentPanel;
 import dk.frv.enav.ins.gui.ComponentPanels.GpsComponentPanel;
 import dk.frv.enav.ins.gui.ComponentPanels.MSIComponentPanel;
@@ -82,6 +83,7 @@ public class MainFrame extends JFrame implements WindowListener {
 	private ActiveWaypointComponentPanel activeWaypointPanel;
 	private LogoPanel logoPanel;
 	private MSIComponentPanel msiComponentPanel;
+	private AisComponentPanel aisComponentPanel;
 	
 	
 	private JPanel glassPanel;
@@ -129,6 +131,7 @@ public class MainFrame extends JFrame implements WindowListener {
 		logoPanel = new LogoPanel();
 		chartPanel = new ChartPanel(activeWaypointPanel);
 		msiComponentPanel = new MSIComponentPanel();
+		aisComponentPanel = new AisComponentPanel();
 
 		// Unmovable panels
 		bottomPanel = new BottomPanel();
@@ -160,6 +163,7 @@ public class MainFrame extends JFrame implements WindowListener {
 		mapHandler.add(cursorPanel);
 		mapHandler.add(activeWaypointPanel);
 		mapHandler.add(msiComponentPanel);
+		mapHandler.add(aisComponentPanel);
 
 		// Create top menubar
 		menuBar = new EeINSMenuBar();
@@ -296,6 +300,11 @@ public class MainFrame extends JFrame implements WindowListener {
 		return menuBar;
 	}
 
+	public AisComponentPanel getAisComponentPanel() {
+		return aisComponentPanel;
+	}
+
+	
 	
 	
 	
