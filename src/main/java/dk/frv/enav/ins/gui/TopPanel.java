@@ -29,28 +29,17 @@
  */
 package dk.frv.enav.ins.gui;
 
-import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.Box;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JSeparator;
-import javax.swing.SwingConstants;
-import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
 
 import com.bbn.openmap.MouseDelegator;
 import com.bbn.openmap.gui.OMComponentPanel;
@@ -60,49 +49,48 @@ import dk.frv.enav.ins.event.NavigationMouseMode;
 import dk.frv.enav.ins.gui.ais.AisDialog;
 import dk.frv.enav.ins.gui.msi.MsiDialog;
 import dk.frv.enav.ins.gui.route.RouteManagerDialog;
-import dk.frv.enav.ins.msi.IMsiUpdateListener;
-import dk.frv.enav.ins.msi.MsiHandler;
-import dk.frv.enav.ins.msi.MsiHandler.MsiMessageExtended;
-import dk.frv.enav.ins.nogo.NogoHandler;
 
 /**
  * The top buttons panel
  */
 public class TopPanel extends OMComponentPanel implements ActionListener,
-		IMsiUpdateListener, MouseListener {
+		MouseListener {
 
 	private static final long serialVersionUID = 1L;
 
-	private ButtonLabel zoomInBtn = new ButtonLabel("Zoom In");
-	private ButtonLabel zoomOutBtn = new ButtonLabel("Zoom Out");
-	private ButtonLabel centreBtn = new ButtonLabel("Centre");
-	private ToggleButtonLabel autoFollowBtn = new ToggleButtonLabel(
-			"Auto follow");
-	private ButtonLabel setupBtn = new ButtonLabel("Setup");
-	private ToggleButtonLabel routeBtn = new ToggleButtonLabel("R");
-	private ButtonLabel routeManagerBtn = new ButtonLabel("Routes");
-	private ButtonLabel msiButton = new ButtonLabel("MSI");
-	private ButtonLabel aisButton = new ButtonLabel("AIS Targets");
-	private ToggleButtonLabel nogoButton = new ToggleButtonLabel("Toggle NoGo");
-	private ToggleButtonLabel aisBtn = new ToggleButtonLabel("AIS");
-	private ToggleButtonLabel riskBtn = new ToggleButtonLabel("Risk");
-	private ToggleButtonLabel encBtn = new ToggleButtonLabel("ENC");
-	private ToggleButtonLabel newRouteBtn = new ToggleButtonLabel("New route");
+	private ButtonLabel zoomInBtn = new ButtonLabel(toolbarIcon("images/toolbar/magnifier-zoom-in.png"));
+	private ButtonLabel zoomOutBtn = new ButtonLabel(toolbarIcon("images/toolbar/magnifier-zoom-out.png"));
+	private ButtonLabel centreBtn = new ButtonLabel(toolbarIcon("images/toolbar/arrow-in.png"));
+	private ToggleButtonLabel autoFollowBtn = new ToggleButtonLabel(toolbarIcon("images/toolbar/arrow-curve-000-double.png"));
+	private ButtonLabel setupBtn = new ButtonLabel(toolbarIcon("images/toolbar/wrench.png"));
+//	private ToggleButtonLabel routeBtn = new ToggleButtonLabel(toolbarIcon("images/toolbar/marker--plus.png"));
+	private ButtonLabel routeManagerBtn = new ButtonLabel(toolbarIcon("images/toolbar/marker.png"));
+	private ButtonLabel msiButton = new ButtonLabel(toolbarIcon("images/toolbar/msi_symbol_16.png"));
+	private ButtonLabel aisButton = new ButtonLabel(toolbarIcon("images/toolbar/radar.png"));
+//	private ToggleButtonLabel nogoButton = new ToggleButtonLabel("Toggle NoGo");
+	private ToggleButtonLabel aisBtn = new ToggleButtonLabel(toolbarIcon("images/toolbar/board-game.png"));
+//	private ToggleButtonLabel riskBtn = new ToggleButtonLabel("Risk");
+	private ToggleButtonLabel encBtn = new ToggleButtonLabel(toolbarIcon("images/toolbar/map-medium.png"));
+	private ToggleButtonLabel newRouteBtn = new ToggleButtonLabel(toolbarIcon("images/toolbar/marker--plus.png"));
 
-	private ToggleButtonLabel lockFrames = new ToggleButtonLabel(
-			"Lock/Unlock UI");
+//	private final ToggleButtonLabel tglbtnMsiFilter = new ToggleButtonLabel(
+//			"MSI filter");
+	
+	
+//	private ToggleButtonLabel lockFrames = new ToggleButtonLabel(
+//			"Lock/Unlock UI");
 
 	private MainFrame mainFrame;
 	private MsiDialog msiDialog = null;
 	private AisDialog aisDialog = null;
+	private EeINSMenuBar menuBar = null;
 
 	private MouseDelegator mouseDelegator;
-	private final ToggleButtonLabel tglbtnMsiFilter = new ToggleButtonLabel(
-			"MSI filter");
-	private MsiHandler msiHandler;
-	private NogoHandler nogoHandler;
-	private BlinkingLabel msiIcon;
-	private int notifyMsgId = -1;
+
+//	private MsiHandler msiHandler;
+//	private NogoHandler nogoHandler;
+//	private BlinkingLabel msiIcon;
+//	private int notifyMsgId = -1;
 	
 	private static int iconWidth = 16;
 	private static int iconHeight = 16;
@@ -118,30 +106,30 @@ public class TopPanel extends OMComponentPanel implements ActionListener,
 
 		autoFollowBtn.setToolTipText("Auto follow own ship");
 		setupBtn.setToolTipText("Setup");
-		routeBtn.setToolTipText("New route");
-		routeBtn.setVisible(false);
+//		routeBtn.setToolTipText("New route");
+//		routeBtn.setVisible(false);
 		newRouteBtn.setToolTipText("Add a new route : Shortcut Ctrl N");
 		routeManagerBtn.setToolTipText("Routes Manager : Shortcut Ctrl R");
 		msiButton
 				.setToolTipText("Maritime Safety Information : Shortcut Ctrl M");
 		aisButton.setToolTipText("Show nearby vessels : Shortcut Ctrl A");
-		nogoButton.setToolTipText("Show/hide NoGo area");
+//		nogoButton.setToolTipText("Show/hide NoGo area");
 		aisBtn.setToolTipText("Show/hide AIS targets");
-		riskBtn.setToolTipText("Show/hide risk info");
+//		riskBtn.setToolTipText("Show/hide risk info");
 		encBtn.setToolTipText("Show/hide ENC");
-		tglbtnMsiFilter
-				.setToolTipText("Enable/disable MSI message filtering based on position and routes");
+//		tglbtnMsiFilter
+//				.setToolTipText("Enable/disable MSI message filtering based on position and routes");
 
 		// Temporary
-		boolean showRiskAndNogo = !EeINS.getSettings().getGuiSettings()
-				.isRiskNogoDisabled();
+//		boolean showRiskAndNogo = !EeINS.getSettings().getGuiSettings()
+//				.isRiskNogoDisabled();
 
 		add(zoomInBtn);
 		add(zoomOutBtn);
 		add(centreBtn);
 		add(autoFollowBtn);
 		add(setupBtn);
-		add(routeBtn);
+//		add(routeBtn);
 		add(newRouteBtn);
 		add(routeManagerBtn);
 		add(msiButton);
@@ -149,17 +137,17 @@ public class TopPanel extends OMComponentPanel implements ActionListener,
 		add(new JSeparator());
 		add(aisBtn);
 		add(encBtn);
-		add(tglbtnMsiFilter);
-		if (showRiskAndNogo)
-			add(riskBtn);
-		if (showRiskAndNogo)
-			add(nogoButton);
+//		add(tglbtnMsiFilter);
+//		if (showRiskAndNogo)
+//			add(riskBtn);
+//		if (showRiskAndNogo)
+//			add(nogoButton);
 
-		add(lockFrames);
+//		add(lockFrames);
 
 		Component horizontalStrut = Box.createHorizontalStrut(5);
-		JSeparator separator = new JSeparator();
-		separator.setOrientation(SwingConstants.VERTICAL);
+//		JSeparator separator = new JSeparator();
+//		separator.setOrientation(SwingConstants.VERTICAL);
 		horizontalStrut = Box.createHorizontalStrut(5);
 
 		ImageIcon[] msiAnim = new ImageIcon[2];
@@ -167,36 +155,36 @@ public class TopPanel extends OMComponentPanel implements ActionListener,
 				EeINS.class.getResource("/images/msi/msi_symbol_64x20.png"));
 		msiAnim[1] = new ImageIcon(
 				EeINS.class.getResource("/images/msi/blank64x20.png"));
-		msiIcon = new BlinkingLabel(400, msiAnim);
+//		msiIcon = new BlinkingLabel(400, msiAnim);
 
 		add(horizontalStrut);
 		// add(separator);
 		// add(horizontalStrut);
-		add(msiIcon);
-		msiIcon.setVisible(false);
+//		add(msiIcon);
+//		msiIcon.setVisible(false);
 
-		msiIcon.addMouseListener(this);
+//		msiIcon.addMouseListener(this);
 		zoomInBtn.addMouseListener(this);
 
 		zoomOutBtn.addMouseListener(this);
 		centreBtn.addMouseListener(this);
 		autoFollowBtn.addMouseListener(this);
 		setupBtn.addMouseListener(this);
-		routeBtn.addMouseListener(this);
+//		routeBtn.addMouseListener(this);
 		newRouteBtn.addMouseListener(this);
 		routeManagerBtn.addMouseListener(this);
 		msiButton.addMouseListener(this);
 		aisButton.addMouseListener(this);
-		nogoButton.addMouseListener(this);
+//		nogoButton.addMouseListener(this);
 		aisBtn.addMouseListener(this);
-		riskBtn.addMouseListener(this);
+//		riskBtn.addMouseListener(this);
 		encBtn.addMouseListener(this);
-		tglbtnMsiFilter.addMouseListener(this);
-		lockFrames.addMouseListener(this);
+//		tglbtnMsiFilter.addMouseListener(this);
+//		lockFrames.addMouseListener(this);
 
 		
-		lockFrames.setSelected(true);
-		nogoButton.setSelected(true);
+//		lockFrames.setSelected(true);
+//		nogoButton.setSelected(true);
 
 		updateButtons();
 	}
@@ -206,8 +194,9 @@ public class TopPanel extends OMComponentPanel implements ActionListener,
 				.isAutoFollow());
 		aisBtn.setSelected(EeINS.getSettings().getAisSettings().isVisible());
 		encBtn.setSelected(EeINS.getSettings().getMapSettings().isEncVisible());
-		tglbtnMsiFilter.setSelected(EeINS.getSettings().getEnavSettings()
-				.isMsiFilter());
+//		tglbtnMsiFilter.setSelected(EeINS.getSettings().getEnavSettings()
+//				.isMsiFilter());
+		
 	}
 
 	public void disableAutoFollow() {
@@ -245,14 +234,17 @@ public class TopPanel extends OMComponentPanel implements ActionListener,
 		if (obj instanceof MouseDelegator) {
 			mouseDelegator = (MouseDelegator) obj;
 		}
-		if (obj instanceof MsiHandler) {
-			msiHandler = (MsiHandler) obj;
-		}
+//		if (obj instanceof MsiHandler) {
+//			msiHandler = (MsiHandler) obj;
+//		}
 		if (obj instanceof AisDialog) {
 			aisDialog = (AisDialog) obj;
 		}
-		if (obj instanceof NogoHandler) {
-			nogoHandler = (NogoHandler) obj;
+//		if (obj instanceof NogoHandler) {
+//			nogoHandler = (NogoHandler) obj;
+//		}
+		if (obj instanceof EeINSMenuBar) {
+			menuBar = (EeINSMenuBar) obj;
 		}
 	}
 
@@ -273,39 +265,7 @@ public class TopPanel extends OMComponentPanel implements ActionListener,
 		return newRouteBtn;
 	}
 
-	@Override
-	public void msiUpdate() {
-		if (msiHandler.isPendingImportantMessages()) {
-			msiIcon.setVisible(true);
-			msiIcon.setBlink(true);
-			String encText = "";
-
-			if (EeINS.getSettings().getEnavSettings().isMsiFilter()) {
-				int firstUnAckFiltered = msiHandler
-						.getFirstNonAcknowledgedFiltered();
-				// There are no MSI to acknowledge
-				if (firstUnAckFiltered != -1) {
-					MsiMessageExtended msiMessageFiltered = msiHandler
-							.getFilteredMessageList().get(firstUnAckFiltered);
-					notifyMsgId = msiMessageFiltered.msiMessage.getMessageId();
-					encText = msiMessageFiltered.msiMessage.getEncText();
-				}
-
-			} else {
-				int firstUnAck = msiHandler.getFirstNonAcknowledged();
-				MsiMessageExtended msiMessage = msiHandler.getMessageList()
-						.get(firstUnAck);
-				notifyMsgId = msiMessage.msiMessage.getMessageId();
-				encText = msiMessage.msiMessage.getEncText();
-			}
-			msiIcon.setToolTipText(encText);
-		} else {
-			notifyMsgId = -1;
-			msiIcon.setVisible(false);
-			// msiIcon.setBlink(false);
-			msiIcon.setToolTipText(null);
-		}
-	}
+	
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
@@ -332,18 +292,21 @@ public class TopPanel extends OMComponentPanel implements ActionListener,
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		if (e.getSource() == msiIcon) {
-			if (notifyMsgId > 0) {
-				msiDialog.showMessage(notifyMsgId);
-			} else {
-				msiDialog.setVisible(true);
-			}
-		} else if (e.getSource() == autoFollowBtn) {
+//		if (e.getSource() == msiIcon) {
+//			if (notifyMsgId > 0) {
+//				msiDialog.showMessage(notifyMsgId);
+//			} else {
+//				msiDialog.setVisible(true);
+//			}
+//		} else 
+			if (e.getSource() == autoFollowBtn) {
 			EeINS.getSettings().getNavSettings()
 					.setAutoFollow(autoFollowBtn.isSelected());
 			if (autoFollowBtn.isSelected()) {
 				mainFrame.getChartPanel().autoFollow();
 			}
+			menuBar.getAutoFollow().setSelected(EeINS.getSettings().getNavSettings().isAutoFollow());
+			
 		} else if (e.getSource() == centreBtn) {
 			mainFrame.getChartPanel().centreOnShip();
 		} else if (e.getSource() == zoomInBtn) {
@@ -354,12 +317,16 @@ public class TopPanel extends OMComponentPanel implements ActionListener,
 			EeINS.getSettings().getAisSettings()
 					.setVisible(aisBtn.isSelected());
 			mainFrame.getChartPanel().aisVisible(aisBtn.isSelected());
-		} else if (e.getSource() == riskBtn) {
-			EeINS.getRiskHandler().toggleRiskHandler(riskBtn.isSelected());
+			
+			menuBar.getAisLayer().setSelected(EeINS.getSettings().getAisSettings().isVisible());
+			
+//		} else if (e.getSource() == riskBtn) {
+//			EeINS.getRiskHandler().toggleRiskHandler(riskBtn.isSelected());
 		} else if (e.getSource() == encBtn) {
 			EeINS.getSettings().getMapSettings()
 					.setEncVisible(encBtn.isSelected());
 			mainFrame.getChartPanel().encVisible(encBtn.isSelected());
+			menuBar.getEncLayer().setSelected(EeINS.getSettings().getMapSettings().isEncVisible());
 		} else if (e.getSource() == routeManagerBtn) {
 			RouteManagerDialog routeManagerDialog = new RouteManagerDialog(
 					mainFrame);
@@ -375,21 +342,25 @@ public class TopPanel extends OMComponentPanel implements ActionListener,
 			aisDialog.setSelection(-1, true);
 		} else if (e.getSource() == newRouteBtn) {
 			if (mouseDelegator.getActiveMouseModeID() == NavigationMouseMode.modeID) {
+				menuBar.getNewRoute().setSelected(true);
 				mainFrame.getChartPanel().editMode(true);
 			} else {
 				mainFrame.getChartPanel().editMode(false);
+				menuBar.getNewRoute().setSelected(false);
 			}
-		} else if (e.getSource() == nogoButton) {
-			nogoHandler.toggleLayer();
+//		} else if (e.getSource() == nogoButton) {
+//			nogoHandler.toggleLayer();
 		} else if (e.getSource() == newRouteBtn) {
 			newRoute();
-		} else if (e.getSource() == tglbtnMsiFilter) {
-			EeINS.getSettings().getEnavSettings()
-					.setMsiFilter(tglbtnMsiFilter.isSelected());
-			msiHandler.notifyUpdate();
-		} else if (e.getSource() == lockFrames) {
-			mainFrame.getDockableComponents().toggleFrameLock();
-		}
+		} 
+//		else if (e.getSource() == tglbtnMsiFilter) {
+//			EeINS.getSettings().getEnavSettings()
+//					.setMsiFilter(tglbtnMsiFilter.isSelected());
+//			msiHandler.notifyUpdate();
+//		} 
+//		else if (e.getSource() == lockFrames) {
+//			mainFrame.getDockableComponents().toggleFrameLock();
+//		}
 
 	}
 
@@ -397,29 +368,29 @@ public class TopPanel extends OMComponentPanel implements ActionListener,
 		return msiButton;
 	}
 
-	public ToggleButtonLabel getNogoButton() {
-		return nogoButton;
-	}
+//	public ToggleButtonLabel getNogoButton() {
+//		return nogoButton;
+//	}
 
 	public ToggleButtonLabel getAisBtn() {
 		return aisBtn;
 	}
-
-	public ToggleButtonLabel getRiskBtn() {
-		return riskBtn;
-	}
+//
+//	public ToggleButtonLabel getRiskBtn() {
+//		return riskBtn;
+//	}
 
 	public ToggleButtonLabel getEncBtn() {
 		return encBtn;
 	}
 
-	public ToggleButtonLabel getLockFrames() {
-		return lockFrames;
-	}
+//	public ToggleButtonLabel getLockFrames() {
+//		return lockFrames;
+//	}
 
-	public ToggleButtonLabel getTglbtnMsiFilter() {
-		return tglbtnMsiFilter;
-	}
+//	public ToggleButtonLabel getTglbtnMsiFilter() {
+//		return tglbtnMsiFilter;
+//	}
 
 	public ToggleButtonLabel getAutoFollowBtn() {
 		return autoFollowBtn;
@@ -444,4 +415,5 @@ public class TopPanel extends OMComponentPanel implements ActionListener,
 		return newImage;
 	}
 
+	
 }

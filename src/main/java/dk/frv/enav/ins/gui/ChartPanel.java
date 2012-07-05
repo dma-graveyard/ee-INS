@@ -349,6 +349,7 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 			newRouteContainerLayer.getRouteGraphics().clear();
 			newRouteContainerLayer.doPrepare();
 			EeINS.getMainFrame().getTopPanel().getNewRouteBtn().setSelected(false);
+			EeINS.getMainFrame().getEeINSMenuBar().getNewRoute().setSelected(false);
 		}
 	}
 	

@@ -92,6 +92,7 @@ public class MainFrame extends JFrame implements WindowListener {
 	private DockableComponents dockableComponents;
 
 	private MapMenu mapMenu;
+	private EeINSMenuBar menuBar;
 
 	public MainFrame() {
 		super();
@@ -161,7 +162,7 @@ public class MainFrame extends JFrame implements WindowListener {
 		mapHandler.add(msiComponentPanel);
 
 		// Create top menubar
-		MenuBar menuBar = new MenuBar();
+		menuBar = new EeINSMenuBar();
 		this.setJMenuBar(menuBar);
 		
 		// Init glass pane
@@ -196,7 +197,7 @@ public class MainFrame extends JFrame implements WindowListener {
 		glassPanel.setVisible(false);
 	}
 
-	private static Image getAppIcon() {
+	public static Image getAppIcon() {
 		java.net.URL imgURL = EeINS.class.getResource("/images/appicon.png");
 		if (imgURL != null) {
 			return new ImageIcon(imgURL).getImage();
@@ -291,6 +292,11 @@ public class MainFrame extends JFrame implements WindowListener {
 		return msiComponentPanel;
 	}
 
+	public EeINSMenuBar getEeINSMenuBar() {
+		return menuBar;
+	}
+
+	
 	
 	
 }

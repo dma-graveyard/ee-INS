@@ -12,7 +12,6 @@ import dk.frv.enav.ins.gui.BlinkingLabel;
 import dk.frv.enav.ins.gui.Panels.MSIPanel;
 import dk.frv.enav.ins.msi.IMsiUpdateListener;
 import dk.frv.enav.ins.msi.MsiHandler;
-import dk.frv.enav.ins.msi.MsiHandler.MsiMessageExtended;
 
 public class MSIComponentPanel extends OMComponentPanel implements
 IMsiUpdateListener {

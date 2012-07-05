@@ -294,7 +294,8 @@ public class NogoDialog extends JDialog implements ActionListener, Runnable {
 					nogoHandler.setValidTo((Date) spinnerTimeEnd.getValue());
 
 					if (mainFrame != null) {
-						mainFrame.getTopPanel().getNogoButton().setSelected(true);
+						mainFrame.getEeINSMenuBar().getNogoLayer().setSelected(true);
+						nogoHandler.getNogoLayer().setVisible(true);
 					}
 					(new Thread(this)).start();
 				} else {

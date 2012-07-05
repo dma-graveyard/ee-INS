@@ -75,6 +75,10 @@ public class NogoHandler extends MapHandlerChild implements Runnable {
 	
 	
 	
+	public NogoLayer getNogoLayer() {
+		return nogoLayer;
+	}
+
 	public int getNoGoErrorCode() {
 		return noGoErrorCode;
 	}
