@@ -46,8 +46,6 @@ public class AisComponentPanel extends OMComponentPanel
 		setLayout(new BorderLayout(0, 0));
 		add(aisPanel, BorderLayout.NORTH);
 		
-		
-		
 		nameLabel = aisPanel.getNameLabel();
 		callsignLabel = aisPanel.getCallsignLabel();
 		sogLabel = aisPanel.getSogLabel();

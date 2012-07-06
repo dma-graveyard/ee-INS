@@ -233,7 +233,7 @@ public class MsiLayer extends OMGraphicHandlerLayer implements MapMouseListener 
 		
 		if(selectedGraphic instanceof MsiSymbolGraphic){
 			MsiSymbolGraphic msi = (MsiSymbolGraphic) selectedGraphic;
-//			mainFrame.getGlassPane().setVisible(false);
+			mainFrame.getGlassPane().setVisible(false);
 			msiMenu.msiMenu(topPanel, msi);
 			msiMenu.setVisible(true);
 			msiMenu.show(this, e.getX()-2, e.getY()-2);
@@ -242,7 +242,7 @@ public class MsiLayer extends OMGraphicHandlerLayer implements MapMouseListener 
 		}
 		if(selectedGraphic instanceof MsiDirectionalIcon) {
 			MsiDirectionalIcon direction = (MsiDirectionalIcon) selectedGraphic;
-//			mainFrame.getGlassPane().setVisible(false);
+			mainFrame.getGlassPane().setVisible(false);
 			msiMenu.msiDirectionalMenu(topPanel, direction, this);
 			msiMenu.setVisible(true);
 			msiMenu.show(this, e.getX()-10, e.getY()-10);
@@ -305,15 +305,15 @@ public class MsiLayer extends OMGraphicHandlerLayer implements MapMouseListener 
 				MsiSymbolGraphic msiSymbolGraphic = (MsiSymbolGraphic)newClosest;
 				msiInfoPanel.setPos((int)containerPoint.getX(), (int)containerPoint.getY() - 10);
 				msiInfoPanel.showMsiInfo(msiSymbolGraphic.getMsiMessage());
-//				mainFrame.getGlassPane().setVisible(true);
+				mainFrame.getGlassPane().setVisible(true);
 				return true;
 			} else if (newClosest instanceof MsiDirectionalIcon) {
 				closest = newClosest;
-//				mainFrame.getGlassPane().setVisible(true);
+				mainFrame.getGlassPane().setVisible(true);
 				return true;
 			} else {
 				msiInfoPanel.setVisible(false);
-//				mainFrame.getGlassPane().setVisible(false);
+				mainFrame.getGlassPane().setVisible(false);
 				closest = null;
 				return false;				
 			}
