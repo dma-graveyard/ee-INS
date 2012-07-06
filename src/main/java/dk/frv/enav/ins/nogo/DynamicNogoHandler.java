@@ -88,6 +88,7 @@ public class DynamicNogoHandler extends MapHandlerChild implements Runnable {
 	private Date validToTarget;
 	private int noGoErrorCodeTarget;
 	private String noGoMessageTarget;
+	private Thread self;
 
 	private boolean dynamicNoGoActive = false;
 
@@ -103,7 +104,7 @@ public class DynamicNogoHandler extends MapHandlerChild implements Runnable {
 
 	public DynamicNogoHandler(EnavSettings enavSettings) {
 		// pollInterval = enavSettings.getNogoPollInterval();
-		EeINS.startThread(this, "DynamicNoGoHandler");
+		self = EeINS.startThread(this, "DynamicNoGoHandler");
 	}
 
 	@Override
@@ -113,16 +114,26 @@ public class DynamicNogoHandler extends MapHandlerChild implements Runnable {
 		// updateNogo();
 
 		while (true) {
-			if (nogoLayer != null) {
+			
+			if (dynamicNoGoActive){
+				nogoLayer.setVisible(true);
+				updateNogo();
+			}
+			EeINS.sleep(60000);
+			
+			System.out.println(dynamicNoGoActive);
+			
+			if (!dynamicNoGoActive && nogoLayer != null) {
 				nogoLayer.setVisible(false);
 				nogoLayer.cleanUp();
 			}
-			EeINS.sleep(10000);
-			while (dynamicNoGoActive) {
-				nogoLayer.setVisible(true);
-				updateNogo();
-				EeINS.sleep(60000);
-			}
+
+//			EeINS.sleep(10000);
+//			while (dynamicNoGoActive) {
+//				nogoLayer.setVisible(true);
+//				updateNogo();
+//				EeINS.sleep(60000);
+//			}
 
 			// EeINS.sleep(300000);
 			// EeINS.sleep(60000);
@@ -143,10 +154,6 @@ public class DynamicNogoHandler extends MapHandlerChild implements Runnable {
 
 	public synchronized void setTarget(long mmsi) {
 		mmsiTarget = mmsi;
-	}
-
-	public void forceUpdate() {
-		updateNogo();
 	}
 
 	public synchronized void updateNogo() {
@@ -418,6 +425,9 @@ public class DynamicNogoHandler extends MapHandlerChild implements Runnable {
 
 	public void setDynamicNoGoActive(boolean dynamicNoGoActive) {
 		this.dynamicNoGoActive = dynamicNoGoActive;
+		System.out.println("Interrupting!");
+		self.interrupt();
+		
 	}
 
 	public void setMmsiTarget(long mmsiTarget) {

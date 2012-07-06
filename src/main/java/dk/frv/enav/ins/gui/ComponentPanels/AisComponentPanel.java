@@ -122,6 +122,10 @@ public class AisComponentPanel extends OMComponentPanel implements ItemListener
 		sogLabel.setText("N/A");
 		
 		dynamicNoGoCheckbox.setSelected(false);
+		
+		dynamicNoGoCheckbox.setEnabled(false);
+		dynamicNogoTitelLabel.setEnabled(false);
+		
 	}
 
 	
@@ -129,15 +133,15 @@ public class AisComponentPanel extends OMComponentPanel implements ItemListener
 		dynamicNoGoCheckbox.setEnabled(possible);
 		dynamicNogoTitelLabel.setEnabled(possible);
 		
-		System.out.println(dynamicNogoHandler.getMmsiTarget());
-		System.out.println(mmsi);
+//		System.out.println(dynamicNogoHandler.getMmsiTarget());
+//		System.out.println(mmsi);
 		
 		if (dynamicNogoHandler.getMmsiTarget() == mmsi){
 			dynamicNoGoCheckbox.setSelected(true);
-			System.out.println("Selecting it!");
+//			System.out.println("Selecting it!");
 		}else{
 			dynamicNoGoCheckbox.setSelected(false);
-			System.out.println("not the selected");
+//			System.out.println("not the selected");
 		}
 		
 	}
@@ -159,8 +163,8 @@ public class AisComponentPanel extends OMComponentPanel implements ItemListener
 //			
 			else{
 				if (mmsi == dynamicNogoHandler.getMmsiTarget()){
-					dynamicNogoHandler.setDynamicNoGoActive(false);
 					dynamicNogoHandler.setMmsiTarget(-1);
+					dynamicNogoHandler.setDynamicNoGoActive(false);
 					System.out.println("Deselecting");					
 				}
 

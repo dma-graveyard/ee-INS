@@ -529,10 +529,11 @@ public class EeINS {
 		}
 	}
 	
-	public static void startThread(Runnable t, String name) {
+	public static Thread startThread(Runnable t, String name) {
 		Thread thread = new Thread(t);
 		thread.setName(name);
 		thread.start();
+		return thread;
 	}
 	
 	public static double elapsed(long start) {

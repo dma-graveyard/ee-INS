@@ -82,10 +82,14 @@ public class EeINSMenuBar extends JMenuBar implements PropertyConsumer,
 			}
 		});
 
+		setup.setIcon(toolbarIcon("images/toolbar/wrench.png"));
+		
 		lock = new JCheckBoxMenuItem("Unlock");
 		file.add(lock);
 		lock.setSelected(true);
-
+		lock.setIcon(toolbarIcon("images/toolbar/lock-unlock.png"));
+		
+		
 		lock.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -93,14 +97,17 @@ public class EeINSMenuBar extends JMenuBar implements PropertyConsumer,
 				mainFrame.getDockableComponents().toggleFrameLock();
 				if (m.isSelected()) {
 					m.setText("Unlock");
+					m.setIcon(toolbarIcon("images/toolbar/lock-unlock.png"));
 				} else {
 					m.setText("Lock");
+					m.setIcon(toolbarIcon("images/toolbar/lock.png"));
 				}
 			}
 		});
 
 		JMenuItem exit = new JMenuItem("Exit");
 		file.add(exit);
+		exit.setIcon(toolbarIcon("images/toolbar/cross-circle.png"));
 
 		exit.addActionListener(new ActionListener() {
 			@Override
@@ -114,6 +121,7 @@ public class EeINSMenuBar extends JMenuBar implements PropertyConsumer,
 
 		JMenuItem zoomIn = new JMenuItem("Zoom in : Shortcut Numpad +");
 		interact.add(zoomIn);
+		zoomIn.setIcon(toolbarIcon("images/toolbar/magnifier-zoom-in.png"));
 
 		zoomIn.addActionListener(new ActionListener() {
 			@Override
@@ -124,6 +132,7 @@ public class EeINSMenuBar extends JMenuBar implements PropertyConsumer,
 
 		JMenuItem zoomOut = new JMenuItem("Zoom out : Shortcut Numpad -");
 		interact.add(zoomOut);
+		zoomOut.setIcon(toolbarIcon("images/toolbar/magnifier-zoom-out.png"));
 
 		zoomOut.addActionListener(new ActionListener() {
 			@Override
@@ -135,6 +144,7 @@ public class EeINSMenuBar extends JMenuBar implements PropertyConsumer,
 		JCheckBoxMenuItem centerOnShip = new JCheckBoxMenuItem(
 				"Centre on ship : Shortcut C");
 		interact.add(centerOnShip);
+		centerOnShip.setIcon(toolbarIcon("images/toolbar/arrow-in.png"));
 
 		centerOnShip.addActionListener(new ActionListener() {
 			@Override
@@ -146,6 +156,7 @@ public class EeINSMenuBar extends JMenuBar implements PropertyConsumer,
 		autoFollow = new JCheckBoxMenuItem("Auto follow own ship");
 		interact.add(autoFollow);
 		autoFollow.setSelected(EeINS.getSettings().getNavSettings().isAutoFollow());
+		autoFollow.setIcon(toolbarIcon("images/toolbar/arrow-curve-000-double.png"));
 
 		autoFollow.addActionListener(new ActionListener() {
 			@Override
@@ -239,6 +250,7 @@ public class EeINSMenuBar extends JMenuBar implements PropertyConsumer,
 
 		newRoute = new JCheckBoxMenuItem("New Route | Ctrl n");
 		tools.add(newRoute);
+		newRoute.setIcon(toolbarIcon("images/toolbar/marker--plus.png"));
 		
 		newRoute.addActionListener(new ActionListener() {
 			@Override
@@ -273,6 +285,7 @@ public class EeINSMenuBar extends JMenuBar implements PropertyConsumer,
 
 		JMenuItem aboutEeINS = new JMenuItem("About the EeINS");
 		help.add(aboutEeINS);
+		aboutEeINS.setIcon(toolbarIcon("images/appicon.png"));
 		
 		final ImageIcon icon = createImageIcon();
 		
@@ -466,7 +479,13 @@ public class EeINSMenuBar extends JMenuBar implements PropertyConsumer,
 		return newRoute;
 	}
 
-	
+	public ImageIcon toolbarIcon(String imgpath) {
+		ImageIcon icon = new ImageIcon(imgpath);
+		Image img = icon.getImage();
+		Image newimg = img.getScaledInstance(16, 16, java.awt.Image.SCALE_DEFAULT);
+		ImageIcon newImage = new ImageIcon(newimg);
+		return newImage;
+	}
 	
 	
 }
