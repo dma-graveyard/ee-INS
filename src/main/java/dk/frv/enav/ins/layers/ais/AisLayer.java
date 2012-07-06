@@ -44,6 +44,7 @@ import org.apache.log4j.Logger;
 
 import com.bbn.openmap.MapBean;
 import com.bbn.openmap.event.MapMouseListener;
+import com.bbn.openmap.graphicLoader.MMLGraphicLoader;
 import com.bbn.openmap.layer.OMGraphicHandlerLayer;
 import com.bbn.openmap.omGraphics.OMCircle;
 import com.bbn.openmap.omGraphics.OMGraphic;
@@ -94,9 +95,15 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 	private ChartPanel chartPanel;
 	private OMCircle dummyCircle = new OMCircle();
 	
+	AisTargetGraphic aisTargetGraphic = new AisTargetGraphic();
+	long selectedMMSI = -1;
+//	long selectedMMSI = 230994000;
+	
+	
 	private TopPanel topPanel;
 
 	public AisLayer() {
+		graphics.add(aisTargetGraphic);
 		// graphics.setVague(false);
 		(new Thread(this)).start();
 	}
@@ -125,15 +132,36 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 		doPrepare();
 	}
 
+	
+	/**
+	 * Move the target selection and force it to be painted
+	 * @param aisTarget
+	 */
+	public void updateSelection(AisTarget aisTarget){
+		aisTargetGraphic.setVisible(true);
+		aisTargetGraphic.moveSymbol( ((VesselTarget) aisTarget).getPositionData().getPos());
+		doPrepare();
+	}
+	
 	@Override
 	public synchronized void targetUpdated(AisTarget aisTarget) {
 		long mmsi = aisTarget.getMmsi();
+		
+		if (mmsi == selectedMMSI){
+			System.out.println("Somethign happend to my target");
+		}
+		
 		TargetGraphic targetGraphic = targets.get(mmsi);
 
 		if (aisTarget.isGone()) {
+			
+			if (mmsi == selectedMMSI){
+				System.out.println("My target is gone?");
+			}
+			
 			if (targetGraphic != null) {
 				// Remove target
-				// LOG.info("Target has gone: " + mmsi);
+//				 LOG.info("Target has gone: " + mmsi);
 				targets.remove(mmsi);
 				graphics.remove(targetGraphic);
 				setRedrawPending(true);
@@ -156,6 +184,13 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 			}
 			targets.put(mmsi, targetGraphic);
 			graphics.add(targetGraphic);
+			
+
+			if (mmsi == selectedMMSI){
+				System.out.println("My target was recreated?");
+			}
+			
+			
 		}
 		
 		
@@ -163,7 +198,10 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 
 		if (aisTarget instanceof VesselTarget) {
 			// Maybe we would like to force redraw
-			VesselTarget vesselTarget = (VesselTarget) aisTarget; 
+			VesselTarget vesselTarget = (VesselTarget) aisTarget;
+			
+			
+
 			VesselTargetGraphic vesselTargetGraphic = (VesselTargetGraphic) targetGraphic;
 			if (vesselTarget.getSettings().isShowRoute() && vesselTarget.hasIntendedRoute()
 					&& !vesselTargetGraphic.getRouteGraphic().isVisible()) {
@@ -171,8 +209,17 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 			} else if (!vesselTarget.getSettings().isShowRoute() && vesselTargetGraphic.getRouteGraphic().isVisible()) {
 				forceRedraw = true;
 			}
+			
+
+			
 
 			targetGraphic.update(vesselTarget);
+			
+			if (vesselTarget.getMmsi() == selectedMMSI){
+				updateSelection(aisTarget);	
+				System.out.println("My target moved");
+			}
+			
 		} else if (aisTarget instanceof SarTarget) {
 			targetGraphic.update((SarTarget) aisTarget);
 		} else if (aisTarget instanceof AtoNTarget) {
@@ -184,6 +231,8 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 		// System.out.println("targets.size() : " + targets.size());
 		// System.out.println("graphics.size(): " + graphics.size() + "\n---");
 
+		
+		
 		setRedrawPending(true);
 		updateLayer(forceRedraw);
 	}
@@ -298,7 +347,7 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 	@Override
 	public boolean mouseClicked(MouseEvent e) {
 		if (this.isVisible()) {
-			if (e.getButton() == MouseEvent.BUTTON3) {
+			if (e.getButton() == MouseEvent.BUTTON3 || e.getButton() == MouseEvent.BUTTON1) {
 				selectedGraphic = null;
 				OMList<OMGraphic> allClosest = graphics.findAll(e.getX(), e.getY(), 5.0f);
 
@@ -309,10 +358,31 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 						break;
 					}
 				}
-
+				if (e.getButton() == MouseEvent.BUTTON1) {
+					
+					if (allClosest.size() == 0){
+						aisTargetGraphic.setVisible(false);
+						selectedMMSI = -1;
+						doPrepare();
+					}
+					
+					if (selectedGraphic instanceof VesselTargetTriangle) {
+						
+						VesselTargetTriangle vtt = (VesselTargetTriangle) selectedGraphic;
+						VesselTargetGraphic vesselTargetGraphic = vtt.getVesselTargetGraphic();
+						
+						selectedMMSI = vesselTargetGraphic.getVesselTarget().getMmsi();
+						updateSelection(vesselTargetGraphic.getVesselTarget());
+					}
+				}
+				
+				if (e.getButton() == MouseEvent.BUTTON3) {
+				
 				if (selectedGraphic instanceof VesselTargetTriangle) {
+					
 					VesselTargetTriangle vtt = (VesselTargetTriangle) selectedGraphic;
 					VesselTargetGraphic vesselTargetGraphic = vtt.getVesselTargetGraphic();
+							
 					mainFrame.getGlassPane().setVisible(false);
 					aisTargetMenu.aisMenu(vesselTargetGraphic, topPanel);
 					aisTargetMenu.setVisible(true);
@@ -348,6 +418,7 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 					return true;
 				}
 			}
+		}
 		}
 		return false;
 	}
