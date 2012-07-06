@@ -238,6 +238,15 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 		}
 	}
 
+	public synchronized void forceUpdate(AisTarget aisTarget){
+		publishUpdate(aisTarget);
+//		AisTarget aisTarget
+//		
+//		for (VesselTarget vesselTarget : vesselTargets.values()) {
+//			publishUpdate(vesselTarget);
+//		}
+	}
+	
 	/**
 	 * Method for receiving own ship AIS messages
 	 * @param aisMessage

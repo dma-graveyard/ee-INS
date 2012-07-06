@@ -33,6 +33,7 @@ import java.awt.Color;
 
 import javax.swing.JMenuItem;
 
+import dk.frv.enav.ins.ais.AisHandler;
 import dk.frv.enav.ins.gui.TopPanel;
 import dk.frv.enav.ins.layers.ais.AisLayer;
 import dk.frv.enav.ins.layers.ais.VesselTargetGraphic;
@@ -43,58 +44,57 @@ public class AisTargetDetails extends JMenuItem implements IMapMenuAction {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private TopPanel topPanel;
+	private AisHandler aisHandler;;
 	private AisLayer aisLayer;
-	private long MMSI;	
+	private long MMSI;
 	private VesselTargetGraphic vesselTargetGraphic;
-	
+
 	public AisTargetDetails(String text) {
 		super();
 		this.setText(text);
 	}
-	
+
 	@Override
 	public void doAction() {
 		System.out.println("Select it!");
 		System.out.println("Selected :" + MMSI);
-		
-//		aisLayer.setSelectedMMSI(MMSI);
+
+		// aisLayer.setSelectedMMSI(MMSI);
 		vesselTargetGraphic.setLinePaint(Color.red);
 		aisLayer.targetUpdated(vesselTargetGraphic.getVesselTarget());
-		
-		
-//		if (topPanel != null && topPanel.getAisDialog() != null) {
-//			topPanel.getAisDialog().setSelection(this.MMSI, true);
-//			topPanel.getAisDialog().setVisible(true);
-//		}
-//		
-		
+
+		aisHandler.forceUpdate(vesselTargetGraphic.getVesselTarget());
+		// if (topPanel != null && topPanel.getAisDialog() != null) {
+		// topPanel.getAisDialog().setSelection(this.MMSI, true);
+		// topPanel.getAisDialog().setVisible(true);
+		// }
+		//
+
 	}
 
-	public void setTopPanel(TopPanel topPanel) {
-		this.topPanel = topPanel;
+	public void setAisHandler(AisHandler aisHandler) {
+		this.aisHandler = aisHandler;
 	}
-	
+
 	public void setMSSI(long MSSI) {
 		this.MMSI = MSSI;
-	}	
+	}
 
-	public void setAisLayer(AisLayer aisLayer){
+	public void setAisLayer(AisLayer aisLayer) {
 		this.aisLayer = aisLayer;
 	}
-	
+
 	public void setVesselTargetGraphic(VesselTargetGraphic vesselTargetGraphic) {
 		setColor(this.vesselTargetGraphic);
 		this.vesselTargetGraphic = vesselTargetGraphic;
 	}
-	
-	public void setColor(VesselTargetGraphic vesselTargetGraphic){
-		if (vesselTargetGraphic != null){
+
+	public void setColor(VesselTargetGraphic vesselTargetGraphic) {
+		if (vesselTargetGraphic != null) {
 			vesselTargetGraphic.setLinePaint(new Color(74, 97, 205, 255));
-			aisLayer.targetUpdated(vesselTargetGraphic.getVesselTarget());			
+			aisLayer.targetUpdated(vesselTargetGraphic.getVesselTarget());
 		}
 
 	}
 
-	
 }

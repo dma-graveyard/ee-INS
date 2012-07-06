@@ -29,7 +29,6 @@
  */
 package dk.frv.enav.ins.layers.ais;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
