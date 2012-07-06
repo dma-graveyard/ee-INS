@@ -130,6 +130,13 @@ public class NogoHandler extends MapHandlerChild implements Runnable {
 		notifyUpdate(false);
 		boolean nogoUpdated = false;
 		Date now = new Date();
+		
+		
+		System.out.println("Standard locations at:");
+		System.out.println("south east point:" + southEastPoint);
+		System.out.println("north west point: " + northWestPoint);
+		
+		
 		if (getLastUpdate() == null || (now.getTime() - getLastUpdate().getTime() > pollInterval * 1000)) {
 			// Poll for data from shore
 			try {

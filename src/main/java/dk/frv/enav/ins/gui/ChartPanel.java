@@ -68,6 +68,7 @@ import dk.frv.enav.ins.layers.ais.AisLayer;
 import dk.frv.enav.ins.layers.background.CoastalOutlineLayer;
 import dk.frv.enav.ins.layers.gps.GpsLayer;
 import dk.frv.enav.ins.layers.msi.MsiLayer;
+import dk.frv.enav.ins.layers.nogo.DynamicNogoLayer;
 import dk.frv.enav.ins.layers.nogo.NogoLayer;
 import dk.frv.enav.ins.layers.route.RouteLayer;
 import dk.frv.enav.ins.layers.routeEdit.NewRouteContainerLayer;
@@ -96,6 +97,7 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 	private RouteLayer routeLayer;
 	private MsiLayer msiLayer;
 	private NogoLayer nogoLayer;	
+	private DynamicNogoLayer dynamicNogoLayer;
 	private TopPanel topPanel;
 	private RouteEditMouseMode routeEditMouseMode;
 	private RouteEditLayer routeEditLayer;
@@ -195,6 +197,9 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 		nogoLayer.setVisible(true);
 		mapHandler.add(nogoLayer);
 		
+		dynamicNogoLayer = new DynamicNogoLayer();
+		dynamicNogoLayer.setVisible(true);
+		mapHandler.add(dynamicNogoLayer);
 
 		// Create AIS layer
 		aisLayer = new AisLayer();

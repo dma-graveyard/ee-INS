@@ -146,7 +146,7 @@ public class AisLayer extends OMGraphicHandlerLayer implements
 		VesselTarget vessel = (VesselTarget) aisTarget;
 
 		if (vessel.getStaticData() != null) {
-			aisPanel.receiveHighlight(
+			aisPanel.receiveHighlight(vessel.getMmsi(),
 					vessel.getStaticData().getName(),
 					vessel.getStaticData().getCallsign(),
 					vessel.getPositionData().getCog(),
@@ -167,7 +167,7 @@ public class AisLayer extends OMGraphicHandlerLayer implements
 
 			);
 		} else {
-			aisPanel.receiveHighlight(
+			aisPanel.receiveHighlight(vessel.getMmsi(),
 					vessel.getPositionData().getCog(),
 					aisHandler
 							.getOwnShip()
@@ -182,6 +182,12 @@ public class AisLayer extends OMGraphicHandlerLayer implements
 							.getRhumbLineBearing(
 									vessel.getPositionData().getPos()), vessel
 							.getPositionData().getSog());
+		}
+
+		if ((vessel.getStaticData() != null && aisHandler.getOwnShip() != null)) {
+			aisPanel.dynamicNogoAvailable(true);
+		}else{
+			aisPanel.dynamicNogoAvailable(false);
 		}
 
 		doPrepare();
@@ -257,7 +263,6 @@ public class AisLayer extends OMGraphicHandlerLayer implements
 
 			if (vesselTarget.getMmsi() == selectedMMSI) {
 				updateSelection(aisTarget);
-				System.out.println("My target moved");
 			}
 
 		} else if (aisTarget instanceof SarTarget) {
