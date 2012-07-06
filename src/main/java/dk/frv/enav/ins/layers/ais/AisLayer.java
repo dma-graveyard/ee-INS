@@ -44,7 +44,6 @@ import org.apache.log4j.Logger;
 
 import com.bbn.openmap.MapBean;
 import com.bbn.openmap.event.MapMouseListener;
-import com.bbn.openmap.graphicLoader.MMLGraphicLoader;
 import com.bbn.openmap.layer.OMGraphicHandlerLayer;
 import com.bbn.openmap.omGraphics.OMCircle;
 import com.bbn.openmap.omGraphics.OMGraphic;
@@ -146,18 +145,10 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 	@Override
 	public synchronized void targetUpdated(AisTarget aisTarget) {
 		long mmsi = aisTarget.getMmsi();
-		
-		if (mmsi == selectedMMSI){
-			System.out.println("Somethign happend to my target");
-		}
-		
+
 		TargetGraphic targetGraphic = targets.get(mmsi);
 
 		if (aisTarget.isGone()) {
-			
-			if (mmsi == selectedMMSI){
-				System.out.println("My target is gone?");
-			}
 			
 			if (targetGraphic != null) {
 				// Remove target
@@ -166,6 +157,13 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 				graphics.remove(targetGraphic);
 				setRedrawPending(true);
 				updateLayer();
+				
+
+				if (mmsi == selectedMMSI){
+					aisTargetGraphic.setVisible(false);
+					selectedMMSI = -1;
+					doPrepare();
+				}
 			}
 			return;
 		}
@@ -186,9 +184,6 @@ public class AisLayer extends OMGraphicHandlerLayer implements IAisTargetListene
 			graphics.add(targetGraphic);
 			
 
-			if (mmsi == selectedMMSI){
-				System.out.println("My target was recreated?");
-			}
 			
 			
 		}
