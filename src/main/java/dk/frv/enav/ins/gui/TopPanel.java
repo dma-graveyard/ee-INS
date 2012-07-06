@@ -30,6 +30,7 @@
 package dk.frv.enav.ins.gui;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -100,6 +101,8 @@ public class TopPanel extends OMComponentPanel implements ActionListener,
 
 		setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 
+		this.setMinimumSize(new Dimension(0, 14));
+		
 		zoomInBtn.setToolTipText("Zoom in : Shortcut Numpad +");
 		zoomOutBtn.setToolTipText("Zoom out : Shortcut Numpad -");
 		centreBtn.setToolTipText("Centre on ship : Shortcut C");

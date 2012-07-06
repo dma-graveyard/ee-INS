@@ -401,7 +401,7 @@ public class AisLayer extends OMGraphicHandlerLayer implements
 			mainFrame.getGlassPanel().add(sarTargetInfoPanel);
 			highlightInfoPanel = new HighlightInfoPanel();
 			mainFrame.getGlassPanel().add(highlightInfoPanel);
-			mainFrame.getGlassPanel().setVisible(true);
+			mainFrame.getGlassPanel().setVisible(false);
 		}
 		if (obj instanceof GpsHandler) {
 			sarTargetInfoPanel.setGpsHandler((GpsHandler) obj);

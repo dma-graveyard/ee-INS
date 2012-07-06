@@ -88,6 +88,7 @@ public class DockableComponents {
 
 		mainFrame.add(control.getContentArea());
 
+		
 		// Load a layout
 		File layoutFile = new File(EeINS.class.getSimpleName() + ".xml");
 		if (layoutFile.exists()) {
@@ -112,6 +113,8 @@ public class DockableComponents {
 			dockable.setMaximizable(false);
 		}
 
+		control.getContentArea().setMinimumAreaSize(new Dimension(0, 0));
+		
 		// Frames
 		BorderMod bridge = new BorderMod();
 		control.getController()
@@ -140,31 +143,31 @@ public class DockableComponents {
 
 	public void toggleFrameLock() {
 
-//		List<SingleCDockable> mdlist = control.getRegister()
-//				.getSingleDockables();
-//
-//		if (!locked) {
-//
-//			for (int i = 0; i < mdlist.size(); i++) {
-//				PanelDockable dockable = (PanelDockable) mdlist.get(i);
-//				dockable.setTitleShown(false);
-//			}
-//			control.getContentArea().getCenter().setResizingEnabled(false);
-//			control.getContentArea().getCenter().setDividerSize(0);
-//
-//			locked = true;
-//
-//		} else {
-//			for (int i = 0; i < mdlist.size(); i++) {
-//				PanelDockable dockable = (PanelDockable) mdlist.get(i);
-//				dockable.setTitleShown(true);
-//			}
-//
-//			control.getContentArea().getCenter().setResizingEnabled(true);
-//			control.getContentArea().getCenter().setDividerSize(2);
-//			
-//			locked = false;
-//		}
+		List<SingleCDockable> mdlist = control.getRegister()
+				.getSingleDockables();
+
+		if (!locked) {
+
+			for (int i = 0; i < mdlist.size(); i++) {
+				PanelDockable dockable = (PanelDockable) mdlist.get(i);
+				dockable.setTitleShown(false);
+			}
+			control.getContentArea().getCenter().setResizingEnabled(false);
+			control.getContentArea().getCenter().setDividerSize(0);
+
+			locked = true;
+
+		} else {
+			for (int i = 0; i < mdlist.size(); i++) {
+				PanelDockable dockable = (PanelDockable) mdlist.get(i);
+				dockable.setTitleShown(true);
+			}
+			
+			control.getContentArea().getCenter().setResizingEnabled(true);
+			control.getContentArea().getCenter().setDividerSize(2);
+			
+			locked = false;
+		}
 
 	}
 
@@ -195,6 +198,9 @@ public class DockableComponents {
 						PanelDockable newDockable = (PanelDockable) factory
 								.createBackup(name);
 						dmap.put(newDockable.getName(), newDockable);
+						newDockable.setStackable(false);
+						newDockable.setMinimizable(false);
+						newDockable.setMaximizable(false);
 						doOpen(newDockable);
 					}
 
@@ -249,7 +255,7 @@ public class DockableComponents {
 		PanelDockable logoDock = new PanelDockable("Logos", logoPanel);
 		PanelDockable msiDock = new PanelDockable("MSI", msiPanel);
 		
-		PanelDockable aisDock = new PanelDockable("AIS Target", aisPanel);
+//		PanelDockable aisDock = new PanelDockable("AIS Target", aisPanel);
 
 		CGrid grid = new CGrid(aControl);
 		grid.add(0, 0, 100, 3, topDock);
@@ -260,8 +266,8 @@ public class DockableComponents {
 		grid.add(90, 33, 10, 10, cursorDock);
 		grid.add(90, 43, 10, 10, activeWaypointDock);
 		grid.add(90, 53, 10, 10, msiDock);
-		grid.add(90, 63, 10, 10, aisDock);
-		grid.add(90, 73, 10, 27, logoDock);
+//		grid.add(90, 63, 10, 10, aisDock);
+		grid.add(90, 63, 10, 37, logoDock);
 
 		aControl.getContentArea().setMinimumAreaSize(new Dimension(0, 0));
 

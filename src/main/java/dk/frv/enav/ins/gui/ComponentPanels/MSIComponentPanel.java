@@ -1,6 +1,7 @@
 package dk.frv.enav.ins.gui.ComponentPanels;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 
 import javax.swing.JLabel;
 import javax.swing.border.EtchedBorder;
@@ -27,6 +28,9 @@ IMsiUpdateListener {
 	
 	public MSIComponentPanel() {
 		super();
+		
+		this.setMinimumSize(new Dimension(10, 55));
+		
 		msiPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		setBorder(null);
 		

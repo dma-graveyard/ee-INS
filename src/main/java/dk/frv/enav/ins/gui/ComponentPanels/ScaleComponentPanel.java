@@ -1,6 +1,7 @@
 package dk.frv.enav.ins.gui.ComponentPanels;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.util.Date;
 import java.util.Locale;
 
@@ -27,6 +28,9 @@ public class ScaleComponentPanel extends OMComponentPanel implements Runnable, P
 	
 	public ScaleComponentPanel(){
 		super();
+		
+		this.setMinimumSize(new Dimension(10, 25));
+		
 		scalePanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		setBorder(null);
 		setLayout(new BorderLayout(0, 0));

@@ -121,8 +121,9 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 		// Max scale
 		this.maxScale = EeINS.getSettings().getMapSettings().getMaxScale(); 
 	}
-
+	
 	public void initChart() {
+			
 		MapSettings mapSettings = EeINS.getSettings().getMapSettings();
 		Properties props = EeINS.getProperties();
 		

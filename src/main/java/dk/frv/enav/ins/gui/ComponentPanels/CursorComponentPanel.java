@@ -1,6 +1,7 @@
 package dk.frv.enav.ins.gui.ComponentPanels;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 
 import javax.swing.border.EtchedBorder;
 
@@ -24,10 +25,14 @@ public class CursorComponentPanel extends OMComponentPanel implements IGpsDataLi
 	
 	public CursorComponentPanel(){
 		super();
+		
+		this.setMinimumSize(new Dimension(10, 110));
+		
 		cursorPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		setBorder(null);
-		setLayout(new BorderLayout(0, 0));
+		setLayout(new BorderLayout(0, 0)); 	
 		add(cursorPanel, BorderLayout.NORTH);
+
 	}
 
 	/**

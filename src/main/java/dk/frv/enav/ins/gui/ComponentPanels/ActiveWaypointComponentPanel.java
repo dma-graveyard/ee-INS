@@ -1,6 +1,7 @@
 package dk.frv.enav.ins.gui.ComponentPanels;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 
 import javax.swing.border.EtchedBorder;
 
@@ -26,8 +27,11 @@ public class ActiveWaypointComponentPanel extends OMComponentPanel implements IG
 	
 	public ActiveWaypointComponentPanel(){
 		super();
+		
+		this.setMinimumSize(new Dimension(10, 165));
+		
 		activeWaypointPanel = new ActiveWaypointPanel();
-		activeWaypointPanel.setVisible(false);
+//		activeWaypointPanel.setVisible(false);
 		activeWaypointPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		setBorder(null);
 		
@@ -40,12 +44,13 @@ public class ActiveWaypointComponentPanel extends OMComponentPanel implements IG
 	 */
 	@Override
 	public void routesChanged(RoutesUpdateEvent e) {
-		if(routeManager.isRouteActive()){
-			activeWaypointPanel.setVisible(true);
-			activeWaypointPanel.updateActiveNavData();
-		} else if (activeWaypointPanel.isVisible()) {
-			activeWaypointPanel.setVisible(false);
-		}
+		activeWaypointPanel.updateActiveNavData();
+//		if(routeManager.isRouteActive()){
+//			activeWaypointPanel.setVisible(true);
+//			activeWaypointPanel.updateActiveNavData();
+//		} else if (activeWaypointPanel.isVisible()) {
+//			activeWaypointPanel.setVisible(false);
+//		}
 	}
 	@Override
 	public void recieveCoord(LatLonPoint llp) {

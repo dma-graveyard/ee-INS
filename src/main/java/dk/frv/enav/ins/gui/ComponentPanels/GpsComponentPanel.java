@@ -1,6 +1,7 @@
 package dk.frv.enav.ins.gui.ComponentPanels;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 
 import javax.swing.border.EtchedBorder;
 
@@ -30,6 +31,9 @@ public class GpsComponentPanel extends OMComponentPanel implements
 
 	public GpsComponentPanel() {
 		super();
+		
+		this.setMinimumSize(new Dimension(10, 110));
+		
 		gpsPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		setBorder(null);
 		

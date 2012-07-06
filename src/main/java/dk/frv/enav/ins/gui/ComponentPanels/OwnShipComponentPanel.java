@@ -1,6 +1,7 @@
 package dk.frv.enav.ins.gui.ComponentPanels;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 
 import javax.swing.border.EtchedBorder;
 
@@ -30,6 +31,9 @@ public class OwnShipComponentPanel extends OMComponentPanel implements IGpsDataL
 	
 	public OwnShipComponentPanel(){
 		super();
+		
+		this.setMinimumSize(new Dimension(10, 70));
+		
 		ownShipPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		setBorder(null);
 		

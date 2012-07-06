@@ -213,8 +213,14 @@ public class ActiveWaypointPanel extends JPanel {
 	public void updateActiveNavData(){
 		if (routeManager == null) return;
 		if(!routeManager.isRouteActive()){
-			return;
-		}
+			wptLabel.setText("N/A");
+			brgLabel.setText("N/A");
+			rngLabel.setText("N/A");
+			ttgLegLabel.setText("N/A");
+			ttgRouteLabel.setText("N/A");
+			etaNextLabel.setText("N/A");
+			etaRouteLabel.setText("N/A");
+		}else{
 		ActiveRoute activeRoute = routeManager.getActiveRoute();
 		wptLabel.setText(activeRoute.getActiveWp().getName());
 		brgLabel.setText(Formatter.formatDegrees(activeRoute.getActiveWpBrg(), 1));
@@ -223,6 +229,7 @@ public class ActiveWaypointPanel extends JPanel {
 		ttgRouteLabel.setText(Formatter.formatTime(activeRoute.getTtg()));
 		etaNextLabel.setText(Formatter.formatShortDateTime(activeRoute.getActiveWaypointEta()));
 		etaRouteLabel.setText(Formatter.formatShortDateTime(activeRoute.getEta()));
+		}
 	}
 	
 	public void setRouteManager(RouteManager routeManager) {
