@@ -58,7 +58,7 @@ public class CursorPanel extends JPanel {
 	public CursorPanel(){
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{10, 10, 0};
-		gridBagLayout.rowHeights = new int[]{20, 16, 16, 16, 16, 10};
+		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0, 0};
 		gridBagLayout.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
 		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		setLayout(gridBagLayout);

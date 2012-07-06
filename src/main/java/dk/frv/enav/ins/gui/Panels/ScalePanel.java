@@ -55,7 +55,7 @@ public class ScalePanel extends JPanel {
 		setBorder(new LineBorder(Color.GRAY));
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{10, 0};
-		gridBagLayout.rowHeights = new int[]{20, 20, 10};
+		gridBagLayout.rowHeights = new int[]{0, 0, 0};
 		gridBagLayout.columnWeights = new double[]{1.0, Double.MIN_VALUE};
 		gridBagLayout.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
 		setLayout(gridBagLayout);

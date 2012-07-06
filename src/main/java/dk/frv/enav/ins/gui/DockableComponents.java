@@ -140,31 +140,31 @@ public class DockableComponents {
 
 	public void toggleFrameLock() {
 
-		List<SingleCDockable> mdlist = control.getRegister()
-				.getSingleDockables();
-
-		if (!locked) {
-
-			for (int i = 0; i < mdlist.size(); i++) {
-				PanelDockable dockable = (PanelDockable) mdlist.get(i);
-				dockable.setTitleShown(false);
-			}
+//		List<SingleCDockable> mdlist = control.getRegister()
+//				.getSingleDockables();
+//
+//		if (!locked) {
+//
+//			for (int i = 0; i < mdlist.size(); i++) {
+//				PanelDockable dockable = (PanelDockable) mdlist.get(i);
+//				dockable.setTitleShown(false);
+//			}
 //			control.getContentArea().getCenter().setResizingEnabled(false);
 //			control.getContentArea().getCenter().setDividerSize(0);
-
-			locked = true;
-
-		} else {
-			for (int i = 0; i < mdlist.size(); i++) {
-				PanelDockable dockable = (PanelDockable) mdlist.get(i);
-				dockable.setTitleShown(true);
-			}
-
-			control.getContentArea().getCenter().setResizingEnabled(true);
-			control.getContentArea().getCenter().setDividerSize(2);
-
-			locked = false;
-		}
+//
+//			locked = true;
+//
+//		} else {
+//			for (int i = 0; i < mdlist.size(); i++) {
+//				PanelDockable dockable = (PanelDockable) mdlist.get(i);
+//				dockable.setTitleShown(true);
+//			}
+//
+//			control.getContentArea().getCenter().setResizingEnabled(true);
+//			control.getContentArea().getCenter().setDividerSize(2);
+//			
+//			locked = false;
+//		}
 
 	}
 
