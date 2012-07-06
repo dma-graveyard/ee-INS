@@ -97,7 +97,7 @@ public class AisLayer extends OMGraphicHandlerLayer implements
 	private OMCircle dummyCircle = new OMCircle();
 
 	private TopPanel topPanel;
-	
+
 	private AisComponentPanel aisPanel;
 
 	long highlightedMMSI;
@@ -108,7 +108,7 @@ public class AisLayer extends OMGraphicHandlerLayer implements
 	// private int offsetUnlockedX = 24;
 	// private int offsetUnlockedY = -32;
 	private int offsetUnlockedX = 8;
-	private int offsetUnlockedY = -49;
+	private int offsetUnlockedY = -53;
 
 	public AisLayer() {
 		// graphics.setVague(false);
@@ -152,30 +152,49 @@ public class AisLayer extends OMGraphicHandlerLayer implements
 				highlightInfoPanel.displayHighlight((int) xy.getX()
 						- offsetUnlockedX, (int) xy.getY() - offsetUnlockedY);
 			}
-			
-			VesselTarget vessel = highlightedVessel.getVesselTargetGraphic().getVesselTarget();
 
-			if (vessel.getStaticData() != null){
+			VesselTarget vessel = highlightedVessel.getVesselTargetGraphic()
+					.getVesselTarget();
+
+			if (vessel.getStaticData() != null) {
 				aisPanel.receiveHighlight(
 						vessel.getStaticData().getName(),
 						vessel.getStaticData().getCallsign(),
 						vessel.getPositionData().getCog(),
-						aisHandler.getOwnShip().getPositionData().getPos().getRhumbLineDistance(vessel.getPositionData().getPos()),
-						aisHandler.getOwnShip().getPositionData().getPos().getRhumbLineBearing(vessel.getPositionData().getPos()
-								
-								), vessel.getPositionData().getSog()
-						
+						aisHandler
+								.getOwnShip()
+								.getPositionData()
+								.getPos()
+								.getRhumbLineDistance(
+										vessel.getPositionData().getPos()),
+						aisHandler
+								.getOwnShip()
+								.getPositionData()
+								.getPos()
+								.getRhumbLineBearing(
+										vessel.getPositionData().getPos()
 
-						);
-			}else{
+								), vessel.getPositionData().getSog()
+
+				);
+			} else {
 				aisPanel.receiveHighlight(
 						vessel.getPositionData().getCog(),
-						aisHandler.getOwnShip().getPositionData().getPos().getRhumbLineDistance(vessel.getPositionData().getPos()),
-						aisHandler.getOwnShip().getPositionData().getPos().getRhumbLineBearing(vessel.getPositionData().getPos())
-,vessel.getPositionData().getSog()
-						);
+						aisHandler
+								.getOwnShip()
+								.getPositionData()
+								.getPos()
+								.getRhumbLineDistance(
+										vessel.getPositionData().getPos()),
+						aisHandler
+								.getOwnShip()
+								.getPositionData()
+								.getPos()
+								.getRhumbLineBearing(
+										vessel.getPositionData().getPos()),
+						vessel.getPositionData().getSog());
 			}
-			
+
 			double highlightlat = highlightedVessel.getVesselTargetGraphic()
 					.getVesselTarget().getPositionData().getPos().getLatitude();
 			double highlightlon = highlightedVessel.getVesselTargetGraphic()
@@ -199,8 +218,7 @@ public class AisLayer extends OMGraphicHandlerLayer implements
 				// System.out.println(highlightlat + " is bigger than " + )
 				highlightInfoPanel.setVisible(false);
 				aisPanel.resetHighLight();
-				
-				
+
 			}
 
 			// If vessel lat > upperleftlat
@@ -442,14 +460,23 @@ public class AisLayer extends OMGraphicHandlerLayer implements
 						highlightedMMSI = 0;
 
 						// statusArea.removeHighlight();
-
 						highlightInfoPanel.setVisible(false);
+						aisPanel.resetHighLight();
+
+						highlighted = null;
+						System.out.println("nobody near?");
+						
 						return false;
 					}
 
 					if (selectedGraphic instanceof VesselTargetTriangle) {
+						System.out.println("We have something");
 						if (selectedGraphic != highlighted
 								&& selectedGraphic != null) {
+							
+							System.out.println(selectedGraphic != highlighted);
+							System.out.println(selectedGraphic != null);
+							
 							highlighted = selectedGraphic;
 							highlightedVessel = (VesselTargetTriangle) selectedGraphic;
 							highlightedMMSI = highlightedVessel
@@ -470,31 +497,53 @@ public class AisLayer extends OMGraphicHandlerLayer implements
 													.getPositionData().getPos()
 													.getLongitude());
 							// MOVE AND SHOW GLASS PANE
-							VesselTarget vessel = highlightedVessel.getVesselTargetGraphic().getVesselTarget();
-							
-							if (vessel.getStaticData() != null){
+							VesselTarget vessel = highlightedVessel
+									.getVesselTargetGraphic().getVesselTarget();
+
+							if (vessel.getStaticData() != null) {
 								aisPanel.receiveHighlight(
 										vessel.getStaticData().getName(),
 										vessel.getStaticData().getCallsign(),
 										vessel.getPositionData().getCog(),
-										aisHandler.getOwnShip().getPositionData().getPos().getRhumbLineDistance(vessel.getPositionData().getPos()),
-										aisHandler.getOwnShip().getPositionData().getPos().getRhumbLineBearing(vessel.getPositionData().getPos()
-												
-												), vessel.getPositionData().getSog()
-										
+										aisHandler
+												.getOwnShip()
+												.getPositionData()
+												.getPos()
+												.getRhumbLineDistance(
+														vessel.getPositionData()
+																.getPos()),
+										aisHandler
+												.getOwnShip()
+												.getPositionData()
+												.getPos()
+												.getRhumbLineBearing(
+														vessel.getPositionData()
+																.getPos()
 
-										);
-							}else{
+												), vessel.getPositionData()
+												.getSog()
+
+								);
+							} else {
 								aisPanel.receiveHighlight(
 										vessel.getPositionData().getCog(),
-										aisHandler.getOwnShip().getPositionData().getPos().getRhumbLineDistance(vessel.getPositionData().getPos()),
-										aisHandler.getOwnShip().getPositionData().getPos().getRhumbLineBearing(vessel.getPositionData().getPos())
-				,vessel.getPositionData().getSog()
-										);
+										aisHandler
+												.getOwnShip()
+												.getPositionData()
+												.getPos()
+												.getRhumbLineDistance(
+														vessel.getPositionData()
+																.getPos()),
+										aisHandler
+												.getOwnShip()
+												.getPositionData()
+												.getPos()
+												.getRhumbLineBearing(
+														vessel.getPositionData()
+																.getPos()),
+										vessel.getPositionData().getSog());
 							}
-							
 
-							
 							// statusArea.setHighlightedVesselMMSI(highlightedVessel.getMMSI());
 
 							highlightInfoPanel.displayHighlight((int) xy.getX()
