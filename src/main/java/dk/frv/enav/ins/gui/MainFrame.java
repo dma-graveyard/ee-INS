@@ -48,8 +48,10 @@ import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.gui.ComponentPanels.ActiveWaypointComponentPanel;
 import dk.frv.enav.ins.gui.ComponentPanels.AisComponentPanel;
 import dk.frv.enav.ins.gui.ComponentPanels.CursorComponentPanel;
+import dk.frv.enav.ins.gui.ComponentPanels.DynamicNoGoComponentPanel;
 import dk.frv.enav.ins.gui.ComponentPanels.GpsComponentPanel;
 import dk.frv.enav.ins.gui.ComponentPanels.MSIComponentPanel;
+import dk.frv.enav.ins.gui.ComponentPanels.NoGoComponentPanel;
 import dk.frv.enav.ins.gui.ComponentPanels.OwnShipComponentPanel;
 import dk.frv.enav.ins.gui.ComponentPanels.ScaleComponentPanel;
 import dk.frv.enav.ins.gui.Panels.LogoPanel;
@@ -84,6 +86,8 @@ public class MainFrame extends JFrame implements WindowListener {
 	private LogoPanel logoPanel;
 	private MSIComponentPanel msiComponentPanel;
 	private AisComponentPanel aisComponentPanel;
+	private DynamicNoGoComponentPanel dynamicNoGoPanel;
+	private NoGoComponentPanel nogoPanel;
 	
 	
 	private JPanel glassPanel;
@@ -132,7 +136,9 @@ public class MainFrame extends JFrame implements WindowListener {
 		chartPanel = new ChartPanel(activeWaypointPanel);
 		msiComponentPanel = new MSIComponentPanel();
 		aisComponentPanel = new AisComponentPanel();
-
+		dynamicNoGoPanel = new DynamicNoGoComponentPanel();
+		nogoPanel = new NoGoComponentPanel();
+		
 		// Unmovable panels
 		bottomPanel = new BottomPanel();
 
@@ -164,7 +170,9 @@ public class MainFrame extends JFrame implements WindowListener {
 		mapHandler.add(activeWaypointPanel);
 		mapHandler.add(msiComponentPanel);
 		mapHandler.add(aisComponentPanel);
-
+		mapHandler.add(dynamicNoGoPanel);
+		mapHandler.add(nogoPanel);
+		
 		// Create top menubar
 		menuBar = new EeINSMenuBar();
 		this.setJMenuBar(menuBar);
@@ -304,6 +312,15 @@ public class MainFrame extends JFrame implements WindowListener {
 		return aisComponentPanel;
 	}
 
+	public DynamicNoGoComponentPanel getDynamicNoGoPanel() {
+		return dynamicNoGoPanel;
+	}
+
+	public NoGoComponentPanel getNogoPanel() {
+		return nogoPanel;
+	}
+
+	
 	
 	
 	

@@ -245,51 +245,51 @@ public class NogoLocationGraphic extends OMGraphicList {
 
 	}
 
-	@Override
-	public void render(Graphics gr) {
-
-		Graphics2D image = (Graphics2D) gr;
-		image.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-				RenderingHints.VALUE_ANTIALIAS_ON);
-		super.render(image);
-		Font font = new Font(Font.MONOSPACED, Font.PLAIN, 16);
-
-		String message0 = "NoGo Active, only valid from " + validFrom + " to "
-				+ validTo;
-		String message1 = "Do not use this for navigational purposes!";
-		String message2 = "Only valid for draughts at " + draught
-				+ " meters and below";
-
-		String messageTide = "NoGo Active, no Tide Data found showing only static depth";
-
-		gr.setFont(font);
-		gr.setColor(Color.red);
-
-		// Errorcode -1 means server experinced a timeout
-		// Errorcode 0 means everything went ok
-		// Errorcode 1 is the standby message
-		// Errorcode 17 means no data
-		// Errorcode 18 means no tide data
-
-		if (frame) {
-
-			if (errorCode == 0) {
-				gr.drawString(message0, 5, 20);
-				gr.drawString(message1, 5, 40);
-				gr.drawString(message2, 5, 60);
-			}
-
-			if (errorCode == 18) {
-				gr.drawString(messageTide, 5, 20);
-				gr.drawString(message1, 5, 40);
-				gr.drawString(message2, 5, 60);
-			}
-
-			if (errorCode == -1 || errorCode == 1 || errorCode == 17) {
-				gr.drawString(message, 5, 20);
-
-			}
-		}
-	}
+//	@Override
+//	public void render(Graphics gr) {
+//
+//		Graphics2D image = (Graphics2D) gr;
+//		image.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+//				RenderingHints.VALUE_ANTIALIAS_ON);
+//		super.render(image);
+//		Font font = new Font(Font.MONOSPACED, Font.PLAIN, 16);
+//
+//		String message0 = "NoGo Active, only valid from " + validFrom + " to "
+//				+ validTo;
+//		String message1 = "Do not use this for navigational purposes!";
+//		String message2 = "Only valid for draughts at " + draught
+//				+ " meters and below";
+//
+//		String messageTide = "NoGo Active, no Tide Data found showing only static depth";
+//
+//		gr.setFont(font);
+//		gr.setColor(Color.red);
+//
+//		// Errorcode -1 means server experinced a timeout
+//		// Errorcode 0 means everything went ok
+//		// Errorcode 1 is the standby message
+//		// Errorcode 17 means no data
+//		// Errorcode 18 means no tide data
+//
+//		if (frame) {
+//
+//			if (errorCode == 0) {
+//				gr.drawString(message0, 5, 20);
+//				gr.drawString(message1, 5, 40);
+//				gr.drawString(message2, 5, 60);
+//			}
+//
+//			if (errorCode == 18) {
+//				gr.drawString(messageTide, 5, 20);
+//				gr.drawString(message1, 5, 40);
+//				gr.drawString(message2, 5, 60);
+//			}
+//
+//			if (errorCode == -1 || errorCode == 1 || errorCode == 17) {
+//				gr.drawString(message, 5, 20);
+//
+//			}
+//		}
+//	}
 
 }

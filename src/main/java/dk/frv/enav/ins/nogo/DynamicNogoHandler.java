@@ -42,6 +42,7 @@ import dk.frv.enav.common.xml.nogo.types.NogoPolygon;
 import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.ais.AisHandler;
 import dk.frv.enav.ins.gps.GpsHandler;
+import dk.frv.enav.ins.gui.ComponentPanels.DynamicNoGoComponentPanel;
 import dk.frv.enav.ins.layers.nogo.DynamicNogoLayer;
 import dk.frv.enav.ins.services.shore.ShoreServiceException;
 import dk.frv.enav.ins.services.shore.ShoreServices;
@@ -57,12 +58,12 @@ public class DynamicNogoHandler extends MapHandlerChild implements Runnable {
 	GeoLocation northWestPointOwn;
 	GeoLocation southEastPointOwn;
 	float draughtOwn;
+	float draughtTarget;
 
 	// private long mmsiTarget = 211284230;
 	private long mmsiTarget = -1;
 	GeoLocation northWestPointTarget;
 	GeoLocation southEastPointTarget;
-	float draughtTarget;
 
 	boolean nogoFailed = false;
 
@@ -92,6 +93,8 @@ public class DynamicNogoHandler extends MapHandlerChild implements Runnable {
 
 	private boolean dynamicNoGoActive = false;
 
+	private DynamicNoGoComponentPanel nogoPanel;
+
 	public boolean getNogoFailed() {
 		return nogoFailed;
 	}
@@ -114,26 +117,29 @@ public class DynamicNogoHandler extends MapHandlerChild implements Runnable {
 		// updateNogo();
 
 		while (true) {
-			
-			if (dynamicNoGoActive){
-				nogoLayer.setVisible(true);
-				updateNogo();
+
+			try {
+				if (dynamicNoGoActive) {
+					nogoLayer.setVisible(true);
+					updateNogo();
+				}
+				Thread.sleep(80000);
+			} catch (InterruptedException e) {
+				System.out.println("Interrupted");
 			}
-			EeINS.sleep(60000);
-			
-			System.out.println(dynamicNoGoActive);
-			
+
 			if (!dynamicNoGoActive && nogoLayer != null) {
 				nogoLayer.setVisible(false);
 				nogoLayer.cleanUp();
+				nogoPanel.inactive();
 			}
 
-//			EeINS.sleep(10000);
-//			while (dynamicNoGoActive) {
-//				nogoLayer.setVisible(true);
-//				updateNogo();
-//				EeINS.sleep(60000);
-//			}
+			// EeINS.sleep(10000);
+			// while (dynamicNoGoActive) {
+			// nogoLayer.setVisible(true);
+			// updateNogo();
+			// EeINS.sleep(60000);
+			// }
 
 			// EeINS.sleep(300000);
 			// EeINS.sleep(60000);
@@ -157,7 +163,6 @@ public class DynamicNogoHandler extends MapHandlerChild implements Runnable {
 	}
 
 	public synchronized void updateNogo() {
-		System.out.println("Dynamic nogo");
 
 		// Is dynamic nogo activated and target not null?
 		if (dynamicNoGoActive
@@ -187,6 +192,7 @@ public class DynamicNogoHandler extends MapHandlerChild implements Runnable {
 						shipLocation.getLongitude() - 0.08);
 
 				notifyUpdate(false);
+				nogoPanel.newRequest();
 
 				// Set depth for own ship
 				if (aisHandler.getOwnShip().getStaticData() != null) {
@@ -248,7 +254,15 @@ public class DynamicNogoHandler extends MapHandlerChild implements Runnable {
 				}
 				// Notify if update
 				if (nogoUpdated) {
+					nogoLayer.cleanUp();
 					notifyUpdate(true);
+					nogoPanel.requestCompleted(getNogoFailed(),
+							getNoGoErrorCodeOwn(), getNoGoErrorCodeTarget(),
+							getNogoPolygonsOwn(), getNogoPolygonsTarget(),
+							getValidFromOwn(), getValidToOwn(),
+							getDraughtOwn(), getDraughtTarget()
+
+					);
 				}
 			}
 		}
@@ -352,6 +366,9 @@ public class DynamicNogoHandler extends MapHandlerChild implements Runnable {
 		if (aisHandler == null && obj instanceof AisHandler) {
 			aisHandler = (AisHandler) obj;
 		}
+		if (obj instanceof DynamicNoGoComponentPanel) {
+			nogoPanel = (DynamicNoGoComponentPanel) obj;
+		}
 
 	}
 
@@ -427,11 +444,14 @@ public class DynamicNogoHandler extends MapHandlerChild implements Runnable {
 		this.dynamicNoGoActive = dynamicNoGoActive;
 		System.out.println("Interrupting!");
 		self.interrupt();
-		
 	}
 
 	public void setMmsiTarget(long mmsiTarget) {
 		this.mmsiTarget = mmsiTarget;
+	}
+
+	public float getDraughtTarget() {
+		return draughtTarget;
 	}
 
 }

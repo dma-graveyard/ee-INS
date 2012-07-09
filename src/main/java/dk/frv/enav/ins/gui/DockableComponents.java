@@ -32,8 +32,10 @@ import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.gui.ComponentPanels.ActiveWaypointComponentPanel;
 import dk.frv.enav.ins.gui.ComponentPanels.AisComponentPanel;
 import dk.frv.enav.ins.gui.ComponentPanels.CursorComponentPanel;
+import dk.frv.enav.ins.gui.ComponentPanels.DynamicNoGoComponentPanel;
 import dk.frv.enav.ins.gui.ComponentPanels.GpsComponentPanel;
 import dk.frv.enav.ins.gui.ComponentPanels.MSIComponentPanel;
+import dk.frv.enav.ins.gui.ComponentPanels.NoGoComponentPanel;
 import dk.frv.enav.ins.gui.ComponentPanels.OwnShipComponentPanel;
 import dk.frv.enav.ins.gui.ComponentPanels.ScaleComponentPanel;
 import dk.frv.enav.ins.gui.Panels.LogoPanel;
@@ -41,7 +43,7 @@ import dk.frv.enav.ins.gui.Panels.LogoPanel;
 public class DockableComponents {
 
 	private static final String[] PANEL_NAMES = { "Chart", "Top", "Scale",
-			"Own Ship", "GPS", "Cursor", "Active Waypoint", "Logos", "MSI", "AIS Target" };
+			"Own Ship", "GPS", "Cursor", "Active Waypoint", "Logos", "MSI", "AIS Target", "Dynamic NoGo", "NoGo" };
 	private Map<String, PanelDockable> dmap;
 	private CControl control;
 	private DockableFactory factory;
@@ -57,6 +59,8 @@ public class DockableComponents {
 	private LogoPanel logoPanel;
 	private MSIComponentPanel msiPanel;
 	private AisComponentPanel aisPanel;
+	private DynamicNoGoComponentPanel dynamicNoGoPanel;
+	private NoGoComponentPanel nogoPanel;
 
 	private boolean locked = false;
 
@@ -75,10 +79,12 @@ public class DockableComponents {
 		logoPanel = mainFrame.getLogoPanel();
 		msiPanel = mainFrame.getMsiComponentPanel();
 		aisPanel = mainFrame.getAisComponentPanel();
+		dynamicNoGoPanel = mainFrame.getDynamicNoGoPanel();
+		nogoPanel = mainFrame.getNogoPanel();
 
 		factory = new DockableFactory(chartPanel, topPanel, scalePanel,
 				ownShipPanel, gpsPanel, cursorPanel, activeWaypointPanel,
-				logoPanel, msiPanel, aisPanel);
+				logoPanel, msiPanel, aisPanel, dynamicNoGoPanel, nogoPanel);
 
 		CContentArea contentArea = control.getContentArea();
 		mainFrame.getContentPane().add(contentArea);
@@ -293,13 +299,15 @@ public class DockableComponents {
 		LogoPanel logoPanel;
 		MSIComponentPanel msiPanel;
 		AisComponentPanel aisPanel;
+		DynamicNoGoComponentPanel dynamicNoGoPanel;
+		NoGoComponentPanel nogoPanel;
 
 		public DockableFactory(ChartPanel chartPanel, TopPanel topPanel,
 				ScaleComponentPanel scalePanel,
 				OwnShipComponentPanel ownShipPanel, GpsComponentPanel gpsPanel,
 				CursorComponentPanel cursorPanel,
 				ActiveWaypointComponentPanel activeWaypointPanel,
-				LogoPanel logoPanel, MSIComponentPanel msiPanel, AisComponentPanel aisPanel) {
+				LogoPanel logoPanel, MSIComponentPanel msiPanel, AisComponentPanel aisPanel, DynamicNoGoComponentPanel dynamicNoGoPanel, NoGoComponentPanel nogoPanel) {
 
 			super();
 
@@ -313,6 +321,9 @@ public class DockableComponents {
 			this.logoPanel = logoPanel;
 			this.msiPanel = msiPanel;
 			this.aisPanel = aisPanel;
+			this.dynamicNoGoPanel = dynamicNoGoPanel;
+			this.nogoPanel = nogoPanel;
+			
 		}
 
 		@Override
@@ -350,6 +361,13 @@ public class DockableComponents {
 			}
 			if (id.equals("AIS Target")) {
 				return new PanelDockable(id, aisPanel);
+			}
+			
+			if (id.equals("Dynamic NoGo")) {
+				return new PanelDockable(id, dynamicNoGoPanel);
+			}
+			if (id.equals("NoGo")) {
+				return new PanelDockable(id, nogoPanel);
 			}
 
 			return new PanelDockable(id, new JPanel());
