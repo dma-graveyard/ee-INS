@@ -3,6 +3,7 @@ package dk.frv.enav.ins.gui.ComponentPanels;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -30,11 +31,14 @@ public class DynamicNoGoComponentPanel extends OMComponentPanel {
 	private JLabel statLabel2;
 	private JLabel statLabel3;
 	private JLabel statLabel4;
-
+	private JLabel statLabel5;
+	private JLabel statLabel6;
+	private JLabel statLabel7;
+	
 	public DynamicNoGoComponentPanel() {
 		super();
 
-		this.setMinimumSize(new Dimension(10, 195));
+		this.setMinimumSize(new Dimension(10, 150));
 
 		nogoPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		setBorder(null);
@@ -49,28 +53,47 @@ public class DynamicNoGoComponentPanel extends OMComponentPanel {
 		statLabel2 = nogoPanel.getStatLabel2();
 		statLabel3 = nogoPanel.getStatLabel3();
 		statLabel4 = nogoPanel.getStatLabel4();
+		statLabel5 = nogoPanel.getStatLabel5();
+		statLabel6 = nogoPanel.getStatLabel6();
+		statLabel7 = nogoPanel.getStatLabel7();
 		
 		statusLabel.setEnabled(false);
 		statLabel1.setEnabled(false);
 		statLabel2.setEnabled(false);
 		statLabel3.setEnabled(false);
 		statLabel4.setEnabled(false);
+		statLabel5.setEnabled(false);
+		statLabel6.setEnabled(false);
+		statLabel7.setEnabled(false);
+		
+		
+		statLabel5.setText("");
+		statLabel6.setText("");
+		statLabel7.setText("");
 
 	}
 	
 	public void newRequest(){
 		statusLabel.setEnabled(true);
-		statLabel1.setEnabled(true);
-		statLabel2.setEnabled(true);
-		statLabel3.setEnabled(true);
-		statLabel4.setEnabled(true);
+		statLabel1.setEnabled(false);
+		statLabel2.setEnabled(false);
+		statLabel3.setEnabled(false);
+		statLabel4.setEnabled(false);
+		statLabel5.setEnabled(true);
+		statLabel6.setEnabled(true);
+		statLabel7.setEnabled(true);
 		
 		statusLabel.setText("Connecting...");
-		statusLabel.setForeground(Color.YELLOW);
-		statLabel1.setText("Requesting NoGo for");
-		statLabel2.setText("Own vessel and " + AisMessage.trimText(aisHandler.getVesselTargets().get(dynamicNogoHandler.getMmsiTarget()).getStaticData().getName()));
-		statLabel3.setText("Please standby");
-		statLabel4.setText("");
+		statusLabel.setForeground(Color.GREEN);
+		statLabel1.setText("N/A");
+		statLabel2.setText("N/A");
+		statLabel3.setText("N/A");
+		statLabel4.setText("N/A");
+		
+		statLabel5.setText("Target Vessel: " + AisMessage.trimText(aisHandler.getVesselTargets().get(dynamicNogoHandler.getMmsiTarget()).getStaticData().getName()));
+		statLabel6.setText("Requesting NoGo");
+		statLabel7.setText("Please standby");
+
 	}
 
 	
@@ -96,68 +119,122 @@ public class DynamicNoGoComponentPanel extends OMComponentPanel {
 		if (nogoFailed){
 			statusLabel.setText("Failed");
 			statusLabel.setForeground(Color.RED);
-			statLabel1.setText("Connection to shore timed out");
-			statLabel2.setText("Retrying");
-			statLabel3.setText("in a few minutes");
-			statLabel4.setText("");
+			statLabel5.setText("");
+			statLabel6.setText("Connection to shore timed out");
+			statLabel7.setText("Try again in a few minutes");
+			
+			statLabel1.setEnabled(false);
+			statLabel2.setEnabled(false);
+			statLabel3.setEnabled(false);
+			statLabel4.setEnabled(false);
 		}else{
+			
+			int draughtOwnInt = Math.round((draughtOwn));
+			int draughtTargetInt = Math.round(draughtTarget);
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("dd MMM , HH:mm");
+            String validFromStr = sdf.format(validFrom);
+            String validToStr = sdf.format(validTo);
+            
 			if (errorCodeOwn == 17 && errorCodeTarget == 17){
 				statusLabel.setText("Failed");
 				statusLabel.setForeground(Color.RED);
-				statLabel1.setText("No data for region");
-				statLabel2.setText("Retrying");
-				statLabel3.setText("in a few minutes");
-				statLabel4.setText("");
+				statLabel5.setText("No data for region");
+
+				statLabel1.setText("N/A");
+				statLabel2.setText("N/A");
+				statLabel3.setText("N/A");
+				statLabel4.setText("N/A");
+				
+				statLabel1.setEnabled(false);
+				statLabel2.setEnabled(false);
+				statLabel3.setEnabled(false);
+				statLabel4.setEnabled(false);
+				
+				statLabel6.setText("Retrying in a few min");
 				return;
 			}
 			if (errorCodeOwn == 17 || errorCodeTarget == 17){
-				statusLabel.setText("Failed");
-				statusLabel.setForeground(Color.YELLOW);
-				statLabel1.setText("No data for one of the ship regions");
-				statLabel2.setText("Retrying");
-				statLabel3.setText("in a few minutes");
-				statLabel4.setText("");
+				statusLabel.setText("Limited");
+				statusLabel.setForeground(Color.RED);
+				statLabel5.setText("No data for one of the ship regions");
+
+				statLabel1.setText(validFromStr);
+				statLabel2.setText(validToStr);
+				statLabel3.setText(Integer.toString(draughtOwnInt)  + " meters");
+				statLabel4.setText(Integer.toString(draughtTargetInt)  + " meters");
+				
+				statLabel6.setText("Retrying in a few min");
+				statLabel7.setText("");
 				return;
 			}
 			
 			if (errorCodeOwn == 18 && errorCodeTarget == 18){
 				statusLabel.setText("Limited");
-				statusLabel.setForeground(Color.YELLOW);
-				statLabel1.setText("No tide data available for region");
-				statLabel2.setText("Retrying");
-				statLabel3.setText("in a few minutes");
-				statLabel4.setText("");
+				statusLabel.setForeground(Color.ORANGE);
+
+				statLabel1.setText(validFromStr);
+				statLabel2.setText(validToStr);
+				statLabel3.setText(Integer.toString(draughtOwnInt)  + " meters");
+				statLabel4.setText(Integer.toString(draughtTargetInt)  + " meters");
+				statLabel5.setText("No tide data available for region");
+				statLabel6.setText("Retrying in");
+				statLabel7.setText("a few minutes");
+				
 				return;
 			}
 			
 			if (errorCodeOwn == 18 || errorCodeTarget == 18){
 				statusLabel.setText("Limited");
-				statusLabel.setForeground(Color.RED);
-				statLabel1.setText("No tide data for one of the vessels");
-				statLabel2.setText("Retrying");
-				statLabel3.setText("in a few minutes");
-				statLabel4.setText("");
+				statusLabel.setForeground(Color.ORANGE);
+
+				statLabel1.setText(validFromStr);
+				statLabel2.setText(validToStr);
+				statLabel3.setText(Integer.toString(draughtOwnInt)  + " meters");
+				statLabel4.setText(Integer.toString(draughtTargetInt)  + " meters");
+				statLabel5.setText("No tide data for one of the vessel");
+				statLabel6.setText("Retrying in");
+				statLabel7.setText("a few minutes");
+	
 				return;
 			}
 
 			if (errorCodeOwn == 0 && errorCodeTarget == 0){
 				statusLabel.setText("Success");
 				statusLabel.setForeground(Color.GREEN);
-				statLabel1.setText("Valid from " + validFrom);
-				statLabel2.setText("Valid to " + validTo);
-				statLabel3.setText("For own draught: " + draughtOwn);
-				statLabel4.setText("Target draught: " + draughtTarget);
+				statLabel1.setText(validFromStr);
+				statLabel2.setText(validToStr);
+				statLabel3.setText(Integer.toString(draughtOwnInt) + " meters");
+				statLabel4.setText(Integer.toString(draughtTargetInt)  + " meters");
+				statLabel5.setText("");
+				statLabel6.setText("");
+				statLabel7.setText("");
+				
+				statLabel1.setEnabled(true);
+				statLabel2.setEnabled(true);
+				statLabel3.setEnabled(true);
+				statLabel4.setEnabled(true);
 				return;
+
 			}
 
 			if (polygonsOwn.size() == 0 && polygonsTarget.size() == 0){
-				statusLabel.setText("Success, Entire region is Go");
+				statusLabel.setText("Success");
 				statusLabel.setForeground(Color.GREEN);
-				statLabel1.setText("Valid from " + validFrom);
-				statLabel2.setText("Valid to " + validTo);
-				statLabel3.setText("For own draught: " + draughtOwn);
-				statLabel4.setText("Target draught: " + draughtTarget);
+				statLabel1.setText(validFromStr);
+				statLabel2.setText(validToStr);
+				statLabel3.setText(Integer.toString(draughtOwnInt)  + " meters");
+				statLabel4.setText(Integer.toString(draughtTargetInt)  + " meters");
+				statLabel5.setText("Entire region is Go");
+				statLabel6.setText("");
+				statLabel7.setText("");
+				
+				statLabel1.setEnabled(true);
+				statLabel2.setEnabled(true);
+				statLabel3.setEnabled(true);
+				statLabel4.setEnabled(true);
 				return;
+
 			}
 		}
 	}
@@ -168,13 +245,16 @@ public class DynamicNoGoComponentPanel extends OMComponentPanel {
 		statLabel2.setEnabled(false);
 		statLabel3.setEnabled(false);
 		statLabel4.setEnabled(false);
+		statLabel5.setEnabled(false);
 
 		statusLabel.setText("Inactive");
-		statLabel1.setText("");
-		statLabel2.setText("");
-		statLabel3.setText("");
-		statLabel4.setText("");
-		
+		statLabel1.setText("N/A");
+		statLabel2.setText("N/A");
+		statLabel3.setText("N/A");
+		statLabel4.setText("N/A");
+		statLabel5.setText("");
+		statLabel6.setText("");
+		statLabel7.setText("");
 	}
 			
 			

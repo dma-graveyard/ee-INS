@@ -3,6 +3,7 @@ package dk.frv.enav.ins.gui.ComponentPanels;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -29,7 +30,8 @@ public class NoGoComponentPanel extends OMComponentPanel {
 	private JLabel statLabel2;
 	private JLabel statLabel3;
 	private JLabel statLabel4;
-
+	private JLabel statLabel5;
+	
 	public NoGoComponentPanel() {
 		super();
 
@@ -48,12 +50,17 @@ public class NoGoComponentPanel extends OMComponentPanel {
 		statLabel2 = nogoPanel.getStatLabel2();
 		statLabel3 = nogoPanel.getStatLabel3();
 		statLabel4 = nogoPanel.getStatLabel4();
+		statLabel5 = nogoPanel.getStatLabel5();
 		
 		statusLabel.setEnabled(false);
 		statLabel1.setEnabled(false);
 		statLabel2.setEnabled(false);
 		statLabel3.setEnabled(false);
 		statLabel4.setEnabled(false);
+		statLabel5.setEnabled(false);
+		
+		statLabel4.setText("");
+		statLabel5.setText("");
 
 	}
 	
@@ -63,13 +70,17 @@ public class NoGoComponentPanel extends OMComponentPanel {
 		statLabel2.setEnabled(true);
 		statLabel3.setEnabled(true);
 		statLabel4.setEnabled(true);
+		statLabel5.setEnabled(true);
 		
 		statusLabel.setText("Connecting...");
-		statusLabel.setForeground(Color.YELLOW);
-		statLabel1.setText("Requesting NoGo");
-		statLabel2.setText("");
-		statLabel3.setText("Please standby");
-		statLabel4.setText("");
+		statusLabel.setForeground(Color.GREEN);
+		statLabel1.setText("N/A");
+		statLabel2.setText("N/A");
+		statLabel3.setText("N/A");
+		
+		statLabel4.setText("Requesting NoGo");
+		statLabel5.setText("Please standby");
+		
 	}
 
 	
@@ -95,47 +106,73 @@ public class NoGoComponentPanel extends OMComponentPanel {
 		if (nogoFailed){
 			statusLabel.setText("Failed");
 			statusLabel.setForeground(Color.RED);
-			statLabel1.setText("Connection to shore timed out");
-			statLabel2.setText("Retrying");
-			statLabel3.setText("in a few minutes");
-			statLabel4.setText("");
+			statLabel4.setText("Connection to shore timed out");
+			statLabel5.setText("Try again in a few minutes");
+			
+			statLabel1.setEnabled(false);
+			statLabel2.setEnabled(false);
+			statLabel3.setEnabled(false);
 		}else{
+			
+			draught = -draught;
+			
+			int draughtInt = (int) Math.round((draught));
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("dd MMM , HH:mm");
+            String validFromStr = sdf.format(validFrom);
+            String validToStr = sdf.format(validTo);
+
+			
 			if (errorCodeOwn == 17){
 				statusLabel.setText("Failed");
 				statusLabel.setForeground(Color.RED);
-				statLabel1.setText("No data for region");
-				statLabel2.setText("");
-				statLabel3.setText("");
-				statLabel4.setText("");
+				statLabel4.setText("No data for region");
+
+				statLabel1.setEnabled(false);
+				statLabel2.setEnabled(false);
+				statLabel3.setEnabled(false);
+				
+				statLabel5.setText("");
 				return;
 			}
 			
 			if (errorCodeOwn == 18){
 				statusLabel.setText("Limited");
-				statusLabel.setForeground(Color.YELLOW);
-				statLabel1.setText("No tide data available for region");
-				statLabel2.setText("");
-				statLabel3.setText("");
-				statLabel4.setText("");
+				statusLabel.setForeground(Color.ORANGE);
+				statLabel4.setText("No tide data available for region");
+				statLabel5.setText("");
+				statLabel1.setText(validFromStr);
+				statLabel2.setText(validToStr);
+				statLabel3.setText(Integer.toString(draughtInt)  + " meters");
 				return;
 			}
 
 			if (errorCodeOwn == 0){
 				statusLabel.setText("Success");
 				statusLabel.setForeground(Color.GREEN);
-				statLabel1.setText("Valid from " + validFrom);
-				statLabel2.setText("Valid to " + validTo);
-				statLabel3.setText("For draught: " + draught);
+				statLabel1.setText(validFromStr);
+				statLabel2.setText(validToStr);
+				statLabel3.setText((Integer.toString(draughtInt))  + " meters");
 				statLabel4.setText("");
+				statLabel5.setText("");
+				
+				statLabel1.setEnabled(true);
+				statLabel2.setEnabled(true);
+				statLabel3.setEnabled(true);
 				return;
 			}
 
 			if (polygonsOwn.size() == 0){
-				statusLabel.setText("Success, Entire region is Go");
+				statusLabel.setText("Success");
 				statusLabel.setForeground(Color.GREEN);
-				statLabel1.setText("Valid from " + validFrom);
-				statLabel2.setText("Valid to " + validTo);
-				statLabel3.setText("For draught: " + draught);
+				statLabel1.setText(validFromStr);
+				statLabel2.setText(validToStr);
+				statLabel3.setText(Integer.toString(draughtInt)  + " meters");
+				statLabel4.setText("Entire region is Go");
+				
+				statLabel1.setEnabled(true);
+				statLabel2.setEnabled(true);
+				statLabel3.setEnabled(true);
 				return;
 			}
 		}
