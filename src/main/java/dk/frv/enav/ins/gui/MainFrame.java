@@ -231,6 +231,8 @@ public class MainFrame extends JFrame implements WindowListener {
 
 		// Close routine
 		dockableComponents.saveLayout();
+		
+		
 		EeINS.closeApp();
 	}
 

@@ -10,7 +10,11 @@ import java.beans.beancontext.BeanContextChild;
 import java.beans.beancontext.BeanContextChildSupport;
 import java.beans.beancontext.BeanContextMembershipEvent;
 import java.beans.beancontext.BeanContextMembershipListener;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 
 import javax.swing.ImageIcon;
@@ -19,6 +23,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 
 import com.bbn.openmap.Environment;
@@ -57,7 +62,9 @@ public class EeINSMenuBar extends JMenuBar implements PropertyConsumer,
 	private JCheckBoxMenuItem encLayer;
 	private JCheckBoxMenuItem nogoLayer = new JCheckBoxMenuItem("NoGo Layer");;
 	private JCheckBoxMenuItem newRoute;
-	
+
+	private JMenu layouts;
+
 	public EeINSMenuBar() {
 		super();
 	}
@@ -65,7 +72,7 @@ public class EeINSMenuBar extends JMenuBar implements PropertyConsumer,
 	private void initMenuBar() {
 		boolean showRiskAndNogo = !EeINS.getSettings().getGuiSettings()
 				.isRiskNogoDisabled();
-		
+
 		JMenu file = new JMenu("File");
 		this.add(file);
 
@@ -83,13 +90,12 @@ public class EeINSMenuBar extends JMenuBar implements PropertyConsumer,
 		});
 
 		setup.setIcon(toolbarIcon("images/toolbar/wrench.png"));
-		
+
 		lock = new JCheckBoxMenuItem("Unlock");
 		file.add(lock);
 		lock.setSelected(true);
 		lock.setIcon(toolbarIcon("images/toolbar/lock-unlock.png"));
-		
-		
+
 		lock.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -155,15 +161,17 @@ public class EeINSMenuBar extends JMenuBar implements PropertyConsumer,
 
 		autoFollow = new JCheckBoxMenuItem("Auto follow own ship");
 		interact.add(autoFollow);
-		autoFollow.setSelected(EeINS.getSettings().getNavSettings().isAutoFollow());
-		autoFollow.setIcon(toolbarIcon("images/toolbar/arrow-curve-000-double.png"));
+		autoFollow.setSelected(EeINS.getSettings().getNavSettings()
+				.isAutoFollow());
+		autoFollow
+				.setIcon(toolbarIcon("images/toolbar/arrow-curve-000-double.png"));
 
 		autoFollow.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				topPanel.getAutoFollowBtn().setSelected(
 						!topPanel.getAutoFollowBtn().isSelected());
-				
+
 				EeINS.getSettings()
 						.getNavSettings()
 						.setAutoFollow(topPanel.getAutoFollowBtn().isSelected());
@@ -184,55 +192,59 @@ public class EeINSMenuBar extends JMenuBar implements PropertyConsumer,
 		aisLayer.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				topPanel.getAisBtn().setSelected(!topPanel.getAisBtn().isSelected());
-				EeINS.getSettings().getAisSettings().setVisible(topPanel.getAisBtn().isSelected());
-				mainFrame.getChartPanel().aisVisible(topPanel.getAisBtn().isSelected());
+				topPanel.getAisBtn().setSelected(
+						!topPanel.getAisBtn().isSelected());
+				EeINS.getSettings().getAisSettings()
+						.setVisible(topPanel.getAisBtn().isSelected());
+				mainFrame.getChartPanel().aisVisible(
+						topPanel.getAisBtn().isSelected());
 			}
 		});
 
 		encLayer = new JCheckBoxMenuItem("ENC Layer");
 		layers.add(encLayer);
-		encLayer.setSelected(EeINS.getSettings().getMapSettings().isEncVisible());
-		
+		encLayer.setSelected(EeINS.getSettings().getMapSettings()
+				.isEncVisible());
+
 		encLayer.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				topPanel.getEncBtn().setSelected(!topPanel.getEncBtn().isSelected());
-				EeINS.getSettings().getMapSettings().setEncVisible(topPanel.getEncBtn().isSelected());
-				mainFrame.getChartPanel().encVisible(topPanel.getEncBtn().isSelected());
+				topPanel.getEncBtn().setSelected(
+						!topPanel.getEncBtn().isSelected());
+				EeINS.getSettings().getMapSettings()
+						.setEncVisible(topPanel.getEncBtn().isSelected());
+				mainFrame.getChartPanel().encVisible(
+						topPanel.getEncBtn().isSelected());
 			}
 		});
 
-//		JCheckBoxMenuItem msiLayer = new JCheckBoxMenuItem("MSI Layer");
-//		layers.add(msiLayer);
-//		msiLayer.setSelected(EeINS.getSettings().getMapSettings().);
-//		
-//		encLayer.addActionListener(new ActionListener() {
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				topPanel.getEncBtn().setSelected(!topPanel.getEncBtn().isSelected());
-//				EeINS.getSettings().getMapSettings().setEncVisible(topPanel.getEncBtn().isSelected());
-//				mainFrame.getChartPanel().encVisible(topPanel.getEncBtn().isSelected());
-//			}
-//		});
-//		
-		if (showRiskAndNogo){
+		// JCheckBoxMenuItem msiLayer = new JCheckBoxMenuItem("MSI Layer");
+		// layers.add(msiLayer);
+		// msiLayer.setSelected(EeINS.getSettings().getMapSettings().);
+		//
+		// encLayer.addActionListener(new ActionListener() {
+		// @Override
+		// public void actionPerformed(ActionEvent e) {
+		// topPanel.getEncBtn().setSelected(!topPanel.getEncBtn().isSelected());
+		// EeINS.getSettings().getMapSettings().setEncVisible(topPanel.getEncBtn().isSelected());
+		// mainFrame.getChartPanel().encVisible(topPanel.getEncBtn().isSelected());
+		// }
+		// });
+		//
+		if (showRiskAndNogo) {
 			layers.add(nogoLayer);
 		}
-		
-		
 
-		
 		nogoLayer.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				nogoHandler.toggleLayer();
 			}
 		});
-//		nogoHandler.toggleLayer();
+		// nogoHandler.toggleLayer();
 
 		JCheckBoxMenuItem riskLayer = new JCheckBoxMenuItem("Risk Layer");
-		if (showRiskAndNogo){
+		if (showRiskAndNogo) {
 			layers.add(riskLayer);
 		}
 
@@ -241,17 +253,18 @@ public class EeINSMenuBar extends JMenuBar implements PropertyConsumer,
 		riskLayer.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				EeINS.getRiskHandler().toggleRiskHandler(!EeINS.getSettings().getAisSettings().isShowRisk());
+				EeINS.getRiskHandler().toggleRiskHandler(
+						!EeINS.getSettings().getAisSettings().isShowRisk());
 			}
 		});
-		
+
 		JMenu tools = new JMenu("Tools");
 		this.add(tools);
 
 		newRoute = new JCheckBoxMenuItem("New Route | Ctrl n");
 		tools.add(newRoute);
 		newRoute.setIcon(toolbarIcon("images/toolbar/marker--plus.png"));
-		
+
 		newRoute.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -260,24 +273,95 @@ public class EeINSMenuBar extends JMenuBar implements PropertyConsumer,
 			}
 		});
 
-		JMenuItem dynamicNoGo = new JMenuItem("Dynamic NoGo");
-		tools.add(dynamicNoGo);
-
 		JCheckBoxMenuItem msiFilter = new JCheckBoxMenuItem("MSI Filtering");
 		tools.add(msiFilter);
-		
-		msiFilter.setSelected(EeINS.getSettings().getEnavSettings().isMsiFilter());
+
+		msiFilter.setSelected(EeINS.getSettings().getEnavSettings()
+				.isMsiFilter());
 
 		msiFilter.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				EeINS.getSettings().getEnavSettings().setMsiFilter(!
-						EeINS.getSettings().getEnavSettings().isMsiFilter());
+				EeINS.getSettings()
+						.getEnavSettings()
+						.setMsiFilter(
+								!EeINS.getSettings().getEnavSettings()
+										.isMsiFilter());
 				msiHandler.notifyUpdate();
 			}
 		});
-		
-		
+
+		layouts = new JMenu("Layouts");
+		this.add(layouts);
+
+		generateStaticLayouts();
+
+		layouts.add(new JSeparator());
+
+		JMenuItem load = new JMenuItem("Load Custom");
+		layouts.add(load);
+		load.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				String[] list = findNoneStaticLayouts();
+				String layout = null;
+
+				final String path = "./layout/";
+
+				if (list.length == 0) {
+					JOptionPane.showMessageDialog(mainFrame,
+							"No custom layouts saved.", "No Layouts",
+							JOptionPane.ERROR_MESSAGE);
+				} else {
+					layout = (String) JOptionPane.showInputDialog(mainFrame,
+							"Choose one", "Load layout",
+							JOptionPane.INFORMATION_MESSAGE, null, list, null);
+				}
+				if (layout != null) {
+					mainFrame.getDockableComponents().loadLayout(
+							path + layout + ".xml");
+				}
+			}
+		});
+
+		// List already saved
+		// When saving add it to the list
+
+		JMenuItem saveAs = new JMenuItem("Save Custom");
+		layouts.add(saveAs);
+		saveAs.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (!mainFrame.getDockableComponents().isLocked()) {
+					mainFrame.getDockableComponents().toggleFrameLock();
+				}
+
+				String name = null;
+				name = JOptionPane.showInputDialog(mainFrame,
+						"Please input name of layout");
+				if (name != null) {
+					
+					String[] list = findNoneStaticLayouts();
+					
+					for (int i = 0; i < list.length; i++) {
+						if (list[i].equals(name)){
+							int n = JOptionPane.showConfirmDialog(
+								    mainFrame,
+								    "A layout with that name already exists. \n Do you wish to overwrite it?",
+								    "Layout already exists",
+								    JOptionPane.YES_NO_OPTION);
+							if (n == 1){
+								mainFrame.getDockableComponents().saveLayout(name);
+							}
+						}
+					}
+					
+					
+				}
+			}
+		});
+
 		this.add(mainFrame.getDockableComponents().createDockableMenu());
 
 		JMenu help = new JMenu("Help");
@@ -286,36 +370,100 @@ public class EeINSMenuBar extends JMenuBar implements PropertyConsumer,
 		JMenuItem aboutEeINS = new JMenuItem("About the EeINS");
 		help.add(aboutEeINS);
 		aboutEeINS.setIcon(toolbarIcon("images/appicon.png"));
-		
+
 		final ImageIcon icon = createImageIcon();
-		
+
 		aboutEeINS.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(mainFrame,
-					    "The e-Navigation enhanced INS (ee-INS) is developed by the Danish Maritime Authority (www.dma.dk). \n The user manual is available from service.e-navigation.net",
-					    "About the EeINS",
-					    JOptionPane.OK_OPTION, icon);
+				JOptionPane
+						.showMessageDialog(
+								mainFrame,
+								"The e-Navigation enhanced INS (ee-INS) is developed by the Danish Maritime Authority (www.dma.dk). \n The user manual is available from service.e-navigation.net",
+								"About the EeINS", JOptionPane.OK_OPTION, icon);
 			}
 		});
-		
-	}
-	
-	protected static ImageIcon createImageIcon() {
-        java.net.URL imgURL = EeINS.class.getResource("/images/appicon.png");;
-        if (imgURL != null) {
-        	
-    		ImageIcon icon = new ImageIcon(imgURL);
-    		Image img = icon.getImage();
-    		Image newimg = img.getScaledInstance(30, 30, java.awt.Image.SCALE_DEFAULT);
-    		ImageIcon newImage = new ImageIcon(newimg);
-    		return newImage;
 
-        } else {
-            System.err.println("Couldn't find file");
-            return null;
-        }
-    }
+	}
+
+	protected static ImageIcon createImageIcon() {
+		java.net.URL imgURL = EeINS.class.getResource("/images/appicon.png");
+		;
+		if (imgURL != null) {
+
+			ImageIcon icon = new ImageIcon(imgURL);
+			Image img = icon.getImage();
+			Image newimg = img.getScaledInstance(30, 30,
+					java.awt.Image.SCALE_DEFAULT);
+			ImageIcon newImage = new ImageIcon(newimg);
+			return newImage;
+
+		} else {
+			System.err.println("Couldn't find file");
+			return null;
+		}
+	}
+
+	public void generateStaticLayouts() {
+		final String path = "./layout/static/";
+
+		String files;
+		File folder = new File(path);
+		File[] listOfFiles = folder.listFiles();
+
+		for (int i = 0; i < listOfFiles.length; i++) {
+
+			if (listOfFiles[i].isFile()) {
+				files = listOfFiles[i].getName();
+				if (files.endsWith(".xml") || files.endsWith(".XML")) {
+
+					JMenuItem layout = new JMenuItem(files.substring(0,
+							files.length() - 4));
+					final String filename = files;
+					layouts.add(layout);
+					layout.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							mainFrame.getDockableComponents().loadLayout(
+									path + filename);
+						}
+					});
+
+					// System.out.println(path + files);
+				}
+			}
+		}
+	}
+
+	public String[] findNoneStaticLayouts() {
+		final String path = "./layout/";
+
+		List<String> list = new ArrayList<String>();
+
+		String files;
+		File folder = new File(path);
+		File[] listOfFiles = folder.listFiles();
+
+		for (int i = 0; i < listOfFiles.length; i++) {
+
+			if (listOfFiles[i].isFile()) {
+				files = listOfFiles[i].getName();
+				if (files.endsWith(".xml") || files.endsWith(".XML")) {
+					list.add(files.substring(0, files.length() - 4));
+				}
+			}
+		}
+
+		String[] array = new String[list.size()];
+
+		for (int i = 0; i < list.size(); i++) {
+			array[i] = list.get(i);
+		}
+
+		Arrays.sort(array);
+
+		return array;
+	}
 
 	public JCheckBoxMenuItem getLock() {
 		return lock;
@@ -383,7 +531,7 @@ public class EeINSMenuBar extends JMenuBar implements PropertyConsumer,
 			initMenuBar();
 		}
 		if (obj instanceof NogoLayer) {
-			nogoLayer.setSelected( ((NogoLayer) obj).isVisible());
+			nogoLayer.setSelected(((NogoLayer) obj).isVisible());
 		}
 		if (obj instanceof MsiHandler) {
 			msiHandler = (MsiHandler) obj;
@@ -482,10 +630,10 @@ public class EeINSMenuBar extends JMenuBar implements PropertyConsumer,
 	public ImageIcon toolbarIcon(String imgpath) {
 		ImageIcon icon = new ImageIcon(imgpath);
 		Image img = icon.getImage();
-		Image newimg = img.getScaledInstance(16, 16, java.awt.Image.SCALE_DEFAULT);
+		Image newimg = img.getScaledInstance(16, 16,
+				java.awt.Image.SCALE_DEFAULT);
 		ImageIcon newImage = new ImageIcon(newimg);
 		return newImage;
 	}
-	
-	
+
 }

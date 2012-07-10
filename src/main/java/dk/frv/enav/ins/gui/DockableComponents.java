@@ -392,5 +392,55 @@ public class DockableComponents {
 			return name;
 		}
 	}
+	
+	public void loadLayout(String path){
+		// Load a layout
+		File layoutFile = new File(path);
+		if (layoutFile.exists()) {
+			try {
+				control.readXML(layoutFile);
+			} catch (IOException ex) {
+				ex.printStackTrace(System.err);
+			}
+		}
+		
+		
 
+		control.intern().getController().getRelocator().setDragOnlyTitel(true);
+
+		List<SingleCDockable> mdlist = control.getRegister()
+				.getSingleDockables();
+
+		for (int i = 0; i < mdlist.size(); i++) {
+			PanelDockable dockable = (PanelDockable) mdlist.get(i);
+			dockable.setStackable(false);
+			dockable.setMinimizable(false);
+			dockable.setMaximizable(false);
+		}
+
+		control.getContentArea().setMinimumAreaSize(new Dimension(0, 0));
+		
+		// Frames
+		BorderMod bridge = new BorderMod();
+		control.getController()
+				.getThemeManager()
+				.publish(Priority.CLIENT, DisplayerDockBorder.KIND,
+						ThemeManager.BORDER_MODIFIER_TYPE, bridge);
+	}
+
+	public void saveLayout(String name) {
+		try {
+			final String path = "./layout/";
+			File f = new File(path + name + ".xml");
+			control.writeXML(f);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+//		control.destroy();
+	}
+
+	public boolean isLocked() {
+		return locked;
+	}
+	
 }
