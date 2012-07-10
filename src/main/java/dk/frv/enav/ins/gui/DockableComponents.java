@@ -104,7 +104,8 @@ public class DockableComponents {
 				ex.printStackTrace(System.err);
 			}
 		} else {
-			control.readXML(createLayout());
+			loadLayout("./layout/static/default.xml");
+//			control.readXML(createLayout());
 		}
 
 		control.intern().getController().getRelocator().setDragOnlyTitel(true);
