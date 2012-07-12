@@ -119,9 +119,14 @@ public class NoGoComponentPanel extends OMComponentPanel {
 			int draughtInt = (int) Math.round((draught));
 			
 			SimpleDateFormat sdf = new SimpleDateFormat("dd MMM , HH:mm");
-            String validFromStr = sdf.format(validFrom);
-            String validToStr = sdf.format(validTo);
-
+			
+            String validFromStr ="";
+            String validToStr = "";
+			
+			if (validFrom != null){
+				validFromStr = sdf.format(validFrom);
+				validToStr = sdf.format(validTo);
+			}
 			
 			if (errorCodeOwn == 17){
 				statusLabel.setText("Failed");
@@ -141,8 +146,8 @@ public class NoGoComponentPanel extends OMComponentPanel {
 				statusLabel.setForeground(Color.ORANGE);
 				statLabel4.setText("No tide data available for region");
 				statLabel5.setText("");
-				statLabel1.setText(validFromStr);
-				statLabel2.setText(validToStr);
+				statLabel1.setText("N/A");
+				statLabel2.setText("N/A");
 				statLabel3.setText(Integer.toString(draughtInt)  + " meters");
 				return;
 			}
