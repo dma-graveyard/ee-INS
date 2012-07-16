@@ -176,7 +176,7 @@ public abstract class NmeaSensor extends MapHandlerChild implements Runnable {
 		if (!ghFactory.match(msg)) {
 			return;
 		}
-		IProprietarySourceTag sourceTag = ghFactory.getSourceTag(msg);
+		IProprietarySourceTag sourceTag = ghFactory.getTag(msg);
 		if (sourceTag == null || sourceTag.getTimestamp() == null) {
 			return;
 		}
