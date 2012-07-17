@@ -62,6 +62,7 @@ public class AisAdressedRouteSuggestion extends AisIntendedRoute {
 	 */
 	public AisAdressedRouteSuggestion(RouteSuggestion routeSuggestion) {
 		super(routeSuggestion);
+		this.msgLinkId = routeSuggestion.getMsgLinkId();
 	}
 	
 	/**
