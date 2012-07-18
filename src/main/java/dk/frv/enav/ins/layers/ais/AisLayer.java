@@ -145,52 +145,64 @@ public class AisLayer extends OMGraphicHandlerLayer implements
 
 		VesselTarget vessel = (VesselTarget) aisTarget;
 
+		double rhumbLineDistance = -1.0;
+		double rhumbLineBearing = -1.0;
+
 		if (vessel.getStaticData() != null) {
-			aisPanel.receiveHighlight(vessel.getMmsi(),
-					vessel.getStaticData().getName(),
-					vessel.getStaticData().getCallsign(),
-					vessel.getPositionData().getCog(),
-					aisHandler
+
+			if (aisHandler.getOwnShip() != null) {
+				rhumbLineDistance = aisHandler
+						.getOwnShip()
+						.getPositionData()
+						.getPos()
+						.getRhumbLineDistance(vessel.getPositionData().getPos());
+				rhumbLineBearing = aisHandler.getOwnShip().getPositionData()
+						.getPos()
+						.getRhumbLineBearing(vessel.getPositionData().getPos()
+
+						);
+			}
+
+			aisPanel.receiveHighlight(vessel.getMmsi(), vessel.getStaticData()
+					.getName(), vessel.getStaticData().getCallsign(), vessel
+					.getPositionData().getCog(), rhumbLineDistance,
+					rhumbLineBearing, vessel.getPositionData().getSog()
+
+			);
+		} else {
+
+			if (vessel.getStaticData() != null) {
+
+				if (aisHandler.getOwnShip() != null) {
+					rhumbLineDistance = aisHandler
 							.getOwnShip()
 							.getPositionData()
 							.getPos()
 							.getRhumbLineDistance(
-									vessel.getPositionData().getPos()),
-					aisHandler
+									vessel.getPositionData().getPos());
+					rhumbLineBearing = aisHandler
 							.getOwnShip()
 							.getPositionData()
 							.getPos()
 							.getRhumbLineBearing(
 									vessel.getPositionData().getPos()
 
-							), vessel.getPositionData().getSog()
+							);
+				}
 
-			);
-		} else {
-			aisPanel.receiveHighlight(vessel.getMmsi(),
-					vessel.getPositionData().getCog(),
-					aisHandler
-							.getOwnShip()
-							.getPositionData()
-							.getPos()
-							.getRhumbLineDistance(
-									vessel.getPositionData().getPos()),
-					aisHandler
-							.getOwnShip()
-							.getPositionData()
-							.getPos()
-							.getRhumbLineBearing(
-									vessel.getPositionData().getPos()), vessel
-							.getPositionData().getSog());
+				aisPanel.receiveHighlight(vessel.getMmsi(), vessel
+						.getPositionData().getCog(), rhumbLineDistance,
+						rhumbLineBearing, vessel.getPositionData().getSog());
+			}
+
+			if ((vessel.getStaticData() != null && aisHandler.getOwnShip() != null)) {
+				aisPanel.dynamicNogoAvailable(true);
+			} else {
+				aisPanel.dynamicNogoAvailable(false);
+			}
+
+			doPrepare();
 		}
-
-		if ((vessel.getStaticData() != null && aisHandler.getOwnShip() != null)) {
-			aisPanel.dynamicNogoAvailable(true);
-		}else{
-			aisPanel.dynamicNogoAvailable(false);
-		}
-
-		doPrepare();
 	}
 
 	/**
