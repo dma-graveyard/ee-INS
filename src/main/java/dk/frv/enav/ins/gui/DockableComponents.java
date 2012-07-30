@@ -141,11 +141,11 @@ public class DockableComponents {
 		}
 
 		for (String name : PANEL_NAMES) {
-			if (!name.equals("chartPanel") || !name.equals("topPanel") ){
-				
-			
+			if (!name.equals("Top") && !name.equals("Chart") ){
+
 			JMenuItem m = createDockableMenuItem(name, dmap.get(name));
 			menu.add(m);
+			
 			}
 		}
 
