@@ -141,8 +141,12 @@ public class DockableComponents {
 		}
 
 		for (String name : PANEL_NAMES) {
+			if (!name.equals("chartPanel") || !name.equals("topPanel") ){
+				
+			
 			JMenuItem m = createDockableMenuItem(name, dmap.get(name));
 			menu.add(m);
+			}
 		}
 
 		return menu;
@@ -201,7 +205,7 @@ public class DockableComponents {
 				JCheckBoxMenuItem m = (JCheckBoxMenuItem) e.getSource();
 				if (m.isSelected()) {
 					PanelDockable dockable = dmap.get(name);
-					System.out.println(dockable);
+//					System.out.println(dockable);
 					if (dockable != null) {
 						doOpen(dockable);
 					} else {
@@ -251,7 +255,7 @@ public class DockableComponents {
 
 	// If no layout file is present, create the basic layout!
 	private XElement createLayout() {
-		System.out.println("Create layout?");
+//		System.out.println("Create layout?");
 		CControl aControl = new CControl();
 
 		PanelDockable chartDock = new PanelDockable("Chart", chartPanel);
@@ -434,8 +438,6 @@ public class DockableComponents {
 
 	public void saveLayout(String name) {
 		
-//		System.out.println("Save custom?");
-		
 		try {
 			final String path = "./layout/";
 			File f = new File(path + name + ".xml");
@@ -443,7 +445,6 @@ public class DockableComponents {
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
-//		control.destroy();
 	}
 
 	public boolean isLocked() {

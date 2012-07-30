@@ -348,6 +348,11 @@ public class EeINSMenuBar extends JMenuBar implements PropertyConsumer,
 					
 					String[] list = findNoneStaticLayouts();
 					
+					if (list.length == 0){
+							System.out.println("time to save");
+							mainFrame.getDockableComponents().saveLayout(name);
+					}
+					
 					for (int i = 0; i < list.length; i++) {
 						if (list[i].equals(name)){
 							int n = JOptionPane.showConfirmDialog(
@@ -360,6 +365,7 @@ public class EeINSMenuBar extends JMenuBar implements PropertyConsumer,
 								mainFrame.getDockableComponents().saveLayout(name);
 							}
 						}else{
+							System.out.println("time to save");
 							mainFrame.getDockableComponents().saveLayout(name);
 						}
 					}
