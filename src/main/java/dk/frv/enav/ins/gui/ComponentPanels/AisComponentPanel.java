@@ -26,7 +26,7 @@ public class AisComponentPanel extends OMComponentPanel implements ItemListener
 	
 	private final AisTargetPanel aisPanel = new AisTargetPanel();
 	
-	private long mmsi = -1;
+	private long mmsi = -99;
 	
 	
 	private JLabel nameLabel;
@@ -113,7 +113,7 @@ public class AisComponentPanel extends OMComponentPanel implements ItemListener
 	}
 	
 	public void resetHighLight(){
-		mmsi = -1;
+		mmsi = -99;
 		nameLabel.setText("N/A");
 		callsignLabel.setText("N/A");
 		cogLabel.setText( "N/A");
@@ -150,7 +150,7 @@ public class AisComponentPanel extends OMComponentPanel implements ItemListener
 	@Override
 	public void itemStateChanged(ItemEvent arg0) {
 		if (arg0.getItem() == dynamicNoGoCheckbox){
-			
+			System.out.println("item state changed");
 			
 			
 			if (dynamicNoGoCheckbox.isSelected()){

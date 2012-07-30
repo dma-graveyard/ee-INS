@@ -179,6 +179,9 @@ public class DockableComponents {
 	}
 
 	public void saveLayout() {
+		
+//		System.out.println("Save layout");
+		
 		try {
 			File f = new File(EeINS.class.getSimpleName() + ".xml");
 			control.writeXML(f);
@@ -430,6 +433,9 @@ public class DockableComponents {
 	}
 
 	public void saveLayout(String name) {
+		
+//		System.out.println("Save custom?");
+		
 		try {
 			final String path = "./layout/";
 			File f = new File(path + name + ".xml");

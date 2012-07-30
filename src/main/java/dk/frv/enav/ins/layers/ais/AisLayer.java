@@ -139,10 +139,14 @@ public class AisLayer extends OMGraphicHandlerLayer implements
 	 * @param aisTarget
 	 */
 	public void updateSelection(AisTarget aisTarget) {
+		
+		
 		aisTargetGraphic.setVisible(true);
 		aisTargetGraphic.moveSymbol(((VesselTarget) aisTarget)
 				.getPositionData().getPos());
-
+		
+//		doPrepare();
+		
 		VesselTarget vessel = (VesselTarget) aisTarget;
 
 		double rhumbLineDistance = -1.0;
@@ -150,7 +154,7 @@ public class AisLayer extends OMGraphicHandlerLayer implements
 
 		if (vessel.getStaticData() != null) {
 
-			if (aisHandler.getOwnShip() != null) {
+			if (aisHandler.getOwnShip() != null && aisHandler.getOwnShip().getPositionData() != null) {
 				rhumbLineDistance = aisHandler
 						.getOwnShip()
 						.getPositionData()
@@ -171,9 +175,9 @@ public class AisLayer extends OMGraphicHandlerLayer implements
 			);
 		} else {
 
-			if (vessel.getStaticData() != null) {
+//			if (vessel.getStaticData() != null) {
 
-				if (aisHandler.getOwnShip() != null) {
+				if (aisHandler.getOwnShip() != null && aisHandler.getOwnShip().getPositionData() != null) {
 					rhumbLineDistance = aisHandler
 							.getOwnShip()
 							.getPositionData()
@@ -193,8 +197,8 @@ public class AisLayer extends OMGraphicHandlerLayer implements
 				aisPanel.receiveHighlight(vessel.getMmsi(), vessel
 						.getPositionData().getCog(), rhumbLineDistance,
 						rhumbLineBearing, vessel.getPositionData().getSog());
-			}
-
+//			}
+		}
 			if ((vessel.getStaticData() != null && aisHandler.getOwnShip() != null)) {
 				aisPanel.dynamicNogoAvailable(true);
 			} else {
@@ -202,7 +206,7 @@ public class AisLayer extends OMGraphicHandlerLayer implements
 			}
 
 			doPrepare();
-		}
+		
 	}
 
 	/**
@@ -432,6 +436,8 @@ public class AisLayer extends OMGraphicHandlerLayer implements
 
 					if (selectedGraphic instanceof VesselTargetTriangle) {
 
+						System.out.println("selected");
+						
 						VesselTargetTriangle vtt = (VesselTargetTriangle) selectedGraphic;
 						VesselTargetGraphic vesselTargetGraphic = vtt
 								.getVesselTargetGraphic();

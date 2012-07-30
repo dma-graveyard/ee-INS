@@ -337,9 +337,13 @@ public class EeINSMenuBar extends JMenuBar implements PropertyConsumer,
 					mainFrame.getDockableComponents().toggleFrameLock();
 				}
 
+				System.out.println("SAVE CUSTOM");
+				
 				String name = null;
 				name = JOptionPane.showInputDialog(mainFrame,
 						"Please input name of layout");
+				System.out.println(name);
+				
 				if (name != null) {
 					
 					String[] list = findNoneStaticLayouts();
@@ -352,8 +356,11 @@ public class EeINSMenuBar extends JMenuBar implements PropertyConsumer,
 								    "Layout already exists",
 								    JOptionPane.YES_NO_OPTION);
 							if (n == 1){
+								System.out.println("Hi?");
 								mainFrame.getDockableComponents().saveLayout(name);
 							}
+						}else{
+							mainFrame.getDockableComponents().saveLayout(name);
 						}
 					}
 					

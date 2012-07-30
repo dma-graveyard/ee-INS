@@ -133,6 +133,15 @@ public class DynamicNoGoComponentPanel extends OMComponentPanel {
 			int draughtTargetInt = Math.round(draughtTarget);
 			
 			SimpleDateFormat sdf = new SimpleDateFormat("dd MMM , HH:mm");
+			
+			if (validFrom == null){
+				validFrom = new Date();
+			}
+			
+			if (validTo == null){
+				validTo = new Date();
+			}
+			
             String validFromStr = sdf.format(validFrom);
             String validToStr = sdf.format(validTo);
             

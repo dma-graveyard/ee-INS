@@ -125,10 +125,11 @@ public class DynamicNogoHandler extends MapHandlerChild implements Runnable {
 				}
 				Thread.sleep(80000);
 			} catch (InterruptedException e) {
-				System.out.println("Interrupted");
+//				System.out.println("Interrupted " + dynamicNoGoActive);
 			}
 
 			if (!dynamicNoGoActive && nogoLayer != null) {
+//				System.out.println("cleanup");
 				nogoLayer.setVisible(false);
 				nogoLayer.cleanUp();
 				nogoPanel.inactive();
@@ -164,14 +165,20 @@ public class DynamicNogoHandler extends MapHandlerChild implements Runnable {
 
 	public synchronized void updateNogo() {
 
+//		System.out.println("Update NoGo");
+		
 		// Is dynamic nogo activated and target not null?
 		if (dynamicNoGoActive
 				&& aisHandler.getVesselTargets().get(mmsiTarget) != null) {
 
+//			System.out.println("Really update");
+			
 			// Get own ship location and add box around it, + / - something
 			if (aisHandler.getOwnShip().getPositionData() != null
 					&& aisHandler.getVesselTargets().get(mmsiTarget)
 							.getPositionData() != null) {
+				
+//				System.out.println("Really really update");
 
 				GeoLocation shipLocation = aisHandler.getOwnShip()
 						.getPositionData().getPos();
@@ -196,7 +203,7 @@ public class DynamicNogoHandler extends MapHandlerChild implements Runnable {
 
 				// Set depth for own ship
 				if (aisHandler.getOwnShip().getStaticData() != null) {
-					System.out.println("Getting draught from static - own");
+//					System.out.println("Getting draught from static - own");
 					draughtOwn = aisHandler.getOwnShip().getStaticData()
 							.getDraught() / 10;
 				} else {
@@ -206,12 +213,12 @@ public class DynamicNogoHandler extends MapHandlerChild implements Runnable {
 
 				if (aisHandler.getVesselTargets().get(mmsiTarget)
 						.getStaticData() != null) {
-					System.out.println("Getting draught from static - target");
+//					System.out.println("Getting draught from static - target");
 					draughtTarget = aisHandler.getVesselTargets()
 							.get(mmsiTarget).getStaticData().getDraught() / 10;
 
 				} else {
-					System.out.println("Setting draught to 5");
+//					System.out.println("Setting draught to 5");
 					draughtTarget = 5;
 				}
 				// NorthWest pos
@@ -291,7 +298,7 @@ public class DynamicNogoHandler extends MapHandlerChild implements Runnable {
 				&& aisHandler.getVesselTargets().get(mmsiTarget)
 						.getPositionData() != null) {
 
-			System.out.println("Making a request to the server");
+//			System.out.println("Making a request to the server");
 
 			// Send a rest to shoreServices for NoGo
 			NogoResponse nogoResponseOwn = shoreServices.nogoPoll(-draughtOwn,
@@ -442,7 +449,7 @@ public class DynamicNogoHandler extends MapHandlerChild implements Runnable {
 
 	public void setDynamicNoGoActive(boolean dynamicNoGoActive) {
 		this.dynamicNoGoActive = dynamicNoGoActive;
-		System.out.println("Interrupting!");
+//		System.out.println("Interrupting!");
 		self.interrupt();
 	}
 
