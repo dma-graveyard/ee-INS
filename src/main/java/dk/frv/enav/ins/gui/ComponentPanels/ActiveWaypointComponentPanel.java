@@ -28,7 +28,7 @@ public class ActiveWaypointComponentPanel extends OMComponentPanel implements IG
 	public ActiveWaypointComponentPanel(){
 		super();
 		
-		this.setMinimumSize(new Dimension(10, 165));
+//		this.setMinimumSize(new Dimension(10, 165));
 		
 		activeWaypointPanel = new ActiveWaypointPanel();
 //		activeWaypointPanel.setVisible(false);

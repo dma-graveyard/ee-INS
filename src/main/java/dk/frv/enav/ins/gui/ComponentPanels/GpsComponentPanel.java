@@ -32,7 +32,7 @@ public class GpsComponentPanel extends OMComponentPanel implements
 	public GpsComponentPanel() {
 		super();
 		
-		this.setMinimumSize(new Dimension(10, 115));
+//		this.setMinimumSize(new Dimension(10, 115));
 		
 		gpsPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		setBorder(null);

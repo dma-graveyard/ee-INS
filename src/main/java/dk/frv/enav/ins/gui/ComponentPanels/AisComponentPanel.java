@@ -43,7 +43,7 @@ public class AisComponentPanel extends OMComponentPanel implements ItemListener
 	public AisComponentPanel() {
 		super();
 		
-		this.setMinimumSize(new Dimension(10, 195));
+//		this.setMinimumSize(new Dimension(10, 195));
 		
 		aisPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		setBorder(null);

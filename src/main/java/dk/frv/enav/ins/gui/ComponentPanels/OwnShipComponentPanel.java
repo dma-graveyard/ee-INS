@@ -32,7 +32,7 @@ public class OwnShipComponentPanel extends OMComponentPanel implements IGpsDataL
 	public OwnShipComponentPanel(){
 		super();
 		
-		this.setMinimumSize(new Dimension(10, 70));
+//		this.setMinimumSize(new Dimension(10, 70));
 		
 		ownShipPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		setBorder(null);

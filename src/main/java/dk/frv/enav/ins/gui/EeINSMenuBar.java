@@ -91,25 +91,7 @@ public class EeINSMenuBar extends JMenuBar implements PropertyConsumer,
 
 		setup.setIcon(toolbarIcon("images/toolbar/wrench.png"));
 
-		lock = new JCheckBoxMenuItem("Unlock");
-		file.add(lock);
-		lock.setSelected(true);
-		lock.setIcon(toolbarIcon("images/toolbar/lock-unlock.png"));
 
-		lock.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JCheckBoxMenuItem m = (JCheckBoxMenuItem) e.getSource();
-				mainFrame.getDockableComponents().toggleFrameLock();
-				if (m.isSelected()) {
-					m.setText("Unlock");
-					m.setIcon(toolbarIcon("images/toolbar/lock-unlock.png"));
-				} else {
-					m.setText("Lock");
-					m.setIcon(toolbarIcon("images/toolbar/lock.png"));
-				}
-			}
-		});
 
 		JMenuItem exit = new JMenuItem("Exit");
 		file.add(exit);
@@ -294,6 +276,31 @@ public class EeINSMenuBar extends JMenuBar implements PropertyConsumer,
 		layouts = new JMenu("Layouts");
 		this.add(layouts);
 
+		lock = new JCheckBoxMenuItem("Unlock");
+		layouts.add(lock);
+		lock.setSelected(true);
+		lock.setIcon(toolbarIcon("images/toolbar/lock-unlock.png"));
+
+		lock.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JCheckBoxMenuItem m = (JCheckBoxMenuItem) e.getSource();
+				mainFrame.getDockableComponents().toggleFrameLock();
+				if (m.isSelected()) {
+					m.setText("Unlock");
+					m.setIcon(toolbarIcon("images/toolbar/lock-unlock.png"));
+				} else {
+					m.setText("Lock");
+					m.setIcon(toolbarIcon("images/toolbar/lock.png"));
+				}
+			}
+		});
+		
+		
+		
+		
+		layouts.add(new JSeparator());
+		
 		generateStaticLayouts();
 
 		layouts.add(new JSeparator());
@@ -321,6 +328,10 @@ public class EeINSMenuBar extends JMenuBar implements PropertyConsumer,
 				if (layout != null) {
 					mainFrame.getDockableComponents().loadLayout(
 							path + layout + ".xml");
+					lock.setSelected(true);
+					lock.setText("Unlock");
+					lock.setIcon(toolbarIcon("images/toolbar/lock-unlock.png"));
+					
 				}
 			}
 		});
@@ -439,6 +450,10 @@ public class EeINSMenuBar extends JMenuBar implements PropertyConsumer,
 						public void actionPerformed(ActionEvent e) {
 							mainFrame.getDockableComponents().loadLayout(
 									path + filename);
+							
+							lock.setSelected(true);
+							lock.setText("Unlock");
+							lock.setIcon(toolbarIcon("images/toolbar/lock-unlock.png"));
 						}
 					});
 

@@ -38,7 +38,7 @@ public class DynamicNoGoComponentPanel extends OMComponentPanel {
 	public DynamicNoGoComponentPanel() {
 		super();
 
-		this.setMinimumSize(new Dimension(10, 150));
+//		this.setMinimumSize(new Dimension(10, 150));
 
 		nogoPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		setBorder(null);

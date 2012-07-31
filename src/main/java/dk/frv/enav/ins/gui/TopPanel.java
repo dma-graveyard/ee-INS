@@ -99,9 +99,10 @@ public class TopPanel extends OMComponentPanel implements ActionListener,
 	public TopPanel() {
 		super();
 
-		setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+		setLayout(new FlowLayout(FlowLayout.LEFT, 5, 0));
 
-		this.setMinimumSize(new Dimension(0, 14));
+		this.setMinimumSize(new Dimension(0, 24));
+		this.setPreferredSize(new Dimension(0, 24));
 		
 		zoomInBtn.setToolTipText("Zoom in : Shortcut Numpad +");
 		zoomOutBtn.setToolTipText("Zoom out : Shortcut Numpad -");

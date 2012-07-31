@@ -29,7 +29,7 @@ IMsiUpdateListener {
 	public MSIComponentPanel() {
 		super();
 		
-		this.setMinimumSize(new Dimension(10, 55));
+//		this.setMinimumSize(new Dimension(10, 55));
 		
 		msiPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		setBorder(null);

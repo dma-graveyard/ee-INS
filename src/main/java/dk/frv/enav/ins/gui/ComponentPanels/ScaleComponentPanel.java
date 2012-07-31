@@ -29,7 +29,7 @@ public class ScaleComponentPanel extends OMComponentPanel implements Runnable, P
 	public ScaleComponentPanel(){
 		super();
 		
-		this.setMinimumSize(new Dimension(10, 25));
+//		this.setMinimumSize(new Dimension(10, 25));
 		
 		scalePanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		setBorder(null);

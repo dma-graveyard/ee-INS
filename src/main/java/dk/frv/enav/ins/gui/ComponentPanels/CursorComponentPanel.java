@@ -26,7 +26,7 @@ public class CursorComponentPanel extends OMComponentPanel implements IGpsDataLi
 	public CursorComponentPanel(){
 		super();
 		
-		this.setMinimumSize(new Dimension(10, 110));
+//		this.setMinimumSize(new Dimension(10, 110));
 		
 		cursorPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		setBorder(null);

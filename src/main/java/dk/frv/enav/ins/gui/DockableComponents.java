@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -22,10 +24,13 @@ import bibliothek.gui.dock.common.DefaultSingleCDockable;
 import bibliothek.gui.dock.common.MissingCDockableStrategy;
 import bibliothek.gui.dock.common.SingleCDockable;
 import bibliothek.gui.dock.common.SingleCDockableFactory;
+import bibliothek.gui.dock.common.action.predefined.CBlank;
+import bibliothek.gui.dock.common.intern.CDockable;
 import bibliothek.gui.dock.common.mode.ExtendedMode;
 import bibliothek.gui.dock.displayer.DisplayerDockBorder;
 import bibliothek.gui.dock.themes.ThemeManager;
 import bibliothek.gui.dock.util.Priority;
+import bibliothek.gui.dock.util.PropertyKey;
 import bibliothek.util.filter.PresetFilter;
 import bibliothek.util.xml.XElement;
 import dk.frv.enav.ins.EeINS;
@@ -118,6 +123,11 @@ public class DockableComponents {
 			dockable.setStackable(false);
 			dockable.setMinimizable(false);
 			dockable.setMaximizable(false);
+			dockable.setTitleIcon( new ImageIcon( ));
+//            dockable.putAction(CDockable.ACTION_KEY_MAXIMIZE, CBlank.BLANK);
+//            dockable.putAction(CDockable.ACTION_KEY_MINIMIZE, CBlank.BLANK);
+            dockable.putAction(CDockable.ACTION_KEY_EXTERNALIZE, CBlank.BLANK);
+//            dockable.putAction(CDockable.ACTION_KEY_CLOSE, CBlank.BLANK);
 		}
 
 		control.getContentArea().setMinimumAreaSize(new Dimension(0, 0));
@@ -402,6 +412,8 @@ public class DockableComponents {
 	}
 	
 	public void loadLayout(String path){
+		locked = false;
+		
 		// Load a layout
 		File layoutFile = new File(path);
 		if (layoutFile.exists()) {
@@ -412,6 +424,8 @@ public class DockableComponents {
 			}
 		}
 		
+		
+		toggleFrameLock();
 		
 
 		control.intern().getController().getRelocator().setDragOnlyTitel(true);
