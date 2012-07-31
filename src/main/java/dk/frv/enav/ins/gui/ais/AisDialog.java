@@ -331,7 +331,7 @@ public class AisDialog extends ComponentFrame implements ListSelectionListener, 
 			if (destination == null){
 				destination = "unknown";
 			}
-			draught = Float.toString(vesselTarget.getStaticData().getDraught());
+			draught = Float.toString(vesselTarget.getStaticData().getDraught()/10);
 			trueHeading = Float.toString(vesselTarget.getPositionData().getTrueHeading());
 			length = Integer.toString(vesselTarget.getStaticData().getDimBow() + vesselTarget.getStaticData().getDimStern()) + " M";
 			width = Integer.toString(vesselTarget.getStaticData().getDimPort() + vesselTarget.getStaticData().getDimStarboard()) + " M";
