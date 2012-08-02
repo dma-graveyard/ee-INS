@@ -60,6 +60,8 @@ import dk.frv.enav.ins.gps.GnssTime;
 import dk.frv.enav.ins.gps.GpsData;
 import dk.frv.enav.ins.gps.GpsHandler;
 import dk.frv.enav.ins.gps.IGpsDataListener;
+import dk.frv.enav.ins.gui.ComponentPanels.ShowDockableDialog;
+import dk.frv.enav.ins.gui.ComponentPanels.ShowDockableDialog.dock_type;
 import dk.frv.enav.ins.gui.route.RouteSuggestionDialog;
 import dk.frv.enav.ins.route.ActiveRoute.ActiveWpSelectionResult;
 import dk.frv.enav.ins.services.ais.AisServices;
@@ -68,9 +70,10 @@ import dk.frv.enav.ins.services.shore.ShoreServices;
 import dk.frv.enav.ins.settings.EnavSettings;
 
 /**
- * Manager for handling a collection of routes and active route 
+ * Manager for handling a collection of routes and active route
  */
-public class RouteManager extends MapHandlerChild implements Runnable, Serializable, IGpsDataListener, IAisRouteSuggestionListener {
+public class RouteManager extends MapHandlerChild implements Runnable,
+		Serializable, IGpsDataListener, IAisRouteSuggestionListener {
 
 	private static final long serialVersionUID = 1L;
 	private static final String routesFile = ".routes";
@@ -100,10 +103,10 @@ public class RouteManager extends MapHandlerChild implements Runnable, Serializa
 		if (gpsData.isBadPosition()) {
 			return;
 		}
-		
+
 		ActiveWpSelectionResult endRes;
 		ActiveWpSelectionResult res;
-		synchronized (routes) {			
+		synchronized (routes) {
 			activeRoute.update(gpsData);
 			endRes = activeRoute.chooseActiveWp();
 			res = endRes;
@@ -112,7 +115,7 @@ public class RouteManager extends MapHandlerChild implements Runnable, Serializa
 				res = activeRoute.chooseActiveWp();
 			}
 		}
-		
+
 		// If last change ended route, this will be result
 		if (res == ActiveWpSelectionResult.ROUTE_FINISHED) {
 			endRes = ActiveWpSelectionResult.ROUTE_FINISHED;
@@ -135,50 +138,73 @@ public class RouteManager extends MapHandlerChild implements Runnable, Serializa
 				LOG.error("Could not activate route with index: " + index);
 				return;
 			}
-	
+
 			if (isRouteActive()) {
 				// Deactivate route
 				deactivateRoute();
 			}
-	
+
 			Route route = routes.get(index);
 			route.setVisible(true);
 			// Set active route index
 			activeRouteIndex = index;
-			
-			
+
 			// Create new
 			activeRoute = new ActiveRoute(route, gpsHandler.getCurrentData());
-						
+
 			// Set the minimum WP circle radius
-			activeRoute.setWpCircleMin(EeINS.getSettings().getNavSettings().getMinWpRadius());
+			activeRoute.setWpCircleMin(EeINS.getSettings().getNavSettings()
+					.getMinWpRadius());
 			// Set relaxed WP change
-			activeRoute.setRelaxedWpChange(EeINS.getSettings().getNavSettings().isRelaxedWpChange());
+			activeRoute.setRelaxedWpChange(EeINS.getSettings().getNavSettings()
+					.isRelaxedWpChange());
 			// Inject the current position
 			activeRoute.update(gpsHandler.getCurrentData());
 			// Set start time to now
 			activeRoute.setStarttime(GnssTime.getInstance().getDate());
 		}
-		
+
+		// If the dock isn't visible should it show it?
+		if (!EeINS.getMainFrame().getDockableComponents()
+				.isDockVisible("Active Waypoint")) {
+
+			// Show it display the message?
+			if (EeINS.getSettings().getGuiSettings().isShowDockMessage()) {
+				new ShowDockableDialog(EeINS.getMainFrame(), dock_type.ROUTE);
+			} else {
+
+				if (EeINS.getSettings().getGuiSettings().isAlwaysOpenDock()) {
+					EeINS.getMainFrame().getDockableComponents()
+							.openDock("Active Waypoint");
+					EeINS.getMainFrame().getEeINSMenuBar()
+							.refreshDockableMenu();
+				}
+
+				// It shouldn't display message but take a default action
+
+			}
+
+		}
+
 		// Notify listeners
 		notifyListeners(RoutesUpdateEvent.ROUTE_ACTIVATED);
 	}
-	
 
-	
 	public void routeCopy(int index) {
 		Route selectedRoute = getRoute(index);
-		if (selectedRoute == null) return;
+		if (selectedRoute == null)
+			return;
 		selectedRoute.setVisible(selectedRoute instanceof ActiveRoute);
 		Route routeCopy = selectedRoute.copy();
 		routeCopy.setName(routeCopy.getName() + " copy");
 		routeCopy.setVisible(true);
 		addRoute(routeCopy);
 	}
-	
+
 	public void routeReverse(int index) {
 		Route selectedRoute = getRoute(index);
-		if (selectedRoute == null) return;
+		if (selectedRoute == null)
+			return;
 		selectedRoute.setVisible(selectedRoute instanceof ActiveRoute);
 		Route routeReversed = selectedRoute.reverse();
 		routeReversed.setName(routeReversed.getName() + " reversed");
@@ -201,17 +227,19 @@ public class RouteManager extends MapHandlerChild implements Runnable, Serializa
 				return;
 			activeRoute.changeActiveWaypoint(index);
 		}
-		
+
 		notifyListeners(RoutesUpdateEvent.ACTIVE_ROUTE_UPDATE);
 	}
 
 	public void notifyListeners(RoutesUpdateEvent e) {
 		// Call AisServices if active route changes
-		if (e == RoutesUpdateEvent.ACTIVE_ROUTE_UPDATE || e == RoutesUpdateEvent.ACTIVE_ROUTE_FINISHED
-				|| e == RoutesUpdateEvent.ROUTE_ACTIVATED || e == RoutesUpdateEvent.ROUTE_DEACTIVATED) {
+		if (e == RoutesUpdateEvent.ACTIVE_ROUTE_UPDATE
+				|| e == RoutesUpdateEvent.ACTIVE_ROUTE_FINISHED
+				|| e == RoutesUpdateEvent.ROUTE_ACTIVATED
+				|| e == RoutesUpdateEvent.ROUTE_DEACTIVATED) {
 			aisServices.intendedRouteBroadcast(activeRoute);
-		}		
-				
+		}
+
 		for (IRoutesUpdateListener listener : listeners) {
 			listener.routesChanged(e);
 		}
@@ -232,16 +260,16 @@ public class RouteManager extends MapHandlerChild implements Runnable, Serializa
 			if (index < activeRouteIndex) {
 				activeRouteIndex--;
 			}
-			routes.remove(index);			
+			routes.remove(index);
 		}
 
 		notifyListeners(RoutesUpdateEvent.ROUTE_REMOVED);
 	}
-	
+
 	public void addRoute(Route route) {
 		synchronized (routes) {
 			routes.add(route);
-		}		
+		}
 		notifyListeners(RoutesUpdateEvent.ROUTE_ADDED);
 	}
 
@@ -289,25 +317,28 @@ public class RouteManager extends MapHandlerChild implements Runnable, Serializa
 			return routes.size();
 		}
 	}
-	
+
 	@Override
 	public void receiveRouteSuggestion(AisRouteData routeSuggestion) {
 		if (routeSuggestion instanceof AisAdressedRouteSuggestion) {
-			handleAddressedRouteSuggestion((AisAdressedRouteSuggestion)routeSuggestion);
+			handleAddressedRouteSuggestion((AisAdressedRouteSuggestion) routeSuggestion);
 		} else if (routeSuggestion instanceof AisBroadcastRouteSuggestion) {
-			handleBroadcastRouteSuggestion((AisBroadcastRouteSuggestion)routeSuggestion);
+			handleBroadcastRouteSuggestion((AisBroadcastRouteSuggestion) routeSuggestion);
 		}
-		
+
 	}
-	
-	private void handleAddressedRouteSuggestion(AisAdressedRouteSuggestion routeSuggestion) {
+
+	private void handleAddressedRouteSuggestion(
+			AisAdressedRouteSuggestion routeSuggestion) {
 		// Handle cancellation
 		if (routeSuggestion.isCancel()) {
 			System.out.println("handling route suggestion canecellation");
 			synchronized (addressedSuggestedRoutes) {
-				for (Iterator<AisAdressedRouteSuggestion> it = addressedSuggestedRoutes.iterator(); it.hasNext();) {
+				for (Iterator<AisAdressedRouteSuggestion> it = addressedSuggestedRoutes
+						.iterator(); it.hasNext();) {
 					AisAdressedRouteSuggestion oldRouteSuggestion = it.next();
-					if (oldRouteSuggestion.getMsgLinkId() == routeSuggestion.getMsgLinkId()) {
+					if (oldRouteSuggestion.getMsgLinkId() == routeSuggestion
+							.getMsgLinkId()) {
 						oldRouteSuggestion.cancel();
 						break;
 					}
@@ -316,38 +347,39 @@ public class RouteManager extends MapHandlerChild implements Runnable, Serializa
 			notifyListeners(RoutesUpdateEvent.SUGGESTED_ROUTES_CHANGED);
 			return;
 		}
-		
+
 		// Handle new routes
-		System.out.println("handling addressed route sugesstion: " + routeSuggestion);
-		
+		System.out.println("handling addressed route sugesstion: "
+				+ routeSuggestion);
+
 		// Insert into list of
 		synchronized (addressedSuggestedRoutes) {
 			addressedSuggestedRoutes.add(routeSuggestion);
 		}
-		
+
 		// Update route layer
 		notifyListeners(RoutesUpdateEvent.SUGGESTED_ROUTES_CHANGED);
-		
+
 		// Show dialog
 		routeSuggestionDialog.showSuggestion(routeSuggestion);
-		
-		
+
 	}
-	
-	private void handleBroadcastRouteSuggestion(AisBroadcastRouteSuggestion routeSuggestion) {
-		// TODO		
+
+	private void handleBroadcastRouteSuggestion(
+			AisBroadcastRouteSuggestion routeSuggestion) {
+		// TODO
 	}
 
 	public void loadFromFile(File file) throws RouteLoadException {
 		LOG.debug("Load route from file: " + file.getAbsolutePath());
 		// Create new route instance
 		Route route;
-		
-		
+
 		// Some pertinacious loading
 		String ext = "";
 		int mid = file.getName().lastIndexOf('.');
-		ext = file.getName().substring(mid+1,file.getName().length()).toUpperCase();
+		ext = file.getName().substring(mid + 1, file.getName().length())
+				.toUpperCase();
 		if (ext.equals("TXT")) {
 			// Load simple from file
 			route = RouteLoader.loadSimple(file);
@@ -360,7 +392,7 @@ public class RouteManager extends MapHandlerChild implements Runnable, Serializa
 		} else {
 			route = RouteLoader.pertinaciousLoad(file);
 		}
-		
+
 		// Add route to list
 		synchronized (routes) {
 			routes.add(route);
@@ -402,7 +434,8 @@ public class RouteManager extends MapHandlerChild implements Runnable, Serializa
 		if (route.getRouteMetocSettings() == null) {
 			route.setRouteMetocSettings(getDefaultRouteMetocSettings());
 		}
-		if (route.getMetocForecast() == null || !route.isVisible() || !route.getRouteMetocSettings().isShowRouteMetoc()) {
+		if (route.getMetocForecast() == null || !route.isVisible()
+				|| !route.getRouteMetocSettings().isShowRouteMetoc()) {
 			return false;
 		}
 		// Determine if METOC info is old
@@ -411,9 +444,10 @@ public class RouteManager extends MapHandlerChild implements Runnable, Serializa
 		}
 		return true;
 	}
-	
-	public  boolean isMetocOld(Route route) {
-		if (route.getMetocForecast() == null || route.getMetocForecast().getCreated() == null) {
+
+	public boolean isMetocOld(Route route) {
+		if (route.getMetocForecast() == null
+				|| route.getMetocForecast().getCreated() == null) {
 			return true;
 		}
 		EnavSettings enavSettings = EeINS.getSettings().getEnavSettings();
@@ -425,50 +459,54 @@ public class RouteManager extends MapHandlerChild implements Runnable, Serializa
 		}
 		return false;
 	}
-	
+
 	private void checkValidMetoc() {
 		boolean visualUpdate = false;
-		
+
 		synchronized (routes) {
 			for (Route route : routes) {
 				if (route.getMetocForecast() == null) {
 					continue;
 				}
-				if (isMetocOld(route) || !route.isMetocValid(EeINS.getSettings().getEnavSettings().getMetocTimeDiffTolerance())) {
-					if (route.isVisible() && route.getRouteMetocSettings().isShowRouteMetoc()) {
+				if (isMetocOld(route)
+						|| !route.isMetocValid(EeINS.getSettings()
+								.getEnavSettings().getMetocTimeDiffTolerance())) {
+					if (route.isVisible()
+							&& route.getRouteMetocSettings().isShowRouteMetoc()) {
 						visualUpdate = true;
 					}
 					route.removeMetoc();
 				}
 			}
 		}
-		
+
 		if (visualUpdate) {
 			notifyListeners(RoutesUpdateEvent.METOC_SETTINGS_CHANGED);
 		}
 	}
-	
+
 	/**
-	 * Validate if metoc is still valid for route
-	 * If not METOC is removed
-	 * Not for active route
+	 * Validate if metoc is still valid for route If not METOC is removed Not
+	 * for active route
 	 */
 	public boolean validateMetoc(Route route) {
 		if (route instanceof ActiveRoute) {
 			return false;
-		}		
-		if (!showMetocForRoute(route) || !route.isMetocValid(EeINS.getSettings().getEnavSettings().getMetocTimeDiffTolerance())) {
+		}
+		if (!showMetocForRoute(route)
+				|| !route.isMetocValid(EeINS.getSettings().getEnavSettings()
+						.getMetocTimeDiffTolerance())) {
 			if (route.getMetocForecast() != null) {
 				route.removeMetoc();
 				notifyListeners(RoutesUpdateEvent.METOC_SETTINGS_CHANGED);
 			}
 			return false;
-		}		
+		}
 		return true;
 	}
-	
-	public boolean hasMetoc(Route route){
-		if(route.getMetocForecast() != null){
+
+	public boolean hasMetoc(Route route) {
+		if (route.getMetocForecast() != null) {
 			// Determine if METOC info is old
 			EnavSettings enavSettings = EeINS.getSettings().getEnavSettings();
 			long metocTtl = enavSettings.getMetocTtl() * 60 * 1000;
@@ -493,8 +531,9 @@ public class RouteManager extends MapHandlerChild implements Runnable, Serializa
 			manager.setRoutes(routeStore.getRoutes());
 			manager.activeRoute = routeStore.getActiveRoute();
 			manager.activeRouteIndex = routeStore.getActiveRouteIndex();
-			manager.setAddressedSuggestedRoutes(routeStore.getAddressedSuggestedRoutes());
-			
+			manager.setAddressedSuggestedRoutes(routeStore
+					.getAddressedSuggestedRoutes());
+
 		} catch (FileNotFoundException e) {
 			// Not an error
 		} catch (Exception e) {
@@ -506,7 +545,8 @@ public class RouteManager extends MapHandlerChild implements Runnable, Serializa
 		return manager;
 	}
 
-	private void setAddressedSuggestedRoutes(Set<AisAdressedRouteSuggestion> addressedSuggestedRoutes) {
+	private void setAddressedSuggestedRoutes(
+			Set<AisAdressedRouteSuggestion> addressedSuggestedRoutes) {
 		if (addressedSuggestedRoutes != null) {
 			this.addressedSuggestedRoutes = addressedSuggestedRoutes;
 		}
@@ -519,7 +559,7 @@ public class RouteManager extends MapHandlerChild implements Runnable, Serializa
 	}
 
 	public void saveToFile() {
-		synchronized (routes) {		
+		synchronized (routes) {
 			RouteStore routeStore = new RouteStore(this);
 			try {
 				FileOutputStream fileOut = new FileOutputStream(routesFile);
@@ -536,12 +576,14 @@ public class RouteManager extends MapHandlerChild implements Runnable, Serializa
 	public RouteMetocSettings getDefaultRouteMetocSettings() {
 		EnavSettings enavSettings = EeINS.getSettings().getEnavSettings();
 		RouteMetocSettings routeMetocSettings = new RouteMetocSettings();
-		routeMetocSettings.setWindWarnLimit(enavSettings.getDefaultWindWarnLimit());
-		routeMetocSettings.setCurrentWarnLimit(enavSettings.getDefaultCurrentWarnLimit());
-		routeMetocSettings.setWaveWarnLimit(enavSettings.getDefaultWaveWarnLimit());
+		routeMetocSettings.setWindWarnLimit(enavSettings
+				.getDefaultWindWarnLimit());
+		routeMetocSettings.setCurrentWarnLimit(enavSettings
+				.getDefaultCurrentWarnLimit());
+		routeMetocSettings.setWaveWarnLimit(enavSettings
+				.getDefaultWaveWarnLimit());
 		return routeMetocSettings;
 	}
-	
 
 	@Override
 	public void findAndInit(Object obj) {
@@ -553,14 +595,14 @@ public class RouteManager extends MapHandlerChild implements Runnable, Serializa
 			gpsHandler.addListener(this);
 		}
 		if (aisHandler == null && obj instanceof AisHandler) {
-			aisHandler = (AisHandler)obj;
+			aisHandler = (AisHandler) obj;
 			aisHandler.addRouteSuggestionListener(this);
 		}
 		if (obj instanceof RouteSuggestionDialog) {
-			routeSuggestionDialog = (RouteSuggestionDialog)obj;
+			routeSuggestionDialog = (RouteSuggestionDialog) obj;
 		}
 		if (obj instanceof AisServices) {
-			aisServices = (AisServices)obj;
+			aisServices = (AisServices) obj;
 		}
 	}
 
@@ -578,10 +620,12 @@ public class RouteManager extends MapHandlerChild implements Runnable, Serializa
 		if (!isRouteActive()) {
 			return;
 		}
-		if (activeRoute.getRouteMetocSettings() == null || !activeRoute.getRouteMetocSettings().isShowRouteMetoc()) {
+		if (activeRoute.getRouteMetocSettings() == null
+				|| !activeRoute.getRouteMetocSettings().isShowRouteMetoc()) {
 			return;
 		}
-		long activeRouteMetocPollInterval = EeINS.getSettings().getEnavSettings().getActiveRouteMetocPollInterval() * 60 * 1000;
+		long activeRouteMetocPollInterval = EeINS.getSettings()
+				.getEnavSettings().getActiveRouteMetocPollInterval() * 60 * 1000;
 		// Maybe we never want to refresh metoc
 		if (activeRouteMetocPollInterval <= 0) {
 			return;
@@ -590,32 +634,39 @@ public class RouteManager extends MapHandlerChild implements Runnable, Serializa
 		long metocAge = Long.MAX_VALUE;
 		if (getActiveRoute().getMetocForecast() != null) {
 			Date now = GnssTime.getInstance().getDate();
-			metocAge = now.getTime() - getActiveRoute().getMetocForecast().getCreated().getTime();
+			metocAge = now.getTime()
+					- getActiveRoute().getMetocForecast().getCreated()
+							.getTime();
 		}
 		// Check if minimum time since last update has passed
 		if (metocAge <= activeRouteMetocPollInterval) {
 			return;
 		}
 		// Check if not old and still valid
-		if (!isMetocOld(activeRoute) && activeRoute.isMetocValid(EeINS.getSettings().getEnavSettings().getMetocTimeDiffTolerance())) {
+		if (!isMetocOld(activeRoute)
+				&& activeRoute.isMetocValid(EeINS.getSettings()
+						.getEnavSettings().getMetocTimeDiffTolerance())) {
 			return;
 		}
-		
+
 		try {
 			requestRouteMetoc(getActiveRoute());
 			notifyListeners(RoutesUpdateEvent.ROUTE_METOC_CHANGED);
 			LOG.info("Auto updated route metoc for active route");
 		} catch (ShoreServiceException e) {
-			LOG.error("Failed to auto update METOC for active route: " + e.getMessage());
+			LOG.error("Failed to auto update METOC for active route: "
+					+ e.getMessage());
 			activeRoute.removeMetoc();
 			notifyListeners(RoutesUpdateEvent.METOC_SETTINGS_CHANGED);
 		}
-		
+
 	}
-	
-	public void aisRouteSuggestionReply(AisAdressedRouteSuggestion routeSuggestion, AisAdressedRouteSuggestion.Status status) {
+
+	public void aisRouteSuggestionReply(
+			AisAdressedRouteSuggestion routeSuggestion,
+			AisAdressedRouteSuggestion.Status status) {
 		switch (status) {
-		case ACCEPTED:					
+		case ACCEPTED:
 			routeSuggestion.setStatus(Status.ACCEPTED);
 			aisServices.routeSuggestionReply(routeSuggestion);
 			break;
@@ -623,42 +674,41 @@ public class RouteManager extends MapHandlerChild implements Runnable, Serializa
 			routeSuggestion.setStatus(Status.REJECTED);
 			aisServices.routeSuggestionReply(routeSuggestion);
 			break;
-		case NOTED:			
+		case NOTED:
 			routeSuggestion.setStatus(Status.NOTED);
 			aisServices.routeSuggestionReply(routeSuggestion);
 			break;
 		default:
 			break;
 		}
-		
-		notifyListeners(RoutesUpdateEvent.SUGGESTED_ROUTES_CHANGED);		
-	}
 
+		notifyListeners(RoutesUpdateEvent.SUGGESTED_ROUTES_CHANGED);
+	}
 
 	public Set<AisAdressedRouteSuggestion> getAddressedSuggestedRoutes() {
 		return addressedSuggestedRoutes;
 	}
-	
+
 	@Override
 	public void run() {
-		
+
 		// Maintanaince routines
 		while (true) {
 			EeINS.sleep(10000);
-			
+
 			// Active route poll for METOC
 			pollForMetoc();
-			
+
 			// Broadcast intended route over AIS
 			if (isRouteActive()) {
 				aisServices.periodicIntendedRouteBroadcast(activeRoute);
 			}
-			
+
 			// Check validity of METOC for all routes
 			checkValidMetoc();
-			
+
 		}
-		
+
 	}
 
 }

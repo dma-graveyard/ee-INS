@@ -65,6 +65,8 @@ import dk.frv.enav.ins.gui.MainFrame;
 import dk.frv.enav.ins.gui.MapMenu;
 import dk.frv.enav.ins.gui.TopPanel;
 import dk.frv.enav.ins.gui.ComponentPanels.AisComponentPanel;
+import dk.frv.enav.ins.gui.ComponentPanels.ShowDockableDialog;
+import dk.frv.enav.ins.gui.ComponentPanels.ShowDockableDialog.dock_type;
 
 /**
  * AIS layer. Showing AIS targets and intended routes.
@@ -138,8 +140,30 @@ public class AisLayer extends OMGraphicHandlerLayer implements
 	 * 
 	 * @param aisTarget
 	 */
-	public void updateSelection(AisTarget aisTarget) {
+	public void updateSelection(AisTarget aisTarget, boolean clicked) {
 		
+		// If the dock isn't visible should it show it?
+		if (!EeINS.getMainFrame().getDockableComponents()
+				.isDockVisible("AIS Target") && clicked) {
+
+			// Show it display the message?
+			if (EeINS.getSettings().getGuiSettings().isShowDockMessage()) {
+				new ShowDockableDialog(EeINS.getMainFrame(),
+						dock_type.AIS);
+			} else {
+
+				if (EeINS.getSettings().getGuiSettings().isAlwaysOpenDock()) {
+					EeINS.getMainFrame().getDockableComponents()
+							.openDock("AIS Target");
+					EeINS.getMainFrame().getEeINSMenuBar()
+							.refreshDockableMenu();
+				}
+
+				// It shouldn't display message but take a default action
+
+			}
+
+		}
 		
 		aisTargetGraphic.setVisible(true);
 		aisTargetGraphic.moveSymbol(((VesselTarget) aisTarget)
@@ -199,7 +223,7 @@ public class AisLayer extends OMGraphicHandlerLayer implements
 						rhumbLineBearing, vessel.getPositionData().getSog());
 //			}
 		}
-			if ((vessel.getStaticData() != null && aisHandler.getOwnShip() != null)) {
+			if ((vessel.getStaticData() != null && aisHandler.getOwnShip() != null) && aisHandler.getOwnShip().getPositionData() != null) {
 				aisPanel.dynamicNogoAvailable(true);
 			} else {
 				aisPanel.dynamicNogoAvailable(false);
@@ -278,7 +302,7 @@ public class AisLayer extends OMGraphicHandlerLayer implements
 			targetGraphic.update(vesselTarget);
 
 			if (vesselTarget.getMmsi() == selectedMMSI) {
-				updateSelection(aisTarget);
+				updateSelection(aisTarget, false);
 			}
 
 		} else if (aisTarget instanceof SarTarget) {
@@ -444,7 +468,7 @@ public class AisLayer extends OMGraphicHandlerLayer implements
 
 						selectedMMSI = vesselTargetGraphic.getVesselTarget()
 								.getMmsi();
-						updateSelection(vesselTargetGraphic.getVesselTarget());
+						updateSelection(vesselTargetGraphic.getVesselTarget(), true);
 					}
 				}
 

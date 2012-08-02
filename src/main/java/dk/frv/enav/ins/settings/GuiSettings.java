@@ -48,7 +48,9 @@ public class GuiSettings implements Serializable {
 	private Point appLocation = new Point(10, 10);
 	private Dimension appDimensions = new Dimension(1280, 800);
 	private boolean multipleInstancesAllowed = false;
-	private boolean riskNogoDisabled = true;
+	private boolean riskNogoDisabled = false;
+	private boolean alwaysOpenDock = true;
+	private boolean showDockMessage = true;
 
 	public GuiSettings() {
 
@@ -64,6 +66,8 @@ public class GuiSettings implements Serializable {
 		appDimensions.setSize(w, h);
 		multipleInstancesAllowed = PropUtils.booleanFromProperties(props, PREFIX + "multipleInstancesAllowed", multipleInstancesAllowed);
 		riskNogoDisabled = PropUtils.booleanFromProperties(props, PREFIX + "riskNogoDisabled", riskNogoDisabled);
+		alwaysOpenDock = PropUtils.booleanFromProperties(props, PREFIX + "alwaysOpenDock", alwaysOpenDock);
+		showDockMessage = PropUtils.booleanFromProperties(props, PREFIX + "showDockMessage", showDockMessage);
 	}
 
 	public void setProperties(Properties props) {
@@ -74,6 +78,26 @@ public class GuiSettings implements Serializable {
 		props.put(PREFIX + "appDimensions_h", Double.toString(appDimensions.getHeight()));
 		props.put(PREFIX + "multipleInstancesAllowed", Boolean.toString(multipleInstancesAllowed));
 		props.put(PREFIX + "riskNogoDisabled", Boolean.toString(riskNogoDisabled));
+		props.put(PREFIX + "alwaysOpenDock", Boolean.toString(alwaysOpenDock));
+		props.put(PREFIX + "showDockMessage", Boolean.toString(showDockMessage));
+	}
+
+	
+	
+	public boolean isAlwaysOpenDock() {
+		return alwaysOpenDock;
+	}
+
+	public void setAlwaysOpenDock(boolean alwaysOpenDock) {
+		this.alwaysOpenDock = alwaysOpenDock;
+	}
+
+	public boolean isShowDockMessage() {
+		return showDockMessage;
+	}
+
+	public void setShowDockMessage(boolean showDockMessage) {
+		this.showDockMessage = showDockMessage;
 	}
 
 	public Point getAppLocation() {

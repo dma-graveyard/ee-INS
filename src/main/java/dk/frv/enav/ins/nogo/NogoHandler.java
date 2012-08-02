@@ -42,6 +42,8 @@ import dk.frv.enav.common.xml.nogo.types.NogoPolygon;
 import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.gui.ComponentPanels.DynamicNoGoComponentPanel;
 import dk.frv.enav.ins.gui.ComponentPanels.NoGoComponentPanel;
+import dk.frv.enav.ins.gui.ComponentPanels.ShowDockableDialog;
+import dk.frv.enav.ins.gui.ComponentPanels.ShowDockableDialog.dock_type;
 import dk.frv.enav.ins.layers.nogo.NogoLayer;
 import dk.frv.enav.ins.services.shore.ShoreServiceException;
 import dk.frv.enav.ins.services.shore.ShoreServices;
@@ -129,6 +131,36 @@ public class NogoHandler extends MapHandlerChild implements Runnable {
 	}
 
 	public synchronized void updateNogo() {
+		
+		
+		// If the dock isn't visible should it show it?
+		if (!EeINS.getMainFrame().getDockableComponents()
+				.isDockVisible("NoGo")) {
+
+			// Show it display the message?
+			if (EeINS.getSettings().getGuiSettings().isShowDockMessage()) {
+				new ShowDockableDialog(EeINS.getMainFrame(),
+						dock_type.NOGO);
+			} else {
+
+				if (EeINS.getSettings().getGuiSettings().isAlwaysOpenDock()) {
+					EeINS.getMainFrame().getDockableComponents()
+							.openDock("NoGo");
+					EeINS.getMainFrame().getEeINSMenuBar()
+							.refreshDockableMenu();
+				}
+
+				// It shouldn't display message but take a default action
+
+			}
+
+		}
+		
+		
+		
+		
+		
+		
 		notifyUpdate(false);
 		nogoPanel.newRequest();
 		boolean nogoUpdated = false;

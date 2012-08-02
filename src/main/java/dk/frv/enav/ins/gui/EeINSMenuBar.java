@@ -62,6 +62,7 @@ public class EeINSMenuBar extends JMenuBar implements PropertyConsumer,
 	private JCheckBoxMenuItem encLayer;
 	private JCheckBoxMenuItem nogoLayer = new JCheckBoxMenuItem("NoGo Layer");;
 	private JCheckBoxMenuItem newRoute;
+	private JMenu dockableMenu;
 
 	private JMenu layouts;
 
@@ -333,6 +334,7 @@ public class EeINSMenuBar extends JMenuBar implements PropertyConsumer,
 					lock.setIcon(toolbarIcon("images/toolbar/lock-unlock.png"));
 					
 				}
+				refreshDockableMenu();
 			}
 		});
 
@@ -348,8 +350,7 @@ public class EeINSMenuBar extends JMenuBar implements PropertyConsumer,
 					mainFrame.getDockableComponents().toggleFrameLock();
 				}
 
-				System.out.println("SAVE CUSTOM");
-				
+			
 				String name = null;
 				name = JOptionPane.showInputDialog(mainFrame,
 						"Please input name of layout");
@@ -360,7 +361,6 @@ public class EeINSMenuBar extends JMenuBar implements PropertyConsumer,
 					String[] list = findNoneStaticLayouts();
 					
 					if (list.length == 0){
-							System.out.println("time to save");
 							mainFrame.getDockableComponents().saveLayout(name);
 					}
 					
@@ -372,11 +372,9 @@ public class EeINSMenuBar extends JMenuBar implements PropertyConsumer,
 								    "Layout already exists",
 								    JOptionPane.YES_NO_OPTION);
 							if (n == 1){
-								System.out.println("Hi?");
 								mainFrame.getDockableComponents().saveLayout(name);
 							}
 						}else{
-							System.out.println("time to save");
 							mainFrame.getDockableComponents().saveLayout(name);
 						}
 					}
@@ -386,7 +384,8 @@ public class EeINSMenuBar extends JMenuBar implements PropertyConsumer,
 			}
 		});
 
-		this.add(mainFrame.getDockableComponents().createDockableMenu());
+		dockableMenu = (mainFrame.getDockableComponents().createDockableMenu());
+		this.add(dockableMenu);
 
 		JMenu help = new JMenu("Help");
 		this.add(help);
@@ -454,6 +453,8 @@ public class EeINSMenuBar extends JMenuBar implements PropertyConsumer,
 							lock.setSelected(true);
 							lock.setText("Unlock");
 							lock.setIcon(toolbarIcon("images/toolbar/lock-unlock.png"));
+							
+							refreshDockableMenu();
 						}
 					});
 
@@ -463,6 +464,14 @@ public class EeINSMenuBar extends JMenuBar implements PropertyConsumer,
 		}
 	}
 
+	public void refreshDockableMenu(){
+		this.remove(dockableMenu);
+		dockableMenu = null;
+		dockableMenu = (mainFrame.getDockableComponents().createDockableMenu());
+		
+		this.add(dockableMenu, this.getComponentCount()-1);
+	}
+	
 	public String[] findNoneStaticLayouts() {
 		final String path = "./layout/";
 

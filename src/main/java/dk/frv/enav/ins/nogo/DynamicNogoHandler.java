@@ -43,6 +43,8 @@ import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.ais.AisHandler;
 import dk.frv.enav.ins.gps.GpsHandler;
 import dk.frv.enav.ins.gui.ComponentPanels.DynamicNoGoComponentPanel;
+import dk.frv.enav.ins.gui.ComponentPanels.ShowDockableDialog;
+import dk.frv.enav.ins.gui.ComponentPanels.ShowDockableDialog.dock_type;
 import dk.frv.enav.ins.layers.nogo.DynamicNogoLayer;
 import dk.frv.enav.ins.services.shore.ShoreServiceException;
 import dk.frv.enav.ins.services.shore.ShoreServices;
@@ -120,16 +122,17 @@ public class DynamicNogoHandler extends MapHandlerChild implements Runnable {
 
 			try {
 				if (dynamicNoGoActive) {
+					System.out.println("ello?");
 					nogoLayer.setVisible(true);
 					updateNogo();
 				}
 				Thread.sleep(80000);
 			} catch (InterruptedException e) {
-//				System.out.println("Interrupted " + dynamicNoGoActive);
+				// System.out.println("Interrupted " + dynamicNoGoActive);
 			}
 
 			if (!dynamicNoGoActive && nogoLayer != null) {
-//				System.out.println("cleanup");
+				// System.out.println("cleanup");
 				nogoLayer.setVisible(false);
 				nogoLayer.cleanUp();
 				nogoPanel.inactive();
@@ -165,20 +168,25 @@ public class DynamicNogoHandler extends MapHandlerChild implements Runnable {
 
 	public synchronized void updateNogo() {
 
-//		System.out.println("Update NoGo");
-		
+		// System.out.println("Update NoGo");
+
 		// Is dynamic nogo activated and target not null?
 		if (dynamicNoGoActive
 				&& aisHandler.getVesselTargets().get(mmsiTarget) != null) {
 
-//			System.out.println("Really update");
-			
+			System.out.println("Really update");
+
+			System.out
+					.println(aisHandler.getOwnShip().getPositionData() != null);
+			System.out.println(aisHandler.getVesselTargets().get(mmsiTarget)
+					.getPositionData() != null);
+
 			// Get own ship location and add box around it, + / - something
 			if (aisHandler.getOwnShip().getPositionData() != null
 					&& aisHandler.getVesselTargets().get(mmsiTarget)
 							.getPositionData() != null) {
-				
-//				System.out.println("Really really update");
+
+				System.out.println("Really really update");
 
 				GeoLocation shipLocation = aisHandler.getOwnShip()
 						.getPositionData().getPos();
@@ -203,7 +211,7 @@ public class DynamicNogoHandler extends MapHandlerChild implements Runnable {
 
 				// Set depth for own ship
 				if (aisHandler.getOwnShip().getStaticData() != null) {
-//					System.out.println("Getting draught from static - own");
+					// System.out.println("Getting draught from static - own");
 					draughtOwn = aisHandler.getOwnShip().getStaticData()
 							.getDraught() / 10;
 				} else {
@@ -213,12 +221,12 @@ public class DynamicNogoHandler extends MapHandlerChild implements Runnable {
 
 				if (aisHandler.getVesselTargets().get(mmsiTarget)
 						.getStaticData() != null) {
-//					System.out.println("Getting draught from static - target");
+					// System.out.println("Getting draught from static - target");
 					draughtTarget = aisHandler.getVesselTargets()
 							.get(mmsiTarget).getStaticData().getDraught() / 10;
 
 				} else {
-//					System.out.println("Setting draught to 5");
+					// System.out.println("Setting draught to 5");
 					draughtTarget = 5;
 				}
 				// NorthWest pos
@@ -298,7 +306,7 @@ public class DynamicNogoHandler extends MapHandlerChild implements Runnable {
 				&& aisHandler.getVesselTargets().get(mmsiTarget)
 						.getPositionData() != null) {
 
-//			System.out.println("Making a request to the server");
+			System.out.println("Making a request to the server");
 
 			// Send a rest to shoreServices for NoGo
 			NogoResponse nogoResponseOwn = shoreServices.nogoPoll(-draughtOwn,
@@ -449,8 +457,36 @@ public class DynamicNogoHandler extends MapHandlerChild implements Runnable {
 
 	public void setDynamicNoGoActive(boolean dynamicNoGoActive) {
 		this.dynamicNoGoActive = dynamicNoGoActive;
-//		System.out.println("Interrupting!");
+
+		System.out.println(dynamicNoGoActive);
+
+		// System.out.println("Interrupting!");
 		self.interrupt();
+
+		if (dynamicNoGoActive) {
+			// If the dock isn't visible should it show it?
+			if (!EeINS.getMainFrame().getDockableComponents()
+					.isDockVisible("Dynamic NoGo")) {
+
+				// Show it display the message?
+				if (EeINS.getSettings().getGuiSettings().isShowDockMessage()) {
+					new ShowDockableDialog(EeINS.getMainFrame(),
+							dock_type.DYN_NOGO);
+				} else {
+
+					if (EeINS.getSettings().getGuiSettings().isAlwaysOpenDock()) {
+						EeINS.getMainFrame().getDockableComponents()
+								.openDock("Dynamic NoGo");
+						EeINS.getMainFrame().getEeINSMenuBar()
+								.refreshDockableMenu();
+					}
+
+					// It shouldn't display message but take a default action
+
+				}
+
+			}
+		}
 	}
 
 	public void setMmsiTarget(long mmsiTarget) {

@@ -238,7 +238,7 @@ public class NogoDialog extends JDialog implements ActionListener, Runnable {
 		}
 
 		if (aisHandler != null && aisHandler.getOwnShip().getStaticData() != null) {
-			Integer draught = ((int) aisHandler.getOwnShip().getStaticData().getDraught() / 10) + 2;
+			Integer draught = (int)(aisHandler.getOwnShip().getStaticData().getDraught() / 10);
 			spinnerDraught.setValue(draught);
 		}
 

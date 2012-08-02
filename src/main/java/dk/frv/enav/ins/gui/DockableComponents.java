@@ -124,6 +124,7 @@ public class DockableComponents {
 			dockable.setMinimizable(false);
 			dockable.setMaximizable(false);
 			dockable.setTitleIcon( new ImageIcon( ));
+			dockable.setExternalizable(false);
 //            dockable.putAction(CDockable.ACTION_KEY_MAXIMIZE, CBlank.BLANK);
 //            dockable.putAction(CDockable.ACTION_KEY_MINIMIZE, CBlank.BLANK);
             dockable.putAction(CDockable.ACTION_KEY_EXTERNALIZE, CBlank.BLANK);
@@ -237,6 +238,45 @@ public class DockableComponents {
 		});
 		return m;
 	}
+	
+	
+	public boolean isDockVisible(String name){
+		PanelDockable dockable = dmap.get(name);
+		
+		if (dockable != null){
+			
+			if (dockable.isVisible()){
+				return true;
+			}else{
+				return false;
+			}
+			
+		}else{
+			return false;
+		}
+	}
+	
+	public void openDock(String name){
+
+	
+		PanelDockable dockable = dmap.get(name);
+//		System.out.println(dockable);
+		if (dockable != null) {
+			doOpen(dockable);
+		} else {
+			PanelDockable newDockable = (PanelDockable) factory
+					.createBackup(name);
+			dmap.put(newDockable.getName(), newDockable);
+			newDockable.setStackable(false);
+			newDockable.setMinimizable(false);
+			newDockable.setMaximizable(false);
+			doOpen(newDockable);
+		}
+
+	
+	
+	
+	}
 
 	private PanelDockable getMyDockableByName(String name) {
 		return (PanelDockable) control.getSingleDockable(name);
@@ -264,6 +304,7 @@ public class DockableComponents {
 	}
 
 	// If no layout file is present, create the basic layout!
+	@SuppressWarnings("unused")
 	private XElement createLayout() {
 //		System.out.println("Create layout?");
 		CControl aControl = new CControl();
