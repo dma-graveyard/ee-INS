@@ -95,6 +95,10 @@ public class AisAdressedRouteSuggestion extends AisIntendedRoute {
 		case CANCELLED:
 			setHidden(true);
 			break;
+		case PENDING:
+			break;
+		default:
+			break;
 		}
 		this.status = status;
 	}

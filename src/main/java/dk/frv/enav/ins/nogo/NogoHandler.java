@@ -40,7 +40,6 @@ import dk.frv.ais.geo.GeoLocation;
 import dk.frv.enav.common.xml.nogo.response.NogoResponse;
 import dk.frv.enav.common.xml.nogo.types.NogoPolygon;
 import dk.frv.enav.ins.EeINS;
-import dk.frv.enav.ins.gui.ComponentPanels.DynamicNoGoComponentPanel;
 import dk.frv.enav.ins.gui.ComponentPanels.NoGoComponentPanel;
 import dk.frv.enav.ins.gui.ComponentPanels.ShowDockableDialog;
 import dk.frv.enav.ins.gui.ComponentPanels.ShowDockableDialog.dock_type;

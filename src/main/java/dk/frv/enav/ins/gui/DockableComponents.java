@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
@@ -30,7 +29,6 @@ import bibliothek.gui.dock.common.mode.ExtendedMode;
 import bibliothek.gui.dock.displayer.DisplayerDockBorder;
 import bibliothek.gui.dock.themes.ThemeManager;
 import bibliothek.gui.dock.util.Priority;
-import bibliothek.gui.dock.util.PropertyKey;
 import bibliothek.util.filter.PresetFilter;
 import bibliothek.util.xml.XElement;
 import dk.frv.enav.ins.EeINS;

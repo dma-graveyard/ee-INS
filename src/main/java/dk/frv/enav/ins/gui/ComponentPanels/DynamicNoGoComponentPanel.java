@@ -2,7 +2,6 @@ package dk.frv.enav.ins.gui.ComponentPanels;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;

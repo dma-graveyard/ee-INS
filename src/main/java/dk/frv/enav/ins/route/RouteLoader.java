@@ -71,6 +71,7 @@ public class RouteLoader {
 		return route;
 	}
 
+	@SuppressWarnings("resource")
 	public static Route loadSimple(File file) throws RouteLoadException {
 		Route route = new Route();
 		try {

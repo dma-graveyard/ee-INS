@@ -37,14 +37,13 @@ import com.bbn.openmap.layer.OMGraphicHandlerLayer;
 import com.bbn.openmap.omGraphics.OMGraphicList;
 
 import dk.frv.enav.common.xml.nogo.types.NogoPolygon;
-import dk.frv.enav.ins.nogo.DynamicNogoHandler;
 import dk.frv.enav.ins.nogo.NogoHandler;
 
 public class NogoLayer extends OMGraphicHandlerLayer {
 	private static final long serialVersionUID = 1L;
 
 	private NogoHandler nogoHandler = null;
-	private DynamicNogoHandler dynamicNogoHandler = null;
+//	private DynamicNogoHandler dynamicNogoHandler = null;
 	
 	
 	private OMGraphicList graphics = new OMGraphicList();
@@ -146,9 +145,9 @@ public class NogoLayer extends OMGraphicHandlerLayer {
 		if (obj instanceof NogoHandler) {
 			nogoHandler = (NogoHandler) obj;
 		}
-		if (obj instanceof DynamicNogoHandler) {
-			dynamicNogoHandler = (DynamicNogoHandler) obj;
-		}
+//		if (obj instanceof DynamicNogoHandler) {
+//			dynamicNogoHandler = (DynamicNogoHandler) obj;
+//		}
 	}
 
 	public void addFrame(String message, Date validFrom, Date validTo, Double draught, int errorCode){

@@ -75,6 +75,7 @@ public class RouteMetocDialog extends JDialog implements ActionListener, FocusLi
 	private JLabel currentLabel;
 	private JLabel currentMetocDataLbl;
 	private JLabel intervalLbl;
+	@SuppressWarnings("rawtypes")
 	private JComboBox intervalDb;
 	private JButton requestBtn;
 	private JCheckBox windCb;
@@ -218,6 +219,7 @@ public class RouteMetocDialog extends JDialog implements ActionListener, FocusLi
 	}
 	
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void initGui() {
         showCheckbox = new JCheckBox("Show route METOC (if available)");
         showCheckbox.setSelected(true);

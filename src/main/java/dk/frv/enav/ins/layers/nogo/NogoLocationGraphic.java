@@ -32,11 +32,8 @@ package dk.frv.enav.ins.layers.nogo;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Composite;
-import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.RenderingHints;
 import java.awt.TexturePaint;
 import java.awt.image.BufferedImage;
 import java.util.Date;
@@ -52,10 +49,12 @@ import dk.frv.enav.common.xml.nogo.types.NogoPolygon;
 /**
  * Graphic for MSI location/area
  */
+@SuppressWarnings("unused")
 public class NogoLocationGraphic extends OMGraphicList {
 	private static final long serialVersionUID = 1L;
 
 	private NogoPolygon polygon;
+	
 	private Date validFrom;
 	private Date validTo;
 	private int draught;
@@ -127,7 +126,6 @@ public class NogoLocationGraphic extends OMGraphicList {
 		return (AlphaComposite.getInstance(type, alpha));
 	}
 
-	@SuppressWarnings("unused")
 	private void drawPolyline() {
 		// space for lat-lon points plus first lat-lon pair to close the polygon
 		double[] polyPoints = new double[polygon.getPolygon().size() * 2];
@@ -149,7 +147,6 @@ public class NogoLocationGraphic extends OMGraphicList {
 
 	}
 
-	@SuppressWarnings("unused")
 	private void drawPoints() {
 		for (int i = 0; i < polygon.getPolygon().size(); i++) {
 			OMPoint polyPoint = new OMPoint(polygon.getPolygon().get(i)
@@ -185,6 +182,7 @@ public class NogoLocationGraphic extends OMGraphicList {
 
 	}
 
+	@SuppressWarnings("deprecation")
 	private void drawAreaBox() {
 		// space for lat-lon points plus first lat-lon pair to close the polygon
 		

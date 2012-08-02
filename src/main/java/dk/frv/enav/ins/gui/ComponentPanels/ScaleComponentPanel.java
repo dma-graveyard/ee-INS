@@ -1,7 +1,6 @@
 package dk.frv.enav.ins.gui.ComponentPanels;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.util.Date;
 import java.util.Locale;
 
