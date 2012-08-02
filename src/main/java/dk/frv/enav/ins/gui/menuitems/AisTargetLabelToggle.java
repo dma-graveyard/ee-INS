@@ -51,6 +51,7 @@ public class AisTargetLabelToggle extends JMenuItem implements IMapMenuAction {
 	public void doAction() {
 		vesselTargetGraphic.setShowNameLabel(!vesselTargetGraphic.getShowNameLabel());
 		aisLayer.targetUpdated(vesselTargetGraphic.getVesselTarget());
+		aisLayer.doPrepare();
 	}
 	
 	public void setVesselTargetGraphic(VesselTargetGraphic vesselTargetGraphic) {

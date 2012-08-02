@@ -101,6 +101,7 @@ public class AisLayer extends OMGraphicHandlerLayer implements
 	AisTargetGraphic aisTargetGraphic = new AisTargetGraphic();
 	private AisComponentPanel aisPanel;
 	long selectedMMSI = -1;
+	private boolean showLabels = true;
 	// long selectedMMSI = 230994000;
 
 	private TopPanel topPanel;
@@ -109,6 +110,8 @@ public class AisLayer extends OMGraphicHandlerLayer implements
 		graphics.add(aisTargetGraphic);
 		// graphics.setVague(false);
 		(new Thread(this)).start();
+		
+		showLabels = EeINS.getSettings().getAisSettings().isShowNameLabels();
 	}
 
 	@Override
@@ -141,15 +144,15 @@ public class AisLayer extends OMGraphicHandlerLayer implements
 	 * @param aisTarget
 	 */
 	public void updateSelection(AisTarget aisTarget, boolean clicked) {
-		
+
 		// If the dock isn't visible should it show it?
 		if (!EeINS.getMainFrame().getDockableComponents()
-				.isDockVisible("AIS Target") && clicked) {
+				.isDockVisible("AIS Target")
+				&& clicked) {
 
 			// Show it display the message?
 			if (EeINS.getSettings().getGuiSettings().isShowDockMessage()) {
-				new ShowDockableDialog(EeINS.getMainFrame(),
-						dock_type.AIS);
+				new ShowDockableDialog(EeINS.getMainFrame(), dock_type.AIS);
 			} else {
 
 				if (EeINS.getSettings().getGuiSettings().isAlwaysOpenDock()) {
@@ -164,13 +167,13 @@ public class AisLayer extends OMGraphicHandlerLayer implements
 			}
 
 		}
-		
+
 		aisTargetGraphic.setVisible(true);
 		aisTargetGraphic.moveSymbol(((VesselTarget) aisTarget)
 				.getPositionData().getPos());
-		
-//		doPrepare();
-		
+
+		// doPrepare();
+
 		VesselTarget vessel = (VesselTarget) aisTarget;
 
 		double rhumbLineDistance = -1.0;
@@ -178,7 +181,8 @@ public class AisLayer extends OMGraphicHandlerLayer implements
 
 		if (vessel.getStaticData() != null) {
 
-			if (aisHandler.getOwnShip() != null && aisHandler.getOwnShip().getPositionData() != null) {
+			if (aisHandler.getOwnShip() != null
+					&& aisHandler.getOwnShip().getPositionData() != null) {
 				rhumbLineDistance = aisHandler
 						.getOwnShip()
 						.getPositionData()
@@ -199,38 +203,36 @@ public class AisLayer extends OMGraphicHandlerLayer implements
 			);
 		} else {
 
-//			if (vessel.getStaticData() != null) {
+			// if (vessel.getStaticData() != null) {
 
-				if (aisHandler.getOwnShip() != null && aisHandler.getOwnShip().getPositionData() != null) {
-					rhumbLineDistance = aisHandler
-							.getOwnShip()
-							.getPositionData()
-							.getPos()
-							.getRhumbLineDistance(
-									vessel.getPositionData().getPos());
-					rhumbLineBearing = aisHandler
-							.getOwnShip()
-							.getPositionData()
-							.getPos()
-							.getRhumbLineBearing(
-									vessel.getPositionData().getPos()
+			if (aisHandler.getOwnShip() != null
+					&& aisHandler.getOwnShip().getPositionData() != null) {
+				rhumbLineDistance = aisHandler
+						.getOwnShip()
+						.getPositionData()
+						.getPos()
+						.getRhumbLineDistance(vessel.getPositionData().getPos());
+				rhumbLineBearing = aisHandler.getOwnShip().getPositionData()
+						.getPos()
+						.getRhumbLineBearing(vessel.getPositionData().getPos()
 
-							);
-				}
-
-				aisPanel.receiveHighlight(vessel.getMmsi(), vessel
-						.getPositionData().getCog(), rhumbLineDistance,
-						rhumbLineBearing, vessel.getPositionData().getSog());
-//			}
-		}
-			if ((vessel.getStaticData() != null && aisHandler.getOwnShip() != null) && aisHandler.getOwnShip().getPositionData() != null) {
-				aisPanel.dynamicNogoAvailable(true);
-			} else {
-				aisPanel.dynamicNogoAvailable(false);
+						);
 			}
 
-			doPrepare();
-		
+			aisPanel.receiveHighlight(vessel.getMmsi(), vessel
+					.getPositionData().getCog(), rhumbLineDistance,
+					rhumbLineBearing, vessel.getPositionData().getSog());
+			// }
+		}
+		if ((vessel.getStaticData() != null && aisHandler.getOwnShip() != null)
+				&& aisHandler.getOwnShip().getPositionData() != null) {
+			aisPanel.dynamicNogoAvailable(true);
+		} else {
+			aisPanel.dynamicNogoAvailable(false);
+		}
+
+		doPrepare();
+
 	}
 
 	/**
@@ -269,7 +271,7 @@ public class AisLayer extends OMGraphicHandlerLayer implements
 		// Create and insert
 		if (targetGraphic == null) {
 			if (aisTarget instanceof VesselTarget) {
-				targetGraphic = new VesselTargetGraphic();
+				targetGraphic = new VesselTargetGraphic(showLabels);
 			} else if (aisTarget instanceof SarTarget) {
 				targetGraphic = new SarTargetGraphic();
 			} else if (aisTarget instanceof AtoNTarget) {
@@ -461,14 +463,15 @@ public class AisLayer extends OMGraphicHandlerLayer implements
 					if (selectedGraphic instanceof VesselTargetTriangle) {
 
 						System.out.println("selected");
-						
+
 						VesselTargetTriangle vtt = (VesselTargetTriangle) selectedGraphic;
 						VesselTargetGraphic vesselTargetGraphic = vtt
 								.getVesselTargetGraphic();
 
 						selectedMMSI = vesselTargetGraphic.getVesselTarget()
 								.getMmsi();
-						updateSelection(vesselTargetGraphic.getVesselTarget(), true);
+						updateSelection(vesselTargetGraphic.getVesselTarget(),
+								true);
 					}
 				}
 
@@ -650,6 +653,21 @@ public class AisLayer extends OMGraphicHandlerLayer implements
 	public void zoomTo(GeoLocation position) {
 		mapBean.setCenter(position.getLatitude(), position.getLongitude());
 		// mapBean.setScale(EeINS.getSettings().getEnavSettings().getMsiTextboxesVisibleAtScale());
+	}
+
+	public synchronized void toggleAllLabels() {
+
+		showLabels = !showLabels;
+
+		for (TargetGraphic value : targets.values()) {
+
+			if (value instanceof VesselTargetGraphic) {
+				((VesselTargetGraphic) value).setShowNameLabel(showLabels);
+				targetUpdated(((VesselTargetGraphic) value).getVesselTarget());
+			}
+			doPrepare();
+		}
+
 	}
 
 }

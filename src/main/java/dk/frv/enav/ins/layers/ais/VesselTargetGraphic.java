@@ -91,6 +91,11 @@ public class VesselTargetGraphic extends TargetGraphic {
 		super();
 		this.showNameLabel = EeINS.getSettings().getAisSettings().isShowNameLabels();
 	}
+	
+	public VesselTargetGraphic(boolean showName) {
+		super();
+		this.showNameLabel = showName;
+	}
 
 	private void createGraphics() {
 		speedVector = new OMLine(0, 0, 0, 0, OMLine.LINETYPE_STRAIGHT);

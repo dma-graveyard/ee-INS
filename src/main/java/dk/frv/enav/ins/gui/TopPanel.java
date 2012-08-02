@@ -50,6 +50,7 @@ import dk.frv.enav.ins.event.NavigationMouseMode;
 import dk.frv.enav.ins.gui.ais.AisDialog;
 import dk.frv.enav.ins.gui.msi.MsiDialog;
 import dk.frv.enav.ins.gui.route.RouteManagerDialog;
+import dk.frv.enav.ins.layers.ais.AisLayer;
 
 /**
  * The top buttons panel
@@ -68,6 +69,7 @@ public class TopPanel extends OMComponentPanel implements ActionListener,
 	private ButtonLabel routeManagerBtn = new ButtonLabel(toolbarIcon("images/toolbar/marker.png"));
 	private ButtonLabel msiButton = new ButtonLabel(toolbarIcon("images/toolbar/msi_symbol_16.png"));
 	private ButtonLabel aisButton = new ButtonLabel(toolbarIcon("images/toolbar/radar.png"));
+	private ToggleButtonLabel aisToggleName = new ToggleButtonLabel(toolbarIcon("images/toolbar/edit-letter-spacing.png"));
 //	private ToggleButtonLabel nogoButton = new ToggleButtonLabel("Toggle NoGo");
 	private ToggleButtonLabel aisBtn = new ToggleButtonLabel(toolbarIcon("images/toolbar/board-game.png"));
 //	private ToggleButtonLabel riskBtn = new ToggleButtonLabel("Risk");
@@ -85,6 +87,7 @@ public class TopPanel extends OMComponentPanel implements ActionListener,
 	private MsiDialog msiDialog = null;
 	private AisDialog aisDialog = null;
 	private EeINSMenuBar menuBar = null;
+	private AisLayer aisLayer = null;
 
 	private MouseDelegator mouseDelegator;
 
@@ -119,6 +122,7 @@ public class TopPanel extends OMComponentPanel implements ActionListener,
 		aisButton.setToolTipText("Show nearby vessels : Shortcut Ctrl A");
 //		nogoButton.setToolTipText("Show/hide NoGo area");
 		aisBtn.setToolTipText("Show/hide AIS targets");
+		aisToggleName.setToolTipText("Show/hide AIS Name Labels");
 //		riskBtn.setToolTipText("Show/hide risk info");
 		encBtn.setToolTipText("Show/hide ENC");
 //		tglbtnMsiFilter
@@ -140,6 +144,7 @@ public class TopPanel extends OMComponentPanel implements ActionListener,
 		add(aisButton);
 		add(new JSeparator());
 		add(aisBtn);
+		add(aisToggleName);
 		add(encBtn);
 //		add(tglbtnMsiFilter);
 //		if (showRiskAndNogo)
@@ -183,6 +188,7 @@ public class TopPanel extends OMComponentPanel implements ActionListener,
 		aisBtn.addMouseListener(this);
 //		riskBtn.addMouseListener(this);
 		encBtn.addMouseListener(this);
+		aisToggleName.addMouseListener(this);
 //		tglbtnMsiFilter.addMouseListener(this);
 //		lockFrames.addMouseListener(this);
 
@@ -200,6 +206,7 @@ public class TopPanel extends OMComponentPanel implements ActionListener,
 		encBtn.setSelected(EeINS.getSettings().getMapSettings().isEncVisible());
 //		tglbtnMsiFilter.setSelected(EeINS.getSettings().getEnavSettings()
 //				.isMsiFilter());
+		aisToggleName.setSelected(EeINS.getSettings().getAisSettings().isShowNameLabels());
 		
 	}
 
@@ -244,9 +251,9 @@ public class TopPanel extends OMComponentPanel implements ActionListener,
 		if (obj instanceof AisDialog) {
 			aisDialog = (AisDialog) obj;
 		}
-//		if (obj instanceof NogoHandler) {
-//			nogoHandler = (NogoHandler) obj;
-//		}
+		if (obj instanceof AisLayer) {
+			aisLayer = (AisLayer) obj;
+		}
 		if (obj instanceof EeINSMenuBar) {
 			menuBar = (EeINSMenuBar) obj;
 		}
@@ -356,7 +363,9 @@ public class TopPanel extends OMComponentPanel implements ActionListener,
 //			nogoHandler.toggleLayer();
 		} else if (e.getSource() == newRouteBtn) {
 			newRoute();
-		} 
+		} else if (e.getSource() == aisToggleName) {
+			aisLayer.toggleAllLabels();
+		}
 //		else if (e.getSource() == tglbtnMsiFilter) {
 //			EeINS.getSettings().getEnavSettings()
 //					.setMsiFilter(tglbtnMsiFilter.isSelected());
