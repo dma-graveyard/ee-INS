@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="eeins" default="dist">
 
-	<property name="version" value="3.4-BETA1" />
+	<property name="version" value="4.0-BETA1" />
 
 	<property file="${basedir}/ant.properties" />
 	<property file="${basedir}/.ant.properties" />
