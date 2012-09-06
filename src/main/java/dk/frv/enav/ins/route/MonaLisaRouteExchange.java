@@ -30,20 +30,23 @@ package dk.frv.enav.ins.route;
  * 
  */
 
-import java.io.File;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.math.BigInteger;
-import java.util.ArrayList;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.net.InetAddress;
+import java.net.Socket;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
@@ -51,13 +54,13 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.log4j.Logger;
 
 import com.bbn.openmap.MapHandlerChild;
-import com.bbn.openmap.proj.coords.LatLonPoint;
 
 import dk.frv.ais.geo.GeoLocation;
-import dk.frv.enav.common.xml.Waypoint;
 import dk.frv.enav.ins.ais.AisHandler;
 import dk.frv.enav.ins.common.Heading;
 import dk.frv.enav.ins.gps.GpsHandler;
@@ -68,11 +71,9 @@ import dk.frv.enav.ins.route.monalisa.fi.navielektro.ns.formats.vessel_waypoint_
 import dk.frv.enav.ins.route.monalisa.fi.navielektro.ns.formats.vessel_waypoint_exchange.WaypointsType;
 import dk.frv.enav.ins.route.monalisa.se.sspa.optiroute.CurrentShipDataType;
 import dk.frv.enav.ins.route.monalisa.se.sspa.optiroute.DepthPointsType;
-import dk.frv.enav.ins.route.monalisa.se.sspa.optiroute.ObjectFactory;
 import dk.frv.enav.ins.route.monalisa.se.sspa.optiroute.Routerequest;
 import dk.frv.enav.ins.route.monalisa.se.sspa.optiroute.RouteresponseType;
 import dk.frv.enav.ins.route.monalisa.se.sspa.optiroute.WeatherPointsType;
-import dk.frv.enav.ins.services.shore.RouteHttp;
 import dk.frv.enav.ins.services.shore.ShoreServiceException;
 import dk.frv.enav.ins.status.ComponentStatus;
 import dk.frv.enav.ins.status.IStatusComponent;
@@ -273,7 +274,8 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 		Routerequest monaLisaRoute = convertRoute(route);
 
 		JAXBContext context = null;
-
+		String xmlReturnRoute = "";
+		String returnRoute = "";
 		try {
 			context = JAXBContext.newInstance(Routerequest.class);
 			Marshaller m = context.createMarshaller();
@@ -282,15 +284,61 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 
 			// m.marshal(monaLisaRoute, System.out);
 
+			StringWriter st = new StringWriter();
+			m.marshal(monaLisaRoute, st);
+			String xml = st.toString();
+
+			// HTTP STUFF
 			try {
-				m.marshal(
-						monaLisaRoute,
-						new FileOutputStream(
-								"C:\\Dropbox\\Mona Lisa Route XML\\Example\\generatedRequest.xml"));
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
+				String xmldata = xml;
+
+				// Create socket
+				String hostname = "localhost";
+				int port = 80;
+				InetAddress addr = InetAddress.getByName(hostname);
+				Socket sock = new Socket(addr, port);
+
+				// Send header
+				String path = "/EeINS/";
+				BufferedWriter wr = new BufferedWriter(new OutputStreamWriter(
+						sock.getOutputStream(), "UTF-8"));
+				// You can use "UTF8" for compatibility with the Microsoft
+				// virtual machine.
+				wr.write("POST " + path + " HTTP/1.0\r\n");
+				wr.write("Host: EeINS\r\n");
+				wr.write("Content-Length: " + xmldata.length() + "\r\n");
+				wr.write("Content-Type: text/xml; charset=\"utf-8\"\r\n");
+				wr.write("\r\n");
+
+				// Send data
+				wr.write(xmldata);
+				wr.flush();
+
+				// Response
+				BufferedReader rd = new BufferedReader(new InputStreamReader(
+						sock.getInputStream()));
+
+				while (rd.readLine() != null) {
+					returnRoute = returnRoute + rd.readLine();
+				}
+				// System.out.println(returnRoute);
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		 xmlReturnRoute = returnRoute.split("Content-type: text/xml")[1];
+//			System.out.println(xmlReturnRoute);
+			// HTTP DONE
+
+			// try {
+			// m.marshal(
+			// monaLisaRoute,
+			// new FileOutputStream(
+			// "C:\\Dropbox\\Mona Lisa Route XML\\Example\\generatedRequest.xml"));
+			// } catch (FileNotFoundException e) {
+			// // TODO Auto-generated catch block
+			// e.printStackTrace();
+			// }
+
 		} catch (JAXBException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -299,16 +347,19 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 		Unmarshaller u;
 		JAXBContext jc;
 		RouteresponseType routeResponse = null;
+		
+		StringReader sr = new StringReader(xmlReturnRoute);
+		
+//		m.marshal(monaLisaRoute, st);
+//		String xml = st.toString();
 		try {
 			jc = JAXBContext
 					.newInstance("dk.frv.enav.ins.route.monalisa.se.sspa.optiroute");
 			u = jc.createUnmarshaller();
 			routeResponse = (RouteresponseType) u
-					.unmarshal(new FileInputStream(
-							"C:\\Dropbox\\Mona Lisa Route XML\\Example\\route01_res.xml"));
-		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+					.unmarshal(sr);
+		
+		
 		} catch (JAXBException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
