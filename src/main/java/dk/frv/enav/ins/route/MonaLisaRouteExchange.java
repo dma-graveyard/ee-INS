@@ -32,6 +32,7 @@ package dk.frv.enav.ins.route;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -41,6 +42,10 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.charset.Charset;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
@@ -74,6 +79,7 @@ import dk.frv.enav.ins.route.monalisa.se.sspa.optiroute.DepthPointsType;
 import dk.frv.enav.ins.route.monalisa.se.sspa.optiroute.Routerequest;
 import dk.frv.enav.ins.route.monalisa.se.sspa.optiroute.RouteresponseType;
 import dk.frv.enav.ins.route.monalisa.se.sspa.optiroute.WeatherPointsType;
+import dk.frv.enav.ins.services.shore.RouteHttp;
 import dk.frv.enav.ins.services.shore.ShoreServiceException;
 import dk.frv.enav.ins.status.ComponentStatus;
 import dk.frv.enav.ins.status.IStatusComponent;
@@ -160,8 +166,26 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			
+			
+			  c.add(Calendar.DAY_OF_YEAR, 1);
+			  XMLGregorianCalendar tomorrow2 = null;
+				try {
+					tomorrow2 = DatatypeFactory.newInstance()
+							.newXMLGregorianCalendar(c);
+				} catch (DatatypeConfigurationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			    
 
-			waypoint.setETA(date2);
+			  if (i ==0){
+				  waypoint.setETA(date2);
+			  }
+			  if (i==1){
+				  waypoint.setETA(tomorrow2);
+			  }
+
 
 			// Set leg info
 			LeginfoType legInfo = new LeginfoType();
@@ -179,15 +203,25 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 				legInfo.setTurnRadius(Double.valueOf(routeWaypoint.getRot())
 						.intValue());
 			} else {
-				legInfo.setTurnRadius(0);
+				legInfo.setTurnRadius(99);
 			}
 
 			waypoint.setLegInfo(legInfo);
 
 			// Set positon
 			PositionType position = new PositionType();
-			position.setLatitude(routeWaypoint.getPos().getLatitude());
-			position.setLongitude(routeWaypoint.getPos().getLongitude());
+			
+			if (i==0){
+				position.setLatitude(57.22);
+				position.setLongitude(12);
+			}
+			if (i==1){
+				position.setLatitude(57.9);
+				position.setLongitude(11.4);
+			}
+			
+//			position.setLatitude(routeWaypoint.getPos().getLatitude());
+//			position.setLongitude(routeWaypoint.getPos().getLongitude());
 
 			waypoint.setPosition(position);
 
@@ -196,7 +230,7 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 
 			// Set name
 			waypoint.setWptName(routeWaypoint.name);
-
+			
 			monaLisaWaypoints.add(waypoint);
 
 		}
@@ -232,12 +266,16 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 					.getPosition().getLongitude());
 			waypoint.setPos(position);
 
+			
 			if (responseWaypoint.getLegInfo() != null) {
 
 				if (responseWaypoint.getLegInfo().getTurnRadius() != null) {
 					waypoint.setRot((double) responseWaypoint.getLegInfo()
 							.getTurnRadius());
 				}
+
+				
+				
 				if (responseWaypoint.getLegInfo().getPlannedSpeed() != null) {
 					waypoint.setSpeed(responseWaypoint.getLegInfo()
 							.getPlannedSpeed());
@@ -247,7 +285,7 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 							.getTurnRadius());
 				}
 			}
-
+			
 			routeWaypoints.add(waypoint);
 
 			if (routeWaypoints.size() > 1) {
@@ -266,7 +304,8 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 		return route;
 	}
 
-	public Route makeRequest(Route route) throws ShoreServiceException {
+//	public Route makeRequest(Route route) throws ShoreServiceException {
+	public Route makeRequest(Route route) throws Exception {
 		System.out.println("Recieved route for Mona Lisa Exchange");
 		// A request for a route has come in
 
@@ -276,6 +315,8 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 		JAXBContext context = null;
 		String xmlReturnRoute = "";
 		String returnRoute = "";
+		String xml = "";
+		String staticXML = "";
 		try {
 			context = JAXBContext.newInstance(Routerequest.class);
 			Marshaller m = context.createMarshaller();
@@ -286,48 +327,52 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 
 			StringWriter st = new StringWriter();
 			m.marshal(monaLisaRoute, st);
-			String xml = st.toString();
+			xml = st.toString();
 
-			// HTTP STUFF
+			FileInputStream stream = null;
 			try {
-				String xmldata = xml;
-
-				// Create socket
-				String hostname = "localhost";
-				int port = 80;
-				InetAddress addr = InetAddress.getByName(hostname);
-				Socket sock = new Socket(addr, port);
-
-				// Send header
-				String path = "/EeINS/";
-				BufferedWriter wr = new BufferedWriter(new OutputStreamWriter(
-						sock.getOutputStream(), "UTF-8"));
-				// You can use "UTF8" for compatibility with the Microsoft
-				// virtual machine.
-				wr.write("POST " + path + " HTTP/1.0\r\n");
-				wr.write("Host: EeINS\r\n");
-				wr.write("Content-Length: " + xmldata.length() + "\r\n");
-				wr.write("Content-Type: text/xml; charset=\"utf-8\"\r\n");
-				wr.write("\r\n");
-
-				// Send data
-				wr.write(xmldata);
-				wr.flush();
-
-				// Response
-				BufferedReader rd = new BufferedReader(new InputStreamReader(
-						sock.getInputStream()));
-
-				while (rd.readLine() != null) {
-					returnRoute = returnRoute + rd.readLine();
-				}
-				// System.out.println(returnRoute);
-			} catch (Exception e) {
-				e.printStackTrace();
+				stream = new FileInputStream(new File("C:\\route02.xml"));
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
-		 xmlReturnRoute = returnRoute.split("Content-type: text/xml")[1];
-//			System.out.println(xmlReturnRoute);
-			// HTTP DONE
+			try {
+				FileChannel fc = stream.getChannel();
+				MappedByteBuffer bb = null;
+				try {
+					bb = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				/* Instead of using default, pass in a decoder. */
+				staticXML = Charset.defaultCharset().decode(bb).toString();
+			} finally {
+				try {
+					stream.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+			// System.out.println(staticXML);
+
+			// Create HTTP request
+			RouteHttp routeHttp = new RouteHttp();
+			// Init HTTP
+			routeHttp.init();
+			// Set content
+			routeHttp.setRequestBody(xml);
+			// Make request
+			try {
+				routeHttp.makeRequest();
+				xmlReturnRoute = routeHttp.getResponseBody();
+			} catch (Exception e) {
+//				status.markContactError(e);
+//				throw e;
+				System.out.println(e.getMessage());
+			}
 
 			// try {
 			// m.marshal(
@@ -347,19 +392,13 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 		Unmarshaller u;
 		JAXBContext jc;
 		RouteresponseType routeResponse = null;
-		
+
 		StringReader sr = new StringReader(xmlReturnRoute);
-		
-//		m.marshal(monaLisaRoute, st);
-//		String xml = st.toString();
 		try {
 			jc = JAXBContext
 					.newInstance("dk.frv.enav.ins.route.monalisa.se.sspa.optiroute");
 			u = jc.createUnmarshaller();
-			routeResponse = (RouteresponseType) u
-					.unmarshal(sr);
-		
-		
+			routeResponse = (RouteresponseType) u.unmarshal(sr);
 		} catch (JAXBException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -375,26 +414,12 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 		}
 
 		// Receive string back from server which is the optimized route
-		String result = monaLisaResExample;
+		// String result = monaLisaResExample;
 
 		// Parse result into a route we understand
 
-		// // Create HTTP request
-		// RouteHttp routeHttp = new RouteHttp();
-		// // Init HTTP
-		// routeHttp.init();
-		// // Set content
-		// routeHttp.setRequestBody(xmlRoute);
-		//
-		// // Make request
-		// try {
-		// routeHttp.makeRequest();
-		// } catch (ShoreServiceException e) {
-		// status.markContactError(e);
-		// throw e;
-		// }
-		//
 		// String res = routeHttp.getResponseBody();
+		// System.out.println(res);
 
 		// return res;
 		return newRoute;

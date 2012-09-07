@@ -62,35 +62,36 @@ public class RouteHttp {
 //	private byte[] responseBody;
 
 	public RouteHttp() {
-		this.host = "localhost";
-		this.port = 8888;
+		this.host = "83.248.251.174";
+//		this.host = "localhost";
+		this.port = 80;
 
 		setUri(uri);
 	}
 
-	public void makeRequest() throws ShoreServiceException {
+	public void makeRequest() throws Exception {
 		// Make the request
 		int resCode = -1;
 		try {
-			System.out.println("trying to connect to server");
+			System.out.println("Trying to connect to server");
 			resCode = httpClient.executeMethod(method);
 			System.out.println("Connected!");
 		} catch (HttpException e) {
 			LOG.error("Failed to make HTTP connection: " + e.getMessage());
 			LOG.error("HTTP request failed with: " + e.getMessage());
-			throw new ShoreServiceException(ShoreServiceErrorCode.INTERNAL_ERROR);
+//			throw new ShoreServiceException(ShoreServiceErrorCode.INTERNAL_ERROR);
 		} catch (IOException e) {
 			LOG.error("Failed to make HTTP connection: " + e.getMessage());
-			System.out.println("nope: " + e.getMessage());
-			throw new ShoreServiceException(ShoreServiceErrorCode.NO_CONNECTION_TO_SERVER);
+			System.out.println("Failed: " + e.getMessage());
+//			throw new ShoreServiceException(ShoreServiceErrorCode.NO_CONNECTION_TO_SERVER);
 		}
 
 		System.out.println(resCode);
 		
-//		if (resCode != 200) {
-//			method.releaseConnection();
+		if (resCode != 200) {
+			method.releaseConnection();
 //			throw new ShoreServiceException(ShoreServiceErrorCode.SERVER_ERROR);
-//		}
+		}
 
 		try {
 			System.out.println("Message recieved:");
@@ -98,7 +99,7 @@ public class RouteHttp {
 			System.out.println(responseBody);
 		} catch (IOException e) {
 			LOG.error("Failed to read response body: " + e.getMessage());
-			throw new ShoreServiceException(ShoreServiceErrorCode.INVALID_RESPONSE);
+//			throw new ShoreServiceException(ShoreServiceErrorCode.INVALID_RESPONSE);
 		}
 
 		method.releaseConnection();
@@ -161,5 +162,4 @@ public class RouteHttp {
 		return responseBody;
 	}
 
-	
 }

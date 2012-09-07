@@ -59,7 +59,7 @@ public class MonaLisaRouteRequest extends JMenuItem implements IMapMenuAction {
 			}
 			
 			
-		} catch (ShoreServiceException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
