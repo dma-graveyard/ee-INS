@@ -30,18 +30,12 @@ package dk.frv.enav.ins.route;
  * 
  */
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.net.InetAddress;
-import java.net.Socket;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
@@ -59,8 +53,6 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.log4j.Logger;
 
 import com.bbn.openmap.MapHandlerChild;
@@ -80,7 +72,6 @@ import dk.frv.enav.ins.route.monalisa.se.sspa.optiroute.Routerequest;
 import dk.frv.enav.ins.route.monalisa.se.sspa.optiroute.RouteresponseType;
 import dk.frv.enav.ins.route.monalisa.se.sspa.optiroute.WeatherPointsType;
 import dk.frv.enav.ins.services.shore.RouteHttp;
-import dk.frv.enav.ins.services.shore.ShoreServiceException;
 import dk.frv.enav.ins.status.ComponentStatus;
 import dk.frv.enav.ins.status.IStatusComponent;
 import dk.frv.enav.ins.status.ShoreServiceStatus;
@@ -166,26 +157,23 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-			
-			  c.add(Calendar.DAY_OF_YEAR, 1);
-			  XMLGregorianCalendar tomorrow2 = null;
-				try {
-					tomorrow2 = DatatypeFactory.newInstance()
-							.newXMLGregorianCalendar(c);
-				} catch (DatatypeConfigurationException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			    
 
-			  if (i ==0){
-				  waypoint.setETA(date2);
-			  }
-			  if (i==1){
-				  waypoint.setETA(tomorrow2);
-			  }
+			c.add(Calendar.DAY_OF_YEAR, 1);
+			XMLGregorianCalendar tomorrow2 = null;
+			try {
+				tomorrow2 = DatatypeFactory.newInstance()
+						.newXMLGregorianCalendar(c);
+			} catch (DatatypeConfigurationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
+			if (i == 0) {
+				waypoint.setETA(date2);
+			}
+			if (i == 1) {
+				waypoint.setETA(tomorrow2);
+			}
 
 			// Set leg info
 			LeginfoType legInfo = new LeginfoType();
@@ -210,18 +198,18 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 
 			// Set positon
 			PositionType position = new PositionType();
-			
-			if (i==0){
+
+			if (i == 0) {
 				position.setLatitude(57.22);
 				position.setLongitude(12);
 			}
-			if (i==1){
+			if (i == 1) {
 				position.setLatitude(57.9);
 				position.setLongitude(11.4);
 			}
-			
-//			position.setLatitude(routeWaypoint.getPos().getLatitude());
-//			position.setLongitude(routeWaypoint.getPos().getLongitude());
+
+			// position.setLatitude(routeWaypoint.getPos().getLatitude());
+			// position.setLongitude(routeWaypoint.getPos().getLongitude());
 
 			waypoint.setPosition(position);
 
@@ -230,7 +218,7 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 
 			// Set name
 			waypoint.setWptName(routeWaypoint.name);
-			
+
 			monaLisaWaypoints.add(waypoint);
 
 		}
@@ -266,7 +254,6 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 					.getPosition().getLongitude());
 			waypoint.setPos(position);
 
-			
 			if (responseWaypoint.getLegInfo() != null) {
 
 				if (responseWaypoint.getLegInfo().getTurnRadius() != null) {
@@ -274,8 +261,6 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 							.getTurnRadius());
 				}
 
-				
-				
 				if (responseWaypoint.getLegInfo().getPlannedSpeed() != null) {
 					waypoint.setSpeed(responseWaypoint.getLegInfo()
 							.getPlannedSpeed());
@@ -285,7 +270,7 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 							.getTurnRadius());
 				}
 			}
-			
+
 			routeWaypoints.add(waypoint);
 
 			if (routeWaypoints.size() > 1) {
@@ -304,7 +289,7 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 		return route;
 	}
 
-//	public Route makeRequest(Route route) throws ShoreServiceException {
+	// public Route makeRequest(Route route) throws ShoreServiceException {
 	public Route makeRequest(Route route) throws Exception {
 		System.out.println("Recieved route for Mona Lisa Exchange");
 		// A request for a route has come in
@@ -323,12 +308,12 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 			m.setProperty(Marshaller.JAXB_ENCODING, ENCODING);
 
-			// m.marshal(monaLisaRoute, System.out);
-
+			// Convert the generated xml route to a String
 			StringWriter st = new StringWriter();
 			m.marshal(monaLisaRoute, st);
 			xml = st.toString();
 
+			// STATIC ROUTE INPUT START
 			FileInputStream stream = null;
 			try {
 				stream = new FileInputStream(new File("C:\\route02.xml"));
@@ -355,8 +340,7 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 					e.printStackTrace();
 				}
 			}
-
-			// System.out.println(staticXML);
+			// STATIC ROUTE INPUT STOP
 
 			// Create HTTP request
 			RouteHttp routeHttp = new RouteHttp();
@@ -369,10 +353,12 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 				routeHttp.makeRequest();
 				xmlReturnRoute = routeHttp.getResponseBody();
 			} catch (Exception e) {
-//				status.markContactError(e);
-//				throw e;
+				// status.markContactError(e);
+				// throw e;
 				System.out.println(e.getMessage());
 			}
+
+			// Do we want to save the generated route to a file?
 
 			// try {
 			// m.marshal(
@@ -388,6 +374,8 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+		// Unmarshall the recieved route and parse it
 
 		Unmarshaller u;
 		JAXBContext jc;
@@ -412,16 +400,6 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 			// Convert the route to one we can paint
 			newRoute = convertRoute(routeResponse);
 		}
-
-		// Receive string back from server which is the optimized route
-		// String result = monaLisaResExample;
-
-		// Parse result into a route we understand
-
-		// String res = routeHttp.getResponseBody();
-		// System.out.println(res);
-
-		// return res;
 		return newRoute;
 	}
 
