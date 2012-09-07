@@ -147,6 +147,10 @@ public class MainFrame extends JFrame implements WindowListener {
 
 		dockableComponents.toggleFrameLock();
 
+		// Add panels
+		topPanel.setPreferredSize(new Dimension(0, 30));
+		pane.add(topPanel, BorderLayout.PAGE_START);
+		
 		bottomPanel.setPreferredSize(new Dimension(0, 25));
 		pane.add(bottomPanel, BorderLayout.PAGE_END);
 

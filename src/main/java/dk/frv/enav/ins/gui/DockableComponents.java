@@ -45,13 +45,12 @@ import dk.frv.enav.ins.gui.Panels.LogoPanel;
 
 public class DockableComponents {
 
-	private static final String[] PANEL_NAMES = { "Chart", "Top", "Scale",
+	private static final String[] PANEL_NAMES = { "Chart", "Scale",
 			"Own Ship", "GPS", "Cursor", "Active Waypoint", "Logos", "MSI", "AIS Target", "Dynamic NoGo", "NoGo" };
 	private Map<String, PanelDockable> dmap;
 	private CControl control;
 	private DockableFactory factory;
 
-	private TopPanel topPanel;
 	private ChartPanel chartPanel;
 
 	private ScaleComponentPanel scalePanel;
@@ -73,7 +72,7 @@ public class DockableComponents {
 		control.setMissingStrategy(MissingCDockableStrategy.STORE);
 
 		chartPanel = mainFrame.getChartPanel();
-		topPanel = mainFrame.getTopPanel();
+//		topPanel = mainFrame.getTopPanel();
 		scalePanel = mainFrame.getScalePanel();
 		ownShipPanel = mainFrame.getOwnShipPanel();
 		gpsPanel = mainFrame.getGpsPanel();
@@ -85,7 +84,7 @@ public class DockableComponents {
 		dynamicNoGoPanel = mainFrame.getDynamicNoGoPanel();
 		nogoPanel = mainFrame.getNogoPanel();
 
-		factory = new DockableFactory(chartPanel, topPanel, scalePanel,
+		factory = new DockableFactory(chartPanel, scalePanel,
 				ownShipPanel, gpsPanel, cursorPanel, activeWaypointPanel,
 				logoPanel, msiPanel, aisPanel, dynamicNoGoPanel, nogoPanel);
 
@@ -308,7 +307,7 @@ public class DockableComponents {
 		CControl aControl = new CControl();
 
 		PanelDockable chartDock = new PanelDockable("Chart", chartPanel);
-		PanelDockable topDock = new PanelDockable("Top", topPanel);
+//		PanelDockable topDock = new PanelDockable("Top", topPanel);
 		PanelDockable scaleDock = new PanelDockable("Scale", scalePanel);
 		PanelDockable ownShipDock = new PanelDockable("Own Ship", ownShipPanel);
 		PanelDockable gpsDock = new PanelDockable("GPS", gpsPanel);
@@ -321,7 +320,7 @@ public class DockableComponents {
 //		PanelDockable aisDock = new PanelDockable("AIS Target", aisPanel);
 
 		CGrid grid = new CGrid(aControl);
-		grid.add(0, 0, 100, 3, topDock);
+//		grid.add(0, 0, 100, 3, topDock);
 		grid.add(0, 3, 90, 97, chartDock);
 		grid.add(90, 3, 10, 10, scaleDock);
 		grid.add(90, 13, 10, 10, ownShipDock);
@@ -347,7 +346,7 @@ public class DockableComponents {
 	private static class DockableFactory implements SingleCDockableFactory {
 
 		ChartPanel chartPanel;
-		TopPanel topPanel;
+//		TopPanel topPanel;
 		ScaleComponentPanel scalePanel;
 		OwnShipComponentPanel ownShipPanel;
 		GpsComponentPanel gpsPanel;
@@ -359,7 +358,7 @@ public class DockableComponents {
 		DynamicNoGoComponentPanel dynamicNoGoPanel;
 		NoGoComponentPanel nogoPanel;
 
-		public DockableFactory(ChartPanel chartPanel, TopPanel topPanel,
+		public DockableFactory(ChartPanel chartPanel,
 				ScaleComponentPanel scalePanel,
 				OwnShipComponentPanel ownShipPanel, GpsComponentPanel gpsPanel,
 				CursorComponentPanel cursorPanel,
@@ -369,7 +368,7 @@ public class DockableComponents {
 			super();
 
 			this.chartPanel = chartPanel;
-			this.topPanel = topPanel;
+//			this.topPanel = topPanel;
 			this.scalePanel = scalePanel;
 			this.ownShipPanel = ownShipPanel;
 			this.gpsPanel = gpsPanel;
@@ -389,9 +388,9 @@ public class DockableComponents {
 				return new PanelDockable(id, chartPanel);
 			}
 
-			if (id.equals("Top")) {
-				return new PanelDockable(id, topPanel);
-			}
+//			if (id.equals("Top")) {
+//				return new PanelDockable(id, topPanel);
+//			}
 			if (id.equals("Scale")) {
 				return new PanelDockable(id, scalePanel);
 			}
