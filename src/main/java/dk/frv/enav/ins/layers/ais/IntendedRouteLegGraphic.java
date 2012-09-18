@@ -62,7 +62,7 @@ public class IntendedRouteLegGraphic extends OMLine {
 					new float[] { 3.0f, 10.0f }, // Dash pattern
 					0.0f)); // Dash phase)
 		} else {
-			setStroke(new BasicStroke(3.0f, // Width
+			setStroke(new BasicStroke(2.0f, // Width
 					BasicStroke.CAP_SQUARE, // End cap
 					BasicStroke.JOIN_MITER, // Join style
 					10.0f, // Miter limit
