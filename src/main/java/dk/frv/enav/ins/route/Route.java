@@ -426,6 +426,8 @@ public class Route implements Serializable {
 	}
 
 	public void calcValues(boolean force) {
+		System.out.println("Recalculating ETAs");
+		
 		if (!force && ttgs != null && etas != null) {
 			return;
 		}
