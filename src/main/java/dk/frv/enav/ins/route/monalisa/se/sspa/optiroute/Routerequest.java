@@ -17,33 +17,10 @@ import javax.xml.bind.annotation.XmlType;
 import dk.frv.enav.ins.route.monalisa.fi.navielektro.ns.formats.vessel_waypoint_exchange.RouteType;
 
 
-/**
- * Information required by the route optimization in order to calculate the optimal route
- * 
- * <p>Java class for RouteRequest complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
- * 
- * <pre>
- * &lt;complexType name="RouteRequest">
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element name="Route" type="{http://www.navielektro.fi/ns/formats/vessel-waypoint-exchange}routeType"/>
- *         &lt;element name="WeatherPoints" type="{http://www.sspa.se/optiroute}WeatherPointsType"/>
- *         &lt;element name="DepthPoints" type="{http://www.sspa.se/optiroute}DepthPointsType"/>
- *         &lt;element name="CurrentShipData" type="{http://www.sspa.se/optiroute}CurrentShipDataType"/>
- *       &lt;/sequence>
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
- * </pre>
- * 
- * 
- */
+
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "routerequest", propOrder = {
+@XmlType(name = "Routerequest", propOrder = {
     "route",
     "weatherPoints",
     "depthPoints",

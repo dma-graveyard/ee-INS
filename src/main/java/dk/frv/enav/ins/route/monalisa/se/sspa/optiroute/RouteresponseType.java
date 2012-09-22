@@ -42,7 +42,7 @@ import dk.frv.enav.ins.route.monalisa.fi.navielektro.ns.formats.vessel_waypoint_
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "routeresponseType", propOrder = {
+@XmlType(name = "RouteResponseType", propOrder = {
     "fuelRequested",
     "fuelFinal",
     "route"

@@ -120,8 +120,8 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 
 		currentShipData.setAfttrim(trim);
 		currentShipData.setForwardtrim(trim);
-		currentShipData.setImoid("0");
-		currentShipData.setMmsi("0");
+		currentShipData.setImoid("1234567");
+		currentShipData.setMmsi("123456789");
 
 		monaLisaRoute.setCurrentShipData(currentShipData);
 
@@ -168,6 +168,8 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 				e.printStackTrace();
 			}
 
+			
+			
 			if (i == 0) {
 				waypoint.setETA(date2);
 			}
@@ -175,6 +177,9 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 				waypoint.setETA(tomorrow2);
 			}
 
+			
+			
+			
 			// Set leg info
 			LeginfoType legInfo = new LeginfoType();
 			// legInfo.setLegtype(value)
@@ -187,29 +192,29 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 				legInfo.setPlannedSpeed(0.0f);
 			}
 
-			if (routeWaypoint.getRot() != null) {
-				legInfo.setTurnRadius(Double.valueOf(routeWaypoint.getRot())
-						.intValue());
-			} else {
-				legInfo.setTurnRadius(99);
-			}
-
+			
+			
+			//Rate of turn not needed
+//			if (routeWaypoint.getRot() != null) {
+//				legInfo.setTurnRadius(Double.valueOf(routeWaypoint.getRot())
+//						.intValue());
+//			} else {
+//				legInfo.setTurnRadius(99);
+//			}
+//			
+//			//Hardcoded to 99
+//			legInfo.setTurnRadius(99);
+//
+//			
+			
 			waypoint.setLegInfo(legInfo);
 
 			// Set positon
 			PositionType position = new PositionType();
 
-			if (i == 0) {
-				position.setLatitude(57.22);
-				position.setLongitude(12);
-			}
-			if (i == 1) {
-				position.setLatitude(57.9);
-				position.setLongitude(11.4);
-			}
+			 position.setLatitude(routeWaypoint.getPos().getLatitude());
+			 position.setLongitude(routeWaypoint.getPos().getLongitude());
 
-			// position.setLatitude(routeWaypoint.getPos().getLatitude());
-			// position.setLongitude(routeWaypoint.getPos().getLongitude());
 
 			waypoint.setPosition(position);
 
@@ -299,9 +304,9 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 
 		JAXBContext context = null;
 		String xmlReturnRoute = "";
-		String returnRoute = "";
+
 		String xml = "";
-		String staticXML = "";
+
 		try {
 			context = JAXBContext.newInstance(Routerequest.class);
 			Marshaller m = context.createMarshaller();
@@ -312,34 +317,38 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 			StringWriter st = new StringWriter();
 			m.marshal(monaLisaRoute, st);
 			xml = st.toString();
+			
+			xml = xml.replace("routerequest", "RouteRequest");
+			
+			System.out.println(xml);
 
 			// STATIC ROUTE INPUT START
-			FileInputStream stream = null;
-			try {
-				stream = new FileInputStream(new File("C:\\route02.xml"));
-			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			try {
-				FileChannel fc = stream.getChannel();
-				MappedByteBuffer bb = null;
-				try {
-					bb = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
-				} catch (IOException e) {
+//			FileInputStream stream = null;
+//			try {
+////				stream = new FileInputStream(new File("C:\\route02.xml"));
+//			} catch (FileNotFoundException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
+//			try {
+//				FileChannel fc = stream.getChannel();
+//				MappedByteBuffer bb = null;
+//				try {
+//					bb = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
+//				} catch (IOException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+//					e.printStackTrace();
+//				}
 				/* Instead of using default, pass in a decoder. */
-				staticXML = Charset.defaultCharset().decode(bb).toString();
-			} finally {
-				try {
-					stream.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
+//				staticXML = Charset.defaultCharset().decode(bb).toString();
+//			} finally {
+//				try {
+////					stream.close();
+//				} catch (IOException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//			}
 			// STATIC ROUTE INPUT STOP
 
 			// Create HTTP request
@@ -377,6 +386,11 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 
 		// Unmarshall the recieved route and parse it
 
+		
+		xmlReturnRoute = xmlReturnRoute.replace("RouteResponse", "routeresponseType");
+		
+		System.out.println(xmlReturnRoute);
+		
 		Unmarshaller u;
 		JAXBContext jc;
 		RouteresponseType routeResponse = null;
