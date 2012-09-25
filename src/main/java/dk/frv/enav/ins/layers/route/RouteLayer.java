@@ -62,6 +62,7 @@ import dk.frv.enav.ins.route.Route;
 import dk.frv.enav.ins.route.RouteManager;
 import dk.frv.enav.ins.route.RouteWaypoint;
 import dk.frv.enav.ins.route.RoutesUpdateEvent;
+import dk.frv.enav.ins.route.SafeHavenArea;
 
 /**
  * Layer for showing routes
@@ -128,6 +129,17 @@ public class RouteLayer extends OMGraphicHandlerLayer implements IRoutesUpdateLi
 			if (activeRoute.isVisible()) {
 				ActiveRouteGraphic activeRouteExtend = new ActiveRouteGraphic(activeRoute, activeRouteIndex, arrowsVisible, activeStroke, Color.RED);
 				graphics.add(activeRouteExtend);
+				
+				SafeHavenArea safeHavenArea = new SafeHavenArea();
+				safeHavenArea.moveSymbol(activeRoute.getCurrentLeg().getStartWp().getPos(),
+						activeRoute.getCurrentLeg().getStartWp().getPos(),
+						activeRoute.getCurrentLeg().getEndWp().getPos()
+						
+						);
+				safeHavenArea.setVisible(true);
+				graphics.add(safeHavenArea);
+//				
+				
 			}
 		}
 		
