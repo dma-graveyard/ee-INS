@@ -30,15 +30,8 @@ package dk.frv.enav.ins.route;
  * 
  */
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.nio.MappedByteBuffer;
-import java.nio.channels.FileChannel;
-import java.nio.charset.Charset;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -68,13 +61,14 @@ import dk.frv.enav.ins.route.monalisa.fi.navielektro.ns.formats.vessel_waypoint_
 import dk.frv.enav.ins.route.monalisa.fi.navielektro.ns.formats.vessel_waypoint_exchange.WaypointsType;
 import dk.frv.enav.ins.route.monalisa.se.sspa.optiroute.CurrentShipDataType;
 import dk.frv.enav.ins.route.monalisa.se.sspa.optiroute.DepthPointsType;
-import dk.frv.enav.ins.route.monalisa.se.sspa.optiroute.Routerequest;
+import dk.frv.enav.ins.route.monalisa.se.sspa.optiroute.RouteRequest;
 import dk.frv.enav.ins.route.monalisa.se.sspa.optiroute.RouteresponseType;
 import dk.frv.enav.ins.route.monalisa.se.sspa.optiroute.WeatherPointsType;
 import dk.frv.enav.ins.services.shore.RouteHttp;
 import dk.frv.enav.ins.status.ComponentStatus;
 import dk.frv.enav.ins.status.IStatusComponent;
 import dk.frv.enav.ins.status.ShoreServiceStatus;
+//import dk.frv.enav.ins.route.monalisa.se.sspa.optiroute.Routerequest;
 
 /**
  * Shore service component providing the functional link to shore.
@@ -104,12 +98,12 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 		return route;
 	}
 
-	public Routerequest convertRoute(Route route) {
+	public RouteRequest convertRoute(Route route) {
 
 		float trim = 6.0f;
 
 		// Create the route request
-		Routerequest monaLisaRoute = new Routerequest();
+		RouteRequest monaLisaRoute = new RouteRequest();
 
 		// Create the ship data
 		CurrentShipDataType currentShipData = new CurrentShipDataType();
@@ -300,7 +294,7 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 		// A request for a route has come in
 
 		// Convert the route to MonaLisa Format
-		Routerequest monaLisaRoute = convertRoute(route);
+		RouteRequest monaLisaRoute = convertRoute(route);
 
 		JAXBContext context = null;
 		String xmlReturnRoute = "";
@@ -308,7 +302,7 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 		String xml = "";
 
 		try {
-			context = JAXBContext.newInstance(Routerequest.class);
+			context = JAXBContext.newInstance(RouteRequest.class);
 			Marshaller m = context.createMarshaller();
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 			m.setProperty(Marshaller.JAXB_ENCODING, ENCODING);
@@ -318,7 +312,7 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 			m.marshal(monaLisaRoute, st);
 			xml = st.toString();
 			
-			xml = xml.replace("routerequest", "RouteRequest");
+//			xml = xml.replace("routerequest", "RouteRequest");
 			
 			System.out.println(xml);
 
