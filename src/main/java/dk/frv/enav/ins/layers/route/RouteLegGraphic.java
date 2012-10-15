@@ -104,9 +104,6 @@ public class RouteLegGraphic extends OMGraphicList {
 			
 			add(line);
 
-			System.out.println(
-			line.getPts());
-
 		}
 	}
 

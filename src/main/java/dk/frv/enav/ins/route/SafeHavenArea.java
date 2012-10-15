@@ -66,22 +66,12 @@ public class SafeHavenArea extends OMGraphicList {
 
 	public void moveSymbol(GeoLocation pos, GeoLocation startPos, GeoLocation endPos) {
 		remove(selectionGraphics);
-		
-		
-		double lat = 0.0;
-		double lon = 0.0;
-		
-		lat = (startPos.getLatitude() + endPos.getLatitude()) / 2;
-		lon = (startPos.getLongitude() + endPos.getLongitude()) / 2;
-		GeoLocation newPos = new GeoLocation();
-		newPos.setLatitude(lat);
-		newPos.setLongitude(lon);
-		
+		System.out.println("Moving graphics");
 		double bearing = Calculator.bearing(startPos, endPos, Heading.RL);
-		System.out.println(bearing);
+
 		
-		selectionGraphics = new CenterRaster(newPos.getLatitude(),
-				newPos.getLongitude(), imageWidth, imageHeight, targetImage);
+		selectionGraphics = new CenterRaster(pos.getLatitude(),
+				pos.getLongitude(), imageWidth, imageHeight, targetImage);
 		
 		selectionGraphics.setRotationAngle(Math.toRadians(bearing));
 		add(selectionGraphics);
