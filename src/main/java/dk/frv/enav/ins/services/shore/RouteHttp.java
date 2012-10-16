@@ -62,9 +62,9 @@ public class RouteHttp {
 //	private byte[] responseBody;
 
 	public RouteHttp() {
-		this.host = "80.217.206.47";
-//		this.host = "localhost";
-		this.port = 8080;
+//		this.host = "80.217.206.47";
+		this.host = "localhost";
+		this.port = 80;
 
 		setUri(uri);
 	}

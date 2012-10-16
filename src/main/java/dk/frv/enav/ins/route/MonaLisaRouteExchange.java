@@ -86,6 +86,7 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 	private static final String ENCODING = "UTF-8";
 
 	public MonaLisaRouteExchange() {
+
 	}
 
 	public Route convertRoute(String xmlRoute) {
@@ -381,7 +382,7 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 		// Unmarshall the recieved route and parse it
 
 		
-		xmlReturnRoute = xmlReturnRoute.replace("RouteResponse", "routeresponseType");
+//		xmlReturnRoute = xmlReturnRoute.replace("RouteResponse", "routeresponseType");
 		
 		System.out.println(xmlReturnRoute);
 		
@@ -389,6 +390,7 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 		JAXBContext jc;
 		RouteresponseType routeResponse = null;
 
+		
 		StringReader sr = new StringReader(xmlReturnRoute);
 		try {
 			jc = JAXBContext
