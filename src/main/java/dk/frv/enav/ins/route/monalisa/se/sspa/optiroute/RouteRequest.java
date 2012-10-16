@@ -50,7 +50,7 @@ import dk.frv.enav.ins.route.monalisa.fi.navielektro.ns.formats.vessel_waypoint_
     "depthPoints",
     "currentShipData"
 })
-public class RouteRequests {
+public class RouteRequest {
 
     @XmlElement(name = "Route", required = true)
     protected RouteType route;

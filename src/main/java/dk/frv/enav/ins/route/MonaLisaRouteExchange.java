@@ -61,7 +61,7 @@ import dk.frv.enav.ins.route.monalisa.fi.navielektro.ns.formats.vessel_waypoint_
 import dk.frv.enav.ins.route.monalisa.fi.navielektro.ns.formats.vessel_waypoint_exchange.WaypointsType;
 import dk.frv.enav.ins.route.monalisa.se.sspa.optiroute.CurrentShipDataType;
 import dk.frv.enav.ins.route.monalisa.se.sspa.optiroute.DepthPointsType;
-import dk.frv.enav.ins.route.monalisa.se.sspa.optiroute.RouteRequests;
+import dk.frv.enav.ins.route.monalisa.se.sspa.optiroute.RouteRequest;
 import dk.frv.enav.ins.route.monalisa.se.sspa.optiroute.RouteresponseType;
 import dk.frv.enav.ins.route.monalisa.se.sspa.optiroute.WeatherPointsType;
 import dk.frv.enav.ins.services.shore.RouteHttp;
@@ -98,12 +98,12 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 		return route;
 	}
 
-	public RouteRequests convertRoute(Route route) {
+	public RouteRequest convertRoute(Route route) {
 
 		float trim = 6.0f;
 
 		// Create the route request
-		RouteRequests monaLisaRoute = new RouteRequests();
+		RouteRequest monaLisaRoute = new RouteRequest();
 
 		// Create the ship data
 		CurrentShipDataType currentShipData = new CurrentShipDataType();
@@ -294,7 +294,7 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 		// A request for a route has come in
 
 		// Convert the route to MonaLisa Format
-		RouteRequests monaLisaRoute = convertRoute(route);
+		RouteRequest monaLisaRoute = convertRoute(route);
 
 		JAXBContext context = null;
 		String xmlReturnRoute = "";
@@ -302,7 +302,7 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 		String xml = "";
 
 		try {
-			context = JAXBContext.newInstance(RouteRequests.class);
+			context = JAXBContext.newInstance(RouteRequest.class);
 			Marshaller m = context.createMarshaller();
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 			m.setProperty(Marshaller.JAXB_ENCODING, ENCODING);
