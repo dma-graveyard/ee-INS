@@ -42,11 +42,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link RouteRequest }
+     * Create an instance of {@link RouteRequests }
      * 
      */
-    public RouteRequest createRouteRequest() {
-        return new RouteRequest();
+    public RouteRequests createRouteRequest() {
+        return new RouteRequests();
     }
 
     /**
@@ -131,12 +131,12 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link RouteRequest }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}{@link RouteRequests }{@code >}}
      * 
      */
     @XmlElementDecl(namespace = "http://www.sspa.se/optiroute", name = "RouteRequest")
-    public JAXBElement<RouteRequest> createRouteRequest(RouteRequest value) {
-        return new JAXBElement<RouteRequest>(_RouteRequest_QNAME, RouteRequest.class, null, value);
+    public JAXBElement<RouteRequests> createRouteRequest(RouteRequests value) {
+        return new JAXBElement<RouteRequests>(_RouteRequest_QNAME, RouteRequests.class, null, value);
     }
 
 }
