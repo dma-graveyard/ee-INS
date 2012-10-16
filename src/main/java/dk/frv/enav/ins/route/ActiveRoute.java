@@ -171,6 +171,14 @@ public class ActiveRoute extends Route {
 	}
 	
 	public synchronized void update(GpsData gpsData) {
+		
+		
+		//Is this a SafeHaven Route? 
+		//What is the size of the safehaven box?
+		
+		
+		//Find out where we should be, depending on the time and the waypoints of original route.
+		
 //		System.out.println("Update:");
 		// Find out how long we have been sailing?
 		long secondsSailTime = ((GnssTime.getInstance().getDate().getTime() - origStarttime
@@ -179,6 +187,7 @@ public class ActiveRoute extends Route {
 		double distanceTravelled = Converter.nmToMeters(Calculator.distanceAfterTimeMph(this.currentLeg.getSpeed(), secondsSailTime));
 
 		System.out.println("Travelled: " + distanceTravelled + " total to travel: " + this.currentLeg.calcRng());
+		//We have leg total before we recalculate which leg we are on and total total if we are beyond the total size of the route?
 		
 		if (distanceTravelled >= this.currentLeg.calcRng()){
 			this.safeHavenLocation = waypoints.get(1).getPos();
@@ -193,6 +202,7 @@ public class ActiveRoute extends Route {
 			return;
 		}
 
+		
 		// Get active waypoint
 		RouteWaypoint activeWaypoint = waypoints.get(activeWaypointIndex);
 		// Set current GPS data
