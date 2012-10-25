@@ -112,6 +112,8 @@ public class Route implements Serializable {
 	 */
 	protected RouteMetocSettings routeMetocSettings;
 
+	protected boolean safeHaven = true;
+	
 	public Route() {
 
 	}
@@ -270,6 +272,14 @@ public class Route implements Serializable {
 	public Date getWpEta(int index) {
 		calcValues();
 		return etas.get(index);
+	}
+	
+	public List<Date> getEtas(){
+		if (etas == null){
+			calcValues();
+		}
+		
+		return etas;
 	}
 	
 	// Getters and setters from here
@@ -673,5 +683,15 @@ public class Route implements Serializable {
 		builder.append("]");
 		return builder.toString();
 	}
+
+	public boolean isSafeHaven() {
+		return safeHaven;
+	}
+
+	public void setSafeHaven(boolean safeHaven) {
+		this.safeHaven = safeHaven;
+	}
+	
+	
 
 }

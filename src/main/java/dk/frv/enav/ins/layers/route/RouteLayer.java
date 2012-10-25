@@ -133,16 +133,15 @@ public class RouteLayer extends OMGraphicHandlerLayer implements
 						activeStroke, Color.RED);
 				graphics.add(activeRouteExtend);
 
-				SafeHavenArea safeHavenArea = new SafeHavenArea();
-				activeRoute.getSafeHavenLocation();
-				safeHavenArea.moveSymbol(activeRoute.getSafeHavenLocation(),
-						activeRoute.getCurrentLeg().getStartWp().getPos(),
-						activeRoute.getCurrentLeg().getEndWp().getPos()
-
-				);
-				safeHavenArea.setVisible(true);
-				graphics.add(safeHavenArea);
-				//
+				
+				if (activeRoute.isSafeHaven()){
+					SafeHavenArea safeHavenArea = new SafeHavenArea();
+					activeRoute.getSafeHavenLocation();
+					safeHavenArea.moveSymbol(activeRoute.getSafeHavenLocation(), activeRoute.getSafeHavenBearing()
+					);
+					safeHavenArea.setVisible(true);
+					graphics.add(safeHavenArea);
+				}
 
 			}
 		}

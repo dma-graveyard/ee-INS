@@ -73,12 +73,10 @@ public class Calculator {
 
 	}
 
-	public static double distanceAfterTimeMph(Double mph, long minutes) {
-		
-		System.out.println("Travelling at: " + mph + "mph for " + minutes + " Minutes");
-		
+	public static double distanceAfterTimeMph(Double mph, long seconds) {
+//		System.out.println("Travelling at: " + mph + "mph for " + seconds + " Seconds");
 		Double milesPrSecond = mph / 60 / 60;
-		return minutes * milesPrSecond;
+		return seconds * milesPrSecond;
 	}
 
 	public static GeoLocation findPosition(GeoLocation startingLocation,

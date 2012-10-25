@@ -35,6 +35,7 @@ package dk.frv.enav.ins.common.util;
 public class Converter {
 	
 	private static final int NM_IN_METERS = 1852;
+	private static final double M_IN_NM = 0.868976242;
 
 	public static double metersToNm(double meters) {
 		return meters / (double)NM_IN_METERS;
@@ -43,5 +44,10 @@ public class Converter {
 	public static double nmToMeters(double nm) {
 		return nm * NM_IN_METERS;
 	}
+	
+	public static double milesToNM(double m) {
+		return m * M_IN_NM;
+	}
+	
 	
 }

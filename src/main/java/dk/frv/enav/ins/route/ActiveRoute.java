@@ -33,6 +33,7 @@ import java.util.Date;
 
 import dk.frv.ais.geo.GeoLocation;
 import dk.frv.enav.common.xml.metoc.MetocForecast;
+import dk.frv.enav.ins.common.Heading;
 import dk.frv.enav.ins.common.util.Calculator;
 import dk.frv.enav.ins.common.util.Converter;
 import dk.frv.enav.ins.gps.GnssTime;
@@ -106,8 +107,11 @@ public class ActiveRoute extends Route {
 	protected boolean relaxedWpChange = true;
 
 	protected int lastWpCounter = 0;
-	
+
 	private GeoLocation safeHavenLocation;
+	private Route originalRoute;
+	
+	protected double safeHavenBearing = 0;
 
 	public ActiveRoute(Route route, GpsData gpsData) {
 		super();
@@ -120,7 +124,8 @@ public class ActiveRoute extends Route {
 		this.origStarttime = GnssTime.getInstance().getDate();
 		this.routeMetocSettings = route.routeMetocSettings;
 		this.metocForecast = route.metocForecast;
-		
+		this.originalRoute = route.copy();
+
 		this.safeHavenLocation = waypoints.get(0).getPos();
 		calcValues(true);
 		changeActiveWaypoint(getBestWaypoint(route, gpsData));
@@ -165,44 +170,115 @@ public class ActiveRoute extends Route {
 		}
 
 	}
-
-	public GeoLocation getSafeHavenLocation(){
-		return safeHavenLocation;
-	}
 	
+	public double getSafeHavenBearing(){
+		return safeHavenBearing;
+	}
+
+	public GeoLocation getSafeHavenLocation() {
+
+		long currentTime = GnssTime.getInstance().getDate().getTime();
+
+		// We haven't begun sailing on the route yet, putting box at first
+		// waypoint
+		if (currentTime < originalRoute.getStarttime().getTime()) {
+			safeHavenBearing = Calculator.bearing(originalRoute.getWaypoints().get(0).getPos(), originalRoute.getWaypoints().get(1).getPos(), Heading.RL);
+			return originalRoute.getWaypoints().get(0).getPos();
+		} else {
+
+			for (int i = 0; i < originalRoute.getWaypoints().size(); i++) {
+
+				//We haven't found the match so we must be at the end of the route
+				if (i == originalRoute.getWaypoints().size()-1) {
+					safeHavenBearing = Calculator.bearing(originalRoute.getWaypoints().get(originalRoute.getWaypoints().size()-2).getPos(), originalRoute.getWaypoints().get(originalRoute.getWaypoints().size()-1).getPos(), Heading.RL);
+					
+					return originalRoute.getWaypoints().get(i).getPos();
+				} else {
+
+					// We should be beyond this
+					if (currentTime > originalRoute.getEtas().get(i).getTime()
+							&& currentTime < originalRoute.getEtas().get(i + 1)
+									.getTime()) {
+						//How long have we been sailing between these waypoints?
+						long secondsSailTime = (currentTime - originalRoute.getEtas().get(i).getTime()) / (1000);
+						double distanceTravelledNauticalMiles = Converter.milesToNM(Calculator
+								.distanceAfterTimeMph(originalRoute.getWaypoints().get(i).getOutLeg().getSpeed(),
+										secondsSailTime));
+						
+//						System.out.println("Travelled: " + distanceTravelledNauticalMiles
+//								+ " nautical miles total to travel: "
+//								+ this.currentLeg.calcRng() + " nautical miles");
+//						
+						
+						safeHavenLocation = Calculator.findPosition(this.getWaypoints()
+								.get(i).getPos(), this.getWaypoints().get(i).getOutLeg()
+								.calcBrg(),
+								Converter.nmToMeters(distanceTravelledNauticalMiles));
+						
+						safeHavenBearing = Calculator.bearing(originalRoute.getWaypoints().get(i).getPos(), originalRoute.getWaypoints().get(i+1).getPos(), Heading.RL);
+						
+						
+//						System.out.println("At waypoint: " + i);
+						return safeHavenLocation;
+					}
+				}
+
+				// if (originalRoute.getWaypoints().get(i).get)
+
+			}
+
+		}
+		//An error must have occured
+		return null;
+//
+//		System.out.println("Hi?");
+//		
+//		// How long have the route been active
+//		long secondsSailTime = ((GnssTime.getInstance().getDate().getTime() - origStarttime
+//				.getTime()) / (1000));
+//
+//		// How long have should we have sailed in that time period?
+//		double distanceTravelledNauticalMiles = Converter.milesToNM(Calculator
+//				.distanceAfterTimeMph(this.currentLeg.getSpeed(),
+//						secondsSailTime));
+//
+//		System.out.println("Travelled: " + distanceTravelledNauticalMiles
+//				+ " nautical miles total to travel: "
+//				+ this.currentLeg.calcRng() + " nautical miles");
+//		// We have leg total before we recalculate which leg we are on and total
+//		// total if we are beyond the total size of the route?
+//
+//		if (distanceTravelledNauticalMiles >= this.currentLeg.calcRng()) {
+//			this.safeHavenLocation = waypoints.get(1).getPos();
+//		} else {
+//			safeHavenLocation = Calculator.findPosition(this.getWaypoints()
+//					.get(0).getPos(), this.getWaypoints().get(0).getOutLeg()
+//					.calcBrg(),
+//					Converter.nmToMeters(distanceTravelledNauticalMiles));
+//		}
+//
+//		return safeHavenLocation;
+	}
+
 	public synchronized void update(GpsData gpsData) {
-		
-		
-		//Is this a SafeHaven Route? 
-		//What is the size of the safehaven box?
-		
-		
-		//Find out where we should be, depending on the time and the waypoints of original route.
-		
-//		System.out.println("Update:");
-		// Find out how long we have been sailing?
-		long secondsSailTime = ((GnssTime.getInstance().getDate().getTime() - origStarttime
-				.getTime()) / (1000));
 
-		double distanceTravelled = Converter.nmToMeters(Calculator.distanceAfterTimeMph(this.currentLeg.getSpeed(), secondsSailTime));
+		// Is this a SafeHaven Route?
+		if (originalRoute.isSafeHaven()) {
 
-		System.out.println("Travelled: " + distanceTravelled + " total to travel: " + this.currentLeg.calcRng());
-		//We have leg total before we recalculate which leg we are on and total total if we are beyond the total size of the route?
-		
-		if (distanceTravelled >= this.currentLeg.calcRng()){
-			this.safeHavenLocation = waypoints.get(1).getPos();
-		}else{
-			safeHavenLocation = Calculator.findPosition(this.getWaypoints().get(0).getPos(), this.getWaypoints().get(0).getOutLeg().calcBrg(), distanceTravelled);
 		}
 
-		
-		
-		
+		// What is the size of the safehaven box?
+
+		// Find out where we should be, depending on the time and the waypoints
+		// of original route.
+
+		// System.out.println("Update:");
+		// Find out how long we have been sailing?
+
 		if (gpsData.isBadPosition()) {
 			return;
 		}
 
-		
 		// Get active waypoint
 		RouteWaypoint activeWaypoint = waypoints.get(activeWaypointIndex);
 		// Set current GPS data
