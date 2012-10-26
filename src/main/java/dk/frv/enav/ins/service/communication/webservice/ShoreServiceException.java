@@ -27,76 +27,42 @@
  * either expressed or implied, of Danish Maritime Authority.
  * 
  */
-package dk.frv.enav.ins.services.ais;
-
-import org.apache.log4j.Logger;
-
-import dk.frv.ais.reader.ISendResultListener;
-import dk.frv.ais.reader.SendException;
-import dk.frv.ais.reader.SendRequest;
-import dk.frv.ais.sentence.Abk;
+package dk.frv.enav.ins.service.communication.webservice;
 
 /**
- * Thread for sending AIS messages
+ * Shore service exception 
  */
-public class AisSendThread extends Thread implements ISendResultListener {
+public class ShoreServiceException extends Exception {
 	
-	private static final Logger LOG = Logger.getLogger(AisSendThread.class);
+	private static final long serialVersionUID = 1L;
+	
+	private int errroCode;
+	private String extraMessage;
+	
+	public ShoreServiceException(int errorCode, String extraMessage) {
+		this(errorCode);
+		this.extraMessage = extraMessage;
+	}
+	
+	public ShoreServiceException(int errorCode) {
+		super(ShoreServiceErrorCode.getErrorMessage(errorCode));
+		this.errroCode = errorCode;
+	}
+	
+	public int getErrroCode() {
+		return errroCode;
+	}
+	
+	public void setErrroCode(int errroCode) {
+		this.errroCode = errroCode;
+	}
+	
+	public void setExtraMessage(String extraMessage) {
+		this.extraMessage = extraMessage;
+	}
+	
+	public String getExtraMessage() {
+		return extraMessage;
+	}
 
-	protected SendRequest sendRequest;
-	protected AisServices aisServices;
-	protected Abk abk = null;
-	protected Boolean abkReceived = false;
-	
-	public AisSendThread(SendRequest sendRequest, AisServices aisServices) {
-		this.sendRequest = sendRequest;
-		this.aisServices = aisServices;
-	}
-	
-	@Override
-	public void run() {
-		// Send message
-		try {
-			aisServices.getNmeaSensor().send(sendRequest, this);
-		} catch (SendException e) {
-			LOG.error("Failed to send AIS message: " + sendRequest + ": " + e.getMessage());
-			aisServices.sendResult(false);
-			return;
-		}
-		
-		// Busy wait
-		while (true) {
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}		
-			synchronized (abkReceived) {
-				if (abkReceived) {
-					break;
-				}
-			}			
-		}
-		
-		if (abk != null && abk.isSuccess()) {
-			LOG.info("AIS SEND SUCCESS");
-			aisServices.sendResult(true);
-		} else {
-			LOG.info("AIS SEND ERROR");
-			aisServices.sendResult(false);
-		}
-		
-		LOG.debug("abk: " + abk);
-		
-		
-	}
-	
-	@Override
-	public void sendResult(Abk abk) {
-		synchronized (abkReceived) {
-			this.abk = abk;
-			this.abkReceived = true;
-		}			
-	}
-	
 }

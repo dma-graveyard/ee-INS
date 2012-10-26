@@ -43,7 +43,7 @@ import dk.frv.enav.common.xml.metoc.MetocForecast;
 import dk.frv.enav.ins.route.Route;
 import dk.frv.enav.ins.route.RouteManager;
 import dk.frv.enav.ins.route.RoutesUpdateEvent;
-import dk.frv.enav.ins.services.shore.ShoreServiceException;
+import dk.frv.enav.ins.service.communication.webservice.ShoreServiceException;
 
 /**
  * Dialog shown when requesting METOC

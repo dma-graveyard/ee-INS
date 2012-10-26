@@ -61,8 +61,8 @@ public class SensorTab extends JPanel implements ActionListener {
 	private JTextField textFieldGpsFilename;
 	private JSpinner spinnerGpsTcpPort;
 	private JTextField textFieldAisFilename;
-	private JComboBox comboBoxAisConnectionType;
-	private JComboBox comboBoxGpsConnectionType;
+	private JComboBox<SensorConnectionType> comboBoxAisConnectionType;
+	private JComboBox<SensorConnectionType> comboBoxGpsConnectionType;
 	private JCheckBox checkBoxSimulateGps;
 	private JSpinner spinnerAisSensorRange;
 	private SensorSettings sensorSettings;
@@ -89,9 +89,9 @@ public class SensorTab extends JPanel implements ActionListener {
 		spinnerAisTcpPort = new JSpinner();
 		spinnerAisTcpPort.setEditor(new NumberEditor(spinnerAisTcpPort, "#"));
 		
-		comboBoxAisConnectionType = new JComboBox();
+		comboBoxAisConnectionType = new JComboBox<SensorConnectionType>();
 		comboBoxAisConnectionType.addActionListener(this);
-		comboBoxAisConnectionType.setModel(new DefaultComboBoxModel(SensorConnectionType.values()));
+		comboBoxAisConnectionType.setModel(new DefaultComboBoxModel<SensorConnectionType>(SensorConnectionType.values()));
 		GroupLayout gl_AisConnectionPanel = new GroupLayout(AisConnectionPanel);
 		gl_AisConnectionPanel.setHorizontalGroup(
 			gl_AisConnectionPanel.createParallelGroup(Alignment.LEADING)
@@ -145,9 +145,9 @@ public class SensorTab extends JPanel implements ActionListener {
 		
 		JLabel label_9 = new JLabel("Host or serial port");
 		
-		comboBoxGpsConnectionType = new JComboBox();
+		comboBoxGpsConnectionType = new JComboBox<SensorConnectionType>();
 		comboBoxGpsConnectionType.addActionListener(this);
-		comboBoxGpsConnectionType.setModel(new DefaultComboBoxModel(SensorConnectionType.values()));
+		comboBoxGpsConnectionType.setModel(new DefaultComboBoxModel<SensorConnectionType>(SensorConnectionType.values()));
 		
 		textFieldGpsHostOrSerialPort = new JTextField();
 		textFieldGpsHostOrSerialPort.setColumns(10);

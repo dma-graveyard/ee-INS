@@ -75,7 +75,7 @@ public class RouteMetocDialog extends JDialog implements ActionListener, FocusLi
 	private JLabel currentLabel;
 	private JLabel currentMetocDataLbl;
 	private JLabel intervalLbl;
-	private JComboBox intervalDb;
+	private JComboBox<String> intervalDb;
 	private JButton requestBtn;
 	private JCheckBox windCb;
 	private JCheckBox currentCb;
@@ -226,8 +226,8 @@ public class RouteMetocDialog extends JDialog implements ActionListener, FocusLi
         currentMetocDataLbl = new JLabel("None");
         currentMetocDataLbl.setFont(new Font("Segoe UI", Font.BOLD, 12));        
         intervalLbl = new JLabel("Point interval (min)");        
-        intervalDb = new JComboBox();
-        intervalDb.setModel(new DefaultComboBoxModel(new String[] {"15", "30", "45", "60"}));
+        intervalDb = new JComboBox<String>();
+        intervalDb.setModel(new DefaultComboBoxModel<String>(new String[] {"15", "30", "45", "60"}));
         intervalDb.setSelectedIndex(0);
         intervalDb.setMaximumRowCount(4);        
         requestBtn = new JButton("Request METOC");

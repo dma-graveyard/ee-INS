@@ -67,8 +67,9 @@ import dk.frv.enav.ins.risk.RiskHandler;
 import dk.frv.enav.ins.nogo.DynamicNogoHandler;
 import dk.frv.enav.ins.nogo.NogoHandler;
 import dk.frv.enav.ins.route.RouteManager;
-import dk.frv.enav.ins.services.ais.AisServices;
-import dk.frv.enav.ins.services.shore.ShoreServices;
+import dk.frv.enav.ins.service.EnavServiceHandler;
+import dk.frv.enav.ins.service.communication.ais.AisServices;
+import dk.frv.enav.ins.service.communication.webservice.ShoreServices;
 import dk.frv.enav.ins.settings.SensorSettings;
 import dk.frv.enav.ins.settings.Settings;
 import dk.frv.enav.ins.util.OneInstanceGuard;
@@ -99,6 +100,7 @@ public class EeINS {
 	private static AisServices aisServices;
 	private static MsiHandler msiHandler;
 	private static NogoHandler nogoHandler;
+	private static EnavServiceHandler enavServiceHandler;
 	private static DynamicNogoHandler dynamicNoGoHandler;
 	private static UpdateCheckerThread updateThread;
 	private static ExceptionHandler exceptionHandler = new ExceptionHandler();
@@ -188,6 +190,10 @@ public class EeINS {
         // Create NoGo handler
         dynamicNoGoHandler = new DynamicNogoHandler(getSettings().getEnavSettings());
         mapHandler.add(dynamicNoGoHandler);
+        
+        // Create EnavServiceHandler
+        enavServiceHandler = new EnavServiceHandler();
+        mapHandler.add(enavServiceHandler);
         
         // Create plugin components
         createPluginComponents();

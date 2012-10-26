@@ -68,7 +68,7 @@ import dk.frv.enav.ins.gps.GpsData;
 import dk.frv.enav.ins.nmea.IAisListener;
 import dk.frv.enav.ins.nmea.NmeaSensor;
 import dk.frv.enav.ins.nmea.SensorType;
-import dk.frv.enav.ins.services.ais.AisServices;
+import dk.frv.enav.ins.service.communication.ais.AisServices;
 import dk.frv.enav.ins.status.AisStatus;
 import dk.frv.enav.ins.status.ComponentStatus;
 import dk.frv.enav.ins.status.IStatusComponent;

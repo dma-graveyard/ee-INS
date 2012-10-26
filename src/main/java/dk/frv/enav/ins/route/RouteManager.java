@@ -64,16 +64,17 @@ import dk.frv.enav.ins.gui.ComponentPanels.ShowDockableDialog;
 import dk.frv.enav.ins.gui.ComponentPanels.ShowDockableDialog.dock_type;
 import dk.frv.enav.ins.gui.route.RouteSuggestionDialog;
 import dk.frv.enav.ins.route.ActiveRoute.ActiveWpSelectionResult;
-import dk.frv.enav.ins.services.ais.AisServices;
-import dk.frv.enav.ins.services.shore.ShoreServiceException;
-import dk.frv.enav.ins.services.shore.ShoreServices;
+import dk.frv.enav.ins.service.communication.ais.AisServices;
+import dk.frv.enav.ins.service.communication.webservice.ShoreServiceException;
+import dk.frv.enav.ins.service.communication.webservice.ShoreServices;
+import dk.frv.enav.ins.service.intendedroute.ActiveRouteProvider;
 import dk.frv.enav.ins.settings.EnavSettings;
 
 /**
  * Manager for handling a collection of routes and active route
  */
 public class RouteManager extends MapHandlerChild implements Runnable,
-		Serializable, IGpsDataListener, IAisRouteSuggestionListener {
+		Serializable, IGpsDataListener, IAisRouteSuggestionListener, ActiveRouteProvider {
 
 	private static final long serialVersionUID = 1L;
 	private static final String routesFile = ".routes";

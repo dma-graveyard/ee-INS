@@ -49,7 +49,7 @@ import com.bbn.openmap.gui.OMComponentPanel;
 import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.ais.AisHandler;
 import dk.frv.enav.ins.gps.GpsHandler;
-import dk.frv.enav.ins.services.shore.ShoreServices;
+import dk.frv.enav.ins.service.communication.webservice.ShoreServices;
 import dk.frv.enav.ins.status.IStatusComponent;
 
 /**

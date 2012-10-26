@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Danish Maritime Authority. All rights reserved.
+ * Copyright 2012 Danish Maritime Authority. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,27 +27,31 @@
  * either expressed or implied, of Danish Maritime Authority.
  * 
  */
-package dk.frv.enav.ins.services.ais;
+package dk.frv.enav.ins.service;
 
-import dk.frv.ais.reader.SendRequest;
+import com.bbn.openmap.MapHandlerChild;
+
+import dk.frv.enav.ins.route.RouteManager;
+import dk.frv.enav.ins.service.intendedroute.ActiveRouteProvider;
+import dk.frv.enav.ins.service.intendedroute.IntendedRouteService;
 
 /**
- * Thread for sending intended routes
+ * Component offering e-Navigation services 
  */
-public class AisIntendedRouteSendThread extends AisSendThread {
-
-	public AisIntendedRouteSendThread(SendRequest sendRequest, AisServices aisServices) {
-		super(sendRequest, aisServices);
+public class EnavServiceHandler extends MapHandlerChild {
+	
+	private IntendedRouteService intendedRouteService;
+	
+	public EnavServiceHandler() {
+		 
 	}
 	
 	@Override
-	public void run() {
-		super.run();
-		
-		if (abk != null && abk.isSuccess()) {
-			aisServices.setLastIntendedRouteBroadcast();
+	public void findAndInit(Object obj) {		
+		if (obj instanceof RouteManager) {
+			intendedRouteService = new IntendedRouteService((ActiveRouteProvider)obj);
+			((RouteManager)obj).addListener(intendedRouteService);
 		}
-		
 	}
 
 }

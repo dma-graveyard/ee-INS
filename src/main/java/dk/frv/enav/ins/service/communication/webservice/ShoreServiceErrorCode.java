@@ -27,7 +27,7 @@
  * either expressed or implied, of Danish Maritime Authority.
  * 
  */
-package dk.frv.enav.ins.services.shore;
+package dk.frv.enav.ins.service.communication.webservice;
 
 import java.util.HashMap;
 

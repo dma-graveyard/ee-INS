@@ -39,9 +39,9 @@ import org.apache.commons.httpclient.params.HttpConnectionManagerParams;
 import org.apache.log4j.Logger;
 
 import dk.frv.enav.ins.common.util.Compressor;
-import dk.frv.enav.ins.services.shore.ShoreHttp;
-import dk.frv.enav.ins.services.shore.ShoreServiceErrorCode;
-import dk.frv.enav.ins.services.shore.ShoreServiceException;
+import dk.frv.enav.ins.service.communication.webservice.ShoreHttp;
+import dk.frv.enav.ins.service.communication.webservice.ShoreServiceErrorCode;
+import dk.frv.enav.ins.service.communication.webservice.ShoreServiceException;
 import dk.frv.enav.ins.settings.EnavSettings;
 
 /**

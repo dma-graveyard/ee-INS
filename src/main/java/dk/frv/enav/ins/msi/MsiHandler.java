@@ -53,8 +53,8 @@ import dk.frv.enav.ins.layers.msi.MsiLayer;
 import dk.frv.enav.ins.route.IRoutesUpdateListener;
 import dk.frv.enav.ins.route.RouteManager;
 import dk.frv.enav.ins.route.RoutesUpdateEvent;
-import dk.frv.enav.ins.services.shore.ShoreServiceException;
-import dk.frv.enav.ins.services.shore.ShoreServices;
+import dk.frv.enav.ins.service.communication.webservice.ShoreServiceException;
+import dk.frv.enav.ins.service.communication.webservice.ShoreServices;
 import dk.frv.enav.ins.settings.EnavSettings;
 
 /**

@@ -27,7 +27,7 @@
  * either expressed or implied, of Danish Maritime Authority.
  * 
  */
-package dk.frv.enav.ins.services.ais;
+package dk.frv.enav.ins.service.communication.ais;
 
 import java.util.Calendar;
 import java.util.Date;

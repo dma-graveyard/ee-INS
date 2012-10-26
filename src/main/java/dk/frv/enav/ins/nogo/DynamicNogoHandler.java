@@ -46,8 +46,8 @@ import dk.frv.enav.ins.gui.ComponentPanels.DynamicNoGoComponentPanel;
 import dk.frv.enav.ins.gui.ComponentPanels.ShowDockableDialog;
 import dk.frv.enav.ins.gui.ComponentPanels.ShowDockableDialog.dock_type;
 import dk.frv.enav.ins.layers.nogo.DynamicNogoLayer;
-import dk.frv.enav.ins.services.shore.ShoreServiceException;
-import dk.frv.enav.ins.services.shore.ShoreServices;
+import dk.frv.enav.ins.service.communication.webservice.ShoreServiceException;
+import dk.frv.enav.ins.service.communication.webservice.ShoreServices;
 import dk.frv.enav.ins.settings.EnavSettings;
 
 /**

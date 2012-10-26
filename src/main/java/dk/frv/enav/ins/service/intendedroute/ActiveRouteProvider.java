@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Danish Maritime Authority. All rights reserved.
+ * Copyright 2012 Danish Maritime Authority. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,42 +27,19 @@
  * either expressed or implied, of Danish Maritime Authority.
  * 
  */
-package dk.frv.enav.ins.services.shore;
+package dk.frv.enav.ins.service.intendedroute;
+
+import dk.frv.enav.ins.route.ActiveRoute;
 
 /**
- * Shore service exception 
+ * Interface to implement for components offering an active route
  */
-public class ShoreServiceException extends Exception {
+public interface ActiveRouteProvider {
 	
-	private static final long serialVersionUID = 1L;
-	
-	private int errroCode;
-	private String extraMessage;
-	
-	public ShoreServiceException(int errorCode, String extraMessage) {
-		this(errorCode);
-		this.extraMessage = extraMessage;
-	}
-	
-	public ShoreServiceException(int errorCode) {
-		super(ShoreServiceErrorCode.getErrorMessage(errorCode));
-		this.errroCode = errorCode;
-	}
-	
-	public int getErrroCode() {
-		return errroCode;
-	}
-	
-	public void setErrroCode(int errroCode) {
-		this.errroCode = errroCode;
-	}
-	
-	public void setExtraMessage(String extraMessage) {
-		this.extraMessage = extraMessage;
-	}
-	
-	public String getExtraMessage() {
-		return extraMessage;
-	}
+	/**
+	 * Get the current active route
+	 * @return active route or null if no current active route
+	 */
+	public ActiveRoute getActiveRoute();
 
 }

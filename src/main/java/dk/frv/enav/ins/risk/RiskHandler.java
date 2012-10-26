@@ -39,7 +39,7 @@ import org.apache.log4j.Logger;
 import dk.frv.enav.common.xml.risk.response.Risk;
 import dk.frv.enav.common.xml.risk.response.RiskList;
 import dk.frv.enav.ins.EeINS;
-import dk.frv.enav.ins.services.shore.ShoreServiceException;
+import dk.frv.enav.ins.service.communication.webservice.ShoreServiceException;
 
 public class RiskHandler implements Runnable {
 

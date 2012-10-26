@@ -27,64 +27,27 @@
  * either expressed or implied, of Danish Maritime Authority.
  * 
  */
-package dk.frv.enav.ins.status;
+package dk.frv.enav.ins.service.communication.ais;
 
-import java.util.Date;
-
-import dk.frv.enav.ins.common.text.Formatter;
-import dk.frv.enav.ins.service.communication.webservice.ShoreServiceException;
+import dk.frv.ais.reader.SendRequest;
 
 /**
- * Status for shore services
+ * Thread for sending intended routes
  */
-public class ShoreServiceStatus extends ComponentStatus {
+public class AisIntendedRouteSendThread extends AisSendThread {
 
-	private Date lastContact = null;
-	private Date lastFailed = null;
-	private ShoreServiceException lastException = null;
-
-	public ShoreServiceStatus() {
-		super("Shore services");
-		shortStatusText = "No services performed yet";
-	}
-
-	public synchronized void markContactSuccess() {
-		lastContact = new Date();
-		status = Status.OK;
-		shortStatusText = "Last shore contact: " + lastContact;
-	}
-
-	public synchronized void markContactError(ShoreServiceException e) {		
-		lastFailed = new Date();
-		status = Status.ERROR;
-		this.lastException = e;
-		shortStatusText = "Last failed shore contact: " + Formatter.formatLongDateTime(lastFailed);
-	}
-
-	public Date getLastContact() {
-		return lastContact;
-	}
-
-	public Date getLastFailed() {
-		return lastFailed;
+	public AisIntendedRouteSendThread(SendRequest sendRequest, AisServices aisServices) {
+		super(sendRequest, aisServices);
 	}
 	
 	@Override
-	public String getStatusHtml() {
-		StringBuilder buf = new StringBuilder();
-		buf.append("Contact: " + status.name() + "<br/>");
-		if (status == Status.ERROR) {
-			buf.append("Last error: " + Formatter.formatLongDateTime(lastFailed) + "<br/>");
-			buf.append("Error message: " + lastException.getMessage());
-			if (lastException.getExtraMessage() != null) {
-				 buf.append(": " + lastException.getExtraMessage());
-			}
-		} else {
-			buf.append("Last contact: " + Formatter.formatLongDateTime(lastContact));
+	public void run() {
+		super.run();
+		
+		if (abk != null && abk.isSuccess()) {
+			aisServices.setLastIntendedRouteBroadcast();
 		}
 		
-		
-		return buf.toString();
 	}
 
 }

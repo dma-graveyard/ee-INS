@@ -27,64 +27,76 @@
  * either expressed or implied, of Danish Maritime Authority.
  * 
  */
-package dk.frv.enav.ins.status;
+package dk.frv.enav.ins.service.communication.ais;
 
-import java.util.Date;
+import org.apache.log4j.Logger;
 
-import dk.frv.enav.ins.common.text.Formatter;
-import dk.frv.enav.ins.service.communication.webservice.ShoreServiceException;
+import dk.frv.ais.reader.ISendResultListener;
+import dk.frv.ais.reader.SendException;
+import dk.frv.ais.reader.SendRequest;
+import dk.frv.ais.sentence.Abk;
 
 /**
- * Status for shore services
+ * Thread for sending AIS messages
  */
-public class ShoreServiceStatus extends ComponentStatus {
+public class AisSendThread extends Thread implements ISendResultListener {
+	
+	private static final Logger LOG = Logger.getLogger(AisSendThread.class);
 
-	private Date lastContact = null;
-	private Date lastFailed = null;
-	private ShoreServiceException lastException = null;
-
-	public ShoreServiceStatus() {
-		super("Shore services");
-		shortStatusText = "No services performed yet";
-	}
-
-	public synchronized void markContactSuccess() {
-		lastContact = new Date();
-		status = Status.OK;
-		shortStatusText = "Last shore contact: " + lastContact;
-	}
-
-	public synchronized void markContactError(ShoreServiceException e) {		
-		lastFailed = new Date();
-		status = Status.ERROR;
-		this.lastException = e;
-		shortStatusText = "Last failed shore contact: " + Formatter.formatLongDateTime(lastFailed);
-	}
-
-	public Date getLastContact() {
-		return lastContact;
-	}
-
-	public Date getLastFailed() {
-		return lastFailed;
+	protected SendRequest sendRequest;
+	protected AisServices aisServices;
+	protected Abk abk = null;
+	protected Boolean abkReceived = false;
+	
+	public AisSendThread(SendRequest sendRequest, AisServices aisServices) {
+		this.sendRequest = sendRequest;
+		this.aisServices = aisServices;
 	}
 	
 	@Override
-	public String getStatusHtml() {
-		StringBuilder buf = new StringBuilder();
-		buf.append("Contact: " + status.name() + "<br/>");
-		if (status == Status.ERROR) {
-			buf.append("Last error: " + Formatter.formatLongDateTime(lastFailed) + "<br/>");
-			buf.append("Error message: " + lastException.getMessage());
-			if (lastException.getExtraMessage() != null) {
-				 buf.append(": " + lastException.getExtraMessage());
-			}
-		} else {
-			buf.append("Last contact: " + Formatter.formatLongDateTime(lastContact));
+	public void run() {
+		// Send message
+		try {
+			aisServices.getNmeaSensor().send(sendRequest, this);
+		} catch (SendException e) {
+			LOG.error("Failed to send AIS message: " + sendRequest + ": " + e.getMessage());
+			aisServices.sendResult(false);
+			return;
 		}
 		
+		// Busy wait
+		while (true) {
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}		
+			synchronized (abkReceived) {
+				if (abkReceived) {
+					break;
+				}
+			}			
+		}
 		
-		return buf.toString();
+		if (abk != null && abk.isSuccess()) {
+			LOG.info("AIS SEND SUCCESS");
+			aisServices.sendResult(true);
+		} else {
+			LOG.info("AIS SEND ERROR");
+			aisServices.sendResult(false);
+		}
+		
+		LOG.debug("abk: " + abk);
+		
+		
 	}
-
+	
+	@Override
+	public void sendResult(Abk abk) {
+		synchronized (abkReceived) {
+			this.abk = abk;
+			this.abkReceived = true;
+		}			
+	}
+	
 }
