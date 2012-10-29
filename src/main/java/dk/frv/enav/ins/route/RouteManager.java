@@ -233,14 +233,6 @@ public class RouteManager extends MapHandlerChild implements Runnable,
 	}
 
 	public void notifyListeners(RoutesUpdateEvent e) {
-		// Call AisServices if active route changes
-		if (e == RoutesUpdateEvent.ACTIVE_ROUTE_UPDATE
-				|| e == RoutesUpdateEvent.ACTIVE_ROUTE_FINISHED
-				|| e == RoutesUpdateEvent.ROUTE_ACTIVATED
-				|| e == RoutesUpdateEvent.ROUTE_DEACTIVATED) {
-			aisServices.intendedRouteBroadcast(activeRoute);
-		}
-
 		for (IRoutesUpdateListener listener : listeners) {
 			listener.routesChanged(e);
 		}
@@ -699,11 +691,6 @@ public class RouteManager extends MapHandlerChild implements Runnable,
 
 			// Active route poll for METOC
 			pollForMetoc();
-
-			// Broadcast intended route over AIS
-			if (isRouteActive()) {
-				aisServices.periodicIntendedRouteBroadcast(activeRoute);
-			}
 
 			// Check validity of METOC for all routes
 			checkValidMetoc();

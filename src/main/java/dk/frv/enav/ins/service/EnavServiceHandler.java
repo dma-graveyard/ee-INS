@@ -32,6 +32,7 @@ package dk.frv.enav.ins.service;
 import com.bbn.openmap.MapHandlerChild;
 
 import dk.frv.enav.ins.route.RouteManager;
+import dk.frv.enav.ins.service.communication.enavcloud.EnavCloudHandler;
 import dk.frv.enav.ins.service.intendedroute.ActiveRouteProvider;
 import dk.frv.enav.ins.service.intendedroute.IntendedRouteService;
 
@@ -40,6 +41,7 @@ import dk.frv.enav.ins.service.intendedroute.IntendedRouteService;
  */
 public class EnavServiceHandler extends MapHandlerChild {
 	
+	private EnavCloudHandler enavCloudHandler;
 	private IntendedRouteService intendedRouteService;
 	
 	public EnavServiceHandler() {
@@ -49,9 +51,18 @@ public class EnavServiceHandler extends MapHandlerChild {
 	@Override
 	public void findAndInit(Object obj) {		
 		if (obj instanceof RouteManager) {
-			intendedRouteService = new IntendedRouteService((ActiveRouteProvider)obj);
+			intendedRouteService = new IntendedRouteService(this, (ActiveRouteProvider)obj);
 			((RouteManager)obj).addListener(intendedRouteService);
+			intendedRouteService.start();
+		}
+		else if (obj instanceof EnavCloudHandler) {
+			enavCloudHandler = (EnavCloudHandler)obj;
+			enavCloudHandler.start();
 		}
 	}
-
+	
+	public EnavCloudHandler getEnavCloudHandler() {
+		return enavCloudHandler;
+	}
+	
 }

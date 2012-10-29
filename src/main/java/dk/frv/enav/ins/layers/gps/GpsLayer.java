@@ -229,6 +229,9 @@ public class GpsLayer extends OMGraphicHandlerLayer implements IGpsDataListener 
 	
 	@Override
 	public synchronized OMGraphicList prepare() {
+		if (getProjection() == null) {
+			return graphics;
+		}		
 		if(startPos != null && endPos != null){
 			Point2D start = getProjection().forward(startPos);
 			Point2D end = getProjection().forward(endPos);

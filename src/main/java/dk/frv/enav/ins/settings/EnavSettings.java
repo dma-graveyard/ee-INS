@@ -79,6 +79,12 @@ public class EnavSettings implements Serializable {
 	private boolean msiFilter = true;
 	private String updateServer = "http://service.e-navigation.net/";
 	
+	/**
+	 * Cloud server configuration
+	 */
+	private String cloudServerHost = "localhost";
+	private int cloudServerPort = 61616;
+	
 	public EnavSettings() {
 		
 	}
@@ -114,6 +120,9 @@ public class EnavSettings implements Serializable {
 			updateServer = "http://service.e-navigation.net/";
 		}
 		
+		cloudServerHost = props.getProperty(PREFIX + "cloudServerHost", cloudServerHost);
+		cloudServerPort = PropUtils.intFromProperties(props, PREFIX + "cloudServerPort", cloudServerPort);			
+		
 	}
 	
 	public void setProperties(Properties props) {
@@ -138,6 +147,8 @@ public class EnavSettings implements Serializable {
 		props.put(PREFIX + "msiRelevanceFromOwnShipRange", Double.toString(msiRelevanceFromOwnShipRange));
 		props.put(PREFIX + "msiVisibilityFromNewWaypoint", Double.toString(msiVisibilityFromNewWaypoint));
 		props.put(PREFIX + "msiFilter", Boolean.toString(msiFilter));
+		props.put(PREFIX + "cloudServerHost", cloudServerHost);
+		props.put(PREFIX + "cloudServerPort", Integer.toString(cloudServerPort));
 	}
 
 	public double getDefaultWindWarnLimit() {
@@ -290,6 +301,38 @@ public class EnavSettings implements Serializable {
 
 	public void setMsiVisibilityFromNewWaypoint(double msiVisibilityFromNewWaypoint) {
 		this.msiVisibilityFromNewWaypoint = msiVisibilityFromNewWaypoint;
+	}
+
+	public String getCloudServerHost() {
+		return cloudServerHost;
+	}
+
+	public void setCloudServerHost(String cloudServerHost) {
+		this.cloudServerHost = cloudServerHost;
+	}
+
+	public int getCloudServerPort() {
+		return cloudServerPort;
+	}
+
+	public void setCloudServerPort(int cloudServerPort) {
+		this.cloudServerPort = cloudServerPort;
+	}
+
+	public void setDefaultCurrentLow(double defaultCurrentLow) {
+		this.defaultCurrentLow = defaultCurrentLow;
+	}
+
+	public void setDefaultCurrentMedium(double defaultCurrentMedium) {
+		this.defaultCurrentMedium = defaultCurrentMedium;
+	}
+
+	public void setDefaultWaveLow(double defaultWaveLow) {
+		this.defaultWaveLow = defaultWaveLow;
+	}
+
+	public void setDefaultWaveMedium(double defaultWaveMedium) {
+		this.defaultWaveMedium = defaultWaveMedium;
 	}
 	
 }

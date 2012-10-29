@@ -29,11 +29,13 @@
  */
 package dk.frv.enav.ins.service.intendedroute;
 
+import dk.dma.enav.services.intendedroute.IntendedRouteMessage;
 import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.route.ActiveRoute;
 import dk.frv.enav.ins.route.IRoutesUpdateListener;
 import dk.frv.enav.ins.route.RoutesUpdateEvent;
 import dk.frv.enav.ins.service.EnavService;
+import dk.frv.enav.ins.service.EnavServiceHandler;
 
 /**
  * Intended route service implementation
@@ -45,10 +47,9 @@ public class IntendedRouteService extends EnavService implements IRoutesUpdateLi
 	 */
 	private ActiveRouteProvider provider;
 
-	public IntendedRouteService(ActiveRouteProvider provider) {
-		super();
-		this.provider = provider;
-		(new Thread(this)).start();
+	public IntendedRouteService(EnavServiceHandler enavServiceHandler, ActiveRouteProvider provider) {
+		super(enavServiceHandler);
+		this.provider = provider;		
 	}
 
 	/**
@@ -59,12 +60,18 @@ public class IntendedRouteService extends EnavService implements IRoutesUpdateLi
 
 		// Get active route from provider
 		ActiveRoute activeRoute = provider.getActiveRoute();
+		
+		// Make intended route message
+		IntendedRouteMessage message = new IntendedRouteMessage();
+		
 
 		// If active route is null, make cancellation message
 
 		// Transform active route into intended route message
 
 		// send message
+		enavServiceHandler.getEnavCloudHandler().sendMessage(message);
+		
 	}
 
 	/**
@@ -87,6 +94,10 @@ public class IntendedRouteService extends EnavService implements IRoutesUpdateLi
 			EeINS.sleep(60000);
 			broadcastIntendedRoute();
 		}
+	}
+	
+	public void start() {
+		(new Thread(this)).start();
 	}
 
 }

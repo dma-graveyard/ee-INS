@@ -69,6 +69,7 @@ import dk.frv.enav.ins.nogo.NogoHandler;
 import dk.frv.enav.ins.route.RouteManager;
 import dk.frv.enav.ins.service.EnavServiceHandler;
 import dk.frv.enav.ins.service.communication.ais.AisServices;
+import dk.frv.enav.ins.service.communication.enavcloud.EnavCloudHandler;
 import dk.frv.enav.ins.service.communication.webservice.ShoreServices;
 import dk.frv.enav.ins.settings.SensorSettings;
 import dk.frv.enav.ins.settings.Settings;
@@ -101,6 +102,7 @@ public class EeINS {
 	private static MsiHandler msiHandler;
 	private static NogoHandler nogoHandler;
 	private static EnavServiceHandler enavServiceHandler;
+	private static EnavCloudHandler enavCloudHandler;
 	private static DynamicNogoHandler dynamicNoGoHandler;
 	private static UpdateCheckerThread updateThread;
 	private static ExceptionHandler exceptionHandler = new ExceptionHandler();
@@ -192,8 +194,12 @@ public class EeINS {
         mapHandler.add(dynamicNoGoHandler);
         
         // Create EnavServiceHandler
-        enavServiceHandler = new EnavServiceHandler();
+        enavServiceHandler = new EnavServiceHandler();        
         mapHandler.add(enavServiceHandler);
+        
+        // Create enav cloud handler
+        enavCloudHandler = new EnavCloudHandler(settings.getEnavSettings());
+        mapHandler.add(enavCloudHandler);
         
         // Create plugin components
         createPluginComponents();

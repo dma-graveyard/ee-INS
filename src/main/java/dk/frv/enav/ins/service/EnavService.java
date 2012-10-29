@@ -28,11 +28,20 @@
  */
 package dk.frv.enav.ins.service;
 
+
 /**
  * Abstract base for all e-Navigation services
  */
 public abstract class EnavService {
 	
+	protected EnavServiceHandler enavServiceHandler;
 	
+	public EnavService(EnavServiceHandler enavServiceHandler) {
+		this.enavServiceHandler = enavServiceHandler;
+	}
 
+	public EnavServiceHandler getEnavServiceHandler() {
+		return enavServiceHandler;
+	}
+	
 }

@@ -745,8 +745,8 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 			sarTargets = aisStore.getSarTargets();
 		}
 		
-		// Retrieve own ship
-		ownShip = aisStore.getOwnShip();
+		// Retrieve own ship (well not for now, may cause troubles in regard to communication)
+		//ownShip = aisStore.getOwnShip();
 		
 		LOG.info("AIS handler loaded total targets: " + (vesselTargets.size() + atonTargets.size() + sarTargets.size()));
 				
