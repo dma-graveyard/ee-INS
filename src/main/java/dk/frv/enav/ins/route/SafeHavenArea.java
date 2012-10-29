@@ -48,8 +48,6 @@ import com.bbn.openmap.omGraphics.OMGraphicList;
 import com.bbn.openmap.omGraphics.OMPoly;
 
 import dk.frv.ais.geo.GeoLocation;
-import dk.frv.enav.ins.EeINS;
-import dk.frv.enav.ins.common.Heading;
 import dk.frv.enav.ins.common.graphics.CenterRaster;
 import dk.frv.enav.ins.common.util.Calculator;
 
@@ -123,8 +121,8 @@ public class SafeHavenArea extends OMGraphicList {
 		
 		remove(poly);
 
-		int width = 100;
-		int height = 50;
+		int width = 1000;
+		int height = 500;
 		
 		// Create the polygon around the position.
 		calculatePolygon(pos, bearing, width, height);
@@ -148,8 +146,8 @@ public class SafeHavenArea extends OMGraphicList {
 						width/2);
 		
 
-		if (angle < 360){
-			angle = angle + 360;
+		if (angle > 360){
+			angle = angle - 360;
 		}
 		
 		if (oppositeBearing > 360){

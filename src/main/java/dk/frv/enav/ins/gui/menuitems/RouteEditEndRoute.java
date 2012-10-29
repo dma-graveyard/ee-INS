@@ -40,7 +40,6 @@ import dk.frv.enav.ins.route.Route;
 import dk.frv.enav.ins.route.RouteLeg;
 import dk.frv.enav.ins.route.RouteManager;
 import dk.frv.enav.ins.route.RouteWaypoint;
-import dk.frv.enav.ins.route.SafeHavenRoute;
 
 public class RouteEditEndRoute extends JMenuItem implements IMapMenuAction {
 
@@ -81,12 +80,6 @@ public class RouteEditEndRoute extends JMenuItem implements IMapMenuAction {
 				i++;
 			}
 			route.calcValues(true);
-			
-			if (route instanceof SafeHavenRoute){
-				System.out.println("Safe Haven");
-			}else{
-				System.out.println("Not safe haven");
-			}
 			
 			routeManager.addRoute(route);
 			routeManager.notifyListeners(null);
