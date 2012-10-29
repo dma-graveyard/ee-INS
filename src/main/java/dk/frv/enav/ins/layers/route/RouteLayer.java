@@ -88,7 +88,9 @@ public class RouteLayer extends OMGraphicHandlerLayer implements
 
 	private MapMenu routeMenu;
 	private boolean dragging = false;
-
+	SafeHavenArea safeHavenArea = new SafeHavenArea();
+	
+	
 	public RouteLayer() {
 		(new Thread(this)).start();
 	}
@@ -135,7 +137,7 @@ public class RouteLayer extends OMGraphicHandlerLayer implements
 
 				
 				if (activeRoute.isSafeHaven()){
-					SafeHavenArea safeHavenArea = new SafeHavenArea();
+					
 					activeRoute.getSafeHavenLocation();
 					safeHavenArea.moveSymbol(activeRoute.getSafeHavenLocation(), activeRoute.getSafeHavenBearing()
 					);
