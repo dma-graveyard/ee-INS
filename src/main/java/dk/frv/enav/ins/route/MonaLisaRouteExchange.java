@@ -400,7 +400,6 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 
 		if (routeResponse != null) {
 			System.out.println("Route Recieved");
-
 			// Convert the route to one we can paint
 			newRoute = convertRoute(routeResponse);
 		}
