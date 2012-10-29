@@ -63,7 +63,8 @@ public class RouteHttp {
 
 	public RouteHttp() {
 //		this.host = "80.217.206.47";
-		this.host = "localhost";
+//		this.host = "localhost";
+		this.host = "www.optiroute.se/RouteRequest ";
 		this.port = 80;
 
 		setUri(uri);

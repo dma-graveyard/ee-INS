@@ -62,12 +62,13 @@ import dk.frv.enav.ins.route.monalisa.fi.navielektro.ns.formats.vessel_waypoint_
 import dk.frv.enav.ins.route.monalisa.se.sspa.optiroute.CurrentShipDataType;
 import dk.frv.enav.ins.route.monalisa.se.sspa.optiroute.DepthPointsType;
 import dk.frv.enav.ins.route.monalisa.se.sspa.optiroute.RouteRequest;
-import dk.frv.enav.ins.route.monalisa.se.sspa.optiroute.RouteresponseType;
+import dk.frv.enav.ins.route.monalisa.se.sspa.optiroute.RouteResponse;
 import dk.frv.enav.ins.route.monalisa.se.sspa.optiroute.WeatherPointsType;
 import dk.frv.enav.ins.services.shore.RouteHttp;
 import dk.frv.enav.ins.status.ComponentStatus;
 import dk.frv.enav.ins.status.IStatusComponent;
 import dk.frv.enav.ins.status.ShoreServiceStatus;
+
 //import dk.frv.enav.ins.route.monalisa.se.sspa.optiroute.Routerequest;
 
 /**
@@ -87,16 +88,6 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 
 	public MonaLisaRouteExchange() {
 
-	}
-
-	public Route convertRoute(String xmlRoute) {
-
-		Route route = new Route();
-
-		// Remove first part
-		xmlRoute = xmlRoute.split("<?xml version=\"1.0\" ?>")[1];
-
-		return route;
 	}
 
 	public RouteRequest convertRoute(Route route) {
@@ -163,8 +154,6 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 				e.printStackTrace();
 			}
 
-			
-			
 			if (i == 0) {
 				waypoint.setETA(date2);
 			}
@@ -172,9 +161,6 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 				waypoint.setETA(tomorrow2);
 			}
 
-			
-			
-			
 			// Set leg info
 			LeginfoType legInfo = new LeginfoType();
 			// legInfo.setLegtype(value)
@@ -187,29 +173,26 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 				legInfo.setPlannedSpeed(0.0f);
 			}
 
-			
-			
-			//Rate of turn not needed
-//			if (routeWaypoint.getRot() != null) {
-//				legInfo.setTurnRadius(Double.valueOf(routeWaypoint.getRot())
-//						.intValue());
-//			} else {
-//				legInfo.setTurnRadius(99);
-//			}
-//			
-//			//Hardcoded to 99
-//			legInfo.setTurnRadius(99);
-//
-//			
-			
+			// Rate of turn not needed
+			// if (routeWaypoint.getRot() != null) {
+			// legInfo.setTurnRadius(Double.valueOf(routeWaypoint.getRot())
+			// .intValue());
+			// } else {
+			// legInfo.setTurnRadius(99);
+			// }
+			//
+			// //Hardcoded to 99
+			// legInfo.setTurnRadius(99);
+			//
+			//
+
 			waypoint.setLegInfo(legInfo);
 
 			// Set positon
 			PositionType position = new PositionType();
 
-			 position.setLatitude(routeWaypoint.getPos().getLatitude());
-			 position.setLongitude(routeWaypoint.getPos().getLongitude());
-
+			position.setLatitude(routeWaypoint.getPos().getLatitude());
+			position.setLongitude(routeWaypoint.getPos().getLongitude());
 
 			waypoint.setPosition(position);
 
@@ -229,7 +212,7 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 		return monaLisaRoute;
 	}
 
-	public Route convertRoute(RouteresponseType response) {
+	public Route convertRoute(RouteResponse response) {
 		Route route = new Route();
 
 		route.setName("Optimized Mona Lisa Route");
@@ -312,38 +295,38 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 			StringWriter st = new StringWriter();
 			m.marshal(monaLisaRoute, st);
 			xml = st.toString();
-			
-//			xml = xml.replace("routerequest", "RouteRequest");
-			
+
+			// xml = xml.replace("routerequest", "RouteRequest");
+
 			System.out.println(xml);
 
 			// STATIC ROUTE INPUT START
-//			FileInputStream stream = null;
-//			try {
-////				stream = new FileInputStream(new File("C:\\route02.xml"));
-//			} catch (FileNotFoundException e1) {
-//				// TODO Auto-generated catch block
-//				e1.printStackTrace();
-//			}
-//			try {
-//				FileChannel fc = stream.getChannel();
-//				MappedByteBuffer bb = null;
-//				try {
-//					bb = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
-//				} catch (IOException e) {
-					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-				/* Instead of using default, pass in a decoder. */
-//				staticXML = Charset.defaultCharset().decode(bb).toString();
-//			} finally {
-//				try {
-////					stream.close();
-//				} catch (IOException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//			}
+			// FileInputStream stream = null;
+			// try {
+			// // stream = new FileInputStream(new File("C:\\route02.xml"));
+			// } catch (FileNotFoundException e1) {
+			// // TODO Auto-generated catch block
+			// e1.printStackTrace();
+			// }
+			// try {
+			// FileChannel fc = stream.getChannel();
+			// MappedByteBuffer bb = null;
+			// try {
+			// bb = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
+			// } catch (IOException e) {
+			// TODO Auto-generated catch block
+			// e.printStackTrace();
+			// }
+			/* Instead of using default, pass in a decoder. */
+			// staticXML = Charset.defaultCharset().decode(bb).toString();
+			// } finally {
+			// try {
+			// // stream.close();
+			// } catch (IOException e) {
+			// // TODO Auto-generated catch block
+			// e.printStackTrace();
+			// }
+			// }
 			// STATIC ROUTE INPUT STOP
 
 			// Create HTTP request
@@ -381,22 +364,23 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 
 		// Unmarshall the recieved route and parse it
 
-		
-//		xmlReturnRoute = xmlReturnRoute.replace("RouteResponse", "routeresponseType");
-		
+		// xmlReturnRoute = xmlReturnRoute.replace("RouteResponse",
+		// "routeresponseType");
+
 		System.out.println(xmlReturnRoute);
-		
+
 		Unmarshaller u;
 		JAXBContext jc;
-		RouteresponseType routeResponse = null;
+		RouteResponse routeResponse = null;
 
+		xmlReturnRoute = xmlReturnRoute.replace("RouteResponse", "routeresponseType");
 		
 		StringReader sr = new StringReader(xmlReturnRoute);
 		try {
 			jc = JAXBContext
 					.newInstance("dk.frv.enav.ins.route.monalisa.se.sspa.optiroute");
 			u = jc.createUnmarshaller();
-			routeResponse = (RouteresponseType) u.unmarshal(sr);
+			routeResponse = (RouteResponse) u.unmarshal(sr);
 		} catch (JAXBException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

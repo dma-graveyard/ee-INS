@@ -106,11 +106,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link RouteresponseType }
+     * Create an instance of {@link RouteResponse }
      * 
      */
-    public RouteresponseType createRouteresponseType() {
-        return new RouteresponseType();
+    public RouteResponse createRouteResponse() {
+        return new RouteResponse();
     }
 
     /**
@@ -122,12 +122,12 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link RouteresponseType }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}{@link RouteResponse }{@code >}}
      * 
      */
     @XmlElementDecl(namespace = "http://www.sspa.se/optiroute", name = "RouteResponse")
-    public JAXBElement<RouteresponseType> createRouteResponse(RouteresponseType value) {
-        return new JAXBElement<RouteresponseType>(_RouteResponse_QNAME, RouteresponseType.class, null, value);
+    public JAXBElement<RouteResponse> createRouteResponse(RouteResponse value) {
+        return new JAXBElement<RouteResponse>(_RouteResponse_QNAME, RouteResponse.class, null, value);
     }
 
     /**
