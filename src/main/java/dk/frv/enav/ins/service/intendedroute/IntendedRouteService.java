@@ -29,7 +29,9 @@
  */
 package dk.frv.enav.ins.service.intendedroute;
 
-import dk.dma.enav.services.intendedroute.IntendedRouteMessage;
+import org.apache.log4j.Logger;
+
+import dk.dma.enav.services.voyage.intendedroute.IntendedRouteMessage;
 import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.route.ActiveRoute;
 import dk.frv.enav.ins.route.IRoutesUpdateListener;
@@ -41,6 +43,8 @@ import dk.frv.enav.ins.service.EnavServiceHandler;
  * Intended route service implementation
  */
 public class IntendedRouteService extends EnavService implements IRoutesUpdateListener, Runnable {
+	
+	private static final Logger LOG = Logger.getLogger(IntendedRouteService.class);
 
 	/**
 	 * The current active route provider
@@ -59,10 +63,14 @@ public class IntendedRouteService extends EnavService implements IRoutesUpdateLi
 		System.out.println("BROADCAST INTENDED ROUTE");
 
 		// Get active route from provider
+		LOG.info("Get active route");
+		
 		ActiveRoute activeRoute = provider.getActiveRoute();
+		LOG.info("Got active route");
 		
 		// Make intended route message
 		IntendedRouteMessage message = new IntendedRouteMessage();
+		
 		
 
 		// If active route is null, make cancellation message
@@ -70,7 +78,9 @@ public class IntendedRouteService extends EnavService implements IRoutesUpdateLi
 		// Transform active route into intended route message
 
 		// send message
+		LOG.info("Sending");
 		enavServiceHandler.getEnavCloudHandler().sendMessage(message);
+		LOG.info("Done sending");
 		
 	}
 
@@ -91,7 +101,7 @@ public class IntendedRouteService extends EnavService implements IRoutesUpdateLi
 	@Override
 	public void run() {
 		while (true) {
-			EeINS.sleep(60000);
+			EeINS.sleep(10000);
 			broadcastIntendedRoute();
 		}
 	}

@@ -76,6 +76,8 @@ public class EnavCloudHandler extends MapHandlerChild  implements IGpsDataListen
 			return false;
 		}
 		
+		message.setSource(shipId);
+		
 		// Make metadata with area
 		MessageMetadata metadata = MessageMetadata.create();
 		//TODO metadata.setShape();
