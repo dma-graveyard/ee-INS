@@ -25,7 +25,7 @@ import dk.frv.enav.ins.route.monalisa.fi.navielektro.ns.formats.vessel_waypoint_
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="RouteResponse">
+ * &lt;complexType name="routeresponse">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
@@ -40,9 +40,9 @@ import dk.frv.enav.ins.route.monalisa.fi.navielektro.ns.formats.vessel_waypoint_
  * 
  * 
  */
-@XmlRootElement(name = "routeresponseType")
+@XmlRootElement(name="RouteResponse")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "routeresponseType", propOrder = {
+@XmlType(name = "RouteResponse", propOrder = {
     "fuelRequested",
     "fuelFinal",
     "route"

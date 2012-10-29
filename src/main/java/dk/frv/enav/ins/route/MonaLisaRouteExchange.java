@@ -273,6 +273,7 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 	}
 
 	// public Route makeRequest(Route route) throws ShoreServiceException {
+	@SuppressWarnings("rawtypes")
 	public Route makeRequest(Route route) throws Exception {
 		System.out.println("Recieved route for Mona Lisa Exchange");
 		// A request for a route has come in
@@ -298,7 +299,7 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 
 			// xml = xml.replace("routerequest", "RouteRequest");
 
-			System.out.println(xml);
+			// System.out.println(xml);
 
 			// STATIC ROUTE INPUT START
 			// FileInputStream stream = null;
@@ -364,8 +365,8 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 
 		// Unmarshall the recieved route and parse it
 
-		// xmlReturnRoute = xmlReturnRoute.replace("RouteResponse",
-		// "routeresponseType");
+//		 xmlReturnRoute = xmlReturnRoute.replace("RouteResponse",
+//		 "routeresponseType");
 
 		System.out.println(xmlReturnRoute);
 
@@ -373,16 +374,25 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 		JAXBContext jc;
 		RouteResponse routeResponse = null;
 
-		xmlReturnRoute = xmlReturnRoute.replace("RouteResponse", "routeresponseType");
+//		xmlReturnRoute = xmlReturnRoute.replace("RouteResponse",
+//				"routeresponseType");
+
+
+		
 		
 		StringReader sr = new StringReader(xmlReturnRoute);
+		
+
+		
 		try {
 			jc = JAXBContext
 					.newInstance("dk.frv.enav.ins.route.monalisa.se.sspa.optiroute");
 			u = jc.createUnmarshaller();
-			routeResponse = (RouteResponse) u.unmarshal(sr);
+			
+			
+			routeResponse = (RouteResponse)((javax.xml.bind.JAXBElement) u.unmarshal(sr)).getValue();
+
 		} catch (JAXBException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 
@@ -420,70 +430,5 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 	public ComponentStatus getStatus() {
 		return status;
 	}
-
-	private static String monaLisaResExample = "<?xml version=\"1.0\" ?> \n"
-			+ "<ns1:routeresponseType xmlns:ns1=\"http://www.sspa.se/optiroute\" xmlns:ns2=\"http://www.navielektro.fi/ns/formats/vessel-waypoint-exchange\"> \n"
-			+ "    <ns1:FuelRequested>1.25023531914</ns1:FuelRequested> \n"
-			+ "    <ns1:FuelFinal>1.25023531914</ns1:FuelFinal> \n"
-			+ "    <ns1:Route> \n"
-			+ "        <ns2:waypoints> \n"
-			+ "            <ns2:waypoint> \n"
-			+ "                <ns2:wpt-id>1</ns2:wpt-id> \n"
-			+ "                <ns2:ETA>2012-04-18T08:00:00Z</ns2:ETA> \n"
-			+ "                <ns2:wpt-name>Trubaduren</ns2:wpt-name> \n"
-			+ "                <ns2:position> \n"
-			+ "                    <ns2:latitude>57.5947494507</ns2:latitude> \n"
-			+ "                    <ns2:longitude>11.6329803467</ns2:longitude> \n"
-			+ "                </ns2:position> \n"
-			+ "                <ns2:leg-info> \n"
-			+ "                    <ns2:planned-speed>15.745013237</ns2:planned-speed> \n"
-			+ "                </ns2:leg-info> \n"
-			+ "            </ns2:waypoint> \n"
-			+ "            <ns2:waypoint> \n"
-			+ "                <ns2:wpt-id>2</ns2:wpt-id> \n"
-			+ "                <ns2:ETA>2012-04-18T08:15:47.362122</ns2:ETA> \n"
-			+ "                <ns2:wpt-name>x1</ns2:wpt-name> \n"
-			+ "                <ns2:position> \n"
-			+ "                    <ns2:latitude>57.6495399475</ns2:latitude> \n"
-			+ "                    <ns2:longitude>11.7113399506</ns2:longitude> \n"
-			+ "                </ns2:position> \n"
-			+ "                <ns2:leg-info> \n"
-			+ "                    <ns2:planned-speed>15.9477205276</ns2:planned-speed> \n"
-			+ "                </ns2:leg-info> \n"
-			+ "            </ns2:waypoint> \n"
-			+ "            <ns2:waypoint> \n"
-			+ "                <ns2:wpt-id>3</ns2:wpt-id> \n"
-			+ "                <ns2:ETA>2012-04-18T08:23:38.74704</ns2:ETA> \n"
-			+ "                <ns2:wpt-name>x2</ns2:wpt-name> \n"
-			+ "                <ns2:position> \n"
-			+ "                    <ns2:latitude>57.6597290039</ns2:latitude> \n"
-			+ "                    <ns2:longitude>11.7734003067</ns2:longitude> \n"
-			+ "                </ns2:position> \n"
-			+ "                <ns2:leg-info> \n"
-			+ "                    <ns2:planned-speed>15.7729797363</ns2:planned-speed> \n"
-			+ "                </ns2:leg-info> \n"
-			+ "            </ns2:waypoint> \n"
-			+ "            <ns2:waypoint> \n"
-			+ "                <ns2:wpt-id>4</ns2:wpt-id> \n"
-			+ "                <ns2:ETA>2012-04-18T08:30:22.65152</ns2:ETA> \n"
-			+ "                <ns2:wpt-name>x3</ns2:wpt-name> \n"
-			+ "                <ns2:position> \n"
-			+ "                    <ns2:latitude>57.6791992188</ns2:latitude> \n"
-			+ "                    <ns2:longitude>11.8147697449</ns2:longitude> \n"
-			+ "                </ns2:position> \n"
-			+ "                <ns2:leg-info> \n"
-			+ "                    <ns2:planned-speed>14.8269224167</ns2:planned-speed> \n"
-			+ "                </ns2:leg-info> \n"
-			+ "            </ns2:waypoint> \n"
-			+ "            <ns2:waypoint> \n"
-			+ "                <ns2:wpt-id>5</ns2:wpt-id> \n"
-			+ "                <ns2:ETA>2012-04-18T08:41:59.999909</ns2:ETA> \n"
-			+ "                <ns2:wpt-name>Alvsborgsbron</ns2:wpt-name> \n"
-			+ "                <ns2:position> \n"
-			+ "                    <ns2:latitude>57.6908988953</ns2:latitude> \n"
-			+ "                    <ns2:longitude>11.9015398026</ns2:longitude> \n"
-			+ "                </ns2:position> \n"
-			+ "            </ns2:waypoint> \n" + "        </ns2:waypoints> \n"
-			+ "    </ns1:Route> \n" + "</ns1:routeresponseType> \n";
 
 }

@@ -95,9 +95,9 @@ public class RouteHttp {
 		}
 
 		try {
-			System.out.println("Message recieved:");
+//			System.out.println("Message recieved:");
 			responseBody = method.getResponseBodyAsString();
-			System.out.println(responseBody);
+//			System.out.println(responseBody);
 		} catch (IOException e) {
 			LOG.error("Failed to read response body: " + e.getMessage());
 //			throw new ShoreServiceException(ShoreServiceErrorCode.INVALID_RESPONSE);
