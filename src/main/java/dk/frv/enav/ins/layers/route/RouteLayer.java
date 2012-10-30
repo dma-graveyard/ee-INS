@@ -89,7 +89,7 @@ public class RouteLayer extends OMGraphicHandlerLayer implements
 	private MapMenu routeMenu;
 	private boolean dragging = false;
 	SafeHavenArea safeHavenArea = new SafeHavenArea();
-	
+	private boolean activeSafeHaven = false;
 	
 	public RouteLayer() {
 		(new Thread(this)).start();
@@ -102,7 +102,7 @@ public class RouteLayer extends OMGraphicHandlerLayer implements
 		}
 
 		graphics.clear();
-
+		
 		Stroke stroke = new BasicStroke(3.0f, // Width
 				BasicStroke.CAP_SQUARE, // End cap
 				BasicStroke.JOIN_MITER, // Join style
@@ -135,14 +135,13 @@ public class RouteLayer extends OMGraphicHandlerLayer implements
 						activeStroke, Color.RED);
 				graphics.add(activeRouteExtend);
 
-				
-				if (activeRoute.isSafeHaven()){
-					
-					activeRoute.getSafeHavenLocation();
+
+//				safeHavenArea.setVisible(true);
+				if (activeSafeHaven){
 					safeHavenArea.moveSymbol(activeRoute.getSafeHavenLocation(), activeRoute.getSafeHavenBearing()
 					);
-					safeHavenArea.setVisible(true);
 					graphics.add(safeHavenArea);
+					
 				}
 
 			}
@@ -540,6 +539,13 @@ public class RouteLayer extends OMGraphicHandlerLayer implements
 		return false;
 	}
 
+	
+	public void toggleSafeHaven(){
+		activeSafeHaven = !activeSafeHaven;
+		safeHavenArea.setVisible(activeSafeHaven);
+		routesChanged(null);
+	}
+	
 	@Override
 	public void run() {
 		while (true) {
