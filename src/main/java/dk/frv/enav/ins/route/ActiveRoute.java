@@ -262,19 +262,6 @@ public class ActiveRoute extends Route {
 
 	public synchronized void update(GpsData gpsData) {
 
-		// Is this a SafeHaven Route?
-		if (originalRoute.isSafeHaven()) {
-
-		}
-
-		// What is the size of the safehaven box?
-
-		// Find out where we should be, depending on the time and the waypoints
-		// of original route.
-
-		// System.out.println("Update:");
-		// Find out how long we have been sailing?
-
 		if (gpsData.isBadPosition()) {
 			return;
 		}

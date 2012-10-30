@@ -682,14 +682,4 @@ public class Route implements Serializable {
 		return builder.toString();
 	}
 
-	public boolean isSafeHaven() {
-		return safeHaven;
-	}
-
-	public void setSafeHaven(boolean safeHaven) {
-		this.safeHaven = safeHaven;
-	}
-	
-	
-
 }
