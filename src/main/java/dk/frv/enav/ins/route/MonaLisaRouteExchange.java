@@ -365,8 +365,60 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 
 		// Unmarshall the recieved route and parse it
 
-//		 xmlReturnRoute = xmlReturnRoute.replace("RouteResponse",
-//		 "routeresponseType");
+		// xmlReturnRoute = xmlReturnRoute.replace("ns1:",
+		// "");
+		//
+		// xmlReturnRoute = xmlReturnRoute.replace("ns2:",
+		// "");
+
+		System.out.println(xmlReturnRoute);
+
+		xmlReturnRoute = xmlReturnRoute
+				.replace(
+						"<RouteResponse",
+						"<ns1:RouteResponse xmlns:ns1=\"http://www.sspa.se/optiroute\" xmlns:ns2=\"http://www.navielektro.fi/ns/formats/vessel-waypoint-exchange\"");
+
+		xmlReturnRoute = xmlReturnRoute
+				.replace(
+						"</RouteResponse",
+						"</ns1:RouteResponse");
+
+		
+		xmlReturnRoute = xmlReturnRoute.replace("FuelRequested",
+				"ns1:FuelRequested");
+
+		xmlReturnRoute = xmlReturnRoute.replace("FuelFinal", "ns1:FuelFinal");
+
+		xmlReturnRoute = xmlReturnRoute.replace("Route>", "ns1:Route>");
+
+		xmlReturnRoute = xmlReturnRoute
+				.replace(
+						" <waypoints xmlns=\"http://www.navielektro.fi/ns/formats/vessel-waypoint-exchange\"/>",
+						"<ns2:waypoints xmlns=\"http://www.navielektro.fi/ns/formats/vessel-waypoint-exchange\">");
+		
+		xmlReturnRoute = xmlReturnRoute
+				.replace(
+						"</waypoints",
+						"</ns2:waypoints");
+
+		xmlReturnRoute = xmlReturnRoute.replace("waypoint>", "ns2:waypoint>");
+
+		xmlReturnRoute = xmlReturnRoute.replace("wpt-id", "ns2:wpt-id");
+
+		xmlReturnRoute = xmlReturnRoute.replace("ETA", "ns2:ETA");
+
+		xmlReturnRoute = xmlReturnRoute.replace("wpt-name", "ns2:wpt-name");
+
+		xmlReturnRoute = xmlReturnRoute.replace("position", "ns2:position");
+
+		xmlReturnRoute = xmlReturnRoute.replace("latitude", "ns2:latitude");
+
+		xmlReturnRoute = xmlReturnRoute.replace("longitude", "ns2:longitude");
+
+		xmlReturnRoute = xmlReturnRoute.replace("leg-info", "ns2:leg-info");
+
+		xmlReturnRoute = xmlReturnRoute.replace("planned-speed",
+				"ns2:planned-speed");
 
 		System.out.println(xmlReturnRoute);
 
@@ -374,23 +426,18 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 		JAXBContext jc;
 		RouteResponse routeResponse = null;
 
-//		xmlReturnRoute = xmlReturnRoute.replace("RouteResponse",
-//				"routeresponseType");
+		// xmlReturnRoute = xmlReturnRoute.replace("RouteResponse",
+		// "routeresponseType");
 
-
-		
-		
 		StringReader sr = new StringReader(xmlReturnRoute);
-		
 
-		
 		try {
 			jc = JAXBContext
 					.newInstance("dk.frv.enav.ins.route.monalisa.se.sspa.optiroute");
 			u = jc.createUnmarshaller();
-			
-			
-			routeResponse = (RouteResponse)((javax.xml.bind.JAXBElement) u.unmarshal(sr)).getValue();
+
+			routeResponse = (RouteResponse) ((javax.xml.bind.JAXBElement) u
+					.unmarshal(sr)).getValue();
 
 		} catch (JAXBException e1) {
 			e1.printStackTrace();
