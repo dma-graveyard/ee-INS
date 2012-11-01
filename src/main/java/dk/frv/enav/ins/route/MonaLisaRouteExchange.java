@@ -297,9 +297,13 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 			m.marshal(monaLisaRoute, st);
 			xml = st.toString();
 
-			// xml = xml.replace("routerequest", "RouteRequest");
+			xml = xml.replace("ns1:", "");
 
-			// System.out.println(xml);
+			xml = xml.replace("ns2:", "");
+
+//			System.out.println(xml);
+			
+			// xml = xml.replace("routerequest", "RouteRequest");
 
 			// STATIC ROUTE INPUT START
 			// FileInputStream stream = null;
@@ -365,12 +369,6 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 
 		// Unmarshall the recieved route and parse it
 
-		// xmlReturnRoute = xmlReturnRoute.replace("ns1:",
-		// "");
-		//
-		// xmlReturnRoute = xmlReturnRoute.replace("ns2:",
-		// "");
-
 		System.out.println(xmlReturnRoute);
 
 		xmlReturnRoute = xmlReturnRoute
@@ -378,12 +376,9 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 						"<RouteResponse",
 						"<ns1:RouteResponse xmlns:ns1=\"http://www.sspa.se/optiroute\" xmlns:ns2=\"http://www.navielektro.fi/ns/formats/vessel-waypoint-exchange\"");
 
-		xmlReturnRoute = xmlReturnRoute
-				.replace(
-						"</RouteResponse",
-						"</ns1:RouteResponse");
+		xmlReturnRoute = xmlReturnRoute.replace("</RouteResponse",
+				"</ns1:RouteResponse");
 
-		
 		xmlReturnRoute = xmlReturnRoute.replace("FuelRequested",
 				"ns1:FuelRequested");
 
@@ -391,15 +386,13 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 
 		xmlReturnRoute = xmlReturnRoute.replace("Route>", "ns1:Route>");
 
-		xmlReturnRoute = xmlReturnRoute
-				.replace(
-						" <waypoints xmlns=\"http://www.navielektro.fi/ns/formats/vessel-waypoint-exchange\"/>",
-						"<ns2:waypoints xmlns=\"http://www.navielektro.fi/ns/formats/vessel-waypoint-exchange\">");
-		
-		xmlReturnRoute = xmlReturnRoute
-				.replace(
-						"</waypoints",
-						"</ns2:waypoints");
+//		xmlReturnRoute = xmlReturnRoute
+//				.replace(
+//						" <waypoints xmlns=\"http://www.navielektro.fi/ns/formats/vessel-waypoint-exchange\"/>",
+//						"<ns2:waypoints xmlns=\"http://www.navielektro.fi/ns/formats/vessel-waypoint-exchange\">");
+
+		xmlReturnRoute = xmlReturnRoute.replace("waypoints",
+				"ns2:waypoints");
 
 		xmlReturnRoute = xmlReturnRoute.replace("waypoint>", "ns2:waypoint>");
 
