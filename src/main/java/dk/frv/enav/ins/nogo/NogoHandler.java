@@ -40,6 +40,9 @@ import dk.frv.ais.geo.GeoLocation;
 import dk.frv.enav.common.xml.nogo.response.NogoResponse;
 import dk.frv.enav.common.xml.nogo.types.NogoPolygon;
 import dk.frv.enav.ins.EeINS;
+import dk.frv.enav.ins.gui.ComponentPanels.NoGoComponentPanel;
+import dk.frv.enav.ins.gui.ComponentPanels.ShowDockableDialog;
+import dk.frv.enav.ins.gui.ComponentPanels.ShowDockableDialog.dock_type;
 import dk.frv.enav.ins.layers.nogo.NogoLayer;
 import dk.frv.enav.ins.services.shore.ShoreServiceException;
 import dk.frv.enav.ins.services.shore.ShoreServices;
@@ -72,9 +75,13 @@ public class NogoHandler extends MapHandlerChild implements Runnable {
 	private int noGoErrorCode;
 	private String noGoMessage;
 
+	private NoGoComponentPanel nogoPanel;
 	
 	
-	
+	public NogoLayer getNogoLayer() {
+		return nogoLayer;
+	}
+
 	public int getNoGoErrorCode() {
 		return noGoErrorCode;
 	}
@@ -123,9 +130,47 @@ public class NogoHandler extends MapHandlerChild implements Runnable {
 	}
 
 	public synchronized void updateNogo() {
+		
+		
+		// If the dock isn't visible should it show it?
+		if (!EeINS.getMainFrame().getDockableComponents()
+				.isDockVisible("NoGo")) {
+
+			// Show it display the message?
+			if (EeINS.getSettings().getGuiSettings().isShowDockMessage()) {
+				new ShowDockableDialog(EeINS.getMainFrame(),
+						dock_type.NOGO);
+			} else {
+
+				if (EeINS.getSettings().getGuiSettings().isAlwaysOpenDock()) {
+					EeINS.getMainFrame().getDockableComponents()
+							.openDock("NoGo");
+					EeINS.getMainFrame().getEeINSMenuBar()
+							.refreshDockableMenu();
+				}
+
+				// It shouldn't display message but take a default action
+
+			}
+
+		}
+		
+		
+		
+		
+		
+		
 		notifyUpdate(false);
+		nogoPanel.newRequest();
 		boolean nogoUpdated = false;
 		Date now = new Date();
+		
+//		
+//		System.out.println("Standard locations at:");
+//		System.out.println("south east point:" + southEastPoint);
+//		System.out.println("north west point: " + northWestPoint);
+		
+		
 		if (getLastUpdate() == null || (now.getTime() - getLastUpdate().getTime() > pollInterval * 1000)) {
 			// Poll for data from shore
 			try {
@@ -144,6 +189,7 @@ public class NogoHandler extends MapHandlerChild implements Runnable {
 		// Notify if update
 		if (nogoUpdated) {
 			notifyUpdate(true);
+			nogoPanel.requestCompleted(nogoFailed, noGoErrorCode, nogoPolygons, validFrom, validTo, draught);
 		}
 
 	}
@@ -170,6 +216,13 @@ public class NogoHandler extends MapHandlerChild implements Runnable {
 
 		// Date date = new Date();
 		// Send a rest to shoreServices for NoGo
+//		System.out.println(draught);
+//		System.out.println(northWestPoint);
+//		System.out.println(southEastPoint);
+//		System.out.println(validFrom);
+//		System.out.println(validTo);
+		
+		
 		NogoResponse nogoResponse = shoreServices.nogoPoll(draught, northWestPoint, southEastPoint, validFrom, validTo);
 
 		nogoPolygons = nogoResponse.getPolygons();
@@ -235,6 +288,9 @@ public class NogoHandler extends MapHandlerChild implements Runnable {
 		}
 		if (obj instanceof NogoLayer) {
 			nogoLayer = (NogoLayer) obj;
+		}
+		if (obj instanceof NoGoComponentPanel) {
+			nogoPanel = (NoGoComponentPanel) obj;
 		}
 
 	}

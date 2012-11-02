@@ -83,11 +83,13 @@ public class RouteLayer extends OMGraphicHandlerLayer implements IRoutesUpdateLi
 	private OMGraphic selectedGraphic = null;
 	private MetocGraphic routeMetoc;
 	private SuggestedRouteGraphic suggestedRoute;
+	private float routeWidth = 2.0f;
 
 	private MapMenu routeMenu;
 	private boolean dragging = false;
 	
 	public RouteLayer() {
+		routeWidth = EeINS.getSettings().getNavSettings().getRouteWidth();
 	}
 	
 	@Override
@@ -99,14 +101,14 @@ public class RouteLayer extends OMGraphicHandlerLayer implements IRoutesUpdateLi
 		graphics.clear();
 		
 		Stroke stroke = new BasicStroke(
-				3.0f,                      // Width
+				routeWidth,                      // Width
 			    BasicStroke.CAP_SQUARE,    // End cap
 			    BasicStroke.JOIN_MITER,    // Join style
 			    10.0f,                     // Miter limit
 			    new float[] { 3.0f, 10.0f }, // Dash pattern
 			    0.0f);
 		Stroke activeStroke = new BasicStroke(
-				3.0f,                      // Width
+				routeWidth,                      // Width
                 BasicStroke.CAP_SQUARE,    // End cap
                 BasicStroke.JOIN_MITER,    // Join style
                 10.0f,                     // Miter limit

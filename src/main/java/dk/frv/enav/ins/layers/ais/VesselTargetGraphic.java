@@ -91,6 +91,11 @@ public class VesselTargetGraphic extends TargetGraphic {
 		super();
 		this.showNameLabel = EeINS.getSettings().getAisSettings().isShowNameLabels();
 	}
+	
+	public VesselTargetGraphic(boolean showName) {
+		super();
+		this.showNameLabel = showName;
+	}
 
 	private void createGraphics() {
 		speedVector = new OMLine(0, 0, 0, 0, OMLine.LINETYPE_STRAIGHT);
@@ -128,6 +133,12 @@ public class VesselTargetGraphic extends TargetGraphic {
 
 	@Override
 	public void update(AisTarget aisTarget) {
+		
+		if (aisTarget instanceof VesselTarget){
+			
+		
+		
+		
 		vesselTarget = (VesselTarget) aisTarget;
 		VesselPositionData posData = vesselTarget.getPositionData();
 		VesselStaticData staticData = vesselTarget.getStaticData();
@@ -235,6 +246,8 @@ public class VesselTargetGraphic extends TargetGraphic {
 		routeGraphic.update(vesselTarget, name, aisIntendedRoute, pos);
 		if (!targetSettings.isShowRoute()) {
 			routeGraphic.setVisible(false);
+		}
+		
 		}
 	}
 

@@ -32,6 +32,7 @@ package dk.frv.enav.ins.ais;
 import java.util.Date;
 
 import dk.frv.ais.message.binary.RouteInformation;
+import dk.frv.ais.message.binary.RouteSuggestion;
 import dk.frv.enav.ins.gps.GnssTime;
 
 /**
@@ -59,8 +60,9 @@ public class AisAdressedRouteSuggestion extends AisIntendedRoute {
 	 * Copy constructor
 	 * @param routeSuggestion
 	 */
-	public AisAdressedRouteSuggestion(AisAdressedRouteSuggestion routeSuggestion) {
+	public AisAdressedRouteSuggestion(RouteSuggestion routeSuggestion) {
 		super(routeSuggestion);
+		this.msgLinkId = routeSuggestion.getMsgLinkId();
 	}
 	
 	/**
@@ -92,6 +94,10 @@ public class AisAdressedRouteSuggestion extends AisIntendedRoute {
 		case IGNORED:
 		case CANCELLED:
 			setHidden(true);
+			break;
+		case PENDING:
+			break;
+		default:
 			break;
 		}
 		this.status = status;

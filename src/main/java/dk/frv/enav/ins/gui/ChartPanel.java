@@ -60,6 +60,7 @@ import dk.frv.enav.ins.event.NavigationMouseMode;
 import dk.frv.enav.ins.event.RouteEditMouseMode;
 import dk.frv.enav.ins.gps.GpsData;
 import dk.frv.enav.ins.gps.IGpsDataListener;
+import dk.frv.enav.ins.gui.ComponentPanels.ActiveWaypointComponentPanel;
 import dk.frv.enav.ins.gui.nogo.NogoDialog;
 import dk.frv.enav.ins.layers.EncLayerFactory;
 import dk.frv.enav.ins.layers.GeneralLayer;
@@ -67,6 +68,7 @@ import dk.frv.enav.ins.layers.ais.AisLayer;
 import dk.frv.enav.ins.layers.background.CoastalOutlineLayer;
 import dk.frv.enav.ins.layers.gps.GpsLayer;
 import dk.frv.enav.ins.layers.msi.MsiLayer;
+import dk.frv.enav.ins.layers.nogo.DynamicNogoLayer;
 import dk.frv.enav.ins.layers.nogo.NogoLayer;
 import dk.frv.enav.ins.layers.route.RouteLayer;
 import dk.frv.enav.ins.layers.routeEdit.NewRouteContainerLayer;
@@ -92,10 +94,10 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 	private CoastalOutlineLayer coastalOutlineLayer;
 	private NavigationMouseMode mapNavMouseMode;
 	private MouseDelegator mouseDelegator;
-	private SensorPanel sensorPanel;
 	private RouteLayer routeLayer;
 	private MsiLayer msiLayer;
 	private NogoLayer nogoLayer;	
+	private DynamicNogoLayer dynamicNogoLayer;
 	private TopPanel topPanel;
 	private RouteEditMouseMode routeEditMouseMode;
 	private RouteEditLayer routeEditLayer;
@@ -105,9 +107,11 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 	private GpsData gpsData;
 	private boolean nogoMode = false;
 	
+	private ActiveWaypointComponentPanel activeWaypointPanel;
+	
 	private NogoDialog nogoDialog;
 
-	public ChartPanel(SensorPanel sensorPanel) {
+	public ChartPanel(ActiveWaypointComponentPanel activeWaypointPanel) {
 		super();
 		// Set map handler
 		mapHandler = EeINS.getMapHandler();
@@ -115,12 +119,13 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 		setLayout(new BorderLayout());
 		// Set border
 		setBorder(BorderFactory.createLineBorder(Color.GRAY));
-		this.sensorPanel = sensorPanel;
+		this.activeWaypointPanel = activeWaypointPanel;
 		// Max scale
 		this.maxScale = EeINS.getSettings().getMapSettings().getMaxScale(); 
 	}
-
+	
 	public void initChart() {
+			
 		MapSettings mapSettings = EeINS.getSettings().getMapSettings();
 		Properties props = EeINS.getProperties();
 		
@@ -152,7 +157,7 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 		mapHandler.add(routeEditMouseMode);
 		mapHandler.add(msiFilterMouseMode);
 
-		mapHandler.add(sensorPanel);
+		mapHandler.add(activeWaypointPanel);
 
 		// Use the LayerHandler to manage all layers, whether they are
 		// on the map or not. You can add a layer to the map by
@@ -192,6 +197,9 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 		nogoLayer.setVisible(true);
 		mapHandler.add(nogoLayer);
 		
+		dynamicNogoLayer = new DynamicNogoLayer();
+		dynamicNogoLayer.setVisible(true);
+		mapHandler.add(dynamicNogoLayer);
 
 		// Create AIS layer
 		aisLayer = new AisLayer();
@@ -243,7 +251,7 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 
 		// Force a route layer and sensor panel update
 		routeLayer.routesChanged(RoutesUpdateEvent.ROUTE_ADDED);
-		sensorPanel.routesChanged(RoutesUpdateEvent.ROUTE_ADDED);
+		activeWaypointPanel.routesChanged(RoutesUpdateEvent.ROUTE_ADDED);
 		
 		// Force a MSI layer update
 		msiLayer.doUpdate();
@@ -263,7 +271,7 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 			topPanel.setEncDisabled();
 			coastalOutlineLayer.setVisible(true);
 		}
-		
+
 		getMap().addMouseWheelListener(this);
 	}
 
@@ -347,6 +355,7 @@ public class ChartPanel extends OMComponentPanel implements IGpsDataListener, Mo
 			newRouteContainerLayer.getRouteGraphics().clear();
 			newRouteContainerLayer.doPrepare();
 			EeINS.getMainFrame().getTopPanel().getNewRouteBtn().setSelected(false);
+			EeINS.getMainFrame().getEeINSMenuBar().getNewRoute().setSelected(false);
 		}
 	}
 	

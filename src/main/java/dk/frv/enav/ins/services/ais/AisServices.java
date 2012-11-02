@@ -40,9 +40,9 @@ import com.bbn.openmap.MapHandlerChild;
 import dk.frv.ais.message.AisMessage6;
 import dk.frv.ais.message.AisMessage8;
 import dk.frv.ais.message.AisPosition;
-import dk.frv.ais.message.binary.AddressedRouteInformation;
 import dk.frv.ais.message.binary.AsmAcknowledge;
 import dk.frv.ais.message.binary.BroadcastIntendedRoute;
+import dk.frv.ais.message.binary.RouteSuggestion;
 import dk.frv.ais.message.binary.RouteSuggestionReply;
 import dk.frv.ais.reader.SendRequest;
 import dk.frv.enav.ins.ais.AisAdressedRouteSuggestion;
@@ -77,18 +77,18 @@ public class AisServices extends MapHandlerChild {
 	 * Acknowledge the reception of a route suggestion
 	 * @param routeInformation
 	 */
-	public void acknowledgeRouteSuggestion(AisMessage6 receivedMsg6, AddressedRouteInformation routeInformation) {
+	public void acknowledgeRouteSuggestion(AisMessage6 receivedMsg6, RouteSuggestion routeSuggestion) {
 		LOG.debug("In acknowledgeRouteSuggestion()");
 		if (!allowSend()) {
 			return;
 		}
 		// Create acknowledge message
 		AsmAcknowledge acknowledge = new AsmAcknowledge();
-		acknowledge.setReceivedFi(routeInformation.getFi());
-		acknowledge.setReceivedDac(routeInformation.getDac());
+		acknowledge.setReceivedFi(routeSuggestion.getFi());
+		acknowledge.setReceivedDac(routeSuggestion.getDac());
 		acknowledge.setAiAvailable(1);
 		acknowledge.setAiResponse(1);
-		acknowledge.setTextSequenceNum(routeInformation.getMsgLinkId());
+		acknowledge.setTextSequenceNum(routeSuggestion.getMsgLinkId());
 		
 		// Create AIS msg 6
 		AisMessage6 msg6 = new AisMessage6();

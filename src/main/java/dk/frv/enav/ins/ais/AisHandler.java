@@ -58,9 +58,9 @@ import dk.frv.ais.message.AisMessage24;
 import dk.frv.ais.message.AisMessage5;
 import dk.frv.ais.message.AisMessage6;
 import dk.frv.ais.message.AisPositionMessage;
-import dk.frv.ais.message.binary.AddressedRouteInformation;
 import dk.frv.ais.message.binary.AisApplicationMessage;
 import dk.frv.ais.message.binary.BroadcastIntendedRoute;
+import dk.frv.ais.message.binary.RouteSuggestion;
 import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.common.util.Converter;
 import dk.frv.enav.ins.gps.GnssTime;
@@ -201,17 +201,17 @@ public class AisHandler extends MapHandlerChild implements IAisListener, IStatus
 				}
 				
 				// Handle adressed route information
-				if (appMessage.getDac() == 1 && appMessage.getFi() == 28) {
-					AddressedRouteInformation routeInformation = (AddressedRouteInformation)appMessage;
-					LOG.info("AddressedRouteInformation: " + routeInformation);
-					AisAdressedRouteSuggestion addressedRouteSuggestion = new AisAdressedRouteSuggestion(routeInformation);
+				if (appMessage.getDac() == RouteSuggestion.DAC && appMessage.getFi() == RouteSuggestion.FI) {
+					RouteSuggestion routeSuggestion = (RouteSuggestion)appMessage;
+					LOG.info("RouteSuggestion: " + routeSuggestion);
+					AisAdressedRouteSuggestion addressedRouteSuggestion = new AisAdressedRouteSuggestion(routeSuggestion);										
 					addressedRouteSuggestion.setSender(aisMessage.getUserId());
 					for (IAisRouteSuggestionListener suggestionListener : suggestionListeners) {
 						suggestionListener.receiveRouteSuggestion(addressedRouteSuggestion);
 					}
 					// Acknowledge the reception
 					if (suggestionListeners.size() > 0) {
-						aisServices.acknowledgeRouteSuggestion(msg6, routeInformation);
+						aisServices.acknowledgeRouteSuggestion(msg6, routeSuggestion);
 					}
 				}
 			}			

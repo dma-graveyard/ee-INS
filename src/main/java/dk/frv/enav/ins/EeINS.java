@@ -64,6 +64,7 @@ import dk.frv.enav.ins.nmea.NmeaStdinSensor;
 import dk.frv.enav.ins.nmea.NmeaTcpSensor;
 import dk.frv.enav.ins.nmea.SensorType;
 import dk.frv.enav.ins.risk.RiskHandler;
+import dk.frv.enav.ins.nogo.DynamicNogoHandler;
 import dk.frv.enav.ins.nogo.NogoHandler;
 import dk.frv.enav.ins.route.MonaLisaRouteExchange;
 import dk.frv.enav.ins.route.RouteManager;
@@ -101,6 +102,7 @@ public class EeINS {
 	private static AisServices aisServices;
 	private static MsiHandler msiHandler;
 	private static NogoHandler nogoHandler;
+	private static DynamicNogoHandler dynamicNoGoHandler;
 	private static UpdateCheckerThread updateThread;
 	private static ExceptionHandler exceptionHandler = new ExceptionHandler();
 	
@@ -187,7 +189,12 @@ public class EeINS {
         
         // Create NoGo handler
         nogoHandler = new NogoHandler(getSettings().getEnavSettings());
-        mapHandler.add(nogoHandler);        
+        mapHandler.add(nogoHandler);
+        
+        // Create dynamic NoGo handler
+        // Create NoGo handler
+        dynamicNoGoHandler = new DynamicNogoHandler(getSettings().getEnavSettings());
+        mapHandler.add(dynamicNoGoHandler);
         
         // Create plugin components
         createPluginComponents();
@@ -533,10 +540,11 @@ public class EeINS {
 		}
 	}
 	
-	public static void startThread(Runnable t, String name) {
+	public static Thread startThread(Runnable t, String name) {
 		Thread thread = new Thread(t);
 		thread.setName(name);
 		thread.start();
+		return thread;
 	}
 	
 	public static double elapsed(long start) {

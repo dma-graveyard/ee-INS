@@ -29,7 +29,6 @@
  */
 package dk.frv.enav.ins.gui;
 
-
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -46,127 +45,178 @@ import org.apache.log4j.Logger;
 import com.bbn.openmap.MapHandler;
 
 import dk.frv.enav.ins.EeINS;
+import dk.frv.enav.ins.gui.ComponentPanels.ActiveWaypointComponentPanel;
+import dk.frv.enav.ins.gui.ComponentPanels.AisComponentPanel;
+import dk.frv.enav.ins.gui.ComponentPanels.CursorComponentPanel;
+import dk.frv.enav.ins.gui.ComponentPanels.DynamicNoGoComponentPanel;
+import dk.frv.enav.ins.gui.ComponentPanels.GpsComponentPanel;
+import dk.frv.enav.ins.gui.ComponentPanels.MSIComponentPanel;
+import dk.frv.enav.ins.gui.ComponentPanels.NoGoComponentPanel;
+import dk.frv.enav.ins.gui.ComponentPanels.OwnShipComponentPanel;
+import dk.frv.enav.ins.gui.ComponentPanels.ScaleComponentPanel;
+import dk.frv.enav.ins.gui.Panels.LogoPanel;
 import dk.frv.enav.ins.gui.ais.AisDialog;
 import dk.frv.enav.ins.gui.msi.MsiDialog;
-
 import dk.frv.enav.ins.gui.route.RouteSuggestionDialog;
 import dk.frv.enav.ins.settings.GuiSettings;
 
 /**
- * The main frame containing map and panels 
+ * The main frame containing map and panels
  */
 public class MainFrame extends JFrame implements WindowListener {
-	
-	private static final String TITLE = "e-Navigation enhanced INS " + EeINS.getMinorVersion();
-	
-	private static final long serialVersionUID = 1L;	
+
+	private static final String TITLE = "e-Navigation enhanced INS "
+			+ EeINS.getMinorVersion();
+
+	private static final long serialVersionUID = 1L;
 	private static final Logger LOG = Logger.getLogger(MainFrame.class);
-	
+
 	protected static final int SENSOR_PANEL_WIDTH = 190;
-	
+
 	private TopPanel topPanel;
 	private ChartPanel chartPanel;
-	private SensorPanel sensorPanel;
+
 	private BottomPanel bottomPanel;
+
+	private ScaleComponentPanel scalePanel;
+	private OwnShipComponentPanel ownShipPanel;
+	private GpsComponentPanel gpsPanel;
+	private CursorComponentPanel cursorPanel;
+	private ActiveWaypointComponentPanel activeWaypointPanel;
+	private LogoPanel logoPanel;
+	private MSIComponentPanel msiComponentPanel;
+	private AisComponentPanel aisComponentPanel;
+	private DynamicNoGoComponentPanel dynamicNoGoPanel;
+	private NoGoComponentPanel nogoPanel;
+	
+	
 	private JPanel glassPanel;
 	private MsiDialog msiDialog;
 	private AisDialog aisDialog;
 	private RouteSuggestionDialog routeSuggestionDialog;
 
+	private DockableComponents dockableComponents;
+
 	private MapMenu mapMenu;
-	
+	private EeINSMenuBar menuBar;
+
 	public MainFrame() {
-        super();
-        initGUI();
-    }
-	
+		super();
+		initGUI();
+	}
+
 	private void initGUI() {
 		MapHandler mapHandler = EeINS.getMapHandler();
 		// Get settings
 		GuiSettings guiSettings = EeINS.getSettings().getGuiSettings();
-		
-		setTitle(TITLE);		
+
+		setTitle(TITLE);
 		// Set location and size
 		if (guiSettings.isMaximized()) {
 			setExtendedState(getExtendedState() | MAXIMIZED_BOTH);
 		} else {
 			setLocation(guiSettings.getAppLocation());
 			setSize(guiSettings.getAppDimensions());
-		}		
+		}
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setIconImage(getAppIcon());
 		addWindowListener(this);
-		
+
 		// Create panels
 		Container pane = getContentPane();
 		topPanel = new TopPanel();
-		sensorPanel = new SensorPanel();
-		chartPanel = new ChartPanel(sensorPanel);
-		bottomPanel = new BottomPanel();
+
+		// Movable service panels
+		scalePanel = new ScaleComponentPanel();
+		ownShipPanel = new OwnShipComponentPanel();
+		gpsPanel = new GpsComponentPanel();
+		cursorPanel = new CursorComponentPanel();
+		activeWaypointPanel = new ActiveWaypointComponentPanel();
+		logoPanel = new LogoPanel();
+		chartPanel = new ChartPanel(activeWaypointPanel);
+		msiComponentPanel = new MSIComponentPanel();
+		aisComponentPanel = new AisComponentPanel();
+		dynamicNoGoPanel = new DynamicNoGoComponentPanel();
+		nogoPanel = new NoGoComponentPanel();
 		
+		// Unmovable panels
+		bottomPanel = new BottomPanel();
+
+		// Create the dockable layouts
+		dockableComponents = new DockableComponents(this);
+
+		dockableComponents.toggleFrameLock();
+
 		// Add panels
 		topPanel.setPreferredSize(new Dimension(0, 30));
 		pane.add(topPanel, BorderLayout.PAGE_START);
 		
-		pane.add(chartPanel, BorderLayout.CENTER);
-		
 		bottomPanel.setPreferredSize(new Dimension(0, 25));
 		pane.add(bottomPanel, BorderLayout.PAGE_END);
-		
-		sensorPanel.setPreferredSize(new Dimension(SENSOR_PANEL_WIDTH, 0));
-		pane.add(sensorPanel, BorderLayout.LINE_END);
 
 		// Set up the chart panel with layers etc
 		chartPanel.initChart();
 		
 		// Add top panel to map handler
 		mapHandler.add(topPanel);
-		
+
 		// Add bottom panel to map handler
 		mapHandler.add(bottomPanel);
-		
+
 		// Add chart panel to map handler
 		mapHandler.add(chartPanel);
+
+		// Add scale panel to bean context
+		mapHandler.add(scalePanel);
+		mapHandler.add(ownShipPanel);
+		mapHandler.add(gpsPanel);
+		mapHandler.add(cursorPanel);
+		mapHandler.add(activeWaypointPanel);
+		mapHandler.add(msiComponentPanel);
+		mapHandler.add(aisComponentPanel);
+		mapHandler.add(dynamicNoGoPanel);
+		mapHandler.add(nogoPanel);
 		
-		// Add sensor panel to bean context
-		mapHandler.add(sensorPanel);
+		// Create top menubar
+		menuBar = new EeINSMenuBar();
+		this.setJMenuBar(menuBar);
 		
 		// Init glass pane
 		initGlassPane();
-		
+
 		// Add self to map map handler
 		mapHandler.add(this);
 		
+		//Add menubar to map handler
+		mapHandler.add(menuBar);
+
 		// Init MSI dialog
 		msiDialog = new MsiDialog(this);
 		mapHandler.add(msiDialog);
-		
+
 		// Init MSI dialog
 		aisDialog = new AisDialog(this);
 		mapHandler.add(aisDialog);
-		
-		
-		
-		
+
 		// Init Route suggestion dialog
 		routeSuggestionDialog = new RouteSuggestionDialog(this);
-		mapHandler.add(routeSuggestionDialog);				
-		
+		mapHandler.add(routeSuggestionDialog);
+
 		// Init the map right click menu
 		mapMenu = new MapMenu();
-        mapHandler.add(mapMenu);
+		mapHandler.add(mapMenu);
 	}
-	
+
 	private void initGlassPane() {
-		glassPanel = (JPanel)getGlassPane();
+		glassPanel = (JPanel) getGlassPane();
 		glassPanel.setLayout(null);
 		glassPanel.setVisible(false);
 	}
-	
-	private static Image getAppIcon() {
+
+	public static Image getAppIcon() {
 		java.net.URL imgURL = EeINS.class.getResource("/images/appicon.png");
 		if (imgURL != null) {
-            return new ImageIcon(imgURL).getImage();
+			return new ImageIcon(imgURL).getImage();
 		}
 		LOG.error("Could not find app icon");
 		return null;
@@ -182,10 +232,14 @@ public class MainFrame extends JFrame implements WindowListener {
 
 	@Override
 	public void windowClosing(WindowEvent we) {
+
 		// Close routine
+		dockableComponents.saveLayout();
+		
+		
 		EeINS.closeApp();
 	}
-	
+
 	public void saveSettings() {
 		// Save gui settings
 		GuiSettings guiSettings = EeINS.getSettings().getGuiSettings();
@@ -215,17 +269,66 @@ public class MainFrame extends JFrame implements WindowListener {
 	public ChartPanel getChartPanel() {
 		return chartPanel;
 	}
-	
-	public SensorPanel getSensorPanel() {
-		return sensorPanel;
-	}
-	
+
 	public JPanel getGlassPanel() {
 		return glassPanel;
 	}
-	
+
 	public TopPanel getTopPanel() {
 		return topPanel;
 	}
+
+	public ScaleComponentPanel getScalePanel() {
+		return scalePanel;
+	}
+
+	public OwnShipComponentPanel getOwnShipPanel() {
+		return ownShipPanel;
+	}
+
+	public GpsComponentPanel getGpsPanel() {
+		return gpsPanel;
+	}
+
+	public CursorComponentPanel getCursorPanel() {
+		return cursorPanel;
+	}
+
+	public LogoPanel getLogoPanel() {
+		return logoPanel;
+	}
+
+	public ActiveWaypointComponentPanel getActiveWaypointPanel() {
+		return activeWaypointPanel;
+	}
+
+	public DockableComponents getDockableComponents() {
+		return dockableComponents;
+	}
+
+	public MSIComponentPanel getMsiComponentPanel() {
+		return msiComponentPanel;
+	}
+
+	public EeINSMenuBar getEeINSMenuBar() {
+		return menuBar;
+	}
+
+	public AisComponentPanel getAisComponentPanel() {
+		return aisComponentPanel;
+	}
+
+	public DynamicNoGoComponentPanel getDynamicNoGoPanel() {
+		return dynamicNoGoPanel;
+	}
+
+	public NoGoComponentPanel getNogoPanel() {
+		return nogoPanel;
+	}
+
+	
+	
+	
+	
 	
 }
