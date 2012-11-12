@@ -70,6 +70,7 @@ import dk.frv.enav.ins.gui.menuitems.GeneralHideIntendedRoutes;
 import dk.frv.enav.ins.gui.menuitems.GeneralNewRoute;
 import dk.frv.enav.ins.gui.menuitems.GeneralShowIntendedRoutes;
 import dk.frv.enav.ins.gui.menuitems.IMapMenuAction;
+import dk.frv.enav.ins.gui.menuitems.MonaLisaRouteRequest;
 import dk.frv.enav.ins.gui.menuitems.MsiAcknowledge;
 import dk.frv.enav.ins.gui.menuitems.MsiDetails;
 import dk.frv.enav.ins.gui.menuitems.MsiZoomTo;
@@ -138,6 +139,7 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 	private RouteProperties routeProperties;
 	private RouteMetocProperties routeMetocProperties;
 	private RouteRequestMetoc routeRequestMetoc;
+	private MonaLisaRouteRequest monaLisaRouteRequest;
 	private RouteShowMetocToggle routeShowMetocToggle;
 	private RouteLegInsertWaypoint routeLegInsertWaypoint;
 	private RouteWaypointActivateToggle routeWaypointActivateToggle;
@@ -219,8 +221,8 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 		routeDelete = new RouteDelete("Delete route");
 		routeDelete.addActionListener(this);
 		
-
-		
+		monaLisaRouteRequest = new MonaLisaRouteRequest("Request MonaLisa Route");
+		monaLisaRouteRequest.addActionListener(this);
 		routeRequestMetoc = new RouteRequestMetoc("Request METOC");
 		routeRequestMetoc.addActionListener(this);
 		routeShowMetocToggle = new RouteShowMetocToggle();
@@ -483,7 +485,12 @@ public class MapMenu extends JPopupMenu implements ActionListener, LightMapHandl
 			route = routeManager.getActiveRoute();
 		}
 
-	
+		monaLisaRouteRequest.setRouteManager(routeManager);
+		monaLisaRouteRequest.setRouteIndex(routeIndex);
+		monaLisaRouteRequest.setMonaLisaRouteExchange(EeINS.getMonaLisaRouteExchange());
+		add(monaLisaRouteRequest);		
+		
+		
 		routeRequestMetoc.setRouteManager(routeManager);
 		routeRequestMetoc.setRouteIndex(routeIndex);
 		add(routeRequestMetoc);

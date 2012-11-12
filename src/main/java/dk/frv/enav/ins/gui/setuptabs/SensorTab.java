@@ -61,15 +61,12 @@ public class SensorTab extends JPanel implements ActionListener {
 	private JTextField textFieldGpsFilename;
 	private JSpinner spinnerGpsTcpPort;
 	private JTextField textFieldAisFilename;
-	@SuppressWarnings("rawtypes")
 	private JComboBox comboBoxAisConnectionType;
-	@SuppressWarnings("rawtypes")
 	private JComboBox comboBoxGpsConnectionType;
 	private JCheckBox checkBoxSimulateGps;
 	private JSpinner spinnerAisSensorRange;
 	private SensorSettings sensorSettings;
 	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public SensorTab() {
 		
 		JPanel AisConnectionPanel = new JPanel();

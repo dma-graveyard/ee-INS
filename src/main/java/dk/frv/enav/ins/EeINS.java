@@ -66,8 +66,10 @@ import dk.frv.enav.ins.nmea.SensorType;
 import dk.frv.enav.ins.risk.RiskHandler;
 import dk.frv.enav.ins.nogo.DynamicNogoHandler;
 import dk.frv.enav.ins.nogo.NogoHandler;
+import dk.frv.enav.ins.route.MonaLisaRouteExchange;
 import dk.frv.enav.ins.route.RouteManager;
 import dk.frv.enav.ins.services.ais.AisServices;
+import dk.frv.enav.ins.services.shore.ShoreServiceException;
 import dk.frv.enav.ins.services.shore.ShoreServices;
 import dk.frv.enav.ins.settings.SensorSettings;
 import dk.frv.enav.ins.settings.Settings;
@@ -96,6 +98,7 @@ public class EeINS {
 	private static RiskHandler riskHandler;
 	private static RouteManager routeManager;
 	private static ShoreServices shoreServices;
+	private static MonaLisaRouteExchange monaLisaRouteExchange;
 	private static AisServices aisServices;
 	private static MsiHandler msiHandler;
 	private static NogoHandler nogoHandler;
@@ -171,6 +174,10 @@ public class EeINS {
         // Create shore services
         shoreServices = new ShoreServices(getSettings().getEnavSettings());
         mapHandler.add(shoreServices);
+        
+        // Create mona lisa route exchange
+        monaLisaRouteExchange = new MonaLisaRouteExchange();
+        mapHandler.add(monaLisaRouteExchange);
         
         // Create AIS services
         aisServices = new AisServices();
@@ -519,6 +526,10 @@ public class EeINS {
 	
 	public static ShoreServices getShoreServices() {
 		return shoreServices;
+	}
+	
+	public static MonaLisaRouteExchange getMonaLisaRouteExchange(){
+		return monaLisaRouteExchange;
 	}
 	
 	public static void sleep(long ms) {

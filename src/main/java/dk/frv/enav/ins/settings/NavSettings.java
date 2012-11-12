@@ -53,6 +53,7 @@ public class NavSettings implements Serializable {
 	private double defaultXtd = 0.1;
 	private double minWpRadius = 0.2;
 	private boolean relaxedWpChange = true;
+	private float routeWidth = 2.0f;
 	
 	public NavSettings() {
 	}
@@ -69,6 +70,7 @@ public class NavSettings implements Serializable {
 		defaultXtd = PropUtils.doubleFromProperties(props, PREFIX + "defaultXtd", defaultXtd);
 		minWpRadius = PropUtils.doubleFromProperties(props, PREFIX + "minWpRadius", minWpRadius);
 		relaxedWpChange = PropUtils.booleanFromProperties(props, PREFIX + "relaxedWpChange", relaxedWpChange);
+		routeWidth = (float)PropUtils.doubleFromProperties(props, PREFIX + "routeWidth", routeWidth);
 	}
 	
 	public void setProperties(Properties props) {
@@ -83,6 +85,7 @@ public class NavSettings implements Serializable {
 		props.put(PREFIX + "defaultXtd", Double.toString(defaultXtd));
 		props.put(PREFIX + "minWpRadius", Double.toString(minWpRadius));
 		props.put(PREFIX + "relaxedWpChange", Boolean.toString(relaxedWpChange));
+		props.put(PREFIX + "routeWidth", Float.toString(routeWidth));
 	}
 	
 	public boolean isAutoFollow() {
@@ -167,6 +170,14 @@ public class NavSettings implements Serializable {
 	
 	public void setRelaxedWpChange(boolean relaxedWpChange) {
 		this.relaxedWpChange = relaxedWpChange;
+	}
+	
+	public float getRouteWidth() {
+		return routeWidth;
+	}
+	
+	public void setRouteWidth(float routeWidth) {
+		this.routeWidth = routeWidth;
 	}
 	
 }

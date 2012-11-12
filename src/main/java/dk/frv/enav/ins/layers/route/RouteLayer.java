@@ -85,6 +85,7 @@ public class RouteLayer extends OMGraphicHandlerLayer implements
 	private OMGraphic selectedGraphic = null;
 	private MetocGraphic routeMetoc;
 	private SuggestedRouteGraphic suggestedRoute;
+	private float routeWidth = 2.0f;
 
 	private MapMenu routeMenu;
 	private boolean dragging = false;
@@ -93,6 +94,8 @@ public class RouteLayer extends OMGraphicHandlerLayer implements
 	
 	public RouteLayer() {
 		(new Thread(this)).start();
+		routeWidth = EeINS.getSettings().getNavSettings().getRouteWidth();
+
 	}
 
 	@Override
@@ -103,18 +106,22 @@ public class RouteLayer extends OMGraphicHandlerLayer implements
 
 		graphics.clear();
 		
-		Stroke stroke = new BasicStroke(3.0f, // Width
-				BasicStroke.CAP_SQUARE, // End cap
-				BasicStroke.JOIN_MITER, // Join style
-				10.0f, // Miter limit
-				new float[] { 3.0f, 10.0f }, // Dash pattern
-				0.0f);
-		Stroke activeStroke = new BasicStroke(3.0f, // Width
-				BasicStroke.CAP_SQUARE, // End cap
-				BasicStroke.JOIN_MITER, // Join style
-				10.0f, // Miter limit
-				new float[] { 10.0f, 8.0f }, // Dash pattern
-				0.0f); // Dash phase
+
+		Stroke stroke = new BasicStroke(
+				routeWidth,                      // Width
+			    BasicStroke.CAP_SQUARE,    // End cap
+			    BasicStroke.JOIN_MITER,    // Join style
+			    10.0f,                     // Miter limit
+			    new float[] { 3.0f, 10.0f }, // Dash pattern
+			    0.0f);
+		Stroke activeStroke = new BasicStroke(
+				routeWidth,                      // Width
+                BasicStroke.CAP_SQUARE,    // End cap
+                BasicStroke.JOIN_MITER,    // Join style
+                10.0f,                     // Miter limit
+                new float[] { 10.0f, 8.0f }, // Dash pattern
+                0.0f);                     // Dash phase
+
 		Color ECDISOrange = new Color(213, 103, 45, 255);
 
 		int activeRouteIndex = routeManager.getActiveRouteIndex();

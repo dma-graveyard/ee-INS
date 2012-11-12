@@ -461,9 +461,6 @@ public class AisLayer extends OMGraphicHandlerLayer implements
 					}
 
 					if (selectedGraphic instanceof VesselTargetTriangle) {
-
-						System.out.println("selected");
-
 						VesselTargetTriangle vtt = (VesselTargetTriangle) selectedGraphic;
 						VesselTargetGraphic vesselTargetGraphic = vtt
 								.getVesselTargetGraphic();

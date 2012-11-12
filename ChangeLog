@@ -1,5 +1,6 @@
-2012-06-xx Version 3.4
-	* Using AIS ASM DAC=219,FI=2 for route suggestion 
+2012-11-xx Version 4.0
+	* Using AIS ASM DAC=219,FI=2 for route suggestion
+	* Dockable panels
 
 2012-03-01 Version 3.3
 	* Improved coastal outline map
