@@ -46,11 +46,10 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import org.apache.log4j.Logger;
-
 import com.bbn.openmap.MapHandlerChild;
 
 import dk.frv.ais.geo.GeoLocation;
+import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.ais.AisHandler;
 import dk.frv.enav.ins.common.Heading;
 import dk.frv.enav.ins.gps.GpsHandler;
@@ -75,16 +74,22 @@ import dk.frv.enav.ins.status.ShoreServiceStatus;
  * Shore service component providing the functional link to shore.
  */
 public class MonaLisaRouteExchange extends MapHandlerChild implements
-		IStatusComponent {
+		IStatusComponent, Runnable {
 
-	private static final Logger LOG = Logger
-			.getLogger(MonaLisaRouteExchange.class);
+	// private static final Logger LOG = Logger
+	// .getLogger(MonaLisaRouteExchange.class);
 
 	private AisHandler aisHandler;
 	private GpsHandler gpsHandler;
 	private ShoreServiceStatus status = new ShoreServiceStatus();
 
 	private static final String ENCODING = "UTF-8";
+
+	private Route route;
+
+	public void setRoute(Route route) {
+		this.route = route;
+	}
 
 	public MonaLisaRouteExchange() {
 
@@ -272,10 +277,20 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 		return route;
 	}
 
+	public void makeRouteRequest(Route route) {
+
+		this.route = route;
+		
+		new Thread(this).start();
+
+		// return newRoute;
+
+	}
+
 	// public Route makeRequest(Route route) throws ShoreServiceException {
 	@SuppressWarnings("rawtypes")
 	public Route makeRequest(Route route) throws Exception {
-		System.out.println("Recieved route for Mona Lisa Exchange");
+		// System.out.println("Recieved route for Mona Lisa Exchange");
 		// A request for a route has come in
 
 		// Convert the route to MonaLisa Format
@@ -301,8 +316,8 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 
 			xml = xml.replace("ns2:", "");
 
-//			System.out.println(xml);
-			
+			// System.out.println(xml);
+
 			// xml = xml.replace("routerequest", "RouteRequest");
 
 			// STATIC ROUTE INPUT START
@@ -350,18 +365,6 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 				System.out.println(e.getMessage());
 			}
 
-			// Do we want to save the generated route to a file?
-
-			// try {
-			// m.marshal(
-			// monaLisaRoute,
-			// new FileOutputStream(
-			// "C:\\Dropbox\\Mona Lisa Route XML\\Example\\generatedRequest.xml"));
-			// } catch (FileNotFoundException e) {
-			// // TODO Auto-generated catch block
-			// e.printStackTrace();
-			// }
-
 		} catch (JAXBException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -369,7 +372,7 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 
 		// Unmarshall the recieved route and parse it
 
-		System.out.println(xmlReturnRoute);
+		// System.out.println(xmlReturnRoute);
 
 		xmlReturnRoute = xmlReturnRoute
 				.replace(
@@ -386,13 +389,12 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 
 		xmlReturnRoute = xmlReturnRoute.replace("Route>", "ns1:Route>");
 
-//		xmlReturnRoute = xmlReturnRoute
-//				.replace(
-//						" <waypoints xmlns=\"http://www.navielektro.fi/ns/formats/vessel-waypoint-exchange\"/>",
-//						"<ns2:waypoints xmlns=\"http://www.navielektro.fi/ns/formats/vessel-waypoint-exchange\">");
+		// xmlReturnRoute = xmlReturnRoute
+		// .replace(
+		// " <waypoints xmlns=\"http://www.navielektro.fi/ns/formats/vessel-waypoint-exchange\"/>",
+		// "<ns2:waypoints xmlns=\"http://www.navielektro.fi/ns/formats/vessel-waypoint-exchange\">");
 
-		xmlReturnRoute = xmlReturnRoute.replace("waypoints",
-				"ns2:waypoints");
+		xmlReturnRoute = xmlReturnRoute.replace("waypoints", "ns2:waypoints");
 
 		xmlReturnRoute = xmlReturnRoute.replace("waypoint>", "ns2:waypoint>");
 
@@ -413,7 +415,7 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 		xmlReturnRoute = xmlReturnRoute.replace("planned-speed",
 				"ns2:planned-speed");
 
-		System.out.println(xmlReturnRoute);
+		// System.out.println(xmlReturnRoute);
 
 		Unmarshaller u;
 		JAXBContext jc;
@@ -439,7 +441,7 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 		Route newRoute = null;
 
 		if (routeResponse != null) {
-			System.out.println("Route Recieved");
+			// System.out.println("Route Recieved");
 			// Convert the route to one we can paint
 			newRoute = convertRoute(routeResponse);
 		}
@@ -468,6 +470,28 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 	@Override
 	public ComponentStatus getStatus() {
 		return status;
+	}
+
+	@Override
+	public void run() {
+
+		RouteRequest monaLisaRoute = convertRoute(route);
+
+		RouteResponse routeResponse = EeINS.getShoreServices()
+				.makeMonaLisaRouteRequest(monaLisaRoute);
+
+		Route newRoute = null;
+
+		if (routeResponse != null) {
+			newRoute = convertRoute(routeResponse);
+		}
+
+		if (newRoute != null) {
+
+			EeINS.getRouteManager().addRoute(newRoute);
+
+
+		}
 	}
 
 }
