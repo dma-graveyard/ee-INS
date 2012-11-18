@@ -320,6 +320,7 @@ public class ShoreServices extends MapHandlerChild implements IStatusComponent {
 	}
 	
 	
+	@SuppressWarnings("rawtypes")
 	public RouteResponse makeMonaLisaRouteRequest(RouteRequest monaLisaRoute){
 		
 		JAXBContext context = null;
@@ -343,7 +344,7 @@ public class ShoreServices extends MapHandlerChild implements IStatusComponent {
 			xml = xml.replace("ns2:", "");
 
 			// Create HTTP request
-			RouteHttp routeHttp = new RouteHttp();
+			RouteHttp routeHttp = new RouteHttp(enavSettings);
 			// Init HTTP
 			routeHttp.init();
 			// Set content
@@ -432,7 +433,7 @@ public class ShoreServices extends MapHandlerChild implements IStatusComponent {
 			e1.printStackTrace();
 		}
 
-		Route newRoute = null;
+	
 
 
 		return routeResponse;

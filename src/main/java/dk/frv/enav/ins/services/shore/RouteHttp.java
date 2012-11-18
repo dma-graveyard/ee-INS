@@ -39,15 +39,16 @@ import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.httpclient.params.HttpConnectionManagerParams;
 import org.apache.log4j.Logger;
 
+import dk.frv.enav.ins.settings.EnavSettings;
+
 /**
- * Encapsulation of HTTP connection to shore. 
+ * Encapsulation of HTTP connection to shore.
  */
 public class RouteHttp {
 
 	private static final Logger LOG = Logger.getLogger(RouteHttp.class);
 
 	private static final String USER_AGENT = "ee-INS";
-	private static final String ENCODING = "UTF-8";
 
 	private String uri;
 	private String url;
@@ -59,13 +60,10 @@ public class RouteHttp {
 	private HttpClient httpClient;
 	private PostMethod method;
 	private String responseBody;
-//	private byte[] responseBody;
 
-	public RouteHttp() {
-//		this.host = "80.217.206.47";
-//		this.host = "localhost";
-		this.host = "www.optiroute.se/RouteRequest ";
-		this.port = 80;
+	public RouteHttp(EnavSettings enavSettings) {
+		this.host = enavSettings.getMonaLisaServer();
+		this.port = enavSettings.getMonaLisaPort();
 
 		setUri(uri);
 	}
@@ -76,31 +74,35 @@ public class RouteHttp {
 		try {
 			System.out.println("Trying to connect to server");
 			resCode = httpClient.executeMethod(method);
-			System.out.println("Connected!");
+			// System.out.println("Connected!");
 		} catch (HttpException e) {
 			LOG.error("Failed to make HTTP connection: " + e.getMessage());
 			LOG.error("HTTP request failed with: " + e.getMessage());
-//			throw new ShoreServiceException(ShoreServiceErrorCode.INTERNAL_ERROR);
+			// throw new
+			// ShoreServiceException(ShoreServiceErrorCode.INTERNAL_ERROR);
 		} catch (IOException e) {
 			LOG.error("Failed to make HTTP connection: " + e.getMessage());
 			System.out.println("Failed: " + e.getMessage());
-//			throw new ShoreServiceException(ShoreServiceErrorCode.NO_CONNECTION_TO_SERVER);
+			// throw new
+			// ShoreServiceException(ShoreServiceErrorCode.NO_CONNECTION_TO_SERVER);
 		}
 
-		System.out.println(resCode);
-		
+		// System.out.println(resCode);
+
 		if (resCode != 200) {
 			method.releaseConnection();
-//			throw new ShoreServiceException(ShoreServiceErrorCode.SERVER_ERROR);
+			// throw new
+			// ShoreServiceException(ShoreServiceErrorCode.SERVER_ERROR);
 		}
 
 		try {
-//			System.out.println("Message recieved:");
+			// System.out.println("Message recieved:");
 			responseBody = method.getResponseBodyAsString();
-//			System.out.println(responseBody);
+			// System.out.println(responseBody);
 		} catch (IOException e) {
 			LOG.error("Failed to read response body: " + e.getMessage());
-//			throw new ShoreServiceException(ShoreServiceErrorCode.INVALID_RESPONSE);
+			// throw new
+			// ShoreServiceException(ShoreServiceErrorCode.INVALID_RESPONSE);
 		}
 
 		method.releaseConnection();
@@ -109,16 +111,17 @@ public class RouteHttp {
 	public void init() {
 		httpClient = new HttpClient();
 		method = new PostMethod(url);
-		HttpConnectionManagerParams params = httpClient.getHttpConnectionManager().getParams();
+		HttpConnectionManagerParams params = httpClient
+				.getHttpConnectionManager().getParams();
 		params.setSoTimeout(readTimeout);
 		params.setConnectionTimeout(connectionTimeout);
 		method.setRequestHeader("User-Agent", USER_AGENT);
 		method.setRequestHeader("Connection", "close");
-		method.addRequestHeader("Accept", "text/*");	
+		method.addRequestHeader("Accept", "text/*");
 		method.addRequestHeader("Content-Type", "text/xml");
-		
+
 		// TODO if compress response
-//		method.addRequestHeader("Accept-Encoding", "gzip");
+		// method.addRequestHeader("Accept-Encoding", "gzip");
 	}
 
 	public void setRequestBody(String route) {
@@ -128,16 +131,15 @@ public class RouteHttp {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void setUri(String uri) {
 		this.uri = uri;
 		this.url = "http://" + host;
 		if (port != 80) {
 			this.url += ":" + port;
 		}
-//		this.url += this.uri;
+		// this.url += this.uri;
 	}
-
 
 	public String getUri() {
 		return uri;

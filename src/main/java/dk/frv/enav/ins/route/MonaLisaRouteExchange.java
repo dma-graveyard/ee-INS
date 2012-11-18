@@ -234,8 +234,34 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 
 			waypoint.setName(responseWaypoint.getWptName());
 
-			// waypoint.setInLeg(inLeg)
-			// waypoint.setOutLeg(leg)
+			if (i != 0) {
+				RouteLeg inLeg = new RouteLeg();
+				inLeg.setHeading(Heading.RL);
+				waypoint.setInLeg(inLeg);
+
+				// RouteWaypoint prevWaypoint =
+				// routeWaypoints.get(routeWaypoints
+				// .size() - 2);
+				// System.out.println("For waypoint" + i + " creating in leg");
+			}
+
+			// Outleg always has next
+			if (i != responseWaypoints.size() - 1) {
+				RouteLeg outLeg = new RouteLeg();
+				outLeg.setHeading(Heading.RL);
+				waypoint.setOutLeg(outLeg);
+				// System.out.println("For waypoint" + i + " creating out leg");
+			}
+
+			// if (waypoint.getInLeg() != null) {
+			// waypoint.getInLeg().setSpeed(5.0);
+			// }
+
+			// if (waypoint.getOutLeg() != null) {
+			// System.out.println("SEtting stuff?");
+			// waypoint.getOutLeg().setSpeed(5.0);
+			// // System.out.println(waypoint.getOutLeg().getSpeed());
+			// }
 
 			GeoLocation position = new GeoLocation(responseWaypoint
 					.getPosition().getLatitude(), responseWaypoint
@@ -250,9 +276,12 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 				}
 
 				if (responseWaypoint.getLegInfo().getPlannedSpeed() != null) {
+
 					waypoint.setSpeed(responseWaypoint.getLegInfo()
 							.getPlannedSpeed());
+
 				}
+
 				if (responseWaypoint.getLegInfo().getTurnRadius() != null) {
 					waypoint.setTurnRad((double) responseWaypoint.getLegInfo()
 							.getTurnRadius());
@@ -261,17 +290,35 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 
 			routeWaypoints.add(waypoint);
 
-			if (routeWaypoints.size() > 1) {
-				RouteLeg newLeg = new RouteLeg();
-				newLeg.setHeading(Heading.RL);
-				RouteWaypoint prevWaypoint = routeWaypoints.get(routeWaypoints
-						.size() - 2);
-				prevWaypoint.setOutLeg(newLeg);
-				waypoint.setInLeg(newLeg);
-				newLeg.setStartWp(prevWaypoint);
-				newLeg.setEndWp(waypoint);
-			}
+		}
 
+		if (routeWaypoints.size() > 1) {
+			for (int i = 0; i < routeWaypoints.size(); i++) {
+
+				// System.out.println("Looking at waypoint:" + i);
+				RouteWaypoint waypoint = routeWaypoints.get(i);
+
+				// Waypoint 0 has no in leg, one out leg... no previous
+				if (i != 0) {
+					RouteWaypoint prevWaypoint = routeWaypoints.get(i - 1);
+
+					if (waypoint.getInLeg() != null) {
+						// System.out.println("Setting inleg prev for waypoint:"
+						// + i);
+						waypoint.getInLeg().setStartWp(prevWaypoint);
+						waypoint.getInLeg().setEndWp(waypoint);
+					}
+
+					if (prevWaypoint.getOutLeg() != null) {
+						// System.out.println("Setting outleg prev for waypoint:"
+						// + i);
+						prevWaypoint.getOutLeg().setStartWp(prevWaypoint);
+						prevWaypoint.getOutLeg().setEndWp(waypoint);
+
+					}
+				}
+
+			}
 		}
 
 		return route;
@@ -280,172 +327,11 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 	public void makeRouteRequest(Route route) {
 
 		this.route = route;
-		
+
 		new Thread(this).start();
 
 		// return newRoute;
 
-	}
-
-	// public Route makeRequest(Route route) throws ShoreServiceException {
-	@SuppressWarnings("rawtypes")
-	public Route makeRequest(Route route) throws Exception {
-		// System.out.println("Recieved route for Mona Lisa Exchange");
-		// A request for a route has come in
-
-		// Convert the route to MonaLisa Format
-		RouteRequest monaLisaRoute = convertRoute(route);
-
-		JAXBContext context = null;
-		String xmlReturnRoute = "";
-
-		String xml = "";
-
-		try {
-			context = JAXBContext.newInstance(RouteRequest.class);
-			Marshaller m = context.createMarshaller();
-			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-			m.setProperty(Marshaller.JAXB_ENCODING, ENCODING);
-
-			// Convert the generated xml route to a String
-			StringWriter st = new StringWriter();
-			m.marshal(monaLisaRoute, st);
-			xml = st.toString();
-
-			xml = xml.replace("ns1:", "");
-
-			xml = xml.replace("ns2:", "");
-
-			// System.out.println(xml);
-
-			// xml = xml.replace("routerequest", "RouteRequest");
-
-			// STATIC ROUTE INPUT START
-			// FileInputStream stream = null;
-			// try {
-			// // stream = new FileInputStream(new File("C:\\route02.xml"));
-			// } catch (FileNotFoundException e1) {
-			// // TODO Auto-generated catch block
-			// e1.printStackTrace();
-			// }
-			// try {
-			// FileChannel fc = stream.getChannel();
-			// MappedByteBuffer bb = null;
-			// try {
-			// bb = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
-			// } catch (IOException e) {
-			// TODO Auto-generated catch block
-			// e.printStackTrace();
-			// }
-			/* Instead of using default, pass in a decoder. */
-			// staticXML = Charset.defaultCharset().decode(bb).toString();
-			// } finally {
-			// try {
-			// // stream.close();
-			// } catch (IOException e) {
-			// // TODO Auto-generated catch block
-			// e.printStackTrace();
-			// }
-			// }
-			// STATIC ROUTE INPUT STOP
-
-			// Create HTTP request
-			RouteHttp routeHttp = new RouteHttp();
-			// Init HTTP
-			routeHttp.init();
-			// Set content
-			routeHttp.setRequestBody(xml);
-			// Make request
-			try {
-				routeHttp.makeRequest();
-				xmlReturnRoute = routeHttp.getResponseBody();
-			} catch (Exception e) {
-				// status.markContactError(e);
-				// throw e;
-				System.out.println(e.getMessage());
-			}
-
-		} catch (JAXBException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		// Unmarshall the recieved route and parse it
-
-		// System.out.println(xmlReturnRoute);
-
-		xmlReturnRoute = xmlReturnRoute
-				.replace(
-						"<RouteResponse",
-						"<ns1:RouteResponse xmlns:ns1=\"http://www.sspa.se/optiroute\" xmlns:ns2=\"http://www.navielektro.fi/ns/formats/vessel-waypoint-exchange\"");
-
-		xmlReturnRoute = xmlReturnRoute.replace("</RouteResponse",
-				"</ns1:RouteResponse");
-
-		xmlReturnRoute = xmlReturnRoute.replace("FuelRequested",
-				"ns1:FuelRequested");
-
-		xmlReturnRoute = xmlReturnRoute.replace("FuelFinal", "ns1:FuelFinal");
-
-		xmlReturnRoute = xmlReturnRoute.replace("Route>", "ns1:Route>");
-
-		// xmlReturnRoute = xmlReturnRoute
-		// .replace(
-		// " <waypoints xmlns=\"http://www.navielektro.fi/ns/formats/vessel-waypoint-exchange\"/>",
-		// "<ns2:waypoints xmlns=\"http://www.navielektro.fi/ns/formats/vessel-waypoint-exchange\">");
-
-		xmlReturnRoute = xmlReturnRoute.replace("waypoints", "ns2:waypoints");
-
-		xmlReturnRoute = xmlReturnRoute.replace("waypoint>", "ns2:waypoint>");
-
-		xmlReturnRoute = xmlReturnRoute.replace("wpt-id", "ns2:wpt-id");
-
-		xmlReturnRoute = xmlReturnRoute.replace("ETA", "ns2:ETA");
-
-		xmlReturnRoute = xmlReturnRoute.replace("wpt-name", "ns2:wpt-name");
-
-		xmlReturnRoute = xmlReturnRoute.replace("position", "ns2:position");
-
-		xmlReturnRoute = xmlReturnRoute.replace("latitude", "ns2:latitude");
-
-		xmlReturnRoute = xmlReturnRoute.replace("longitude", "ns2:longitude");
-
-		xmlReturnRoute = xmlReturnRoute.replace("leg-info", "ns2:leg-info");
-
-		xmlReturnRoute = xmlReturnRoute.replace("planned-speed",
-				"ns2:planned-speed");
-
-		// System.out.println(xmlReturnRoute);
-
-		Unmarshaller u;
-		JAXBContext jc;
-		RouteResponse routeResponse = null;
-
-		// xmlReturnRoute = xmlReturnRoute.replace("RouteResponse",
-		// "routeresponseType");
-
-		StringReader sr = new StringReader(xmlReturnRoute);
-
-		try {
-			jc = JAXBContext
-					.newInstance("dk.frv.enav.ins.route.monalisa.se.sspa.optiroute");
-			u = jc.createUnmarshaller();
-
-			routeResponse = (RouteResponse) ((javax.xml.bind.JAXBElement) u
-					.unmarshal(sr)).getValue();
-
-		} catch (JAXBException e1) {
-			e1.printStackTrace();
-		}
-
-		Route newRoute = null;
-
-		if (routeResponse != null) {
-			// System.out.println("Route Recieved");
-			// Convert the route to one we can paint
-			newRoute = convertRoute(routeResponse);
-		}
-		return newRoute;
 	}
 
 	@Override
@@ -489,7 +375,6 @@ public class MonaLisaRouteExchange extends MapHandlerChild implements
 		if (newRoute != null) {
 
 			EeINS.getRouteManager().addRoute(newRoute);
-
 
 		}
 	}

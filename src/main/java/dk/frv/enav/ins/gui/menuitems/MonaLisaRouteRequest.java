@@ -41,25 +41,24 @@ public class MonaLisaRouteRequest extends JMenuItem implements IMapMenuAction {
 			route = routeManager.getActiveRoute();
 		}
 
-		
 		monaLisaRouteExchange.makeRouteRequest(route);
-//		
-//		try {
-//
-//			Route newRoute = monaLisaRouteExchange.makeRouteRequest(route);
-//
-//			if (newRoute != null) {
-//				routeManager.addRoute(newRoute);
-//
-//				// route = newRoute;
-//
-//			}
-//
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//
+		
+		// try {
+		//
+		// Route newRoute = monaLisaRouteExchange.makeRouteRequest(route);
+		//
+		// if (newRoute != null) {
+		// routeManager.addRoute(newRoute);
+		//
+		// // route = newRoute;
+		//
+		// }
+		//
+		// } catch (Exception e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		//
 	}
 
 }

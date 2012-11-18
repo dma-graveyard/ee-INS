@@ -78,6 +78,9 @@ public class EnavSettings implements Serializable {
 	private double msiVisibilityFromNewWaypoint = 30.0d;
 	private boolean msiFilter = true;
 	private String updateServer = "http://service.e-navigation.net/";
+	private String monaLisaServer = "www.optiroute.se/RouteRequest";
+	private int monaLisaPort = 80;
+	
 	
 	public EnavSettings() {
 		
@@ -114,6 +117,9 @@ public class EnavSettings implements Serializable {
 			updateServer = "http://service.e-navigation.net/";
 		}
 		
+		monaLisaServer = props.getProperty(PREFIX + "monaLisaServer", monaLisaServer);
+		monaLisaPort = PropUtils.intFromProperties(props, PREFIX + "monaLisaPort", monaLisaPort);
+	
 	}
 	
 	public void setProperties(Properties props) {
@@ -138,6 +144,9 @@ public class EnavSettings implements Serializable {
 		props.put(PREFIX + "msiRelevanceFromOwnShipRange", Double.toString(msiRelevanceFromOwnShipRange));
 		props.put(PREFIX + "msiVisibilityFromNewWaypoint", Double.toString(msiVisibilityFromNewWaypoint));
 		props.put(PREFIX + "msiFilter", Boolean.toString(msiFilter));
+		props.put(PREFIX + "monaLisaServer", monaLisaServer);
+		props.put(PREFIX + "monaLisaPort", Integer.toString(monaLisaPort));
+
 	}
 
 	public double getDefaultWindWarnLimit() {
@@ -291,5 +300,23 @@ public class EnavSettings implements Serializable {
 	public void setMsiVisibilityFromNewWaypoint(double msiVisibilityFromNewWaypoint) {
 		this.msiVisibilityFromNewWaypoint = msiVisibilityFromNewWaypoint;
 	}
+
+	public String getMonaLisaServer() {
+		return monaLisaServer;
+	}
+
+	public void setMonaLisaServer(String monaLisaServer) {
+		this.monaLisaServer = monaLisaServer;
+	}
+
+	public int getMonaLisaPort() {
+		return monaLisaPort;
+	}
+
+	public void setMonaLisaPort(int monaLisaPort) {
+		this.monaLisaPort = monaLisaPort;
+	}
+
+	
 	
 }
