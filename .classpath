@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="ee-ins/src/main/java"/>
 	<classpathentry kind="lib" path="extlib/comm.jar"/>
 	<classpathentry kind="lib" path="extlib/commons-codec.jar"/>
 	<classpathentry kind="lib" path="extlib/commons-httpclient-3.1.jar">
@@ -25,5 +25,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="extlib/aislib-1.5.jar"/>
 	<classpathentry kind="lib" path="extlib/enavshore-common.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/testbed"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

@@ -37,32 +37,31 @@ import dk.frv.enav.ins.service.intendedroute.ActiveRouteProvider;
 import dk.frv.enav.ins.service.intendedroute.IntendedRouteService;
 
 /**
- * Component offering e-Navigation services 
+ * Component offering e-Navigation services
  */
 public class EnavServiceHandler extends MapHandlerChild {
-	
-	private EnavCloudHandler enavCloudHandler;
-	private IntendedRouteService intendedRouteService;
-	
-	public EnavServiceHandler() {
-		 
-	}
-	
-	@Override
-	public void findAndInit(Object obj) {		
-		if (obj instanceof RouteManager) {
-			intendedRouteService = new IntendedRouteService(this, (ActiveRouteProvider)obj);
-			((RouteManager)obj).addListener(intendedRouteService);
-			intendedRouteService.start();
-		}
-		else if (obj instanceof EnavCloudHandler) {
-			enavCloudHandler = (EnavCloudHandler)obj;
-			enavCloudHandler.start();
-		}
-	}
-	
-	public EnavCloudHandler getEnavCloudHandler() {
-		return enavCloudHandler;
-	}
-	
+
+    private EnavCloudHandler enavCloudHandler;
+    private IntendedRouteService intendedRouteService;
+
+    public EnavServiceHandler() {
+
+    }
+
+    @Override
+    public void findAndInit(Object obj) {
+        if (obj instanceof RouteManager) {
+            intendedRouteService = new IntendedRouteService(this, (ActiveRouteProvider) obj);
+            ((RouteManager) obj).addListener(intendedRouteService);
+            // intendedRouteService.start();
+        } else if (obj instanceof EnavCloudHandler) {
+            enavCloudHandler = (EnavCloudHandler) obj;
+            enavCloudHandler.start();
+        }
+    }
+
+    public EnavCloudHandler getEnavCloudHandler() {
+        return enavCloudHandler;
+    }
+
 }

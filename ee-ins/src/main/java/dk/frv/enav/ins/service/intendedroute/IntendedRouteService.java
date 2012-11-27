@@ -32,7 +32,6 @@ package dk.frv.enav.ins.service.intendedroute;
 import org.apache.log4j.Logger;
 
 import dk.dma.enav.services.voyage.intendedroute.IntendedRouteMessage;
-import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.route.ActiveRoute;
 import dk.frv.enav.ins.route.IRoutesUpdateListener;
 import dk.frv.enav.ins.route.RoutesUpdateEvent;
@@ -42,72 +41,55 @@ import dk.frv.enav.ins.service.EnavServiceHandler;
 /**
  * Intended route service implementation
  */
-public class IntendedRouteService extends EnavService implements IRoutesUpdateListener, Runnable {
-	
-	private static final Logger LOG = Logger.getLogger(IntendedRouteService.class);
+public class IntendedRouteService extends EnavService implements IRoutesUpdateListener {
 
-	/**
-	 * The current active route provider
-	 */
-	private ActiveRouteProvider provider;
+    private static final Logger LOG = Logger.getLogger(IntendedRouteService.class);
 
-	public IntendedRouteService(EnavServiceHandler enavServiceHandler, ActiveRouteProvider provider) {
-		super(enavServiceHandler);
-		this.provider = provider;		
-	}
+    /**
+     * The current active route provider
+     */
+    private final ActiveRouteProvider provider;
 
-	/**
-	 * Broadcast intended route
-	 */
-	public void broadcastIntendedRoute() {
-		System.out.println("BROADCAST INTENDED ROUTE");
+    public IntendedRouteService(EnavServiceHandler enavServiceHandler, ActiveRouteProvider provider) {
+        super(enavServiceHandler);
+        this.provider = provider;
+    }
 
-		// Get active route from provider
-		LOG.info("Get active route");
-		
-		ActiveRoute activeRoute = provider.getActiveRoute();
-		LOG.info("Got active route");
-		
-		// Make intended route message
-		IntendedRouteMessage message = new IntendedRouteMessage();
-		
-		
+    /**
+     * Broadcast intended route
+     */
+    // @ScheduleWithFixedDelay(10000)
+    public void broadcastIntendedRoute() {
+        System.out.println("BROADCAST INTENDED ROUTE");
 
-		// If active route is null, make cancellation message
+        // Get active route from provider
+        LOG.info("Get active route");
 
-		// Transform active route into intended route message
+        ActiveRoute activeRoute = provider.getActiveRoute();
+        LOG.info("Got active route");
 
-		// send message
-		LOG.info("Sending");
-		enavServiceHandler.getEnavCloudHandler().sendMessage(message);
-		LOG.info("Done sending");
-		
-	}
+        // Make intended route message
+        IntendedRouteMessage message = new IntendedRouteMessage();
 
-	/**
-	 * Handle event of active route change
-	 */
-	@Override
-	public void routesChanged(RoutesUpdateEvent e) {
-		if (e == RoutesUpdateEvent.ACTIVE_ROUTE_UPDATE || e == RoutesUpdateEvent.ACTIVE_ROUTE_FINISHED
-				|| e == RoutesUpdateEvent.ROUTE_ACTIVATED || e == RoutesUpdateEvent.ROUTE_DEACTIVATED) {
-			broadcastIntendedRoute();
-		}
-	}
+        // If active route is null, make cancellation message
 
-	/**
-	 * Send active route periodically
-	 */
-	@Override
-	public void run() {
-		while (true) {
-			EeINS.sleep(10000);
-			broadcastIntendedRoute();
-		}
-	}
-	
-	public void start() {
-		(new Thread(this)).start();
-	}
+        // Transform active route into intended route message
 
+        // send message
+        LOG.info("Sending");
+        enavServiceHandler.getEnavCloudHandler().sendMessage(message);
+        LOG.info("Done sending");
+
+    }
+
+    /**
+     * Handle event of active route change
+     */
+    @Override
+    public void routesChanged(RoutesUpdateEvent e) {
+        if (e == RoutesUpdateEvent.ACTIVE_ROUTE_UPDATE || e == RoutesUpdateEvent.ACTIVE_ROUTE_FINISHED
+                || e == RoutesUpdateEvent.ROUTE_ACTIVATED || e == RoutesUpdateEvent.ROUTE_DEACTIVATED) {
+            broadcastIntendedRoute();
+        }
+    }
 }
