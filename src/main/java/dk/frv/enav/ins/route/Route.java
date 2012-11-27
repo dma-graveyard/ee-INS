@@ -112,6 +112,8 @@ public class Route implements Serializable {
 	 */
 	protected RouteMetocSettings routeMetocSettings;
 
+	protected boolean safeHaven = true;
+	
 	public Route() {
 
 	}
@@ -270,6 +272,14 @@ public class Route implements Serializable {
 	public Date getWpEta(int index) {
 		calcValues();
 		return etas.get(index);
+	}
+	
+	public List<Date> getEtas(){
+		if (etas == null){
+			calcValues();
+		}
+		
+		return etas;
 	}
 	
 	// Getters and setters from here
@@ -589,6 +599,9 @@ public class Route implements Serializable {
 		
 		return wp;
 	}
+	
+	
+	
 	
 	public void appendWaypoint() {
 		RouteWaypoint lastWaypoint = waypoints.get(waypoints.size()-1);

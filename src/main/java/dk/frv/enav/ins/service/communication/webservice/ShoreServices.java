@@ -29,10 +29,17 @@
  */
 package dk.frv.enav.ins.service.communication.webservice;
 
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 
 import org.apache.log4j.Logger;
 
@@ -60,6 +67,9 @@ import dk.frv.enav.ins.gps.GpsHandler;
 import dk.frv.enav.ins.route.ActiveRoute;
 import dk.frv.enav.ins.route.Route;
 import dk.frv.enav.ins.route.RouteWaypoint;
+import dk.frv.enav.ins.route.monalisa.se.sspa.optiroute.RouteRequest;
+import dk.frv.enav.ins.route.monalisa.se.sspa.optiroute.RouteResponse;
+import dk.frv.enav.ins.services.shore.RouteHttp;
 import dk.frv.enav.ins.settings.EnavSettings;
 import dk.frv.enav.ins.status.ComponentStatus;
 import dk.frv.enav.ins.status.IStatusComponent;
@@ -76,6 +86,7 @@ public class ShoreServices extends MapHandlerChild implements IStatusComponent {
 	private GpsHandler gpsHandler;
 	private EnavSettings enavSettings;
 	private ShoreServiceStatus status = new ShoreServiceStatus();
+	private static final String ENCODING = "UTF-8";
 	
 	public ShoreServices(EnavSettings enavSettings) {
 		this.enavSettings = enavSettings; 
@@ -307,6 +318,128 @@ public class ShoreServices extends MapHandlerChild implements IStatusComponent {
 	@Override
 	public ComponentStatus getStatus() {
 		return status;
+	}
+	
+	
+	@SuppressWarnings("rawtypes")
+	public RouteResponse makeMonaLisaRouteRequest(RouteRequest monaLisaRoute){
+		
+		JAXBContext context = null;
+		String xmlReturnRoute = "";
+
+		String xml = "";
+
+		try {
+			context = JAXBContext.newInstance(RouteRequest.class);
+			Marshaller m = context.createMarshaller();
+			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+			m.setProperty(Marshaller.JAXB_ENCODING, ENCODING);
+
+			// Convert the generated xml route to a String
+			StringWriter st = new StringWriter();
+			m.marshal(monaLisaRoute, st);
+			xml = st.toString();
+
+			xml = xml.replace("ns1:", "");
+
+			xml = xml.replace("ns2:", "");
+
+			// Create HTTP request
+			RouteHttp routeHttp = new RouteHttp(enavSettings);
+			// Init HTTP
+			routeHttp.init();
+			// Set content
+			routeHttp.setRequestBody(xml);
+			// Make request
+			try {
+				routeHttp.makeRequest();
+				xmlReturnRoute = routeHttp.getResponseBody();
+			} catch (Exception e) {
+				// status.markContactError(e);
+				// throw e;
+				System.out.println(e.getMessage());
+			}
+
+
+		} catch (JAXBException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+		
+		
+		
+		xmlReturnRoute = xmlReturnRoute
+				.replace(
+						"<RouteResponse",
+						"<ns1:RouteResponse xmlns:ns1=\"http://www.sspa.se/optiroute\" xmlns:ns2=\"http://www.navielektro.fi/ns/formats/vessel-waypoint-exchange\"");
+
+		xmlReturnRoute = xmlReturnRoute.replace("</RouteResponse",
+				"</ns1:RouteResponse");
+
+		xmlReturnRoute = xmlReturnRoute.replace("FuelRequested",
+				"ns1:FuelRequested");
+
+		xmlReturnRoute = xmlReturnRoute.replace("FuelFinal", "ns1:FuelFinal");
+
+		xmlReturnRoute = xmlReturnRoute.replace("Route>", "ns1:Route>");
+
+//		xmlReturnRoute = xmlReturnRoute
+//				.replace(
+//						" <waypoints xmlns=\"http://www.navielektro.fi/ns/formats/vessel-waypoint-exchange\"/>",
+//						"<ns2:waypoints xmlns=\"http://www.navielektro.fi/ns/formats/vessel-waypoint-exchange\">");
+
+		xmlReturnRoute = xmlReturnRoute.replace("waypoints",
+				"ns2:waypoints");
+
+		xmlReturnRoute = xmlReturnRoute.replace("waypoint>", "ns2:waypoint>");
+
+		xmlReturnRoute = xmlReturnRoute.replace("wpt-id", "ns2:wpt-id");
+
+		xmlReturnRoute = xmlReturnRoute.replace("ETA", "ns2:ETA");
+
+		xmlReturnRoute = xmlReturnRoute.replace("wpt-name", "ns2:wpt-name");
+
+		xmlReturnRoute = xmlReturnRoute.replace("position", "ns2:position");
+
+		xmlReturnRoute = xmlReturnRoute.replace("latitude", "ns2:latitude");
+
+		xmlReturnRoute = xmlReturnRoute.replace("longitude", "ns2:longitude");
+
+		xmlReturnRoute = xmlReturnRoute.replace("leg-info", "ns2:leg-info");
+
+		xmlReturnRoute = xmlReturnRoute.replace("planned-speed",
+				"ns2:planned-speed");
+
+//		System.out.println(xmlReturnRoute);
+
+		Unmarshaller u;
+		JAXBContext jc;
+		RouteResponse routeResponse = null;
+
+		// xmlReturnRoute = xmlReturnRoute.replace("RouteResponse",
+		// "routeresponseType");
+
+		StringReader sr = new StringReader(xmlReturnRoute);
+
+		try {
+			jc = JAXBContext
+					.newInstance("dk.frv.enav.ins.route.monalisa.se.sspa.optiroute");
+			u = jc.createUnmarshaller();
+
+			routeResponse = (RouteResponse) ((javax.xml.bind.JAXBElement) u
+					.unmarshal(sr)).getValue();
+
+		} catch (JAXBException e1) {
+			e1.printStackTrace();
+		}
+
+	
+
+
+		return routeResponse;
+
+		
 	}
 	
 }

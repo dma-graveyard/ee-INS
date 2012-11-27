@@ -62,11 +62,13 @@ import dk.frv.enav.ins.route.Route;
 import dk.frv.enav.ins.route.RouteManager;
 import dk.frv.enav.ins.route.RouteWaypoint;
 import dk.frv.enav.ins.route.RoutesUpdateEvent;
+import dk.frv.enav.ins.route.SafeHavenArea;
 
 /**
  * Layer for showing routes
  */
-public class RouteLayer extends OMGraphicHandlerLayer implements IRoutesUpdateListener, MapMouseListener {
+public class RouteLayer extends OMGraphicHandlerLayer implements
+		IRoutesUpdateListener, MapMouseListener, Runnable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -75,7 +77,7 @@ public class RouteLayer extends OMGraphicHandlerLayer implements IRoutesUpdateLi
 	private MetocInfoPanel metocInfoPanel = null;
 	private WaypointInfoPanel waypointInfoPanel = null;
 	private MapBean mapBean = null;
-	
+
 	private OMGraphicList graphics = new OMGraphicList();
 	private OMGraphicList metocGraphics = new OMGraphicList();
 	private boolean arrowsVisible = false;
@@ -87,19 +89,24 @@ public class RouteLayer extends OMGraphicHandlerLayer implements IRoutesUpdateLi
 
 	private MapMenu routeMenu;
 	private boolean dragging = false;
+	SafeHavenArea safeHavenArea = new SafeHavenArea();
+	private boolean activeSafeHaven = false;
 	
 	public RouteLayer() {
+		(new Thread(this)).start();
 		routeWidth = EeINS.getSettings().getNavSettings().getRouteWidth();
+
 	}
-	
+
 	@Override
 	public synchronized void routesChanged(RoutesUpdateEvent e) {
-		if(e == RoutesUpdateEvent.ROUTE_MSI_UPDATE) {
+		if (e == RoutesUpdateEvent.ROUTE_MSI_UPDATE) {
 			return;
 		}
-		
+
 		graphics.clear();
 		
+
 		Stroke stroke = new BasicStroke(
 				routeWidth,                      // Width
 			    BasicStroke.CAP_SQUARE,    // End cap
@@ -114,36 +121,50 @@ public class RouteLayer extends OMGraphicHandlerLayer implements IRoutesUpdateLi
                 10.0f,                     // Miter limit
                 new float[] { 10.0f, 8.0f }, // Dash pattern
                 0.0f);                     // Dash phase
+
 		Color ECDISOrange = new Color(213, 103, 45, 255);
-		
+
 		int activeRouteIndex = routeManager.getActiveRouteIndex();
 		for (int i = 0; i < routeManager.getRoutes().size(); i++) {
 			Route route = routeManager.getRoutes().get(i);
-			if(route.isVisible() && i != activeRouteIndex){				
-				RouteGraphic routeGraphic = new RouteGraphic(route, i, arrowsVisible, stroke, ECDISOrange);
+			if (route.isVisible() && i != activeRouteIndex) {
+				RouteGraphic routeGraphic = new RouteGraphic(route, i,
+						arrowsVisible, stroke, ECDISOrange);
 				graphics.add(routeGraphic);
 			}
 		}
-		
+
 		if (routeManager.isRouteActive()) {
 			ActiveRoute activeRoute = routeManager.getActiveRoute();
 			if (activeRoute.isVisible()) {
-				ActiveRouteGraphic activeRouteExtend = new ActiveRouteGraphic(activeRoute, activeRouteIndex, arrowsVisible, activeStroke, Color.RED);
+				ActiveRouteGraphic activeRouteExtend = new ActiveRouteGraphic(
+						activeRoute, activeRouteIndex, arrowsVisible,
+						activeStroke, Color.RED);
 				graphics.add(activeRouteExtend);
+
+
+//				safeHavenArea.setVisible(true);
+				if (activeSafeHaven){
+					safeHavenArea.moveSymbol(activeRoute.getSafeHavenLocation(), activeRoute.getSafeHavenBearing()
+					);
+					graphics.add(safeHavenArea);
+					
+				}
+
 			}
 		}
-		
+
 		// Handle route metoc
 		metocGraphics.clear();
 		for (int i = 0; i < routeManager.getRoutes().size(); i++) {
 			Route route = routeManager.getRoutes().get(i);
 			boolean activeRoute = false;
-			
+
 			if (routeManager.isActiveRoute(i)) {
 				route = routeManager.getActiveRoute();
 				activeRoute = true;
 			}
-			
+
 			if (routeManager.showMetocForRoute(route)) {
 				routeMetoc = new MetocGraphic(route, activeRoute);
 				metocGraphics.add(routeMetoc);
@@ -152,154 +173,173 @@ public class RouteLayer extends OMGraphicHandlerLayer implements IRoutesUpdateLi
 		if (metocGraphics.size() > 0) {
 			graphics.add(0, metocGraphics);
 		}
-		
-		for (AisAdressedRouteSuggestion routeSuggestion : routeManager.getAddressedSuggestedRoutes()) {
-			if(!routeSuggestion.isHidden()){
-				suggestedRoute = new SuggestedRouteGraphic(routeSuggestion, stroke);
+
+		for (AisAdressedRouteSuggestion routeSuggestion : routeManager
+				.getAddressedSuggestedRoutes()) {
+			if (!routeSuggestion.isHidden()) {
+				suggestedRoute = new SuggestedRouteGraphic(routeSuggestion,
+						stroke);
 				graphics.add(suggestedRoute);
 			}
 		}
-		
+
 		graphics.project(getProjection(), true);
 
 		doPrepare();
 	}
-	
+
 	/**
-	 * Calculate distance between displayed METOC-points projected onto the screen
-	 * @param metocGraphic METOC-graphics containing METOC-points
-	 * @return The smallest distance between displayed METOC-points projected onto the screen
+	 * Calculate distance between displayed METOC-points projected onto the
+	 * screen
+	 * 
+	 * @param metocGraphic
+	 *            METOC-graphics containing METOC-points
+	 * @return The smallest distance between displayed METOC-points projected
+	 *         onto the screen
 	 */
-	public double calculateMetocDistance(MetocGraphic metocGraphic){
+	public double calculateMetocDistance(MetocGraphic metocGraphic) {
 		List<OMGraphic> forecasts = metocGraphic.getTargets();
 		double minDist = 0;
 		for (int i = 0; i < forecasts.size(); i++) {
-			if(i < forecasts.size()-2){
-				MetocPointGraphic metocForecastPoint = (MetocPointGraphic) forecasts.get(i);
-				MetocPointGraphic metocForecastPointNext = (MetocPointGraphic) forecasts.get(i+1);
+			if (i < forecasts.size() - 2) {
+				MetocPointGraphic metocForecastPoint = (MetocPointGraphic) forecasts
+						.get(i);
+				MetocPointGraphic metocForecastPointNext = (MetocPointGraphic) forecasts
+						.get(i + 1);
 				double lat = metocForecastPoint.getLat();
 				double lon = metocForecastPoint.getLon();
-				
+
 				double latnext = metocForecastPointNext.getLat();
 				double lonnext = metocForecastPointNext.getLon();
-				
+
 				Point2D current = getProjection().forward(lat, lon);
 				Point2D next = getProjection().forward(latnext, lonnext);
-				
-				Vector2D vector = new Vector2D(current.getX(),current.getY(),next.getX(),next.getY());
-				
+
+				Vector2D vector = new Vector2D(current.getX(), current.getY(),
+						next.getX(), next.getY());
+
 				double newDist = vector.norm();
-				
-				if(i == 0){
+
+				if (i == 0) {
 					minDist = newDist;
 				}
-				
-				if(minDist > newDist){
+
+				if (minDist > newDist) {
 					minDist = newDist;
 				}
 			}
 		}
 		return minDist;
 	}
-	
+
 	/**
 	 * Calculate distance between each METOC-point projected onto the screen
-	 * @param route The route which contains metoc data (check for this before!)
-	 * @return The smallest distance between METOC-points projected onto the screen
+	 * 
+	 * @param route
+	 *            The route which contains metoc data (check for this before!)
+	 * @return The smallest distance between METOC-points projected onto the
+	 *         screen
 	 */
-	public double calculateMetocDistance(Route route){
-		MetocForecast routeMetoc  = route.getMetocForecast();
+	public double calculateMetocDistance(Route route) {
+		MetocForecast routeMetoc = route.getMetocForecast();
 		List<MetocForecastPoint> forecasts = routeMetoc.getForecasts();
 		double minDist = 0;
 		for (int i = 0; i < forecasts.size(); i++) {
-			if(i < forecasts.size()-2){
+			if (i < forecasts.size() - 2) {
 				MetocForecastPoint metocForecastPoint = forecasts.get(i);
-				MetocForecastPoint metocForecastPointNext = forecasts.get(i+1);
+				MetocForecastPoint metocForecastPointNext = forecasts
+						.get(i + 1);
 				double lat = metocForecastPoint.getLat();
 				double lon = metocForecastPoint.getLon();
-				
+
 				double latnext = metocForecastPointNext.getLat();
 				double lonnext = metocForecastPointNext.getLon();
-				
+
 				Point2D current = getProjection().forward(lat, lon);
 				Point2D next = getProjection().forward(latnext, lonnext);
-				
-				Vector2D vector = new Vector2D(current.getX(),current.getY(),next.getX(),next.getY());
-				
+
+				Vector2D vector = new Vector2D(current.getX(), current.getY(),
+						next.getX(), next.getY());
+
 				double newDist = vector.norm();
-				
-				if(i == 0){
+
+				if (i == 0) {
 					minDist = newDist;
 				}
-				
-				if(minDist > newDist){
+
+				if (minDist > newDist) {
 					minDist = newDist;
 				}
 			}
 		}
 		return minDist;
 	}
-	
+
 	@Override
 	public synchronized OMGraphicList prepare() {
-//		System.out.println("Entering RouteLayer.prepare()");
-//		long start = System.nanoTime();
+		// System.out.println("Entering RouteLayer.prepare()");
+		// long start = System.nanoTime();
 		for (OMGraphic omgraphic : graphics) {
-			if(omgraphic instanceof RouteGraphic){
-				((RouteGraphic) omgraphic).showArrowHeads(getProjection().getScale() < EeINS.getSettings().getNavSettings().getShowArrowScale());
+			if (omgraphic instanceof RouteGraphic) {
+				((RouteGraphic) omgraphic).showArrowHeads(getProjection()
+						.getScale() < EeINS.getSettings().getNavSettings()
+						.getShowArrowScale());
 			}
 		}
-		
+
 		List<OMGraphic> metocList = metocGraphics.getTargets();
 		for (OMGraphic omGraphic : metocList) {
 			MetocGraphic metocGraphic = (MetocGraphic) omGraphic;
 			Route route = metocGraphic.getRoute();
-			if(routeManager.showMetocForRoute(route)){
+			if (routeManager.showMetocForRoute(route)) {
 				double minDist = calculateMetocDistance(route);
-				int step = (int) (5/minDist);
-				if(step < 1)
+				int step = (int) (5 / minDist);
+				if (step < 1)
 					step = 1;
 				metocGraphic.setStep(step);
-				metocGraphic.paintMetoc();				
+				metocGraphic.paintMetoc();
 			}
 		}
-		
+
 		graphics.project(getProjection());
-//		System.out.println("Finished RouteLayer.prepare() in " + EeINS.elapsed(start) + " ms\n---");
+		// System.out.println("Finished RouteLayer.prepare() in " +
+		// EeINS.elapsed(start) + " ms\n---");
 		return graphics;
 	}
-	
-//	@Override
-//	public void paint(Graphics g) {
-//		System.out.println("Entering RouteLayer.paint)");
-//		long start = System.nanoTime();
-//		super.paint(g);
-//		System.out.println("Finished RouteLayer.paint() in " + EeINS.elapsed(start) + " ms\n---");
-//	}
-	
+
+	// @Override
+	// public void paint(Graphics g) {
+	// System.out.println("Entering RouteLayer.paint)");
+	// long start = System.nanoTime();
+	// super.paint(g);
+	// System.out.println("Finished RouteLayer.paint() in " +
+	// EeINS.elapsed(start) + " ms\n---");
+	// }
+
 	@Override
 	public void findAndInit(Object obj) {
 		if (obj instanceof RouteManager) {
-			routeManager = (RouteManager)obj;
+			routeManager = (RouteManager) obj;
 			routeManager.addListener(this);
 		}
 		if (obj instanceof MainFrame) {
-			mainFrame = (MainFrame)obj;
+			mainFrame = (MainFrame) obj;
 			metocInfoPanel = new MetocInfoPanel();
 			mainFrame.getGlassPanel().add(metocInfoPanel);
 		}
-		if (obj instanceof MapBean){
-			mapBean = (MapBean)obj;
+		if (obj instanceof MapBean) {
+			mapBean = (MapBean) obj;
 		}
-		if(obj instanceof MapMenu){
+		if (obj instanceof MapMenu) {
 			routeMenu = (MapMenu) obj;
 		}
-		if ((waypointInfoPanel == null) && (routeManager != null && mainFrame != null)) {
+		if ((waypointInfoPanel == null)
+				&& (routeManager != null && mainFrame != null)) {
 			waypointInfoPanel = new WaypointInfoPanel();
 			mainFrame.getGlassPanel().add(waypointInfoPanel);
 		}
 	}
-	
+
 	@Override
 	public void findAndUndo(Object obj) {
 		if (obj == routeManager) {
@@ -308,73 +348,79 @@ public class RouteLayer extends OMGraphicHandlerLayer implements IRoutesUpdateLi
 	}
 
 	public MapMouseListener getMapMouseListener() {
-        return this;
-    }
-	
+		return this;
+	}
+
 	@Override
 	public String[] getMouseModeServiceList() {
-        String[] ret = new String[1];
-        ret[0] = NavigationMouseMode.modeID; // "Gestures"
-        return ret;
-    }
+		String[] ret = new String[1];
+		ret[0] = NavigationMouseMode.modeID; // "Gestures"
+		return ret;
+	}
 
 	@Override
 	public boolean mouseClicked(MouseEvent e) {
-		if(e.getButton() != MouseEvent.BUTTON3){
+		if (e.getButton() != MouseEvent.BUTTON3) {
 			return false;
 		}
-		
+
 		selectedGraphic = null;
-		OMList<OMGraphic> allClosest = graphics.findAll(e.getX(), e.getY(), 5.0f);
+		OMList<OMGraphic> allClosest = graphics.findAll(e.getX(), e.getY(),
+				5.0f);
 		for (OMGraphic omGraphic : allClosest) {
-			if (omGraphic instanceof SuggestedRouteGraphic || omGraphic instanceof WaypointCircle || omGraphic instanceof RouteLegGraphic) {
+			if (omGraphic instanceof SuggestedRouteGraphic
+					|| omGraphic instanceof WaypointCircle
+					|| omGraphic instanceof RouteLegGraphic) {
 				selectedGraphic = omGraphic;
 				break;
 			}
 		}
-		
-		if(selectedGraphic instanceof SuggestedRouteGraphic){
+
+		if (selectedGraphic instanceof SuggestedRouteGraphic) {
 			mainFrame.getGlassPane().setVisible(false);
 			waypointInfoPanel.setVisible(false);
 			SuggestedRouteGraphic suggestedRoute = (SuggestedRouteGraphic) selectedGraphic;
-			AisAdressedRouteSuggestion aisSuggestedRoute = suggestedRoute.getRouteSuggestion();
+			AisAdressedRouteSuggestion aisSuggestedRoute = suggestedRoute
+					.getRouteSuggestion();
 			routeMenu.suggestedRouteMenu(aisSuggestedRoute);
 			routeMenu.setVisible(true);
-			routeMenu.show(this, e.getX()-2, e.getY()-2);
+			routeMenu.show(this, e.getX() - 2, e.getY() - 2);
 			return true;
 		}
-		if(selectedGraphic instanceof WaypointCircle){
+		if (selectedGraphic instanceof WaypointCircle) {
 			WaypointCircle wpc = (WaypointCircle) selectedGraphic;
 			mainFrame.getGlassPane().setVisible(false);
 			waypointInfoPanel.setVisible(false);
 			routeMenu.routeWaypointMenu(wpc.getRouteIndex(), wpc.getWpIndex());
 			routeMenu.setVisible(true);
-			routeMenu.show(this, e.getX()-2, e.getY()-2);
+			routeMenu.show(this, e.getX() - 2, e.getY() - 2);
 			return true;
 		}
-		if(selectedGraphic instanceof RouteLegGraphic){
+		if (selectedGraphic instanceof RouteLegGraphic) {
 			RouteLegGraphic rlg = (RouteLegGraphic) selectedGraphic;
 			mainFrame.getGlassPane().setVisible(false);
 			waypointInfoPanel.setVisible(false);
-			routeMenu.routeLegMenu(rlg.getRouteIndex(), rlg.getRouteLeg(), e.getPoint());
+			routeMenu.routeLegMenu(rlg.getRouteIndex(), rlg.getRouteLeg(),
+					e.getPoint());
 			routeMenu.setVisible(true);
-			routeMenu.show(this, e.getX()-2, e.getY()-2);
+			routeMenu.show(this, e.getX() - 2, e.getY() - 2);
 			return true;
 		}
-		
+
 		return false;
 	}
 
 	@Override
 	public boolean mouseDragged(MouseEvent e) {
-		if(!javax.swing.SwingUtilities.isLeftMouseButton(e)){
+		if (!javax.swing.SwingUtilities.isLeftMouseButton(e)) {
 			return false;
 		}
-		
-		if(!dragging){
+
+		if (!dragging) {
 			mainFrame.getGlassPane().setVisible(false);
 			selectedGraphic = null;
-			OMList<OMGraphic> allClosest = graphics.findAll(e.getX(), e.getY(), 5.0f);
+			OMList<OMGraphic> allClosest = graphics.findAll(e.getX(), e.getY(),
+					5.0f);
 			for (OMGraphic omGraphic : allClosest) {
 				if (omGraphic instanceof WaypointCircle) {
 					selectedGraphic = omGraphic;
@@ -382,53 +428,58 @@ public class RouteLayer extends OMGraphicHandlerLayer implements IRoutesUpdateLi
 				}
 			}
 		}
-		
-		if(selectedGraphic instanceof WaypointCircle){
+
+		if (selectedGraphic instanceof WaypointCircle) {
 			WaypointCircle wpc = (WaypointCircle) selectedGraphic;
-			if(routeManager.getActiveRouteIndex() != wpc.getRouteIndex()){
-				RouteWaypoint routeWaypoint = wpc.getRoute().getWaypoints().get(wpc.getWpIndex());
-				LatLonPoint newLatLon = mapBean.getProjection().inverse(e.getPoint());
-				GeoLocation newLocation = new GeoLocation(newLatLon.getLatitude(), newLatLon.getLongitude());
+			if (routeManager.getActiveRouteIndex() != wpc.getRouteIndex()) {
+				RouteWaypoint routeWaypoint = wpc.getRoute().getWaypoints()
+						.get(wpc.getWpIndex());
+				LatLonPoint newLatLon = mapBean.getProjection().inverse(
+						e.getPoint());
+				GeoLocation newLocation = new GeoLocation(
+						newLatLon.getLatitude(), newLatLon.getLongitude());
 				routeWaypoint.setPos(newLocation);
 				routesChanged(RoutesUpdateEvent.ROUTE_WAYPOINT_MOVED);
 				dragging = true;
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseExited(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseMoved() {
-        graphics.deselect();
-        repaint();
-    }
+		graphics.deselect();
+		repaint();
+	}
 
 	@Override
 	public boolean mouseMoved(MouseEvent e) {
 		OMGraphic newClosest = null;
-		OMList<OMGraphic> allClosest = graphics.findAll(e.getX(), e.getY(), 2.0f);
-		
+		OMList<OMGraphic> allClosest = graphics.findAll(e.getX(), e.getY(),
+				2.0f);
+
 		for (OMGraphic omGraphic : allClosest) {
-			if (omGraphic instanceof MetocPointGraphic || omGraphic instanceof WaypointCircle) {
+			if (omGraphic instanceof MetocPointGraphic
+					|| omGraphic instanceof WaypointCircle) {
 				newClosest = omGraphic;
 				break;
 			}
 		}
-		
+
 		if (routeMetoc != null && metocInfoPanel != null) {
 			if (newClosest != closest) {
 				if (newClosest == null) {
@@ -439,27 +490,35 @@ public class RouteLayer extends OMGraphicHandlerLayer implements IRoutesUpdateLi
 				} else {
 					if (newClosest instanceof MetocPointGraphic) {
 						closest = newClosest;
-						MetocPointGraphic pointGraphic = (MetocPointGraphic)newClosest;
-						MetocForecastPoint pointForecast = pointGraphic.getMetocPoint();
-						Point containerPoint = SwingUtilities.convertPoint(mapBean, e.getPoint(), mainFrame);
-						metocInfoPanel.setPos((int)containerPoint.getX(), (int)containerPoint.getY());
-						metocInfoPanel.showText(pointForecast, pointGraphic.getMetocGraphic().getRoute().getRouteMetocSettings());												
+						MetocPointGraphic pointGraphic = (MetocPointGraphic) newClosest;
+						MetocForecastPoint pointForecast = pointGraphic
+								.getMetocPoint();
+						Point containerPoint = SwingUtilities.convertPoint(
+								mapBean, e.getPoint(), mainFrame);
+						metocInfoPanel.setPos((int) containerPoint.getX(),
+								(int) containerPoint.getY());
+						metocInfoPanel.showText(pointForecast, pointGraphic
+								.getMetocGraphic().getRoute()
+								.getRouteMetocSettings());
 						waypointInfoPanel.setVisible(false);
-						mainFrame.getGlassPane().setVisible(true);						
+						mainFrame.getGlassPane().setVisible(true);
 						return true;
 					}
 				}
 			}
 		}
-		
+
 		if (newClosest != closest) {
 			if (newClosest instanceof WaypointCircle) {
 				closest = newClosest;
-				WaypointCircle waypointCircle = (WaypointCircle)closest;
-				Point containerPoint = SwingUtilities.convertPoint(mapBean, e.getPoint(), mainFrame);
-				waypointInfoPanel.setPos((int)containerPoint.getX(), (int)containerPoint.getY() - 10);
-				waypointInfoPanel.showWpInfo(waypointCircle.getRoute(), waypointCircle.getWpIndex());
-				mainFrame.getGlassPane().setVisible(true);				
+				WaypointCircle waypointCircle = (WaypointCircle) closest;
+				Point containerPoint = SwingUtilities.convertPoint(mapBean,
+						e.getPoint(), mainFrame);
+				waypointInfoPanel.setPos((int) containerPoint.getX(),
+						(int) containerPoint.getY() - 10);
+				waypointInfoPanel.showWpInfo(waypointCircle.getRoute(),
+						waypointCircle.getWpIndex());
+				mainFrame.getGlassPane().setVisible(true);
 				metocInfoPanel.setVisible(false);
 				return true;
 			} else {
@@ -479,7 +538,7 @@ public class RouteLayer extends OMGraphicHandlerLayer implements IRoutesUpdateLi
 
 	@Override
 	public boolean mouseReleased(MouseEvent e) {
-		if(dragging){
+		if (dragging) {
 			dragging = false;
 			routeManager.notifyListeners(RoutesUpdateEvent.ROUTE_MSI_UPDATE);
 			return true;
@@ -487,4 +546,20 @@ public class RouteLayer extends OMGraphicHandlerLayer implements IRoutesUpdateLi
 		return false;
 	}
 
+	
+	public void toggleSafeHaven(){
+		activeSafeHaven = !activeSafeHaven;
+		safeHavenArea.setVisible(activeSafeHaven);
+		routesChanged(null);
+	}
+	
+	@Override
+	public void run() {
+		while (true) {
+			EeINS.sleep(1000);
+
+			routesChanged(null);
+
+		}
+	}
 }

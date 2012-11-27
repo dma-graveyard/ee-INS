@@ -57,6 +57,11 @@ public class NewRouteContainerLayer extends OMGraphicHandlerLayer {
 		route.setWaypoints(waypoints);
 		routeGraphics = new RouteGraphic(true, new BasicStroke(2), Color.black);
 		graphics.add(routeGraphics);
+		
+		
+		
+		
+		
 	}
 	
 	@Override

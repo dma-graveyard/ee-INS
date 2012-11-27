@@ -58,6 +58,10 @@ public class RouteEditEndRoute extends JMenuItem implements IMapMenuAction {
 	@Override
 	public void doAction() {
 		if (newRouteLayer.getRoute().getWaypoints().size() > 1) {
+			
+			
+			
+			
 			Route route = new Route(newRouteLayer.getRoute());
 			route.setName("New route");
 			int i = 1;
@@ -76,6 +80,7 @@ public class RouteEditEndRoute extends JMenuItem implements IMapMenuAction {
 				i++;
 			}
 			route.calcValues(true);
+			
 			routeManager.addRoute(route);
 			routeManager.notifyListeners(null);
 		}

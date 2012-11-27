@@ -78,6 +78,9 @@ public class EnavSettings implements Serializable {
 	private double msiVisibilityFromNewWaypoint = 30.0d;
 	private boolean msiFilter = true;
 	private String updateServer = "http://service.e-navigation.net/";
+	private String monaLisaServer = "www.optiroute.se/RouteRequest";
+	private int monaLisaPort = 80;
+	
 	
 	/**
 	 * Cloud server configuration
@@ -121,8 +124,9 @@ public class EnavSettings implements Serializable {
 		}
 		
 		cloudServerHost = props.getProperty(PREFIX + "cloudServerHost", cloudServerHost);
-		cloudServerPort = PropUtils.intFromProperties(props, PREFIX + "cloudServerPort", cloudServerPort);			
-		
+		cloudServerPort = PropUtils.intFromProperties(props, PREFIX + "cloudServerPort", cloudServerPort);					
+		monaLisaServer = props.getProperty(PREFIX + "monaLisaServer", monaLisaServer);
+		monaLisaPort = PropUtils.intFromProperties(props, PREFIX + "monaLisaPort", monaLisaPort);	
 	}
 	
 	public void setProperties(Properties props) {
@@ -149,6 +153,8 @@ public class EnavSettings implements Serializable {
 		props.put(PREFIX + "msiFilter", Boolean.toString(msiFilter));
 		props.put(PREFIX + "cloudServerHost", cloudServerHost);
 		props.put(PREFIX + "cloudServerPort", Integer.toString(cloudServerPort));
+		props.put(PREFIX + "monaLisaServer", monaLisaServer);
+		props.put(PREFIX + "monaLisaPort", Integer.toString(monaLisaPort));
 	}
 
 	public double getDefaultWindWarnLimit() {
@@ -334,5 +340,22 @@ public class EnavSettings implements Serializable {
 	public void setDefaultWaveMedium(double defaultWaveMedium) {
 		this.defaultWaveMedium = defaultWaveMedium;
 	}
+
+	public String getMonaLisaServer() {
+		return monaLisaServer;
+	}
+
+	public void setMonaLisaServer(String monaLisaServer) {
+		this.monaLisaServer = monaLisaServer;
+	}
+
+	public int getMonaLisaPort() {
+		return monaLisaPort;
+	}
+
+	public void setMonaLisaPort(int monaLisaPort) {
+		this.monaLisaPort = monaLisaPort;
+	}
+
 	
 }
