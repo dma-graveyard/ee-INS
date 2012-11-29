@@ -32,6 +32,7 @@ package dk.frv.enav.ins.layers.background;
 import java.awt.Graphics;
 
 import com.bbn.openmap.layer.shape.ShapeLayer;
+import com.bbn.openmap.layer.shape.SpatialIndex;
 import com.bbn.openmap.omGraphics.OMGraphicList;
 
 /**
@@ -66,6 +67,5 @@ public class CoastalOutlineLayer extends ShapeLayer {
 		super.paint(g);
 		//System.out.println("Finished CoastalOutlineLayer.paint() in " + EeINS.elapsed(start) + " ms\n---");
 	}
-
 	
 }

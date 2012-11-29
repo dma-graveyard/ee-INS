@@ -1,7 +1,8 @@
 2012-11-xx Version 4.0
 	* Using AIS ASM DAC=219,FI=2 for route suggestion
 	* Dockable panels
-
+    * Moved from Ant to Maven as a build system 
+    
 2012-03-01 Version 3.3
 	* Improved coastal outline map
 	* Better handling of background map when ENC is on

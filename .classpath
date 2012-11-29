@@ -1,30 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry kind="lib" path="ee-ins/src/main/resources"/>
+	<classpathentry kind="src" path="ee-ins-common/src/main/java"/>
 	<classpathentry kind="src" path="ee-ins/src/main/java"/>
-	<classpathentry kind="lib" path="extlib/comm.jar"/>
-	<classpathentry kind="lib" path="extlib/commons-codec.jar"/>
-	<classpathentry kind="lib" path="extlib/commons-httpclient-3.1.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="http://hc.apache.org/httpclient-legacy/apidocs/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="extlib/commons-lang-2.5.jar"/>
-	<classpathentry kind="lib" path="extlib/commons-logging.jar"/>
-	<classpathentry kind="lib" path="extlib/log4j-1.2.15.jar"/>
-	<classpathentry kind="lib" path="extlib/milStd2525_png.jar"/>
-	<classpathentry kind="lib" path="extlib/omcorba.jar"/>
-	<classpathentry kind="lib" path="extlib/omj3d.jar"/>
-	<classpathentry kind="lib" path="extlib/omsvg.jar"/>
-	<classpathentry kind="lib" path="extlib/openmap.jar" sourcepath="/openmap">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/workspace/openmap/doc/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="extlib/docking-frames-common.jar"/>
-	<classpathentry kind="lib" path="extlib/enav-0.1-SNAPSHOT.jar" sourcepath="/eNav"/>
+	<classpathentry kind="var" path="M2_REPO/javax/inject/javax.inject/1/javax.inject-1.jar" sourcepath="M2_REPO/javax/inject/javax.inject/1/javax.inject-1-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/javax/annotation/jsr250-api/1.0/jsr250-api-1.0.jar" sourcepath="M2_REPO/javax/annotation/jsr250-api/1.0/jsr250-api-1.0-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/commons-codec/commons-codec/1.7/commons-codec-1.7.jar"/>
+	<classpathentry kind="var" path="M2_REPO/commons-httpclient/commons-httpclient/3.1/commons-httpclient-3.1.jar"/>
+	<classpathentry kind="var" path="M2_REPO/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4.jar"/>
+	<classpathentry kind="var" path="M2_REPO/commons-lang/commons-lang/2.6/commons-lang-2.6.jar" sourcepath="M2_REPO/commons-lang/commons-lang/2.6/commons-lang-2.6-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/springframework/spring-context/3.1.3.RELEASE/spring-context-3.1.3.RELEASE.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/springframework/spring-aop/3.1.3.RELEASE/spring-aop-3.1.3.RELEASE.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/springframework/spring-asm/3.1.3.RELEASE/spring-asm-3.1.3.RELEASE.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/springframework/spring-beans/3.1.3.RELEASE/spring-beans-3.1.3.RELEASE.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/springframework/spring-core/3.1.3.RELEASE/spring-core-3.1.3.RELEASE.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/springframework/spring-expression/3.1.3.RELEASE/spring-expression-3.1.3.RELEASE.jar"/>
+	<classpathentry kind="var" path="M2_REPO/log4j/log4j/1.2.17/log4j-1.2.17.jar" sourcepath="M2_REPO/log4j/log4j/1.2.17/log4j-1.2.17-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/dk/dma/3rdparty/docking-frames-common/1.2.3/docking-frames-common-1.2.3.jar"/>
+	<classpathentry kind="var" path="M2_REPO/dk/dma/3rdparty/docking-frames-core/1.2.3/docking-frames-core-1.2.3.jar"/>
+	<classpathentry kind="var" path="M2_REPO/dk/dma/3rdparty/comm/1.2.3/comm-1.2.3.jar"/>
+	<classpathentry kind="var" path="M2_REPO/dk/dma/3rdparty/milStd2525_png/1.2.3/milStd2525_png-1.2.3.jar"/>
+	<classpathentry kind="var" path="M2_REPO/dk/dma/3rdparty/omcorba/1.2.3/omcorba-1.2.3.jar"/>
+	<classpathentry kind="var" path="M2_REPO/dk/dma/3rdparty/omj3d/1.2.3/omj3d-1.2.3.jar"/>
+	<classpathentry kind="var" path="M2_REPO/dk/dma/3rdparty/omsvg/1.2.3/omsvg-1.2.3.jar"/>
+	<classpathentry kind="var" path="M2_REPO/dk/dma/3rdparty/openmap/1.2.3/openmap-1.2.3.jar"/>
+	<classpathentry kind="var" path="M2_REPO/dk/dma/3rdparty/aislib/1.5/aislib-1.5.jar"/>
+	<classpathentry kind="var" path="M2_REPO/dk/dma/3rdparty/enavshore-common/1.5/enavshore-common-1.5.jar"/>
+	<classpathentry kind="var" path="M2_REPO/dk/dma/3rdparty/enav/1.5/enav-1.5.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/google/guava/guava/13.0/guava-13.0.jar" sourcepath="M2_REPO/com/google/guava/guava/13.0/guava-13.0-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/google/inject/guice/3.0/guice-3.0.jar" sourcepath="M2_REPO/com/google/inject/guice/3.0/guice-3.0-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/aopalliance/aopalliance/1.0/aopalliance-1.0.jar" sourcepath="M2_REPO/aopalliance/aopalliance/1.0/aopalliance-1.0-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/picocontainer/picocontainer/2.10.2/picocontainer-2.10.2.jar" sourcepath="M2_REPO/org/picocontainer/picocontainer/2.10.2/picocontainer-2.10.2-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/dk/dma/enav/enav-services/0.1-SNAPSHOT/enav-services-0.1-SNAPSHOT.jar"/>
+	<classpathentry kind="var" path="M2_REPO/dk/dma/enav/enav-messaging/0.1-SNAPSHOT/enav-messaging-0.1-SNAPSHOT.jar"/>
+	<classpathentry kind="var" path="M2_REPO/dk/dma/enav/enav-model/0.1-SNAPSHOT/enav-model-0.1-SNAPSHOT.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/slf4j/slf4j-api/1.6.6/slf4j-api-1.6.6.jar" sourcepath="M2_REPO/org/slf4j/slf4j-api/1.6.6/slf4j-api-1.6.6-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/beust/jcommander/1.29/jcommander-1.29.jar"/>
+	<classpathentry kind="var" path="M2_REPO/net/gescobar/jmx-annotations/1.0.0/jmx-annotations-1.0.0.jar" sourcepath="M2_REPO/net/gescobar/jmx-annotations/1.0.0/jmx-annotations-1.0.0-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/junit/junit/4.9/junit-4.9.jar" sourcepath="M2_REPO/junit/junit/4.9/junit-4.9-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/hamcrest/hamcrest-core/1.1/hamcrest-core-1.1.jar" sourcepath="M2_REPO/org/hamcrest/hamcrest-core/1.1/hamcrest-core-1.1-sources.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="extlib/aislib-1.5.jar"/>
-	<classpathentry kind="lib" path="extlib/enavshore-common.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/testbed"/>
-	<classpathentry kind="output" path="build/classes"/>
+	<classpathentry kind="output" path="bin"/>
 </classpath>

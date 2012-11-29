@@ -5,6 +5,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -98,7 +101,8 @@ public class DockableComponents {
 
 		
 		// Load a layout
-		File layoutFile = new File(EeINS.class.getSimpleName() + ".xml");
+		Path home = Paths.get(System.getProperty("user.home"), ".eeins");
+		File layoutFile = home.resolve(EeINS.class.getSimpleName() + ".xml").toFile();
 		if (layoutFile.exists()) {
 			try {
 				control.readXML(layoutFile);
@@ -106,7 +110,7 @@ public class DockableComponents {
 				ex.printStackTrace(System.err);
 			}
 		} else {
-			loadLayout("./layout/static/default.xml");
+			loadLayout(home.resolve("layout/static/default.xml").toString());
 //			control.readXML(createLayout());
 		}
 
@@ -195,7 +199,8 @@ public class DockableComponents {
 //		System.out.println("Save layout");
 		
 		try {
-			File f = new File(EeINS.class.getSimpleName() + ".xml");
+	        Path home = Paths.get(System.getProperty("user.home"), ".eeins");
+            File f = home.resolve(EeINS.class.getSimpleName() + ".xml").toFile();
 			control.writeXML(f);
 		} catch (IOException ex) {
 			ex.printStackTrace();
@@ -491,8 +496,10 @@ public class DockableComponents {
 	public void saveLayout(String name) {
 		
 		try {
-			final String path = "./layout/";
-			File f = new File(path + name + ".xml");
+	          Path home = Paths.get(System.getProperty("user.home"), ".eeins");
+	          Path layoutFolder = home.resolve("layout");
+	          Files.createDirectories(layoutFolder);
+  			File f = layoutFolder.resolve(name + ".xml").toFile();
 			control.writeXML(f);
 		} catch (IOException ex) {
 			ex.printStackTrace();
