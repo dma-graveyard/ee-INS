@@ -54,6 +54,7 @@ import dk.frv.enav.ins.EeINS;
 import dk.frv.enav.ins.ais.AisAdressedRouteSuggestion;
 import dk.frv.enav.ins.common.math.Vector2D;
 import dk.frv.enav.ins.event.NavigationMouseMode;
+import dk.frv.enav.ins.gps.GpsHandler;
 import dk.frv.enav.ins.gui.MainFrame;
 import dk.frv.enav.ins.gui.MapMenu;
 import dk.frv.enav.ins.route.ActiveRoute;
@@ -89,8 +90,10 @@ public class RouteLayer extends OMGraphicHandlerLayer implements
 
 	private MapMenu routeMenu;
 	private boolean dragging = false;
-	SafeHavenArea safeHavenArea = new SafeHavenArea();
+	SafeHavenArea safeHavenArea = null;
 	private boolean activeSafeHaven = false;
+	
+	private GpsHandler gpsHandler = null;
 	
 	public RouteLayer() {
 		(new Thread(this)).start();
@@ -145,6 +148,7 @@ public class RouteLayer extends OMGraphicHandlerLayer implements
 
 //				safeHavenArea.setVisible(true);
 				if (activeSafeHaven){
+
 					safeHavenArea.moveSymbol(activeRoute.getSafeHavenLocation(), activeRoute.getSafeHavenBearing()
 					);
 					graphics.add(safeHavenArea);
@@ -338,6 +342,13 @@ public class RouteLayer extends OMGraphicHandlerLayer implements
 			waypointInfoPanel = new WaypointInfoPanel();
 			mainFrame.getGlassPanel().add(waypointInfoPanel);
 		}
+		
+		if (obj instanceof GpsHandler) {
+			gpsHandler = (GpsHandler) obj;
+			safeHavenArea = new SafeHavenArea(gpsHandler);
+		}
+		
+		
 	}
 
 	@Override

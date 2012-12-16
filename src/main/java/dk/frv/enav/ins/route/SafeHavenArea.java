@@ -50,6 +50,7 @@ import com.bbn.openmap.omGraphics.OMPoly;
 import dk.frv.ais.geo.GeoLocation;
 import dk.frv.enav.ins.common.graphics.CenterRaster;
 import dk.frv.enav.ins.common.util.Calculator;
+import dk.frv.enav.ins.gps.GpsHandler;
 
 public class SafeHavenArea extends OMGraphicList {
 	private static final long serialVersionUID = 1L;
@@ -65,14 +66,21 @@ public class SafeHavenArea extends OMGraphicList {
 	private BufferedImage hatchFill;
 	OMPoly poly;
 
-	public SafeHavenArea() {
+	int width = 1000;
+	int height = 500;
+
+	GpsHandler gpsHandler = null;
+
+	public SafeHavenArea(GpsHandler gpsHandler) {
 		super();
+
+		this.gpsHandler = gpsHandler;
 
 		hatchFill = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D big = hatchFill.createGraphics();
 		Composite originalComposite = big.getComposite();
 		big.setComposite(makeComposite(0.7f));
-		big.setColor(Color.green);
+		big.setColor(Color.gray);
 		big.drawLine(0, 0, 10, 10);
 
 		hatchFillRectangle = new Rectangle(0, 0, 10, 10);
@@ -95,20 +103,20 @@ public class SafeHavenArea extends OMGraphicList {
 		polyPoints[j + 1] = polyPoints[1];
 		poly = new OMPoly(polyPoints, OMGraphic.DECIMAL_DEGREES,
 				OMGraphic.LINETYPE_RHUMB, 1);
+
 		// poly.setLinePaint(clear);
 		poly.setFillPaint(new Color(0, 0, 0, 1));
 		poly.setTextureMask(new TexturePaint(hatchFill, hatchFillRectangle));
 
-		
 		Stroke activeStroke = new BasicStroke(1.0f, // Width
 				BasicStroke.CAP_SQUARE, // End cap
 				BasicStroke.JOIN_MITER, // Join style
 				10.0f, // Miter limit
 				new float[] { 10.0f, 8.0f }, // Dash pattern
 				0.0f); // Dash phase
-		
+
 		poly.setStroke(activeStroke);
-		
+
 		add(poly);
 	}
 
@@ -118,85 +126,106 @@ public class SafeHavenArea extends OMGraphicList {
 	}
 
 	public void moveSymbol(GeoLocation pos, double bearing) {
-		
+
 		remove(poly);
 
-		int width = 1000;
-		int height = 500;
-		
 		// Create the polygon around the position.
-		calculatePolygon(pos, bearing, width, height);
+		calculatePolygon(pos, bearing);
+
+		calculateColor(pos);
 
 		// createGraphics();
 		drawPolygon();
 
 	}
 
-	private void calculatePolygon(GeoLocation position, double bearing,
-			int width, int height) {
-//		double withNm = Converter.nmToMeters(width/2);
-//		double heightNm = Converter.nmToMeters(height/2);
+	private void calculateColor(GeoLocation position) {
+
+		hatchFill = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D big = hatchFill.createGraphics();
+		 Composite originalComposite = big.getComposite();
+		 big.setComposite(makeComposite(0.5f));
+//		big.setColor(Color.red);
+
+
+
+
+		if (gpsHandler.getCurrentData().getPosition() != null) {
+			double distance = position.getGeodesicDistance(gpsHandler
+					.getCurrentData().getPosition());
+
+			System.out.println("Distance is: " + distance + " height is " + height);
+
+			if (distance > height*2) {
+				big.setColor(Color.red);
+				System.out.println("red");
+			}
+			if (distance <= height * 2) {
+				big.setColor(Color.yellow);
+
+				System.out.println("yellow");
+			}
+			if (distance <= height) {
+				big.setColor(Color.green);
+				System.out.println("green");
+			}
+		}
+		
+		 big.drawLine(0, 0, 10, 10);
+		
+		 hatchFillRectangle = new Rectangle(0, 0, 10, 10);
+		 big.setComposite(originalComposite);
+
+	}
+
+	private void calculatePolygon(GeoLocation position, double bearing) {
+		// double withNm = Converter.nmToMeters(width/2);
+		// double heightNm = Converter.nmToMeters(height/2);
 
 		double angle = 90 + bearing;
 		double oppositeBearing = 180 + bearing;
-		
-		
-		GeoLocation topLinePt = Calculator
-				.findPosition(position, bearing,
-						width/2);
-		
 
-		if (angle > 360){
+		GeoLocation topLinePt = Calculator.findPosition(position, bearing,
+				width / 2);
+
+		if (angle > 360) {
 			angle = angle - 360;
 		}
-		
-		if (oppositeBearing > 360){
+
+		if (oppositeBearing > 360) {
 			oppositeBearing = oppositeBearing - 360;
 		}
-		
-		
-		GeoLocation bottomLinePt = Calculator
-				.findPosition(position, oppositeBearing,
-						width/2);
 
-//		System.out.println("Top pnt: " + topLinePt);
-//		System.out.println("Btm pnt: " + bottomLinePt);
-		
-		
-		GeoLocation point1 = Calculator
-				.findPosition(bottomLinePt, angle,
-						height/2);
-		
-		GeoLocation point2 = Calculator
-				.findPosition(topLinePt, angle,
-						height/2);
-		
-		GeoLocation point3 = Calculator
-				.findPosition(bottomLinePt, angle + 180,
-						height/2);
-		
+		GeoLocation bottomLinePt = Calculator.findPosition(position,
+				oppositeBearing, width / 2);
 
-		
-		GeoLocation point4 = Calculator
-				.findPosition(topLinePt, angle + 180,
-						height/2);
-	
+		// System.out.println("Top pnt: " + topLinePt);
+		// System.out.println("Btm pnt: " + bottomLinePt);
+
+		GeoLocation point1 = Calculator.findPosition(bottomLinePt, angle,
+				height / 2);
+
+		GeoLocation point2 = Calculator.findPosition(topLinePt, angle,
+				height / 2);
+
+		GeoLocation point3 = Calculator.findPosition(bottomLinePt, angle + 180,
+				height / 2);
+
+		GeoLocation point4 = Calculator.findPosition(topLinePt, angle + 180,
+				height / 2);
+
 		polygon.clear();
 
-//		polygon.add(topLinePt);
-//		polygon.add(bottomLinePt);
-		
-		
-		
+		// polygon.add(topLinePt);
+		// polygon.add(bottomLinePt);
+
 		polygon.add(point1);
 
 		polygon.add(point2);
 
 		polygon.add(point4);
-		polygon.add(point3);	
+		polygon.add(point3);
 
-		
-		
 	}
 
 	public void removeSymbol() {
